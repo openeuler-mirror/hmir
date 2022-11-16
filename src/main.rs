@@ -7,6 +7,10 @@ use log4rs;
 use log::{error,info,warn};
 use clap::{Arg,App};
 
+use jsonrpsee::ws_server::{RpcModule, WsServerBuilder,WsServerHandle};
+use jsonrpsee_core::middleware::{WsMiddleware, Headers, MethodKind, Params};
+use std::{time::Instant, net::SocketAddr};
+
 macro_rules! assert_single_instance{
     ()=>{
         let __instance = SingleInstance::new(constants::LOCKFILE).unwrap();
@@ -74,21 +78,30 @@ async fn main() -> anyhow::Result<()> {
     }
 
     // println!("Bind Address : {:?}:{:?}",ip,port);
-
-    run_ws_server(ip.unwrap(),port.unwrap()).await?;
-
+    let (server_addr, _handle) = run_ws_server(ip.unwrap(),port.unwrap()).await?;
 
 
-    Ok(())
+
+    futures::future::pending().await
 
 
 }
 
 
-async fn run_ws_server(ip: &str , port : &str) -> anyhow::Result<()> {
+async fn run_ws_server(ip: &str , port : &str) -> anyhow::Result<(SocketAddr,WsServerHandle)> {
 
-    Ok(())
+    let url: String =ip.to_owned();
+    let url = url + ":" + port;
 
+    let server = WsServerBuilder::default().build(url.parse::<SocketAddr>()?).await?;
+    let mut module = RpcModule::new(());
+
+    let addr = server.local_addr()?;
+    let server_handle = server.start(module)?;
+    info!("Sucess start the service with {}:{}",ip,port);
+
+
+    Ok((addr,server_handle))
 }
 
 
