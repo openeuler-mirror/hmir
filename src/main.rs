@@ -43,12 +43,17 @@ fn log_init ()
     }
 }
 
+#[doc(hidden)]
+fn init_services() {
+    svr::init_services_mg();
+}
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
 
     log_init();
     assert_single_instance!();
+    init_services();
 
     let mut app = App::new("hmir");
     let mut matches = app.clone()
