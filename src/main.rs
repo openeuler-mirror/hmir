@@ -5,7 +5,7 @@ use std::process;
 use constants::constants;
 use log4rs;
 use log::{error,info,warn};
-
+use clap::{Arg,App};
 
 macro_rules! assert_single_instance{
     ()=>{
@@ -17,6 +17,11 @@ macro_rules! assert_single_instance{
     }
 }
 
+macro_rules! hmir_exit {
+    () => {
+        process::exit(1);
+    };
+}
 
 fn log_init ()
 {
@@ -30,13 +35,40 @@ fn log_init ()
     }
 }
 
+
+
 fn main() -> anyhow::Result<()> {
+
+
 
     log_init();
     assert_single_instance!();
 
+    let mut app = App::new("hmir");
+    let mut matches = app.clone()
+        .version(constants::VERSION)
+        .author("duanwujie")
+        .about("Host management in rust")
+        .arg(Arg::with_name("ip")
+                 .short('h')
+                 .long("host")
+                 .takes_value(true)
+                 .help("The host ip address"))
+        .arg(Arg::with_name("port")
+            .short('p')
+            .long("port")
+            .takes_value(true)
+            .help("The port"))
+        .get_matches();
 
-    todo!()
+    let ip = matches.value_of("ip");
+    if ip == None {
+        app.print_help();
+        error!("Argument error with ip {:?}",ip);
+        hmir_exit!();
+    }
+
+    Ok(())
 
 
 }
