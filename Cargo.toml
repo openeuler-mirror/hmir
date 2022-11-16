@@ -13,4 +13,5 @@ description = "Host management in rust "
 anyhow = "1.0.66"
 single-instance = "0.3.3"
 constants = {path = "constants"}
-
+log4rs = "1.2.0"
+log = "0.4.17"
