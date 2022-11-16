@@ -1,3 +1,4 @@
+mod svr;
 
 extern crate single_instance;
 use single_instance::SingleInstance;
@@ -95,6 +96,8 @@ async fn run_ws_server(ip: &str , port : &str) -> anyhow::Result<(SocketAddr,WsS
 
     let server = WsServerBuilder::default().build(url.parse::<SocketAddr>()?).await?;
     let mut module = RpcModule::new(());
+
+    svr::register_method(& mut module);
 
     let addr = server.local_addr()?;
     let server_handle = server.start(module)?;
