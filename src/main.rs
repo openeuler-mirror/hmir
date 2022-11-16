@@ -1,5 +1,8 @@
 mod svr;
 
+#[macro_use]
+extern crate lazy_static;
+
 extern crate single_instance;
 use single_instance::SingleInstance;
 use std::process;
