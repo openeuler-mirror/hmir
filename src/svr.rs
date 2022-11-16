@@ -47,14 +47,26 @@ fn create_svrmg_thread()
 
 
 #[doc(hidden)]
-pub fn init_services_mg() -> bool {
+pub fn init_services_mg()  {
     create_svrmg_thread();
-    true
 }
 
 
+///
+/// service-all接口实现
+///
+/// 获取所有服务信息
+pub fn service_all() -> String {
+    let serialized = serde_json::to_string(&*SERVICE_MAP).unwrap();
+    serialized
+}
 
 pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
+
+    module.register_method("service-all", |_, _| {
+        //默认没有error就是成功的
+        Ok(service_all())
+    })?;
 
 
     Ok(())
