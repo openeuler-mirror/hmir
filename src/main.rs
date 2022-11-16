@@ -49,7 +49,7 @@ fn main() -> anyhow::Result<()> {
         .version(constants::VERSION)
         .author("duanwujie")
         .about("Host management in rust")
-        .arg(Arg::with_name("ip")
+        .arg(Arg::with_name("host")
                  .short('h')
                  .long("host")
                  .takes_value(true)
@@ -61,12 +61,23 @@ fn main() -> anyhow::Result<()> {
             .help("The port"))
         .get_matches();
 
-    let ip = matches.value_of("ip");
+    let ip = matches.value_of("host");
     if ip == None {
         app.print_help();
         error!("Argument error with ip {:?}",ip);
         hmir_exit!();
     }
+
+    let port = matches.value_of("port");
+    if port == None {
+        app.print_help();
+        error!("Argument error with ip {:?}",port);
+        hmir_exit!();
+    }
+
+    // println!("Bind Address : {:?}:{:?}",ip,port);
+
+
 
     Ok(())
 
