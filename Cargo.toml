@@ -11,5 +11,6 @@ description = "Host management in rust "
 
 [dependencies]
 anyhow = "1.0.66"
-
+single-instance = "0.3.3"
+constants = {path = "constants"}
 
