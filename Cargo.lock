@@ -541,6 +541,7 @@ dependencies = [
  "clap",
  "constants",
  "futures",
+ "hmir-hash",
  "jsonrpsee",
  "jsonrpsee-core",
  "jsonrpsee-types",
@@ -550,6 +551,10 @@ dependencies = [
  "tokio",
  "tokio-stream",
 ]
+
+[[package]]
+name = "hmir-hash"
+version = "0.1.0"
 
 [[package]]
 name = "http"
