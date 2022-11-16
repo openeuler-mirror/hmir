@@ -36,10 +36,8 @@ fn log_init ()
 }
 
 
-
-fn main() -> anyhow::Result<()> {
-
-
+#[tokio::main]
+async fn main() -> anyhow::Result<()> {
 
     log_init();
     assert_single_instance!();
@@ -77,6 +75,8 @@ fn main() -> anyhow::Result<()> {
 
     // println!("Bind Address : {:?}:{:?}",ip,port);
 
+    run_ws_server(ip.unwrap(),port.unwrap()).await?;
+
 
 
     Ok(())
@@ -84,6 +84,12 @@ fn main() -> anyhow::Result<()> {
 
 }
 
+
+async fn run_ws_server(ip: &str , port : &str) -> anyhow::Result<()> {
+
+    Ok(())
+
+}
 
 
 
