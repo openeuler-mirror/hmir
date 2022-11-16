@@ -18,3 +18,7 @@ log = "0.4.17"
 clap = "3.2.23"
 tokio = { version = "1.16", features = ["full"] }
 tokio-stream = { version = "0.1", features = ["sync"] }
+jsonrpsee = { version = "0.15.1", features = ["full"] }
+jsonrpsee-core = "0.15.1"
+jsonrpsee-types = "0.15.1"
+futures = "0.3"
