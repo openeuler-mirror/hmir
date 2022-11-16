@@ -9,11 +9,17 @@
 
 
 use std::collections::{HashMap};
+use serde::{Deserialize, Serialize};
 
+
+#[derive(Debug,Serialize,Deserialize)]
 pub struct HashWrap <V> {
     // #[serde(serialize_with ="ordered_map")]
     map: HashMap<String,V>
 }
+
+
+
 
 impl <V> HashWrap<V> {
     pub fn new() -> Self {
@@ -64,6 +70,5 @@ mod tests {
         assert_eq!(key2, 2);
         let key3 = m.get(& "key3".to_string()).unwrap().clone();
         assert_eq!(key3, 3);
-
     }
 }
