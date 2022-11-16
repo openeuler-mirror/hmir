@@ -1,0 +1,15 @@
+[package]
+name = "hmir"
+version = "0.1.0"
+edition = "2021"
+authors = ["Wujie Duan <dev17001@linx-info.com>"]
+license = "Apache-2.0"
+repository = "https://gitee.com/openeuler/hmir"
+homepage = "https://gitee.com/openeuler/hmir"
+description = "Host management in rust "
+
+
+[dependencies]
+anyhow = "1.0.66"
+
+

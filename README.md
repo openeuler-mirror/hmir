@@ -1,4 +1,4 @@
-# hmir
+# HMIR
 
 #### 介绍
 Host management in rust
@@ -9,15 +9,14 @@ Host management in rust
 
 #### 安装教程
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+1.  make install
 
 #### 使用说明
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+1. 默认安装在 ~/.cargo/bin/目录下
+2. 运行 sudo ~/.cargo/bin/hmir
+3. 当前默认监听地址: 127.0.0.1:8080地址
+4. 可通过 ws://127.0.0.1:8080 发送websocket请求
 
 #### 参与贡献
 
