@@ -23,3 +23,8 @@ jsonrpsee-core = "0.15.1"
 jsonrpsee-types = "0.15.1"
 futures = "0.3"
 hmir-hash = {path = "hmir-hash" }
+
+
+[[test]]
+name = "integration"
+path = "tests/tests.rs"

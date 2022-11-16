@@ -3,7 +3,7 @@
 //! Example
 //!
 //! ```
-//!  let m  = HashWrap::<int>:: new();
+//!  let m  = HashWrap::<u32>:: new();
 //! ```
 //!
 
@@ -45,3 +45,25 @@ impl <V> HashWrap<V> {
     }
 }
 
+
+#[cfg(test)]
+mod tests {
+
+    use super::*;
+
+    #[test]
+    fn hash_it_works() {
+        let mut m  = HashWrap::<u32>:: new();
+        m.insert("key1".to_string(),1);
+        m.insert("key2".to_string(),2);
+        m.insert("key3".to_string(),3);
+
+        let key1 = m.get(& "key1".to_string()).unwrap().clone();
+        assert_eq!(key1, 1);
+        let key2 = m.get(& "key2".to_string()).unwrap().clone();
+        assert_eq!(key2, 2);
+        let key3 = m.get(& "key3".to_string()).unwrap().clone();
+        assert_eq!(key3, 3);
+
+    }
+}
