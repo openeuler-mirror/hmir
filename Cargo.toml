@@ -22,7 +22,10 @@ jsonrpsee = { version = "0.15.1", features = ["full"] }
 jsonrpsee-core = "0.15.1"
 jsonrpsee-types = "0.15.1"
 futures = "0.3"
+lazy_static = "1.4.0"
+
 hmir-hash = {path = "hmir-hash" }
+hmir-systemd = {path = "hmir-systemd" }
 
 
 [[test]]

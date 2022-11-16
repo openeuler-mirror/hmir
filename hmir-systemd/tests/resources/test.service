@@ -1,0 +1,16 @@
+[Unit]
+Description=test service
+After=
+
+[Service]
+WorkingDirectory=/path/to/directory
+User=guest
+Group=guest
+Environment="FOO=foo"
+Environment="BAR=bar"
+ExecStart=/bin/echo aloha
+Restart=no
+RestartSec=100ms
+
+[Install]
+WantedBy=multi-user.target
