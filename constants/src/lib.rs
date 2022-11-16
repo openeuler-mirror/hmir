@@ -10,4 +10,7 @@ mod tests {
 
 pub mod constants {
     pub static LOCKFILE: &'static str = "/var/run/hmir/hmir.lock";
+    pub static VERSION: &'static str = "0.1.0";
+
+
 }
