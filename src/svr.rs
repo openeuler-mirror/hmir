@@ -61,6 +61,22 @@ pub fn service_all() -> String {
     serialized
 }
 
+///
+/// service-status接口实现
+///
+/// 获取指定服务信息
+pub fn service_status(service: std::string::String) -> String
+{
+    let mut  result = HashWrap::new();
+    if SERVICE_MAP.read().unwrap().contains_key(&service) {
+        let value = SERVICE_MAP.read().unwrap().get(&service).unwrap().clone();
+        result.insert(service,value);
+    }
+    let serialized = serde_json::to_string(&result).unwrap();
+    serialized
+
+}
+
 pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
 
     module.register_method("service-all", |_, _| {
@@ -68,6 +84,10 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
         Ok(service_all())
     })?;
 
+    module.register_method("service-status", |params, _| {
+        let service = params.one::<std::string::String>()?;
+        Ok(service_status(service))
+    })?;
 
     Ok(())
 }
