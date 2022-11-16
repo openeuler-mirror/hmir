@@ -608,6 +608,7 @@ dependencies = [
  "lazy_static",
  "log",
  "log4rs",
+ "serde_json",
  "single-instance",
  "tokio",
  "tokio-stream",

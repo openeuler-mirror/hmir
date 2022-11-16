@@ -2,6 +2,9 @@
 build: 
 	cargo build --release
 
+debug:
+	cargo build
+
 .PHONY: install
 install:
 	cargo install --locked --path .
