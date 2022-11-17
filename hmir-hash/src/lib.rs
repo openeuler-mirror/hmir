@@ -9,44 +9,45 @@
 
 
 use std::collections::{HashMap};
+use std::hash::Hash;
 use serde::{Deserialize, Serialize};
 
 
 #[derive(Debug,Serialize,Deserialize)]
-pub struct HashWrap <V> {
+pub struct HashWrap <K: Eq+Hash ,V> {
     // #[serde(serialize_with ="ordered_map")]
-    map: HashMap<String,V>
+    map: HashMap<K,V>
 }
 
 
 
 
-impl <V> HashWrap<V> {
+impl <K,V> HashWrap<K,V> where K: Eq + Hash {
     pub fn new() -> Self {
         HashWrap {
             map: HashMap::new()
         }
     }
 
-    pub fn map<R>(&self, key: String, f: impl FnOnce(&V) -> R) -> Option<R> {
+    pub fn map<R>(&self, key: K, f: impl FnOnce(&V) -> R) -> Option<R> {
         self.map.get(&key).map(f)
     }
 
-    pub fn map_mut<R>(&mut self, key: String, f: impl FnOnce(&mut V) -> R) -> Option<R> {
+    pub fn map_mut<R>(&mut self, key: K, f: impl FnOnce(&mut V) -> R) -> Option<R> {
         self.map.get_mut(&key).map(f)
     }
 
-    pub fn get(&self, key:& String) -> Option<&V> {
+    pub fn get(&self, key:& K) -> Option<&V> {
         self.map.get(key)
     }
 
 
-    pub fn insert(&mut self, key: String, value: V) {
+    pub fn insert(&mut self, key: K, value: V) {
         // You're taking `value` by value here, so you don't need to clone it.
         self.map.insert(key, value/*.clone()*/);
     }
 
-    pub fn contains_key(&self, k: &String) -> bool {
+    pub fn contains_key(&self, k: &K) -> bool {
         self.map.contains_key(k)
     }
 }

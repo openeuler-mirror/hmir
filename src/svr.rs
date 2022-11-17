@@ -89,8 +89,8 @@ use hmir_systemd::{
 
 
 lazy_static! {
-    static ref SERVICE_MAP : RwLock<HashWrap<Unit>> = {
-        let m  = HashWrap::<Unit>:: new();
+    static ref SERVICE_MAP : RwLock<HashWrap<String,Unit>> = {
+        let m  = HashWrap::<String,Unit>:: new();
         RwLock::new(m)
     };
 }
