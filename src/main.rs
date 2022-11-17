@@ -1,4 +1,10 @@
 mod svr;
+mod ceph;
+mod ipmi;
+mod net;
+mod pkg;
+mod proc;
+
 
 #[macro_use]
 extern crate lazy_static;
@@ -106,6 +112,10 @@ async fn run_ws_server(ip: &str , port : &str) -> anyhow::Result<(SocketAddr,WsS
     let mut module = RpcModule::new(());
 
     svr::register_method(& mut module);
+    pkg::register_method(& mut module);
+    ipmi::register_method(& mut module);
+    net::register_method(& mut module);
+    proc::register_method(& mut module);
 
     let addr = server.local_addr()?;
     let server_handle = server.start(module)?;
