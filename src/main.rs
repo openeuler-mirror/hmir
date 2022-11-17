@@ -4,6 +4,7 @@ mod ipmi;
 mod net;
 mod pkg;
 mod proc;
+mod kernel;
 
 
 #[macro_use]
@@ -116,6 +117,7 @@ async fn run_ws_server(ip: &str , port : &str) -> anyhow::Result<(SocketAddr,WsS
     ipmi::register_method(& mut module);
     net::register_method(& mut module);
     proc::register_method(& mut module);
+    kernel::register_method(& mut module);
 
     let addr = server.local_addr()?;
     let server_handle = server.start(module)?;
