@@ -77,16 +77,121 @@ pub fn service_status(service: std::string::String) -> String
 
 }
 
+///
+/// service-stop接口实现
+///
+/// 停止指定服务
+pub fn service_stop(service: std::string::String) -> String {
+    let client = build_blocking_client(SystemdObjectType::Manager).unwrap();
+    let result = client.stop_unit(service.as_str(), "replace");
+    match result {
+        Ok(path) => String::from("Ok"),
+        Err(e) => String::from(e.name().unwrap())
+    }
+}
+
+
+///
+/// service-start接口实现
+///
+/// 启动指定服务
+pub fn service_start(service: std::string::String) -> String {
+    let client = build_blocking_client(SystemdObjectType::Manager).unwrap();
+    let result = client.start_unit(service.as_str(), "replace");
+    match result {
+        Ok(path) => String::from("Ok"),
+        Err(e) => String::from(e.name().unwrap())
+    }
+}
+
+
+///
+/// service-restart接口实现
+///
+/// 重启指定服务
+pub fn service_restart(service: std::string::String) -> String {
+    let client = build_blocking_client(SystemdObjectType::Manager).unwrap();
+    let result = client.restart_unit(service.as_str(), "replace");
+    match result {
+        Ok(path) => String::from("Ok"),
+        Err(e) => String::from(e.name().unwrap())
+    }
+}
+
+///
+/// service-disable接口实现
+///
+/// disable指定服务
+pub fn service_disable(service: std::string::String) -> String {
+    // let client = build_blocking_client(SystemdObjectType::Manager).unwrap();
+    // let result = client.disable_unit(service.as_str(), "replace");
+    // match result {
+    //     Ok(path) => String::from("Ok"),
+    //     Err(e) => String::from(e.name().unwrap())
+    // }
+    todo!();
+}
+
+
+///
+/// service-enable接口实现
+///
+/// enable指定服务
+pub fn service_enable(service: std::string::String) -> String {
+    // let client = build_blocking_client(SystemdObjectType::Manager).unwrap();
+    // let result = client.enable_unit(service.as_str(), "replace");
+    // match result {
+    //     Ok(path) => String::from("Ok"),
+    //     Err(e) => String::from(e.name().unwrap())
+    // }
+    todo!();
+}
+
+
 pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
+
+    //The svr module
 
     module.register_method("service-all", |_, _| {
         //默认没有error就是成功的
         Ok(service_all())
     })?;
 
+
     module.register_method("service-status", |params, _| {
         let service = params.one::<std::string::String>()?;
         Ok(service_status(service))
+    })?;
+
+
+    module.register_method("service-start", |params, _| {
+        //默认没有error就是成功的
+        let service = params.one::<std::string::String>()?;
+        Ok(service_start(service))
+    })?;
+
+    module.register_method("service-stop", |params, _| {
+        //默认没有error就是成功的
+        let service = params.one::<std::string::String>()?;
+        Ok(service_stop(service))
+    })?;
+
+    module.register_method("service-restart", |params, _| {
+        //默认没有error就是成功的
+        let service = params.one::<std::string::String>()?;
+        Ok(service_restart(service))
+    })?;
+
+    module.register_method("service-disable", |params, _| {
+        //默认没有error就是成功的
+        let service = params.one::<std::string::String>()?;
+        Ok(service_disable(service))
+    })?;
+
+    module.register_method("service-enable", |params, _| {
+        //默认没有error就是成功的
+        let service = params.one::<std::string::String>()?;
+        Ok(service_enable(service))
     })?;
 
     Ok(())
