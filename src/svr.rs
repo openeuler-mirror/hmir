@@ -1,3 +1,78 @@
+//! 服务管理模块
+//!
+//! 支持以下的请求
+//! - service-status : 查询指定服务状态
+//!
+//! 请求格式:
+//! ```
+//! {
+//!    "jsonrpc":"2.0",
+//!    "id":1,
+//!    "method":"service-status",
+//!    "params":["collectl.service"]
+//! }
+//! ```
+//! 响应格式:
+//!
+//! ```
+//! {
+//!      "jsonrpc": "2.0",
+//!      "result": "{\"map\":{\"collectl.service\":{\"name\":\"collectl.service\",\"description\":\"LSB: Collectl monitors system performance.\",\"load_state\":\"Loaded\",\"active_state\":\"Inactive\",\"sub_state\":\"Dead\",\"follow_unit\":null,\"object_path\":\"/org/freedesktop/systemd1/unit/collectl_2eservice\",\"job_id\":0,\"job_ty\":\"\",\"job_object_path\":\"/\"}}}",
+//!      "id": 1
+//! }
+//! ```
+//! result字段以字符串的形式存放了返回的json结果。
+//! 下面是result字符串以json格式化的结果:
+//! ```
+//! {
+//!     "map":{
+//!         "collectl.service":{
+//!             "name":"collectl.service",
+//!             "description":"LSB: Collectl monitors system performance.",
+//!             "load_state":"Loaded",
+//!             "active_state":"Inactive",
+//!             "sub_state":"Dead",
+//!             "follow_unit":null,
+//!             "object_path":"/org/freedesktop/systemd1/unit/collectl_2eservice",
+//!             "job_id":0,
+//!             "job_ty":"",
+//!             "job_object_path":"/"
+//!         }
+//!     }
+//! }
+//!```
+//!  - service-all : 查询所有服务状态
+//!
+//! 请求格式:
+//! ```
+//! {
+//!    "jsonrpc":"2.0",
+//!    "id":1,
+//!    "method":"service-all"
+//! }
+//! ```
+//!  - service-stop : 停止指定服务
+//!
+//! 请求格式:
+//! ```
+//! {
+//!    "jsonrpc":"2.0",
+//!    "id":1,
+//!    "method":"service-stop",
+//!    "params":["collectl.service"]
+//! }
+//! ```
+//!  - service-start : 启动指定服务
+//!
+//! 请求格式:
+//! ```
+//! {
+//!    "jsonrpc":"2.0",
+//!    "id":1,
+//!    "method":"service-start",
+//!    "params":["collectl.service"]
+//! }
+//! ```
 
 use jsonrpsee::ws_server::{RpcModule, WsServerBuilder,WsServerHandle};
 use std::sync::RwLock;
@@ -14,8 +89,8 @@ use hmir_systemd::{
 
 
 lazy_static! {
-    static ref SERVICE_MAP : RwLock<HashWrap<Unit>> = {
-        let m  = HashWrap::<Unit>:: new();
+    static ref SERVICE_MAP : RwLock<HashWrap<String,Unit>> = {
+        let m  = HashWrap::<String,Unit>:: new();
         RwLock::new(m)
     };
 }
