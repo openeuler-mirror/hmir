@@ -39,6 +39,7 @@
 #include <ipmitool/ipmi_sensor.h>
 #include <ipmitool/ipmi_sel.h>  /* for IPMI_OEM */
 #include <ipmitool/log.h>
+#include <config.h>
 
 /*
  * These are put at the head so they are found first because they
@@ -1490,9 +1491,6 @@ size_t count_bytes(const char *s, unsigned char c)
  */
 #define IANA_NAME_OFFSET 2
 #define IANA_PEN_REGISTRY "enterprise-numbers"
-#define PATH_SEPARATOR ":"
-#define IANADIR "/usr/local/share/misc"
-#define IANAUSERDIR ".local/usr/share/misc"
 
 static
 int oem_info_list_load(oem_valstr_list_t **list)
