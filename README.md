@@ -6,6 +6,12 @@ Host management in rust
 #### 软件架构
 软件架构说明
 
+- src/main.rs : 主框架,实现ws的RPC框架
+- src/xxxx.rs : 接口模块，每个模块暴露 register_method，完成模块的rpc接口注册
+- hmir-xxx: 这些Crate和主机底层交互，由于当前rust处于发展阶段，很多Rust Crate还不够成熟，
+  或者缺少对应的库，因此这里会使用bindgen技术，对C库进行bind和封装，提供给src/xxxx.rs调用。
+
+
 
 #### 安装教程
 
