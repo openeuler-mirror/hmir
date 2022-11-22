@@ -11,6 +11,7 @@ use std::os::unix::net::UnixStream;
 use std::io::prelude::*;
 use std::net::Shutdown;
 use std::string::FromUtf8Error;
+use hmir_hash::HashWrap;
 
 
 fn u8v_to_string(v : Vec<u8>) -> Result<String, FromUtf8Error>{
@@ -203,8 +204,38 @@ impl OvsClient{
     
 }
 
-pub fn check_connection() {
-    println!("check_connection");
+#[derive(Clone, Serialize, Deserialize)]
+struct ConnectInfo {
+    message: String,
+}
+
+pub fn check_connection() -> std::string::String{
+    let ovsc = OvsClient::new();
+    match ovsc{
+        Err(e) => {
+            let ret_info = ConnectInfo {
+                message: e.error_detail.clone(),
+            };
+            let ret_message = serde_json::to_string(&ret_info).unwrap();
+            ret_message
+        },
+        Ok(mut c) => {
+            let is_connected = c.check_connection();
+            if is_connected {
+                let ret_info = ConnectInfo {
+                    message: "Done".to_string(),
+                };
+                let ret_message = serde_json::to_string(&ret_info).unwrap();
+                ret_message
+            } else {
+                let ret_info = ConnectInfo {
+                    message: "Failure".to_string(),
+                };
+                let ret_message = serde_json::to_string(&ret_info).unwrap();
+                ret_message
+            }
+        }      
+    }    
 }
 
 pub fn get_ports() {
@@ -227,18 +258,18 @@ pub fn get_ports() {
     }
 }
 
-pub fn get_bridges() {
+pub fn get_bridges() -> std::string::String {
     todo!()
 }
 
-pub fn add_port() {
+pub fn add_port() -> std::string::String {
     todo!()
 }
 
 #[doc(hidden)]
 pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
 
-   module.register_method("check-connetion", |_, _| {
+   module.register_method("check-connection", |_, _| {
         Ok(check_connection())
     })?;
 
