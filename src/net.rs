@@ -11,8 +11,6 @@ use std::os::unix::net::UnixStream;
 use std::io::prelude::*;
 use std::net::Shutdown;
 use std::string::FromUtf8Error;
-use hmir_hash::HashWrap;
-
 
 fn u8v_to_string(v : Vec<u8>) -> Result<String, FromUtf8Error>{
     String::from_utf8(v)
@@ -205,7 +203,7 @@ impl OvsClient{
 }
 
 #[derive(Clone, Serialize, Deserialize)]
-struct ConnectInfo {
+struct RetInfo {
     message: String,
 }
 
@@ -213,7 +211,7 @@ pub fn check_connection() -> std::string::String{
     let ovsc = OvsClient::new();
     match ovsc{
         Err(e) => {
-            let ret_info = ConnectInfo {
+            let ret_info = RetInfo {
                 message: e.error_detail.clone(),
             };
             let ret_message = serde_json::to_string(&ret_info).unwrap();
@@ -222,13 +220,13 @@ pub fn check_connection() -> std::string::String{
         Ok(mut c) => {
             let is_connected = c.check_connection();
             if is_connected {
-                let ret_info = ConnectInfo {
+                let ret_info = RetInfo {
                     message: "Done".to_string(),
                 };
                 let ret_message = serde_json::to_string(&ret_info).unwrap();
                 ret_message
             } else {
-                let ret_info = ConnectInfo {
+                let ret_info = RetInfo {
                     message: "Failure".to_string(),
                 };
                 let ret_message = serde_json::to_string(&ret_info).unwrap();
@@ -238,21 +236,34 @@ pub fn check_connection() -> std::string::String{
     }    
 }
 
-pub fn get_ports() {
+pub fn get_ports() -> std::string::String{
     let ovsc = OvsClient::new();
     match ovsc{
-        Err(e) => println!("{}", e),
+        Err(e) => {
+            let ret_info = RetInfo {
+                message: e.error_detail.clone(),
+            };
+            let ret_message = serde_json::to_string(&ret_info).unwrap();
+            ret_message
+        },
         Ok(mut c)=>{
             let ports = c.get_ports();
             match ports{
                 Ok(ports) =>{
                     println!("number of port : {0}", ports.len());
+                    let mut ret_message  =  "".to_string();
                     for port in ports{
-                        //println!("{0} : {1}", port.name, port.uuid);
-                        println!("{}", serde_json::to_string(&port).unwrap());
+                        //ret_message = serde_json::to_string(&port).unwrap();
                     }
+                    ret_message    
                 },
-                Err(e) => println!("{}", e)
+                Err(e) => {
+                    let ret_info = RetInfo {
+                        message: e.error_detail.clone(),
+                    };
+                    let ret_message = serde_json::to_string(&ret_info).unwrap();
+                    ret_message
+                }
             }
         }
     }
