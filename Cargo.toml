@@ -29,6 +29,7 @@ procfs = "0.14.1"
 
 hmir-hash = {path = "hmir-hash" }
 hmir-systemd = {path = "hmir-systemd" }
+uuid = { version = "0.7", features = ["v4"] }
 
 
 [[test]]
