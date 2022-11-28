@@ -7,6 +7,16 @@ fn build_lib() {
 
 
     cc::Build::new()
+        .flag("-Wno-sign-compare")
+        .flag("-Wno-unused-variable")
+        .flag("-Wno-pointer-sign")
+        .flag("-Wno-implicit-fallthrough")
+        .flag("-Wno-unused-parameter")
+        .flag("-Wno-tautological-compare")
+        .flag("-Wno-type-limits")
+        .flag("-Wno-unused-function")
+        .flag("-Wno-format-extra-args")
+        .flag("-Wno-format")
         .file("src/ipmi/ipmitool.c")
         .file("src/ipmi/dimm_spd.c")
         .file("src/ipmi/helper.c")
@@ -86,6 +96,8 @@ fn gen_bind() {
         // Invalidate the built crate whenever any of the included header files changed.
         .parse_callbacks(Box::new(bindgen::CargoCallbacks))
         .allowlist_function("ipmi.*")
+        .allowlist_function("picmg.*")
+        .allowlist_function("vita_.*")
         // Finish the builder and generate the bindings.
         .generate()
         .expect("Unable to generate bindings");
@@ -101,5 +113,5 @@ fn gen_bind() {
 fn main()
 {
     build_lib();
-    //gen_bind();
+    // gen_bind();
 }
