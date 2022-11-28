@@ -27,5 +27,10 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
         Ok(ovs::add_port(port_info))
     })?;
 
+    module.register_method("ovs-del-port", |params, _| {
+        let port_info = params.parse::<HashMap<String, String>>()?;
+        Ok(ovs::del_port(port_info))
+    })?;
+
     Ok(())
 }

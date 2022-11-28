@@ -28,6 +28,7 @@
 //!     "method":"ovs-get-bridges" 
 //! }
 //!  ```
+//! 
 //! 响应格式：
 //! ```
 //! {
@@ -36,7 +37,8 @@
 //!    "id":1
 //! }
 //! ```
-//!  //! - ovs-get-ports： 查询ovs端口信息
+//! 
+//!  - ovs-get-ports： 查询ovs端口信息
 //! 请求格式：
 //!  ```
 //! { 
@@ -45,6 +47,7 @@
 //!     "method":"ovs-get-ports" 
 //! }
 //!  ```
+//! 
 //! 响应格式：
 //! ```
 //! {
@@ -73,7 +76,24 @@
 //! }
 //! ```
 //! 
-
+//! - ovs-del-port： ovs网桥中删除端口
+//! 请求格式：
+//!  ```
+//! { 
+//!     "jsonrpc":"2.0", 
+//!     "id":1, 
+//!     "method":"ovs-del-port"
+//!     "params":{"br_name":"br-br0","port_name":"ens4"}
+//! }
+//!  ```
+//! 响应模式：
+//! ```
+//! {
+//!     "jsonrpc":"2.0",
+//!     "result":"{\"error\":null,\"id\":2,\"result\":[{\"count\":1},{\"count\":1},{\"count\":1}]}",
+//!     "id":1,
+//! }
+//! ```
 
 
 use std::collections::HashMap;
@@ -465,6 +485,83 @@ impl OvsClient{
         self.send_msg(query)
     }
 
+    fn del_port(&mut self, bridge_name:&str, port_name: &str) -> Result<serde_json::Value, OvsError>{
+        let mut port_list:Vec<Vec<String>> = Vec::new();        
+        let target_bridge = match self.get_bridge(bridge_name){
+            None=>{
+                return Err(
+                        OvsError::new(
+                        OvsErrorType::InconsistentInstruction,
+                        &format!("Bridge is not found. ({})", bridge_name)
+                    )
+                )
+            },
+            Some(b) =>{
+                println!("{}", serde_json::to_string(&b).unwrap());
+                for p in &b.ports{
+                    if p.name != port_name {
+                        port_list.push(vec!("uuid".to_string(), p.uuid.clone()));
+                    }
+                }
+                println!("{}", serde_json::to_string(&port_list).unwrap());
+                b
+            }
+        };
+
+        let mut query = json!({
+            "method":"transact",
+            "params":[
+                "Open_vSwitch",
+                {
+                    "op" : "delete",
+                    "table" : "Interface",
+                    "where": [
+                        [
+                            "name",
+                            "==",
+                            port_name
+                        ]
+                    ]
+                },
+                {
+                    "op" : "delete",
+                    "table" : "Port",
+                    "where": [
+                        [
+                            "name",
+                            "==",
+                            port_name   
+                        ]
+                    ]
+                },
+                {
+                    "where": [
+                        [
+                            "_uuid",
+                            "==",
+                            [
+                                "uuid",
+                                target_bridge.uuid
+                            ]
+                        ]
+                    ],
+                    "row": {
+                        "ports": [
+                            "set",
+                            port_list
+                        ]
+                    },
+                    "op": "update",
+                    "table": "Bridge"
+                },
+            ],
+            "id":self.transaction_id
+        });
+        
+        println!("query_message:{}", query);
+        self.send_msg(query)
+    }
+
     fn get_bridge(&mut self, bridge_name:&str) -> Option<OvsBridge>{
         let bridges = self.get_bridges().unwrap();
         
@@ -667,4 +764,37 @@ pub fn add_port(info_map : HashMap<String, String>) -> std::string::String {
             }
         }
     }
+}
+
+pub fn del_port(info_map : HashMap<String, String>) -> std::string::String {
+    let ovsc = OvsClient::new();
+    match ovsc{
+        Err(e) => {
+            let ret_info = RetInfo {
+                message: e.error_detail.clone(),
+            };
+            let ret_message = serde_json::to_string(&ret_info).unwrap();
+            ret_message
+        },
+        Ok(mut c)=>{
+            let br_name = info_map.get("br_name").unwrap();
+            let port_name = info_map.get("port_name").unwrap();
+            println!("br_name:{},port_name:{}", br_name, port_name);
+            let add_result = c.del_port(br_name, port_name);
+            match add_result {
+                Ok(add_result) =>{
+                    let ret_message = json!(add_result).to_string();
+                    ret_message 
+                },
+                Err(e) => {
+                    let ret_info = RetInfo {
+                        message: e.error_detail.clone(),
+                    };
+                    let ret_message = serde_json::to_string(&ret_info).unwrap();
+                    ret_message
+                }
+            }
+        }
+    }
+
 }
