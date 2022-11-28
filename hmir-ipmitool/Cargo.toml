@@ -15,4 +15,4 @@ bindgen = "0.61"
 system-deps = "6.0"
 
 
-#[package.metadata.system-deps]
+[package.metadata.system-deps]

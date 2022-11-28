@@ -3971,7 +3971,11 @@ extern "C" { pub fn ipmi_pef_print_str(text: *const ::std::os::raw::c_char, val:
 
 extern "C" { pub fn ipmi_pef_main(intf: *mut ipmi_intf, argc: ::std::os::raw::c_int, argv: *mut *mut ::std::os::raw::c_char) -> ::std::os::raw::c_int; }
 
+extern "C" { pub fn picmg_led_color_str(color: ::std::os::raw::c_int) -> *const ::std::os::raw::c_char; }
+
 extern "C" { pub fn ipmi_picmg_main(intf: *mut ipmi_intf, argc: ::std::os::raw::c_int, argv: *mut *mut ::std::os::raw::c_char) -> ::std::os::raw::c_int; }
+
+extern "C" { pub fn picmg_discover(intf: *mut ipmi_intf) -> u8; }
 
 extern "C" { pub fn ipmi_picmg_ipmb_address(intf: *mut ipmi_intf) -> u8; }
 
@@ -4227,6 +4231,8 @@ extern "C" { pub fn ipmi_sunoem_main(arg1: *mut ipmi_intf, arg2: ::std::os::raw:
 extern "C" { pub fn ipmi_tsol_main(arg1: *mut ipmi_intf, arg2: ::std::os::raw::c_int, arg3: *mut *mut ::std::os::raw::c_char) -> ::std::os::raw::c_int; }
 
 extern "C" { pub fn ipmi_user_main(arg1: *mut ipmi_intf, arg2: ::std::os::raw::c_int, arg3: *mut *mut ::std::os::raw::c_char) -> ::std::os::raw::c_int; }
+
+extern "C" { pub fn vita_discover(intf: *mut ipmi_intf) -> u8; }
 
 extern "C" { pub fn ipmi_vita_ipmb_address(intf: *mut ipmi_intf) -> u8; }
 
