@@ -59,7 +59,7 @@
 //! { 
 //!     "jsonrpc":"2.0", 
 //!     "id":1, 
-//!     "method":"ovs-add-ports"
+//!     "method":"ovs-add-port"
 //!      "params":{"br_name":"br-br0","port_name":"ens4", "vlan_id":"100"}
 //! }
 //!  ```
