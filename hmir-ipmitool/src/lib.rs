@@ -140,6 +140,7 @@ pub fn hmir_ipmi_sensor_list() -> i32
         let intf = hmir_ipmi_intf_get();
         let itr = ipmi_sdr_start(intf, 0);
         if itr.is_null() {
+            println!("The ipmi_sdr_start is null");
             return -1;
         }
 
@@ -151,47 +152,19 @@ pub fn hmir_ipmi_sensor_list() -> i32
 
             let rec = ipmi_sdr_get_record(intf, header, itr);
             if rec.is_null() {
-                let header = ipmi_sdr_get_next_header(intf, itr);
+                println!("the ipmi_sdr_get_record is null");
                 continue;
             }
 
-            let sdr_record_type = (*header).type_;
-            match sdr_record_type {
-                0x01 | 0x2 => {
-                    let sensor = rec as * mut sdr_record_common_sensor;
-
-                    let event_type = (*sensor).event_type;
-                    let mut thresh_available = 1;
-
-                    match event_type {
-                        1 => {
-                            let sr = ipmi_sdr_read_sensor_value(intf, sensor, sdr_record_type, 3);
-
-                            let thresh_status = "ns";
-
-                            let sensor_num = (*sensor).keys.sensor_num;
-                            let owner_id = (*sensor).keys.owner_id;
-                            let lun = (*sensor).keys._bitfield_1.get(0,2) as u8;
-                            let channel = (*sensor).keys._bitfield_1.get(4,4) as u8;
-                            // let thresh_status = ipmi_sdr_get_thresh_status(sr, "ns");
-
-                            let rsp = ipmi_sdr_get_sensor_thresholds(intf, sensor_num, owner_id, lun, channel);
-                            if (*rsp).ccode !=0  || (*rsp).data_len != 0 {
-                                thresh_available = 0;
-                            }
-                            // dump_sensor_fc_thredshold_csv(thresh_available, rsp, sr);
-
-                            println!("{:?}",*sr);
-
-                        },
-                        _ => {
-                            ipmi_sensor_print_fc_discrete();
-                        }
-                    }
-                },
-                _ => {  break ;}
+            // println!("The rec is : {:?}",rec);
+            let htype = (*header).type_;
+            match htype {
+                1 | 2 => {
+                    // ipmi_sensor_print_fc(intf,rec as * mut sdr_record_common_sensor,htype);
+                }
+                _ => {}
             }
-
+    
             //unsafe不进行所有权的检查，因此这里需要进行主动的释放
             libc::free(rec as *mut c_void);
         }
@@ -199,7 +172,6 @@ pub fn hmir_ipmi_sensor_list() -> i32
         hmir_ipmi_cleanup(intf);
     }
     0
-
 
 }
 
