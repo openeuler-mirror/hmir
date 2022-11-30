@@ -31,7 +31,7 @@ pub fn ipmi_acquire_ipmb_address(intf : * mut ipmi_intf) -> u8
 
 pub fn hmir_ipmi_intf_get() -> *mut ipmi_intf
 {
-    let mut name = CString::new("open").unwrap();
+    let name = CString::new("open").unwrap();
     let lookupbit = 0x10;	/* use name-only lookup by default */
     let sol_escape_char = '~';
     let devnum = 0;
@@ -129,13 +129,127 @@ pub fn ipmi_sensor_print_fc_discrete()
 }
 
 
+pub fn dump_sensor_fc_thredshold_csv(thresh_available : i32,
+    rsp : *mut ipmi_rs,sr : *mut sensor_reading)
+{
+    unsafe {
+        let s_a_units = CStr::from_ptr((*sr).s_a_units);
+        println!("{}", s_a_units.to_str().unwrap());
+    }
+}
+
+
+
+
+
+
+pub fn hmir_ipmi_sdr_get_unit_string(pct : bool, relation : u8,
+    base:u8, modifier:u8)
+{
+    
+
+
+}
+
+
+
+
+
+pub fn hmir_ipmi_sensor_print_fc_threshold(intf : * mut ipmi_intf,
+    sensor : * mut sdr_record_common_sensor,sdr_record_type : u8) ->i32
+{
+
+    unsafe {
+       
+        let thresh_available = 1;    
+        let sr : *mut sensor_reading = ipmi_sdr_read_sensor_value(intf, sensor, sdr_record_type, 3);
+
+        if sr.is_null() {
+            println!("The sr is null");
+            return -1;
+        }
+        // let s_id  = (*sr).s_id.as_ptr() as *mut i8;
+        let s_id = CStr::from_ptr((*sr).s_id.as_ptr());
+        println!("s_id:{},{:p}",String::from_utf8_lossy(s_id.to_bytes()).to_string(),(*sr).s_a_units);
+
+
+
+        // println!("{:?}",*sr);
+        //todo check sr is null
+    
+        // const char *thresh_status = ipmi_sdr_get_thresh_status(sr, "ns");
+        let thresh_status = "ns";
+        let sensor_num = (*sensor).keys.sensor_num;
+        let owner_id = (*sensor).keys.owner_id;
+        let lun = (*sensor).keys._bitfield_1.get(0,2) as u8;
+        let channel = (*sensor).keys._bitfield_1.get(4,4) as u8;
+
+        // println!("sensor_num: {},owner_id: {},lun:{},channel:{}",sensor_num,owner_id,lun,channel);
+    
+        /*
+        * Get sensor thresholds
+        */
+        let rsp = ipmi_sdr_get_sensor_thresholds(intf,sensor_num, owner_id,lun, channel);
+        // dump_sensor_fc_thredshold_csv(thresh_available, rsp, sr);
+
+    }
+
+
+	// if (!rsp || rsp->ccode || !rsp->data_len)
+	// 	thresh_available = 0;
+
+
+    
+	// return (sr->s_reading_valid ? 0 : -1 );
+    return 0;
+}
+
+
+
+pub fn hmir_ipmi_sensor_print_fc_discrete(intf : * mut ipmi_intf,
+    sensor : * mut sdr_record_common_sensor,sdr_record_type : u8) ->i32
+{
+    unsafe {
+        let sr = ipmi_sdr_read_sensor_value(intf, sensor, sdr_record_type, 3);
+        if sr.is_null() {
+            println!("The sr is null");
+            return -1;
+        }
+        let s_id = CStr::from_ptr((*sr).s_id.as_ptr());
+        println!("s_id:{},{:p}",String::from_utf8_lossy(s_id.to_bytes()).to_string(),(*sr).s_a_units);
+
+        
+    }
+
+    0
+
+}
+
+
+
+pub fn hmir_ipmi_sensor_print_fc(intf : *mut ipmi_intf,
+    sensor : *mut sdr_record_common_sensor,sdr_record_type : u8) ->i32
+{
+
+    unsafe {
+        let event_type = (*sensor).event_type;
+        match event_type {
+            1 => {
+                return hmir_ipmi_sensor_print_fc_threshold(intf, sensor, sdr_record_type);
+            }
+            _ => {
+                return hmir_ipmi_sensor_print_fc_discrete(intf, sensor, sdr_record_type);
+            }
+        }
+    }
+
+    0
+}
 
 
 
 pub fn hmir_ipmi_sensor_list() -> i32
 {
-    let mut name = CString::new("open").unwrap();
-
     unsafe {
         let intf = hmir_ipmi_intf_get();
         let itr = ipmi_sdr_start(intf, 0);
@@ -160,7 +274,7 @@ pub fn hmir_ipmi_sensor_list() -> i32
             let htype = (*header).type_;
             match htype {
                 1 | 2 => {
-                    // ipmi_sensor_print_fc(intf,rec as * mut sdr_record_common_sensor,htype);
+                    hmir_ipmi_sensor_print_fc(intf,rec as * mut sdr_record_common_sensor,htype);
                 }
                 _ => {}
             }

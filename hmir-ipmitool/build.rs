@@ -98,6 +98,7 @@ fn gen_bind() {
         .allowlist_function("ipmi.*")
         .allowlist_function("picmg.*")
         .allowlist_function("vita_.*")
+        .allowlist_function("sdr_*")
         // Finish the builder and generate the bindings.
         .generate()
         .expect("Unable to generate bindings");
@@ -113,5 +114,5 @@ fn gen_bind() {
 fn main()
 {
     build_lib();
-    // gen_bind();
+    //gen_bind();
 }
