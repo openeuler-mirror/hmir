@@ -287,14 +287,14 @@ ipmi_sdr_get_unit_string(bool pct, uint8_t relation,
 		}
 		break;
 	}
+
 	return unitstr;
 }
 
 /* sdr_sensor_has_analog_reading  -  Determine if sensor has an analog reading
  *
  */
-static int
-sdr_sensor_has_analog_reading(struct ipmi_intf *intf,
+int sdr_sensor_has_analog_reading(struct ipmi_intf *intf,
 			    struct sensor_reading *sr)
 {
 	/* Compact sensors can't return analog values so we false */
@@ -1611,12 +1611,14 @@ ipmi_sdr_read_sensor_value(struct ipmi_intf *intf,
 
 
 	if (!rsp) {
+		// printf("-------------------------step1 \n");
 		lprintf(LOG_DEBUG, "Error reading sensor %s (#%02x)",
 			sr.s_id, sensor->keys.sensor_num);
 		return &sr;
 	}
 
 	if (rsp->ccode) {
+		// printf("-------------------------step2 \n");
 		if ( !((sr.full    && rsp->ccode == 0xcb) ||
 		       (sr.compact && rsp->ccode == 0xcd)) ) {
 			lprintf(LOG_DEBUG,
@@ -1628,6 +1630,8 @@ ipmi_sdr_read_sensor_value(struct ipmi_intf *intf,
 	}
 
 	if (rsp->data_len < 2) {
+		// printf("-------------------------step3 \n");
+
 		/*
 		 * We must be returned both a value (data[0]), and the validity
 		 * of the value (data[1]), in order to correctly interpret
@@ -1647,6 +1651,8 @@ ipmi_sdr_read_sensor_value(struct ipmi_intf *intf,
 		sr.s_scanning_disabled = 1;
 		lprintf(LOG_DEBUG, "Sensor %s (#%02x) scanning disabled",
 			sr.s_id, sensor->keys.sensor_num);
+		// printf("-------------------------step4\n ");
+
 		return &sr;
 	}
 	if ( !sr.s_reading_unavailable ) {
@@ -1658,6 +1664,8 @@ ipmi_sdr_read_sensor_value(struct ipmi_intf *intf,
 	if (rsp->data_len > 3)
 		sr.s_data3   = rsp->data[3];
 	if (sdr_sensor_has_analog_reading(intf, &sr)) {
+		// printf("-------------------------step5\n ");
+
 		sr.s_has_analog_value = 1;
 		if (sr.s_reading_valid) {
 			sr.s_a_val = sdr_convert_sensor_reading(sr.full, sr.s_reading);
@@ -1667,6 +1675,7 @@ ipmi_sdr_read_sensor_value(struct ipmi_intf *intf,
 					   sr.full->cmn.unit.modifier,
 					   sr.full->cmn.unit.type.base,
 					   sr.full->cmn.unit.type.modifier);
+		// printf("------------the sr.s_a_units is : %s\n",sr.s_a_units);
 		snprintf(sr.s_a_str, sizeof(sr.s_a_str), "%.*f",
 			(sr.s_a_val == (int) sr.s_a_val) ? 0 :
 			precision, sr.s_a_val);
