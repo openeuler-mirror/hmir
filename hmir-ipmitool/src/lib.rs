@@ -7,7 +7,6 @@ include!("bindings.rs");
 
 
 
-use libc::printf;
 use std::ffi::CString;
 use core::ffi::c_void;
 use std::ffi::CStr;
@@ -129,29 +128,52 @@ pub fn ipmi_sensor_print_fc_discrete()
 }
 
 
-pub fn dump_sensor_fc_thredshold_csv(thresh_available : i32,
+pub fn print_thresh_setting(full : *mut sdr_record_full_sensor,
+                            thresh_is_avail:u8,setting:u8,field_sep : *const std::os::raw::c_char,
+                            analog_fmt : *const std::os::raw::c_char,
+                            discrete_fmt: *const std::os::raw::c_char,
+                            na_fmt : *const std::os::raw::c_char)
+{
+    // unsafe
+    // {
+    //     print!("%s", field_sep);
+    //     if (!thresh_is_avail) {
+    //         print!(na_fmt, "na");
+    //         return;
+    //     }
+    //     if (full && !UNITS_ARE_DISCRETE(&full->cmn)) {
+    //         print!(analog_fmt, sdr_convert_sensor_reading (full, setting));
+    //     } else {
+    //         print!(discrete_fmt, setting);
+    //     }
+    // }
+}
+
+pub fn hmir_dump_sensor_fc_thredshold_csv(thresh_available : i32,
     rsp : *mut ipmi_rs,sr : *mut sensor_reading)
 {
     unsafe {
+        let s_id = CStr::from_ptr((*sr).s_id.as_ptr());
         let s_a_units = CStr::from_ptr((*sr).s_a_units);
-        println!("{}", s_a_units.to_str().unwrap());
+        print!("{:<16}",String::from_utf8_lossy(s_id.to_bytes()).to_string());
+        if (*sr).s_reading_valid != 0 {
+            if (*sr).s_has_analog_value != 0 {
+                print!("|{:<10.3}|{:<10}|{:<6}", (*sr).s_a_val, s_a_units.to_str().unwrap(), "ns");
+            }else {
+                print!("|0x{:<8x}|{:<10}|{:<6}", (*sr).s_reading, s_a_units.to_str().unwrap(), "ns");
+            }
+        } else {
+            print!("|{:<10}|{:<10}|{:<6}", "na", s_a_units.to_str().unwrap(), "na");
+        }
+        if thresh_available !=0 && !(*sr).full.is_null() {
+            //todo here
+        } else {
+            print!("|{:<10}|{:<10}|{:<10}|{:<10}|{:<10}|{:<10}", "na", "na", "na", "na", "na", "na");
+        }
+
+        println!("");
     }
 }
-
-
-
-
-
-
-pub fn hmir_ipmi_sdr_get_unit_string(pct : bool, relation : u8,
-    base:u8, modifier:u8)
-{
-    
-
-
-}
-
-
 
 
 
@@ -160,23 +182,15 @@ pub fn hmir_ipmi_sensor_print_fc_threshold(intf : * mut ipmi_intf,
 {
 
     unsafe {
-       
-        let thresh_available = 1;    
+
+        let mut thresh_available = 1;
         let sr : *mut sensor_reading = ipmi_sdr_read_sensor_value(intf, sensor, sdr_record_type, 3);
 
         if sr.is_null() {
             println!("The sr is null");
             return -1;
         }
-        // let s_id  = (*sr).s_id.as_ptr() as *mut i8;
-        let s_id = CStr::from_ptr((*sr).s_id.as_ptr());
-        println!("s_id:{},{:p}",String::from_utf8_lossy(s_id.to_bytes()).to_string(),(*sr).s_a_units);
 
-
-
-        // println!("{:?}",*sr);
-        //todo check sr is null
-    
         // const char *thresh_status = ipmi_sdr_get_thresh_status(sr, "ns");
         let thresh_status = "ns";
         let sensor_num = (*sensor).keys.sensor_num;
@@ -190,16 +204,13 @@ pub fn hmir_ipmi_sensor_print_fc_threshold(intf : * mut ipmi_intf,
         * Get sensor thresholds
         */
         let rsp = ipmi_sdr_get_sensor_thresholds(intf,sensor_num, owner_id,lun, channel);
-        // dump_sensor_fc_thredshold_csv(thresh_available, rsp, sr);
+        if !rsp.is_null() || (*rsp).ccode !=0 || (*rsp).data_len !=0 {
+            thresh_available = 0;
+        }
 
+        hmir_dump_sensor_fc_thredshold_csv(thresh_available, rsp, sr);
     }
 
-
-	// if (!rsp || rsp->ccode || !rsp->data_len)
-	// 	thresh_available = 0;
-
-
-    
 	// return (sr->s_reading_valid ? 0 : -1 );
     return 0;
 }
@@ -216,7 +227,7 @@ pub fn hmir_ipmi_sensor_print_fc_discrete(intf : * mut ipmi_intf,
             return -1;
         }
         let s_id = CStr::from_ptr((*sr).s_id.as_ptr());
-        println!("s_id:{},{:p}",String::from_utf8_lossy(s_id.to_bytes()).to_string(),(*sr).s_a_units);
+        // println!("s_id:{},{:p}",String::from_utf8_lossy(s_id.to_bytes()).to_string(),(*sr).s_a_units);
 
         
     }
