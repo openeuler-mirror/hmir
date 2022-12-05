@@ -8361,7 +8361,8 @@ fn bindgen_test_layout_sdr_record_list() {
         )
     );
 }
-#[repr(C, packed)]
+// #[repr(C, packed)]
+#[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct sensor_reading {
     pub s_id: [::std::os::raw::c_char; 17usize],
