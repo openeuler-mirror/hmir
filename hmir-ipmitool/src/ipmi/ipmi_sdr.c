@@ -1611,14 +1611,14 @@ ipmi_sdr_read_sensor_value(struct ipmi_intf *intf,
 
 
 	if (!rsp) {
-		// printf("-------------------------step1 \n");
+//		 printf("-------------------------step1 \n");
 		lprintf(LOG_DEBUG, "Error reading sensor %s (#%02x)",
 			sr.s_id, sensor->keys.sensor_num);
 		return &sr;
 	}
 
 	if (rsp->ccode) {
-		// printf("-------------------------step2 \n");
+//		 printf("-------------------------step2 \n");
 		if ( !((sr.full    && rsp->ccode == 0xcb) ||
 		       (sr.compact && rsp->ccode == 0xcd)) ) {
 			lprintf(LOG_DEBUG,
@@ -1630,7 +1630,7 @@ ipmi_sdr_read_sensor_value(struct ipmi_intf *intf,
 	}
 
 	if (rsp->data_len < 2) {
-		// printf("-------------------------step3 \n");
+//		 printf("-------------------------step3 \n");
 
 		/*
 		 * We must be returned both a value (data[0]), and the validity
@@ -1651,7 +1651,7 @@ ipmi_sdr_read_sensor_value(struct ipmi_intf *intf,
 		sr.s_scanning_disabled = 1;
 		lprintf(LOG_DEBUG, "Sensor %s (#%02x) scanning disabled",
 			sr.s_id, sensor->keys.sensor_num);
-		// printf("-------------------------step4\n ");
+//		 printf("-------------------------step4\n ");
 
 		return &sr;
 	}
@@ -1671,6 +1671,7 @@ ipmi_sdr_read_sensor_value(struct ipmi_intf *intf,
 			sr.s_a_val = sdr_convert_sensor_reading(sr.full, sr.s_reading);
 		}
 		/* determine units string with possible modifiers */
+
 		sr.s_a_units = ipmi_sdr_get_unit_string(sr.full->cmn.unit.pct,
 					   sr.full->cmn.unit.modifier,
 					   sr.full->cmn.unit.type.base,
