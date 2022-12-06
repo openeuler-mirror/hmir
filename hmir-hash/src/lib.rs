@@ -47,6 +47,10 @@ impl <K,V> HashWrap<K,V> where K: Eq + Hash {
         self.map.insert(key, value/*.clone()*/);
     }
 
+    pub fn remove(&mut self , key : K) {
+        self.map.remove(&key);
+    }
+
     pub fn contains_key(&self, k: &K) -> bool {
         self.map.contains_key(k)
     }
