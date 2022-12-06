@@ -2,7 +2,7 @@
 //!
 //!
 
-use jsonrpsee::ws_server::{RpcModule, WsServerBuilder,WsServerHandle};
+use jsonrpsee::ws_server::{RpcModule};
 
 
 #[doc(hidden)]

@@ -74,7 +74,7 @@
 //! }
 //! ```
 
-use jsonrpsee::ws_server::{RpcModule, WsServerBuilder,WsServerHandle};
+use jsonrpsee::ws_server::{RpcModule};
 use std::sync::RwLock;
 use hmir_hash::HashWrap;
 use std::{thread, time};

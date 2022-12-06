@@ -3,7 +3,7 @@
 //!
 
 
-use jsonrpsee::ws_server::{RpcModule, WsServerBuilder,WsServerHandle};
+use jsonrpsee::ws_server::{RpcModule};
 
 use procfs;
 use serde::{Deserialize, Serialize};
