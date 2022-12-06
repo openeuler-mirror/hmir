@@ -2,8 +2,7 @@
 //!
 //!
 
-use jsonrpsee::ws_server::{RpcModule, WsServerBuilder,WsServerHandle};
-use procfs::KernelModule;
+use jsonrpsee::ws_server::{RpcModule};
 use hmir_hash::HashWrap;
 use serde::{Deserialize, Serialize};
 

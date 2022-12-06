@@ -1,6 +1,6 @@
 use crate::{path_to_string, Result};
 use dbus::arg;
-use serde::{Deserialize, Serialize};
+use serde::{Serialize};
 
 // systemctl --state=help
 #[derive(Clone, Debug, PartialEq,Serialize)]
