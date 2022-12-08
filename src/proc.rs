@@ -119,6 +119,12 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
         Ok(process_status(pid))
     })?;
 
+    module.register_method("process-kill", |params, _| {
+        //默认没有error就是成功的
+        let pid = params.one::<i32>()?;
+        Ok(process_kill(pid))
+    })?;
+
 
     Ok(())
 }
