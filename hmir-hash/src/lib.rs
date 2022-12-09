@@ -41,6 +41,7 @@ impl <K,V> HashWrap<K,V> where K: Eq + Hash {
         self.map.get(key)
     }
 
+    pub fn get_mut(&mut self, key: &K) -> Option<&mut V>  {self.map.get_mut(key)}
 
     pub fn insert(&mut self, key: K, value: V) {
         // You're taking `value` by value here, so you don't need to clone it.
