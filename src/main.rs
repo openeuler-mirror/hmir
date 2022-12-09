@@ -5,6 +5,7 @@ mod net;
 mod pkg;
 mod proc;
 mod kernel;
+mod observer;
 
 
 #[macro_use]
@@ -68,7 +69,7 @@ async fn main() -> anyhow::Result<()> {
         .author("duanwujie")
         .about("Host management in rust")
         .arg(Arg::with_name("host")
-                 .short('h')
+                 .short('x')
                  .long("host")
                  .takes_value(true)
                  .help("The host ip address"))
@@ -95,11 +96,7 @@ async fn main() -> anyhow::Result<()> {
 
     // println!("Bind Address : {:?}:{:?}",ip,port);
     let (server_addr, _handle) = run_ws_server(ip.unwrap(),port.unwrap()).await?;
-
-
-
     futures::future::pending().await
-
 
 }
 
@@ -118,6 +115,7 @@ async fn run_ws_server(ip: &str , port : &str) -> anyhow::Result<(SocketAddr,WsS
     net::register_method(& mut module);
     proc::register_method(& mut module);
     kernel::register_method(& mut module);
+    observer::register_method(& mut module);
 
     let addr = server.local_addr()?;
     let server_handle = server.start(module)?;
