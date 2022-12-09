@@ -1,13 +1,6 @@
-
-pub mod ovs_impl;
-pub mod ovs_error;
-pub mod ovs_bridge;
-pub mod ovs_port;
-pub mod ovs_client;
-pub mod ovs_vsctl;
-
 use jsonrpsee::ws_server::RpcModule;
 use std::collections::HashMap;
+use hmir_ovs::*;
 
 pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
     module.register_method("ovs-check-connection", |_, _| {
