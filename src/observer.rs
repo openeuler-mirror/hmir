@@ -54,8 +54,10 @@ struct ObserverMetric {
 }
 
 
+type m_handle_t = Arc<RwLock<HashWrap<u32,ObserverMetric>>>;
+
 lazy_static! {
-    static ref OBSERVER_MAP : Arc<RwLock<HashWrap<u32,ObserverMetric>>> = {
+    static ref OBSERVER_MAP : m_handle_t = {
         let m  = HashWrap::<u32,ObserverMetric>:: new();
         Arc::new(RwLock::new(m))
     };
@@ -69,8 +71,8 @@ pub fn do_nothing() -> std::string::String
 type callback = fn() -> std::string::String;
 
 
-fn get_observer_callback(obs_type : u32) -> callback {
-    match obs_type {
+fn get_observer_callback(obs_cmd : u32) -> callback {
+    match obs_cmd {
         SERVICE_STATUS => service_all,
         _ => do_nothing
     }
@@ -88,10 +90,38 @@ pub fn is_valid_obs_cmd(t : u32) -> bool {
 fn do_remote_post(result : & std::string::String , url : & std::string::String ){
 
 
-    
+
 
 }
 
+
+fn create_obs_thread(map_handle : m_handle_t, obs_cmd : u32)
+{
+    tokio::task::spawn(async move {
+        //运行在一个不阻塞的线程
+        let mut count = 0;
+        loop {
+            if let Some(o) = map_handle.read().unwrap().get(&obs_cmd) {
+                let url = o.url.clone();
+                let duration = o.duration;
+                let status = o.status;
+                let call:callback = o.callback;
+
+                if !status {
+                    map_handle.write().unwrap().remove(obs_cmd);
+                    break
+                }
+                if count == duration {
+                    let result = call();
+                    do_remote_post(&result,&url);
+                    count = 0;
+                }
+                tokio::time::sleep(time::Duration::from_secs(1));
+                count = count +1;
+            }
+        }
+    });
+}
 
 fn reg_observer(obs_param : &ObserverParam) -> std::string::String
 {
@@ -106,56 +136,35 @@ fn reg_observer(obs_param : &ObserverParam) -> std::string::String
             status : true
         };
 
-        let call:callback = metric.callback;
         let obs_cmd = metric.obs_cmd;
 
-
-        if OBSERVER_MAP.write().unwrap().contains_key(&obs_param.obs_cmd) {
-            //update the value
-            metric.status = OBSERVER_MAP.read().unwrap().get(&obs_cmd).unwrap().status;
-            OBSERVER_MAP.write().unwrap().remove(metric.obs_cmd);
-            OBSERVER_MAP.write().unwrap().insert(metric.obs_cmd,metric);
-
-        } else {
-            OBSERVER_MAP.write().unwrap().insert(metric.obs_cmd,metric);
-            let map_handle = OBSERVER_MAP.clone();
-
-            tokio::task::spawn(async move {
-                //运行在一个不阻塞的线程
-                loop {
-                    let url = map_handle.read().unwrap().get(&obs_cmd).unwrap().url.clone();
-                    let duration = map_handle.read().unwrap().get(&obs_cmd).unwrap().duration;
-                    let mut count = 0;
-                    if count == duration {
-                        let result = call();
-                        do_remote_post(&result,&url);
-                    }
-
-                    let status = map_handle.read().unwrap().get(&obs_cmd).unwrap().status;
-                    if !status {
-                        OBSERVER_MAP.write().unwrap().remove(obs_cmd);
-                        break
-                    }
-
-                    tokio::time::sleep(time::Duration::from_secs(1));
-                    count = count +1;
+        match  OBSERVER_MAP.read().unwrap().contains_key(&obs_cmd) {
+            true => {
+                if let Some(obs) = OBSERVER_MAP.write().unwrap().get_mut(&obs_cmd) {
+                    //just upgrade the duration and url
+                    obs.duration = metric.duration;
+                    obs.url = metric.url;
                 }
-            });
+            }
+            _ => {
+                OBSERVER_MAP.write().unwrap().insert(obs_cmd,metric);
+                let map_handle = OBSERVER_MAP.clone();
+                create_obs_thread(map_handle,obs_cmd);
+            }
         }
+
     }
     return string::String::from("Ok");
 }
 
-
-
-pub fn unregister_observer(obs_cmd : u32)
+pub fn unregister_observer(obs_cmd : u32) -> string::String
 {
     if OBSERVER_MAP.write().unwrap().contains_key(&obs_cmd) {
         if let Some(metric) = OBSERVER_MAP.write().unwrap().get_mut(&obs_cmd) {
             metric.status = false;
         }
     }
-
+    return string::String::from("Ok")
 }
 
 
