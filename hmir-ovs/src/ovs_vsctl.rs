@@ -7,7 +7,7 @@
 //! { 
 //!     "jsonrpc":"2.0", 
 //!     "id":1, 
-//!     "method":"ovs-add-br" 
+//!     "method":"ovs-add-br" ,
 //!     "params": {"br_name":"ovsmgmt"}
 //! }
 //!  ```
@@ -45,26 +45,26 @@ use std::collections::HashMap;
 
 pub fn add_br(info_map : HashMap<String, String>) -> std::string::String {
     let br_name = info_map.get("br_name").unwrap();
-    let status = Command::new("ovs-vsctl")
+    let output = Command::new("ovs-vsctl")
                                         .arg("add-br")
                                         .arg(br_name).
-                                        status().expect("failed to excute ovs-add-br");
-    if status.success() {
+                                        output().expect("failed to excute ovs-add-br");
+    if output.status.success() {
         String::from("Done")
     }else {
-        String::from("Failure")
+        String::from_utf8_lossy(&output.stderr).to_string()
     } 
 }
 
 pub fn del_br(info_map : HashMap<String, String>) -> std::string::String {
     let br_name = info_map.get("br_name").unwrap();
-    let status = Command::new("ovs-vsctl")
+    let output = Command::new("ovs-vsctl")
                                         .arg("del-br")
                                         .arg(br_name).
-                                        status().expect("failed to excute ovs-del-br");
-    if status.success() {
+                                        output().expect("failed to excute ovs-del-br");
+    if output.status.success() {
         String::from("Done")
     }else {
-        String::from("Failure")
+        String::from_utf8_lossy(&output.stderr).to_string()
     }    
 }
