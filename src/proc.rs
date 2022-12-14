@@ -27,7 +27,9 @@ use nix::unistd;
 #[derive(Clone, Debug,Serialize)]
 struct ProcInfo {
     pub pid: i32,
-    pub comm: String
+    pub comm: String,
+    pub ppid: i32,
+    pub vsize: u64
 }
 
 pub fn process_all() -> std::string::String
@@ -39,7 +41,9 @@ pub fn process_all() -> std::string::String
             // total_time is in seconds
             let p  = ProcInfo {
                 pid: stat.pid,
-                comm: stat.comm
+                comm: stat.comm,
+                ppid: stat.ppid,
+                vsize: stat.vsize
             };
             map.insert(stat.pid,p);
         }
@@ -73,7 +77,9 @@ pub fn process_status(pid : i32) -> std::string::String {
         let stat = process.unwrap().stat().unwrap();
         let p  = ProcInfo {
             pid: stat.pid,
-            comm: stat.comm
+            comm: stat.comm,
+            ppid: stat.ppid,
+            vsize: stat.vsize
         };
         let mut map = HashWrap::<i32,ProcInfo>:: new();
         map.insert(stat.pid,p);
