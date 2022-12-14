@@ -7,7 +7,7 @@
 //! { 
 //!     "jsonrpc":"2.0", 
 //!     "id":1, 
-//!     "method":"ovs-add-br" ,
+//!     "method":"ovs-vsctl-add-br" ,
 //!     "params": {"br_name":"ovsmgmt"}
 //! }
 //!  ```
@@ -26,7 +26,7 @@
 //! { 
 //!     "jsonrpc":"2.0", 
 //!     "id":1, 
-//!     "method":"ovs-del-br",
+//!     "method":"ovs-vsctl-del-br",
 //!     "params": {"br_name":"ovsmgmt"} 
 //! }
 //!  ```
@@ -42,8 +42,24 @@
 
 use std::process::Command;
 use std::collections::HashMap;
+use jsonrpsee::ws_server::RpcModule;
 
-pub fn add_br(info_map : HashMap<String, String>) -> std::string::String {
+pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
+    module.register_method("ovs-vsctl-add-br", |params, _| {
+        let br_info = params.parse::<HashMap<String, String>>()?;
+        Ok(add_br(br_info))
+    })?;
+
+    module.register_method("ovs-vsctl-del-br", |params, _| {
+        let br_info = params.parse::<HashMap<String, String>>()?;
+        Ok(del_br(br_info))
+    })?;
+    Ok(())
+}
+
+
+
+fn add_br(info_map : HashMap<String, String>) -> std::string::String {
     let br_name = info_map.get("br_name").unwrap();
     let output = Command::new("ovs-vsctl")
                                         .arg("add-br")
@@ -56,7 +72,7 @@ pub fn add_br(info_map : HashMap<String, String>) -> std::string::String {
     } 
 }
 
-pub fn del_br(info_map : HashMap<String, String>) -> std::string::String {
+fn del_br(info_map : HashMap<String, String>) -> std::string::String {
     let br_name = info_map.get("br_name").unwrap();
     let output = Command::new("ovs-vsctl")
                                         .arg("del-br")

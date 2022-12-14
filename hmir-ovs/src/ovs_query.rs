@@ -7,7 +7,7 @@
 //! { 
 //!     "jsonrpc":"2.0", 
 //!     "id":1, 
-//!     "method":"ovs-check-connection" 
+//!     "method":"ovs-query-connection" 
 //! }
 //!  ```
 //! 响应格式：
@@ -25,7 +25,7 @@
 //! { 
 //!     "jsonrpc":"2.0", 
 //!     "id":1, 
-//!     "method":"ovs-get-bridges" 
+//!     "method":"ovs-query-bridges" 
 //! }
 //!  ```
 //! 
@@ -44,7 +44,7 @@
 //! { 
 //!     "jsonrpc":"2.0", 
 //!     "id":1, 
-//!     "method":"ovs-get-ports" 
+//!     "method":"ovs-query-ports" 
 //! }
 //!  ```
 //! 
@@ -95,12 +95,13 @@
 //! }
 //! ```
 
+use jsonrpsee::ws_server::RpcModule;
+use std::collections::HashMap;
 
 use super::ovs_bridge::*;
 use super::ovs_port::*;
 use super::ovs_client::*;
 
-use std::collections::HashMap;
 use serde_json::json;
 use serde::{Deserialize, Serialize};
 
@@ -119,8 +120,34 @@ pub struct RetInfo {
     pub message: String,
 }
 
+pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
+        
+    module.register_method("ovs-query-connection", |_, _| {
+        Ok(check_connection())
+    })?;
+    
+    module.register_method("ovs-query-ports", |_, _| {
+        Ok(get_ports())
+    })?;
 
-pub fn check_connection() -> std::string::String{
+    module.register_method("ovs-query-bridges", |_, _| {
+        Ok(get_bridges())
+    })?;
+
+    module.register_method("ovs-add-port", |params, _| {
+        let port_info = params.parse::<HashMap<String, String>>()?;
+        Ok(add_port(port_info))
+    })?;
+
+    module.register_method("ovs-del-port", |params, _| {
+        let port_info = params.parse::<HashMap<String, String>>()?;
+        Ok(del_port(port_info))
+    })?;
+    Ok(())
+}
+
+
+fn check_connection() -> std::string::String{
     let ovsc = OvsClient::new();
     match ovsc{
         Err(e) => {
@@ -149,7 +176,7 @@ pub fn check_connection() -> std::string::String{
     }    
 }
 
-pub fn get_ports() -> std::string::String{
+fn get_ports() -> std::string::String{
     let ovsc = OvsClient::new();
     match ovsc{
         Err(e) => {
