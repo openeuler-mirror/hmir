@@ -1,6 +1,5 @@
 use serde::{Deserialize, Serialize};
 
-
 // ovs port definition
 #[derive(Debug, Clone, Serialize)]
 pub struct OvsPort{
