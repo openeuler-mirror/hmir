@@ -1,4 +1,4 @@
-//! ovs-vsctl实现，网桥操作为主
+//! ovs-vsctl实现
 //! 
 //! 支持以下的格式
 //! - ovs-vsctl-add-br: 添加网桥

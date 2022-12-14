@@ -162,7 +162,6 @@ impl OvsClient{
 
     pub fn add_port(&mut self, bridge_name:&str, port_name: &str, port_mode: &OvsPortMode) -> Result<serde_json::Value, OvsError>{
         let ports = self.get_ports()?;
-        let bridges = self.get_bridges()?;
         
         for p in ports{
             if p.name == port_name{
@@ -232,7 +231,7 @@ impl OvsClient{
             }
         }
         
-        let mut query = json!({
+        let query = json!({
             "method":"transact",
             "params":[
                 "Open_vSwitch",
@@ -302,7 +301,7 @@ impl OvsClient{
             }
         };
 
-        let mut query = json!({
+        let  query = json!({
             "method":"transact",
             "params":[
                 "Open_vSwitch",
