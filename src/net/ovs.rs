@@ -4,7 +4,6 @@
 //！ovs-ofctl：流控能力，调用 ovs-ofctl 命令执行
 
 use jsonrpsee::ws_server::RpcModule;
-use std::collections::HashMap;
 use hmir_ovs::*;
 
 pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
