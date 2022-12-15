@@ -29,7 +29,8 @@ struct ProcInfo {
     pub pid: i32,
     pub comm: String,
     pub ppid: i32,
-    pub vsize: u64
+    pub vsize: u64,
+    pub num_threads: i64
 }
 
 pub fn process_all() -> std::string::String
@@ -43,7 +44,8 @@ pub fn process_all() -> std::string::String
                 pid: stat.pid,
                 comm: stat.comm,
                 ppid: stat.ppid,
-                vsize: stat.vsize
+                vsize: stat.vsize,
+                num_threads: stat.num_threads
             };
             map.insert(stat.pid,p);
         }
@@ -79,7 +81,8 @@ pub fn process_status(pid : i32) -> std::string::String {
             pid: stat.pid,
             comm: stat.comm,
             ppid: stat.ppid,
-            vsize: stat.vsize
+            vsize: stat.vsize,
+            num_threads: stat.num_threads
         };
         let mut map = HashWrap::<i32,ProcInfo>:: new();
         map.insert(stat.pid,p);
