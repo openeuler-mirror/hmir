@@ -159,10 +159,8 @@ fn reg_observer(obs_param : &ObserverParam) -> std::string::String
 
 pub fn unregister_observer(obs_cmd : u32) -> string::String
 {
-    if OBSERVER_MAP.write().unwrap().contains_key(&obs_cmd) {
-        if let Some(metric) = OBSERVER_MAP.write().unwrap().get_mut(&obs_cmd) {
-            metric.status = false;
-        }
+    if let Some(metric) = OBSERVER_MAP.write().unwrap().get_mut(&obs_cmd) {
+        metric.status = false;
     }
     return string::String::from("Ok")
 }
