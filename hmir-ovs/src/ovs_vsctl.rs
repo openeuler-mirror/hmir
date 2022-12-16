@@ -53,7 +53,26 @@
 //! }
 //!  ```
 //! 
-
+//! - ovs-vsctl-set-netflow-rule： 网桥中设置netflow 规则
+//! 请求格式：
+//!  ```
+//! { 
+//!     "jsonrpc":"2.0", 
+//!     "id":1, 
+//!     "method":"ovs-vsctl-set-netflow-rule",
+//!     "params": {"br_name":"ovsmgmt", "targets": "172.30.24.3:2055"} 
+//! }
+//!  ```
+//! - ovs-vsctl-del-netflow-rule： 网桥中删除netflow 规则
+//! 请求格式：
+//!  ```
+//! { 
+//!     "jsonrpc":"2.0", 
+//!     "id":1, 
+//!     "method":"ovs-vsctl-del-netflow-rule",
+//!     "params": {"br_name":"ovsmgmt"} 
+//! }
+//!  ```
 
 use std::process::Command;
 use std::collections::HashMap;
@@ -80,6 +99,16 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
     module.register_method("ovs-vsctl-del-port", |params, _| {
         let br_info = params.parse::<HashMap<String, String>>()?;
         Ok(del_port(br_info))
+    })?;
+
+    module.register_method("ovs-vsctl-set-netflow-rule", |params, _| {
+        let br_info = params.parse::<HashMap<String, String>>()?;
+        Ok(ovs_vsctl_set_netflow_rule(br_info))
+    })?;
+
+    module.register_method("ovs-vsctl-del-netflow-rule", |params, _| {
+        let br_info = params.parse::<HashMap<String, String>>()?;
+        Ok(ovs_vsctl_del_netflow_rule(br_info))
     })?;
 
     Ok(())
@@ -135,6 +164,39 @@ fn del_port(info_map : HashMap<String, String>) -> std::string::String {
                                         .arg(br_name)
                                         .arg(port_name).
                                         output().expect("failed to excute ovs-vsctl-del-port");
+    if output.status.success() {
+        String::from("Done")
+    }else {
+        String::from_utf8_lossy(&output.stderr).to_string()
+    } 
+}
+
+fn ovs_vsctl_set_netflow_rule(info_map : HashMap<String, String>) -> std::string::String {
+    let br_name = info_map.get("br_name").unwrap();
+    let targets =  info_map.get("targets").unwrap();
+    let flow_rule = format!("netflow=@nf -- --id=@nf create NetFlow targets=\"{}\" active-timeout=60", targets);
+
+    let output = Command::new(VSCTL_CMD)
+                                        .arg("set")
+                                        .arg("Bridge")
+                                        .arg(br_name)
+                                        .arg(flow_rule).
+                                        output().expect("failed to excute ovs-vsctl-set-netflow-rule");
+    if output.status.success() {
+        String::from("Done")
+    }else {
+        String::from_utf8_lossy(&output.stderr).to_string()
+    } 
+}
+
+fn ovs_vsctl_del_netflow_rule(info_map : HashMap<String, String>) -> std::string::String {
+    let br_name = info_map.get("br_name").unwrap();
+    let output = Command::new(VSCTL_CMD)
+                                        .arg("clear")
+                                        .arg("Bridge")
+                                        .arg(br_name)
+                                        .arg("netflow").
+                                        output().expect("failed to excute ovs-vsctl-del-netflow-rule");
     if output.status.success() {
         String::from("Done")
     }else {
