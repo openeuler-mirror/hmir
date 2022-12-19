@@ -271,3 +271,15 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
 
     Ok(())
 }
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn service_all_it_works() {
+        let s = service_all();
+        println!("{}",s);
+    }
+
+}
