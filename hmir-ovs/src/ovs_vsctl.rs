@@ -73,6 +73,16 @@
 //!     "params": {"br_name":"ovsmgmt"} 
 //! }
 //!  ```
+//! - ovs-vsctl-set-port-vlan： 设置ovs port vlanID
+//! 请求格式：
+//!  ```
+//! { 
+//!     "jsonrpc":"2.0", 
+//!     "id":1, 
+//!     "method":"vs-vsctl-set-port-vlan",
+//!     "params": {"port_name":"vnet0", "tag_value":"2"} 
+//! }
+//!  ```
 
 use std::process::Command;
 use std::collections::HashMap;
@@ -111,11 +121,18 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
         Ok(ovs_vsctl_del_netflow_rule(br_info))
     })?;
 
+    module.register_method("ovs-vsctl-set-port-vlan", |params, _| {
+        let br_info = params.parse::<HashMap<String, String>>()?;
+        let port_name = br_info.get("port_name").unwrap();
+        let tag_value =  br_info.get("tag_name").unwrap();
+        Ok(ovs_vsctl_set_db_entry("Port".to_string(), port_name.to_string(), "tag".to_string(), tag_value.to_string()))
+    })?;
+
     Ok(())
 }
 
 
-fn add_br(info_map : HashMap<String, String>) -> std::string::String {
+fn add_br(info_map : HashMap<String, String>) -> String {
     let br_name = info_map.get("br_name").unwrap();
     let output = Command::new(VSCTL_CMD)
                                         .arg("add-br")
@@ -128,7 +145,7 @@ fn add_br(info_map : HashMap<String, String>) -> std::string::String {
     } 
 }
 
-fn del_br(info_map : HashMap<String, String>) -> std::string::String {
+fn del_br(info_map : HashMap<String, String>) -> String {
     let br_name = info_map.get(VSCTL_CMD).unwrap();
     let output = Command::new("ovs-vsctl")
                                         .arg("del-br")
@@ -141,7 +158,7 @@ fn del_br(info_map : HashMap<String, String>) -> std::string::String {
     }    
 }
 
-fn add_port(info_map : HashMap<String, String>) -> std::string::String {
+fn add_port(info_map : HashMap<String, String>) -> String {
     let br_name = info_map.get("br_name").unwrap();
     let port_name = info_map.get("port_name").unwrap();
     let output = Command::new(VSCTL_CMD)
@@ -156,7 +173,7 @@ fn add_port(info_map : HashMap<String, String>) -> std::string::String {
     } 
 }
 
-fn del_port(info_map : HashMap<String, String>) -> std::string::String {
+fn del_port(info_map : HashMap<String, String>) -> String {
     let br_name = info_map.get("br_name").unwrap();
     let port_name = info_map.get("port_name").unwrap();
     let output = Command::new(VSCTL_CMD)
@@ -189,7 +206,7 @@ fn ovs_vsctl_set_netflow_rule(info_map : HashMap<String, String>) -> std::string
     } 
 }
 
-fn ovs_vsctl_del_netflow_rule(info_map : HashMap<String, String>) -> std::string::String {
+fn ovs_vsctl_del_netflow_rule(info_map : HashMap<String, String>) -> String {
     let br_name = info_map.get("br_name").unwrap();
     let output = Command::new(VSCTL_CMD)
                                         .arg("clear")
@@ -197,6 +214,22 @@ fn ovs_vsctl_del_netflow_rule(info_map : HashMap<String, String>) -> std::string
                                         .arg(br_name)
                                         .arg("netflow").
                                         output().expect("failed to excute ovs-vsctl-del-netflow-rule");
+    if output.status.success() {
+        String::from("Done")
+    }else {
+        String::from_utf8_lossy(&output.stderr).to_string()
+    } 
+}
+
+fn ovs_vsctl_set_db_entry(table: String, row: String, key: String, value: String) -> String{
+
+    let set_rule = format!("{}={}", key, value);
+    let output = Command::new(VSCTL_CMD)
+                                        .arg("set")
+                                        .arg(table)
+                                        .arg(row)
+                                        .arg(set_rule).
+                                        output().expect("failed to excute ovs_vsctl_set_db_entry");
     if output.status.success() {
         String::from("Done")
     }else {
