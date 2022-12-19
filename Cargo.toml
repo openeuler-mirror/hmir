@@ -32,7 +32,6 @@ hmir-hash = {path = "hmir-hash" }
 hmir-systemd = {path = "hmir-systemd" }
 hmir-ovs = {path = "hmir-ovs" }
 
-
 [[test]]
 name = "integration"
 path = "tests/tests.rs"
