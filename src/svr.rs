@@ -198,13 +198,13 @@ pub fn service_restart(service: std::string::String) -> String {
 ///
 /// disable指定服务
 pub fn service_disable(service: std::string::String) -> String {
-    // let client = build_blocking_client(SystemdObjectType::Manager).unwrap();
-    // let result = client.disable_unit(service.as_str(), "replace");
-    // match result {
-    //     Ok(path) => String::from("Ok"),
-    //     Err(e) => String::from(e.name().unwrap())
-    // }
-    todo!();
+    let client = build_blocking_client(SystemdObjectType::Manager).unwrap();
+    let vec = vec![service.as_str()];
+    let result = client.disable_unit_files(vec, true);
+    match result {
+        Ok(path) => String::from("Ok"),
+        Err(e) => String::from(e.name().unwrap())
+    }
 }
 
 
@@ -214,12 +214,13 @@ pub fn service_disable(service: std::string::String) -> String {
 /// enable指定服务
 pub fn service_enable(service: std::string::String) -> String {
     // let client = build_blocking_client(SystemdObjectType::Manager).unwrap();
-    // let result = client.enable_unit(service.as_str(), "replace");
+    // let vec = vec![service.as_str()];
+    // let result = client.enable_unit_files(vec, false,true);
     // match result {
     //     Ok(path) => String::from("Ok"),
     //     Err(e) => String::from(e.name().unwrap())
     // }
-    todo!();
+    todo!()
 }
 
 
@@ -276,10 +277,13 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use serde_json::{Result, Value};
+
     #[test]
     fn service_all_it_works() {
-        let s = service_all();
-        println!("{}",s);
+        update_all_svr();
+        let data = service_all();
+        println!("{}",data);
     }
 
     #[test]
@@ -298,6 +302,12 @@ mod tests {
     #[test]
     fn service_start_it_works() {
         let s = service_start(std::string::String::from("docker.service"));
+        println!("{}",s);
+    }
+
+    #[test]
+    fn service_disable_it_works(){
+        let s = service_disable(std::string::String::from("docker.service"));
         println!("{}",s);
     }
 }
