@@ -2,6 +2,12 @@
 //!
 //! 支持以下的请求
 //! - service-status : 查询指定服务状态
+//! - service-all    : 所有服务状态
+//! - service-disable : disable服务
+//! - service-enable : enable服务
+//! - service-stop   : stop服务
+//! - service-restart : restart服务
+//! - service-start : start服务
 //!
 //! 请求格式:
 //! ```
