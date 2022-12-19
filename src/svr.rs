@@ -213,14 +213,13 @@ pub fn service_disable(service: std::string::String) -> String {
 ///
 /// enable指定服务
 pub fn service_enable(service: std::string::String) -> String {
-    // let client = build_blocking_client(SystemdObjectType::Manager).unwrap();
-    // let vec = vec![service.as_str()];
-    // let result = client.enable_unit_files(vec, false,true);
-    // match result {
-    //     Ok(path) => String::from("Ok"),
-    //     Err(e) => String::from(e.name().unwrap())
-    // }
-    todo!()
+    let client = build_blocking_client(SystemdObjectType::Manager).unwrap();
+    let vec = vec![service.as_str()];
+    let result = client.enable_unit_files(vec, false,true);
+    match result {
+        Ok(path) => String::from("Ok"),
+        Err(e) => String::from(e.name().unwrap())
+    }
 }
 
 
