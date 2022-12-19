@@ -282,4 +282,9 @@ mod tests {
         println!("{}",s);
     }
 
+    #[test]
+    fn service_restart_it_works() {
+        let s = service_restart(std::string::String::from("docker.service"));
+        println!("{}",s);
+    }
 }
