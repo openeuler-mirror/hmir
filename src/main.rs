@@ -116,6 +116,7 @@ async fn run_ws_server(ip: &str , port : &str) -> anyhow::Result<(SocketAddr,WsS
     proc::register_method(& mut module);
     kernel::register_method(& mut module);
     observer::register_method(& mut module);
+    ceph::register_method(& mut module);
 
     let addr = server.local_addr()?;
     let server_handle = server.start(module)?;
