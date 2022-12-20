@@ -209,8 +209,7 @@ pub fn service_restart(service: std::string::String) -> String {
 /// disable指定服务
 pub fn service_disable(service: std::string::String) -> String {
     let client = build_blocking_client(SystemdObjectType::Manager).unwrap();
-    let vec = vec![service.as_str()];
-    let result = client.disable_unit_files(vec, true);
+    let result = client.disable_unit_files(vec![service.as_str()], true);
     svr_default_result!(result);
 }
 
@@ -221,8 +220,7 @@ pub fn service_disable(service: std::string::String) -> String {
 /// enable指定服务
 pub fn service_enable(service: std::string::String) -> String {
     let client = build_blocking_client(SystemdObjectType::Manager).unwrap();
-    let vec = vec![service.as_str()];
-    let result = client.enable_unit_files(vec, false,true);
+    let result = client.enable_unit_files(vec![service.as_str()], false,true);
     svr_default_result!(result);
 }
 
