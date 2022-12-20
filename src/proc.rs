@@ -33,6 +33,15 @@ struct ProcInfo {
     pub num_threads: i64
 }
 
+macro_rules! proc_default_result {
+    ($i:expr) =>{
+        let mut response = HashWrap::<i32,ProcInfo>:: new();
+        response.set_code($i);
+        let serialized = serde_json::to_string(&response).unwrap();
+        return serialized;
+    }
+}
+
 pub fn process_all() -> std::string::String
 {
     let mut map = HashWrap::<i32,ProcInfo>:: new();
@@ -89,7 +98,8 @@ pub fn process_status(pid : i32) -> std::string::String {
         let serialized = serde_json::to_string(&map).unwrap();
         return serialized;
     }
-    return string::String::from("Invalid process");
+
+    proc_default_result!(-1);
 }
 
 
@@ -108,9 +118,9 @@ fn is_valid_process(pid : i32) -> bool {
 pub fn process_kill(pid : i32) -> std::string::String {
     if is_valid_process(pid) {
         signal::kill(unistd::Pid::from_raw(pid), signal::Signal::SIGTERM).unwrap();
-        return string::String::from("Ok");
+        proc_default_result!(0);
     }
-    return string::String::from("Invalid process");
+    proc_default_result!(-1);
 }
 
 pub fn process_bind_cpu(pid : i32) -> std::string::String {
@@ -118,9 +128,9 @@ pub fn process_bind_cpu(pid : i32) -> std::string::String {
         let core_ids = core_affinity::get_core_ids().unwrap();
         let core_id = core_ids[0];
         core_affinity::set_for_current(core_id);
-        return string::String::from("Ok");
+        proc_default_result!(0);
     }
-    return string::String::from("Invalid process");
+    proc_default_result!(-1);
 }
 
 

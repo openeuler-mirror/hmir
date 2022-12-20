@@ -7,6 +7,7 @@ license = "Apache-2.0"
 repository = "https://gitee.com/openeuler/hmir"
 homepage = "https://gitee.com/openeuler/hmir"
 description = "Host management in rust "
+readme = "README.md"
 
 
 [dependencies]
@@ -33,6 +34,7 @@ core_affinity = "0.7.6"
 hmir-hash = {path = "hmir-hash" }
 hmir-systemd = {path = "hmir-systemd" }
 hmir-ovs = {path = "hmir-ovs" }
+hmir-ipmitool = { path = "hmir-ipmitool"}
 hmir-ceph = {path = "hmir-ceph" }
 
 [[test]]
