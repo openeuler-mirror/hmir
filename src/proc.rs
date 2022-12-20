@@ -22,7 +22,7 @@ use std::string;
 use std::error::Error;
 use nix::sys::signal;
 use nix::unistd;
-
+extern crate core_affinity;
 
 #[derive(Clone, Debug,Serialize)]
 struct ProcInfo {
@@ -123,6 +123,16 @@ pub fn process_kill(pid : i32) -> std::string::String {
     proc_default_result!(-1);
 }
 
+pub fn process_bind_cpu(pid : i32) -> std::string::String {
+    if is_valid_process(pid) {
+        let core_ids = core_affinity::get_core_ids().unwrap();
+        let core_id = core_ids[0];
+        core_affinity::set_for_current(core_id);
+        return string::String::from("Ok");
+    }
+    return string::String::from("Invalid process");
+}
+
 
 #[doc(hidden)]
 pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
@@ -142,6 +152,12 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
         //默认没有error就是成功的
         let pid = params.one::<i32>()?;
         Ok(process_kill(pid))
+    })?;
+
+    module.register_method("process-bind", |params, _| {
+        //默认没有error就是成功的
+        let pid = params.one::<i32>()?;
+        Ok(process_bind_cpu(pid))
     })?;
 
 

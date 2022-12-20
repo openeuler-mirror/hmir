@@ -29,11 +29,13 @@ serde = { version = "1.0.147", features = ["derive"] }
 procfs = "0.14.1"
 nix = "0.25.0"
 iptables = "0.5.0"
+core_affinity = "0.7.6"
 
 hmir-hash = {path = "hmir-hash" }
 hmir-systemd = {path = "hmir-systemd" }
 hmir-ovs = {path = "hmir-ovs" }
 hmir-ipmitool = { path = "hmir-ipmitool"}
+hmir-ceph = {path = "hmir-ceph" }
 
 [[test]]
 name = "integration"
