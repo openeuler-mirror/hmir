@@ -83,7 +83,7 @@ mod tests {
 
     #[test]
     fn hash_it_works() {
-        let mut m  = HashWrap::<u32>:: new();
+        let mut m  = HashWrap::<std::string::String,u32>:: new();
         m.insert("key1".to_string(),1);
         m.insert("key2".to_string(),2);
         m.insert("key3".to_string(),3);
@@ -98,7 +98,7 @@ mod tests {
 
     #[test]
     fn hash_serialize_works(){
-        let mut m  = HashWrap::<u32>:: new();
+        let mut m  = HashWrap::<std::string::String,u32>:: new();
         m.insert("key1".to_string(),1);
         m.insert("key2".to_string(),2);
         m.insert("key3".to_string(),3);
@@ -106,7 +106,7 @@ mod tests {
         let serialized = serde_json::to_string(&m).unwrap();
 
         let hello_slice = &serialized[..];
-        let p: HashWrap<u32> = serde_json::from_str(hello_slice).unwrap();
+        let p: HashWrap<std::string::String,u32> = serde_json::from_str(hello_slice).unwrap();
 
         let key1 = p.get(& "key1".to_string()).unwrap().clone();
         assert_eq!(key1, 1);
