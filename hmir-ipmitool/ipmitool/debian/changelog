@@ -1,0 +1,853 @@
+ipmitool (1.8.19-1) unstable; urgency=medium
+
+  * New upstrem release.
+    - New debian/patches/0700-build.patch.
+    - New debian/patches/0620-manpage_typo.patch.
+  * Remove longer not needed patches.
+  * Declare compliance with Debian Policy 4.6.1.0 (No changes needed).
+  * debian/copyright:
+    - Add year 2022 to myself.
+  * New debian/patches/0105-sensor_reading.patch (Closes: #983082):
+    - Fix sensor reading for non-analog sensors.
+  * New debian/README.Debian with the explanation how to change the
+      start parameters (Closes: #1002013).
+
+ -- Jörg Frings-Fürst <debian@jff.email>  Sat, 29 Oct 2022 21:38:16 +0200
+
+ipmitool (1.8.18-11) unstable; urgency=medium
+
+  * Remove useless debian/ipmitool.lintian-overrides.
+  * Declare compliance with Debian Policy 4.6.0.0 (No changes needed).
+  * Remove useless DEP 8 Smoketest.
+  * debian/copyright:
+    - Add year 2021 to debian/*.
+  * debian/ipmitool.maintscript (Closes: #947384):
+    - Change prior-version to 1.8.18-11~.
+  * debian/systemd/ipmitool.ipmievd.service:
+    - Add After=openipmi.service (Closes: #950206).
+
+ -- Jörg Frings-Fürst <debian@jff.email>  Sun, 22 Aug 2021 21:15:52 +0200
+
+ipmitool (1.8.18-10.1) unstable; urgency=high
+
+  * Non-maintainer upload.
+  * CVE-2020-5208: buffer overflows and potentially to remote code execution.
+    Applied upstream patches:
+    - CVE-2020-5208_1_Fix_buffer_overflow_vulnerabilities.patch
+    - CVE-2020-5208_2-fru-Fix-buffer-overflow-in-ipmi_spd_print_fru.patch
+    - CVE-2020-5208_3-session-Fix-buffer-overflow-in-ipmi_get_session_info.patch
+    - CVE-2020-5208_4-channel-Fix-buffer-overflow.patch
+    - CVE-2020-5208_5_lanp-Fix-buffer-overflows-in-get_lan_param_select.patch
+    - CVE-2020-5208_6-fru-sdr-Fix-id_string-buffer-overflows.patch
+    (Closes: #950761).
+
+ -- Thomas Goirand <zigo@debian.org>  Fri, 19 Feb 2021 11:04:17 +0100
+
+ipmitool (1.8.18-10) unstable; urgency=medium
+
+  * Add "Restrictions: superficial" to debian/tests/control (Closes: #969834).
+
+ -- Jörg Frings-Fürst <debian@jff.email>  Mon, 14 Sep 2020 14:35:04 +0200
+
+ipmitool (1.8.18-9) unstable; urgency=medium
+
+  * New debian/patches/0005-gcc10.patch: Fix ftbfs with gcc-10
+    (Closes: #957371).
+  * Refresh debian/patches/0115-typo.patch.
+  * Remove not longer used patches:
+    - 0605-manpage_typo.patch
+    - 0105-typo.patch
+    - 0610-readme_typo.patch
+    - 0001-Dialect_change.patch
+  * Declare compliance with Debian Policy 4.5.0 (No changes needed).
+  * Switch to debhelper-compat level 13.
+  * debian/ipmitool.maintscript:
+    - Fix syntax (Closes: #947384).
+
+ -- Jörg Frings-Fürst <debian@jff.email>  Tue, 28 Jul 2020 18:20:20 +0200
+
+ipmitool (1.8.18-8) unstable; urgency=medium
+
+  * New debian/patches/0130-Correct_lanplus_segment_violation.patch:
+    - Fix lanplus segment violation for truncated response (Closes: #945764).
+  * Declare compliance with Debian Policy 4.4.1.2 (No changes needed).
+  * Switch to debhelper-compat:
+    - debian/control: change to debhelper-compat (=12).
+    - remove debian/compat.
+  * debian/control:
+    - Add Rules-Requires-Root: no.
+  * debian/copyright:
+    - Add 2019 to debian/*.
+
+ -- Jörg Frings-Fürst <debian@jff.email>  Sun, 22 Dec 2019 20:55:43 +0100
+
+ipmitool (1.8.18-7) unstable; urgency=medium
+
+  * debian/watch: Use tags instead releases to fix the wrong format.
+  * Migrate to debhelper 12:
+    - Change debian/compat to 12.
+    - Bump minimum debhelper version in debian/control to >= 12.
+  * Declare compliance with Debian Policy 4.4.0 (No changes needed).
+  * debian/control: Add missing Depend init_system_helpers to fix
+      lintan warning missing-versioned-depends-on-init-system-helpers.
+  * New debian/patches/0615-manpage_typo.patch: Fix typos in man pages.
+  * Add DEP 8 smoketest (Closes: #903676).
+      Thanks to "Dann Frazier" <dannf@debian.org>.
+  * Remove not longer needed debian/ipmitool.ipmievd.default (Closes: #907832).
+    - New debian/ipmitool.maintscript to remove /etc/default/ipmitool.
+    - Add IPMIEVD_OPTIONS from /etc/default/ipmitool into
+      debian/ipmitool.ipmievd.service.
+
+ -- Jörg Frings-Fürst <debian@jff.email>  Sat, 20 Jul 2019 10:59:12 +0200
+
+ipmitool (1.8.18-6) unstable; urgency=medium
+
+  * debian/changelog:
+    - Remove trailing whitespaces.
+  * debian/control:
+    - Change to my new email address.
+    - Switch Vcs-* to new location.
+    - Switch homepage to github.
+  * debian/copyright:
+    - Use secure copyright format URI.
+    - Change to my new email address.
+    - Switch homepage to github.
+    - Add year 2018 for debian/*.
+  * debian/rules:
+    - Replace outdated dh_systemd_enable with dh_installsystemd.
+  * debian/watch:
+    - Switch to github.
+  * Declare compliance with Debian Policy 4.1.5:
+    - Switch from enable ipmievd daemon via /etc/default/ipmievd to use
+      update-rc.d.
+  * Migrate to debhelper 11:
+    - Change debian/compat to 11.
+    - Bump minimum debhelper version in debian/control to >= 11.
+  * New debian/patches/0125-nvidia-iana.patch:
+    - Add IANA ID for NVIDIA hardware (Closes: #903616).
+  * I disagree to the upload of the release 1.8.18-5 as a team upload.
+    That was a NMU.
+
+ -- Jörg Frings-Fürst <debian@jff.email>  Sun, 05 Aug 2018 12:20:50 +0200
+
+ipmitool (1.8.18-5) unstable; urgency=medium
+
+  * Team upload.
+  * Use dh_systemd_enable --name to install ipmitool.ipmievd.service.
+    (closes: #879063)
+
+ -- Bas Couwenberg <sebastic@debian.org>  Tue, 14 Nov 2017 07:58:01 +0100
+
+ipmitool (1.8.18-4) unstable; urgency=medium
+
+  * Migrate to OpenSSL1.1 (Closes_# 853782):
+    - New debian/patches/0120-openssl1.1.patch:
+      + Cherry-picked from upstream.
+    - debian/control:
+      + Switch Build-Depends from libssl1.0-dev to
+        libssl-dev to build against OpenSSL 1.1.
+  * Declare compliance with Debian Policy 4.0.0. (No changes needed).
+  * Refresh debian/patches/0115-typo.patch.
+  * debian/rules:
+    - Enable dummy interface.
+  * New README.source to explain the branching model used.
+
+ -- Jörg Frings-Fürst <debian@jff-webhosting.net>  Sun, 13 Aug 2017 10:56:16 +0200
+
+ipmitool (1.8.18-3) unstable; urgency=medium
+
+  * debian/rules:
+    - Fix enablement of usb interface (Closes: #849349).
+      Thanks to Steve Langasek <steve.langasek@canonical.com>.
+  * Drop both dh-autoreconf/dh-systemd from both build-depends
+    and dh --with arguments because this is all defaults when
+    using dh compat 10.
+  * debian/copyright:
+    Add year 2017 to debian/*.
+
+ -- Jörg Frings-Fürst <debian@jff-webhosting.net>  Tue, 03 Jan 2017 07:07:30 +0100
+
+ipmitool (1.8.18-2) unstable; urgency=medium
+
+  * debian/control:
+    - Switch Build-Depeds from libssl-dev to libssl1.0-dev.
+      We can't yet use libssl 1.1.
+
+ -- Jörg Frings-Fürst <debian@jff-webhosting.net>  Fri, 18 Nov 2016 10:50:13 +0100
+
+ipmitool (1.8.18-1) unstable; urgency=medium
+
+  * New upstream release:
+    - Fix for lan print does not report ipv6 addresses (Closes: #837164).
+  * Refresh patches:
+    - 0115-typo.patch
+    - 0500-fix_CVE-2011-4339.patch
+  * Bump compat to 10:
+    - Change debian/compat to 10.
+    - Change debhelper version at debian/control to >= 10.
+  * debian/control:
+    - Add requested version for lsb-base to prevent lintian error.
+
+ -- Jörg Frings-Fürst <debian@jff-webhosting.net>  Sun, 09 Oct 2016 13:27:29 +0200
+
+ipmitool (1.8.17-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Drop upstream applied patches:
+    - 0001-Dialect_change.patch
+    - 0105-typo.patch
+    - 0605-manpage_typo.patch
+    - 0610-readme_typo.patch
+  * Refresh patches:
+    - 0110-getpass-prototype.patch
+    - 0500-fix_CVE-2011-4339.patch
+  * New patch:
+    - 0115-typo.patch
+  * Remove override_dh_autoreconf from debian/rules, the NEWS file is now
+    available from source.
+  * debian/control:
+    - Change Vcs-Git to cgit uri.
+
+ -- Jörg Frings-Fürst <debian@jff-webhosting.net>  Sun, 15 May 2016 11:23:50 +0200
+
+ipmitool (1.8.16-3) unstable; urgency=medium
+
+  * debian/rules:
+    - Use of USB only on Linux architectures (Closes: #820007).
+      Thanks to Steven Chamberlain <steven@pyro.eu.org>.
+  * New debian/patches/0110-getpass-prototype.patch:
+    - use necessary source dialect to ensure getpass() availability
+      (Closes: #819340).
+      Thanks to Steve Langasek <steve.langasek@ubuntu.com>.
+  * debian/control:
+    - Bump Standards-Version to 3.9.8 (no changes required).
+
+ -- Jörg Frings-Fürst <debian@jff-webhosting.net>  Wed, 13 Apr 2016 07:45:13 +0200
+
+ipmitool (1.8.16-2) unstable; urgency=medium
+
+  * New debian/patches/0001-Dialect_change.patch (Closes: #816491):
+    - Change dialect from c99 to gnu99 to prevend segfaults
+      on missing functions.
+    - Add autoreconf and remove dh_autotools-dev to/from debian/rules
+      and debian/control.
+  * Correct Vcs-Git uri.
+
+ -- Jörg Frings-Fürst <debian@jff-webhosting.net>  Sun, 13 Mar 2016 12:31:08 +0100
+
+ipmitool (1.8.16-1) unstable; urgency=medium
+
+  * New upstream release (Closes: #810827).
+    - fix does not fall back to IPv4 for IPMI v2 / RMCP+ sessions
+      (Closes: #755479).
+  * Refresh patches.
+  * Add year 2016 to debian/copyright.
+  * debian/control:
+    - Bump Standards-Version to 3.9.7 (no changes required).
+    - Change Vcs-* and homepage to secure uri.
+    - Add [!hurd-i386] to libfreeipmi-dev because freeipmi
+      isn't available at hurd-i386 (Closes: #815443).
+  * debian/watch: Bump Version to 4 (no changes required).
+  * New debian/patches/0105-typo.patch to fix some typos.
+  * Renew debian/patches/0605-manpage_typo.patch.
+
+ -- Jörg Frings-Fürst <debian@jff-webhosting.net>  Tue, 23 Feb 2016 07:07:52 +0100
+
+ipmitool (1.8.15-1) unstable; urgency=medium
+
+  * New upstream release.
+  * debian/patches:
+    - Remove patches (including in upstream):
+      - 120-Dell-13G.patch
+      - 115-lib_declarations.patch
+      - 097-source_typo.patch
+    - Refresh patches:
+      - 099_readme_typo
+      - 101_fix_buf_overflow.patch
+      - 112_fix_CVE-2011-4339.patch
+  * debian/contol:
+    - bump Standards-Version to 3.9.6 (no changes required).
+    - Change Vcs-* to new cgit based repository viewer.
+    - Add libfreeipmi-dev to Build-Depends to enable freeipmi interface.
+  * debian/source/options:
+    - Removed because xz is now standard compression.
+  * debian/rules:
+    - Remove oldstyle debhelper parts.
+    - Add "--with autotools-dev".
+  * debian/watch:
+    - Add xz for searching upstream tarballs.
+  * debian/copyright:
+    - Add missing section for debian/*.
+  * debian/ipmitool.postrm:
+    - Escape the double quote around false.
+  * debian/rules:
+    - Add override_dh_systemd_enable to disable start after a fresh install.
+  * Remove load of kernel modules via init scripts (Closes: #766418):
+    - Remove debian/systemd/*.conf.
+    - Empty REQMODULES at ipmitool.ipmievd.init.
+
+ -- Jörg Frings-Fürst <debian@jff-webhosting.net>  Mon, 05 Jan 2015 14:42:49 +0100
+
+ipmitool (1.8.14-4) unstable; urgency=medium
+
+  * New debian/patches/120-Dell-13G.patch:
+    - Add support for Dell 13G server (Closes: #756555)
+  * debian/rules:
+    - Remove oldstyle CFLAGS parameter.
+    - change hardening to modern dh.
+
+ -- Jörg Frings-Fürst <debian@jff-webhosting.net>  Thu, 07 Aug 2014 15:09:16 +0200
+
+ipmitool (1.8.14-3) unstable; urgency=medium
+
+  * move ipmitool.conf
+     from /etc/modules-load.d
+     to /usr/lib/modules-load.d ( Closes: #753762 )
+
+ -- Jörg Frings-Fürst <debian@jff-webhosting.net>  Mon, 02 Jun 2014 20:46:28 +0200
+
+ipmitool (1.8.14-2) unstable; urgency=medium
+
+  * patch 115-lib_declarations.patch
+     - lib/kontronoem.c
+       correct declaration of write_fru_area ( Closes: #749913 )
+  * remove hardening-wrapper from build-Depends
+  * add ipmi* kernel-modules to startup-script
+     ( LP: #908112 )
+  * add debian/systemd/ipmitool.conf to load
+     ipmi* kernel-modules under systemd
+  * add debian/source/option
+     compression xy / level 9
+
+  [ Gerald Turner <gturner@unzane.com> ]
+  * changes on systemd startup scripts ( Closes: #750003 )
+
+ -- Jörg Frings-Fürst <debian@jff-webhosting.net>  Tue, 27 May 2014 14:53:55 +0200
+
+ipmitool (1.8.14-1) unstable; urgency=medium
+
+  * remove debian/README.debian
+  * remove debian/dirs
+  * add debian/ipmitool.ipmievd.default
+    - default ipmievd start is disabled
+  * add patch
+    - 096-manpage_longlines.patch
+    - 097-source_typo.patch
+    - 098-manpage_typo.patch
+      - fix "tiny misprint" ( Closes: #554348 )
+  * add systemd
+  * rewrite debian/copyright
+  * add debian/source/format
+  * debian/control
+    - add homepage ( Closes: #744283 )
+    - bump Standards-Version to 3.9.5
+    - remove unused Build-Depends
+      - quilt
+  * change to upstream version 1.8.14
+    - fix FTBFS on kfreebsd ( Closes: #725476 )
+  * Bumps compat to 9
+  * New maintainer ( Closes: #748487 )
+
+ -- Jörg Frings-Fürst <debian@jff-webhosting.net>  Sun, 18 May 2014 17:40:37 +0200
+
+ipmitool (1.8.13-1) unstable; urgency=low
+
+  * New upstream release
+    - Fixes regression in default cipher suite selection (Closes: #708621).
+
+ -- Luk Claes <luk@debian.org>  Wed, 18 Sep 2013 07:45:10 +0200
+
+ipmitool (1.8.12-1) unstable; urgency=low
+
+  * Merge new upstream from Ubuntu (Closes: #692292).
+
+ -- Luk Claes <luk@debian.org>  Tue, 07 May 2013 18:12:12 +0200
+
+ipmitool (1.8.12-0ubuntu2) raring; urgency=low
+
+  * debian/patches/big_endian: cherry-pick missing includes from upstream;
+    fixes FTBFS on powerpc.
+
+ -- Robie Basak <robie.basak@canonical.com>  Tue, 05 Mar 2013 13:38:42 +0000
+
+ipmitool (1.8.12-0ubuntu1) raring; urgency=low
+
+  * New upstream release (LP: #1074443):
+    - Dropped patches:
+      + fix_sdr_segfault: ipmi_sdr_print_sensor_compact no longer
+        exists upstream.
+      + dell_*: merged upstream.
+
+ -- Robie Basak <robie.basak@canonical.com>  Mon, 04 Mar 2013 12:13:46 +0000
+
+ipmitool (1.8.11-5ubuntu1) precise; urgency=low
+
+  * Merge from Debian testing (LP: #914920).  Remaining changes:
+    - debian/contol:
+      + Changed openipmi from Suggests to Recommends
+    - debian/copyright:
+      + Add DELL copyright notice.
+    - Apply a series of 6 patches from upstream's patch tracker to
+      add DELL specific commands (delloem)
+  * Drop changes:
+    - Add armel/armhf support, now Architecture is any
+    - 101_fix_buf_overflow.patch now in debian
+
+ -- Leo Iannacone <l3on@ubuntu.com>  Wed, 11 Jan 2012 18:49:15 +0100
+
+ipmitool (1.8.11-5) unstable; urgency=high
+
+  * debian/control: Add libncurses-dev build dependency
+  * Don't set umask to fix CVE-2011-4339 (Closes: #651917).
+
+ -- Luk Claes <luk@debian.org>  Wed, 28 Dec 2011 12:34:15 +0100
+
+ipmitool (1.8.11-4) unstable; urgency=low
+
+  * debian/control:
+    - Add ${misc:Depends} so deps can be added by debhelper.
+  * debian/README.source: Add reference to quilt docs.
+  * debian/ipmitool.ipmievd.init:
+    - Test if /etc/default/rcS exists, before executing it.
+    - Add status support (Closes: #536119).
+  * debian/ipmitool.{post,pre}{inst,rm}: Add -e.
+  * Fix buffer overflow in tsol session.
+  * Update Vcs-Browser as URL mentioned within Alioth's gitweb
+    interface does not work.
+
+ -- Luk Claes <luk@debian.org>  Thu, 22 Sep 2011 07:49:10 +0200
+
+ipmitool (1.8.11-3) unstable; urgency=high
+
+  * debian/control:
+    - Add myself as co-maintainer.
+    - Add Vcs entries.
+    - Update Architecture to any as ipmitool can be used for
+      remote devices (Closes: #578492).
+  * Only approach rsp->data when rsp is set (Closes: #637423).
+
+ -- Luk Claes <luk@debian.org>  Mon, 19 Sep 2011 19:35:04 +0200
+
+ipmitool (1.8.11-2ubuntu6) oneiric; urgency=low
+
+  * Add armel/armhf support
+
+ -- Michael Casadevall <mcasadevall@ubuntu.com>  Wed, 05 Oct 2011 15:04:58 -0700
+
+ipmitool (1.8.11-2ubuntu5) oneiric; urgency=low
+
+  * Rebuild for OpenSSL 1.0.0.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Wed, 18 May 2011 00:10:19 +0100
+
+ipmitool (1.8.11-2ubuntu4) natty; urgency=low
+
+  * Changed openipmi from Suggests to Recommends to ensure
+    it's installed too. (LP: #110992)
+
+ -- Jeff Lane <jeff@ubuntu.com>  Wed, 09 Mar 2011 10:40:28 -0500
+
+ipmitool (1.8.11-2ubuntu3) maverick; urgency=low
+
+  * debian/patches/101_fix_buf_overflow.patch: Add patch to fix buffer overflow.
+    (LP: #633054)
+
+ -- Chuck Short <zulcss@ubuntu.com>  Wed, 08 Sep 2010 09:11:26 -0400
+
+ipmitool (1.8.11-2ubuntu2) maverick; urgency=low
+
+  * Actually remove 30_ipmi_delloem.patch this time.
+
+ -- Stefano Rivera <stefano@rivera.za.net>  Mon, 28 Jun 2010 12:47:48 +0200
+
+ipmitool (1.8.11-2ubuntu1) maverick; urgency=low
+
+  [ Lorenzo De Liso ]
+  * Merge from debian unstable (LP: #598993), remaining changes:
+    - debian/copyright:
+      + Add DELL copyright notice.
+
+  [ Stefano Rivera ]
+  * Replaced 30_ipmi_delloem.patch (never accepted upstream) with a new series
+    of 6 patches from upstream's patch tracker.
+
+ -- Lorenzo De Liso <blackz@ubuntu.com>  Sun, 27 Jun 2010 12:26:30 +0200
+
+ipmitool (1.8.11-2) unstable; urgency=low
+
+  * Fix password reading (Patch from Kris Popendorf
+    <08kcn0b02@sneakemail.com> closes: #559363)
+  * Remove libreadline5-dev dependency in favour of libreadline-dev
+    (Closes: #553788)
+
+ -- Matthew Johnson <mjj29@debian.org>  Sun, 06 Dec 2009 00:05:49 +0000
+
+ipmitool (1.8.11-1ubuntu1) karmic; urgency=low
+
+  * Merge from debian unstable, remaining changes:
+    + debian/control:
+       - change Maintainer field according to specs.
+    + debian/patches/30_ipmi_delloem:.patch:
+       - Rediffed due to version bump.
+       - Dropped dpatchiness.
+    + debian/copyright:
+      - Add DELL copyright notice.
+
+ -- Chuck Short <zulcss@ubuntu.com>  Mon, 23 Mar 2009 00:01:26 +0000
+
+ipmitool (1.8.11-1) unstable; urgency=low
+
+  * New upstream release
+  * Change to quilt rather than dpatch
+  * Refresh config.sub/config.guess in configure
+  * Bump standards version
+
+ -- Matthew Johnson <mjj29@debian.org>  Sun, 22 Mar 2009 16:44:06 +0000
+
+ipmitool (1.8.9-2ubuntu1) jaunty; urgency=low
+
+  * debian/patches/30_ipmi_delloem:
+    - add DELL specific commands (delloem)
+  * debian/patches/20_ipmi_ipmi:
+    - clean up *.orig
+  * debian/patches/20_ipmi_isol:
+    - clean up *.orig
+  * debian/copyright:
+    - add DELL copyright notice
+  * debian/control:
+    - change Maintainer field
+
+ -- Ante Karamatic <ivoks@ubuntu.com>  Wed, 18 Feb 2009 08:48:33 +0100
+
+ipmitool (1.8.9-2) unstable; urgency=medium
+
+  * Change pidfile name to the one it actually is. (Closes: #508434)
+  * Fix typo in README (Closes: #508231)
+  * Make sdr/Temperatures reading working again (Closes: #507760):
+     - Add patch to revert some bits from 1.8.8 to 1.8.9:
+       20_ipmi_sdr.dpatch (Patch from Cyril Brulebois
+       <cyril.brulebois@kerlabs.com>)
+  * Bump Standards-Version
+  * Remove empty /usr/share/ipmitool directory
+
+ -- Matthew Johnson <mjj29@debian.org>  Tue, 19 Feb 2008 15:21:40 +0000
+
+ipmitool (1.8.9-1) unstable; urgency=low
+
+  * Adopt package (Closes: #432027)
+  * New upstream release
+    - Closes: #422864
+    - Closes: #377628
+  * Add patch to fix segfault (Closes: #389741)
+  * Add patch to fix isol (Closes: #412816)
+  * Add watch file
+  * Move from DH_COMPAT to debian/compat
+  * Bump to dephelper v5
+
+ -- Matthew Johnson <mjj29@debian.org>  Thu, 13 Dec 2007 10:25:22 +0000
+
+ipmitool (1.8.8-3.1) unstable; urgency=high
+
+  * Non-maintainer upload.
+  * High urgency for RC bug fix.
+  * Fix build with linux-libc-dev (closes: #428929).
+  * Fix debian/rules to not rerun configure in the binary target.
+
+ -- Julien Cristau <jcristau@debian.org>  Fri, 20 Jul 2007 16:29:18 +0200
+
+ipmitool (1.8.8-3) unstable; urgency=low
+
+  * Ported fix to ipmievd from upstream version 1.8.9 (Closes: #408536):
+    - fix ipmievd fd closing bug.  Patch from Rupert Hair.
+  * Started using dpatch to apply patches.  Added dpatch to build dependencies.
+  * Add powerpc to the list of supported archs (Closes: #405455)
+
+ -- Petter Reinholdtsen <pere@debian.org>  Tue, 03 Apr 2007 16:37:45 +0200
+
+ipmitool (1.8.8-2) unstable; urgency=low
+
+  * Add handler for the ipmievd init.d script failure during removal and
+    installation.  If it fail during installation, update
+    /etc/default/ipmievd to disable ipmievd.
+
+ -- Petter Reinholdtsen <pere@debian.org>  Sun,  1 Oct 2006 11:21:44 +0200
+
+ipmitool (1.8.8-1) unstable; urgency=low
+
+  * New upstream release.
+    - Daemon now tries to access device before it forks, and thus will
+      report errors to the init.d script if it fail. (Closes: #362425)
+  * Make it possible to disable ipmievd by setting ENABLED=false in
+    /etc/defaults/ipmievd. (Closes: #370511)
+  * Add --oknodo as start-stop-daemon argument when stopping ipmievd,
+    to avoid returning an error if it is not running. (Closes: #370509)
+  * Update standards-version from 3.6.2.1 to 3.7.2.  No changes needed.
+  * Correct dependency and runlevel info in init.d script.
+
+ -- Petter Reinholdtsen <pere@debian.org>  Fri, 29 Sep 2006 19:16:41 +0200
+
+ipmitool (1.8.7-2) unstable; urgency=low
+
+  * Fix typo in init.d/ipmievd. (Closes: #361309)
+
+ -- Petter Reinholdtsen <pere@debian.org>  Sat,  8 Apr 2006 06:44:31 +0200
+
+ipmitool (1.8.7-1) unstable; urgency=low
+
+  * New upstream version.
+    - Dropped nuclear clause from the copyright.  Updated debian/copyright
+      to reflect this.
+    - ipmievd now store pid in /var/run/ipmievd.pid.  Adjust init.d
+      script to use it.
+  * Rename /etc/default/ipmievd variable IPMIEVD_OPTS is renamed to
+    IPMIEVD_OPTIONS to stay compatible with upstream and other
+    distributions.  Add backwards compatibility code with a warning to
+    the users of the old variable.
+
+ -- Petter Reinholdtsen <pere@debian.org>  Sun, 26 Mar 2006 21:11:08 +0200
+
+ipmitool (1.8.6-2) unstable; urgency=low
+
+  * Add ia64 as an supported arch. (Closes: #355930)
+
+ -- Petter Reinholdtsen <pere@debian.org>  Fri, 10 Mar 2006 23:34:50 +0100
+
+ipmitool (1.8.6-1) unstable; urgency=low
+
+  * New upstream version.
+    - Avoid crashing when setting lan IP address. (Closes: #351205)
+  * Avoid changing history by reverding upstream change
+    to email addresses in debian/changelog.
+  * Correct typo in control file: Suggest -> Suggests.  Thanks
+    to Philipp Matthias Hahn for the report.
+  * Add init.d/ipmievd script.  Based on script from Elmar Hoffmann,
+    slightly modified to use lsb-base functions. Added dependency on
+    lsb-base.  (Closes: #345994)
+
+ -- Petter Reinholdtsen <pere@debian.org>  Sun, 26 Feb 2006 10:31:14 +0100
+
+ipmitool (1.8.2-2) unstable; urgency=low
+
+  * Add build-dependency on 'libreadline5-dev | libreadline-dev' to make
+    sure all archs get readline support. (Closes: #326341)
+  * Add build-dependency on libssl-dev to enable SSL support on
+    all archs.
+  * Updated Standards-Version to 3.6.2.1. (No updates required)
+
+ -- Petter Reinholdtsen <pere@debian.org>  Sat,  3 Sep 2005 19:18:51 +0200
+
+ipmitool (1.8.2-1) unstable; urgency=low
+
+  * New upstream release.
+    -  Fix FRU reading for large (>255 bytes) areas.
+    -  Overhaul to ipmievd to support SEL polling in addition to OpenIPMI.
+    -  Fix LAN parameter segfault when no Ciphers supported by
+       BMC. (Closes: #306806)
+    -  Fix IPMIv2 support on Intel v2 BMCs (use -o intelplus).
+    -  Separate option parsing code from main ipmitool source file.
+    -  Add raw I2C support with IPMI Master Read-Write command.
+    -  Add support for new 'sdr elist' extended output format.
+    -  Add support for listing sensors by type with 'sdr type' command.
+    -  Add support for new 'sel elist' extended output format that
+       cross-references events with sensors.
+    -  Add support for sending dynamically generated platform events
+       based on existing sensor information.
+    -  New '-S' argument to read local SDR cache created with 'sdr dump'.
+    -  Updated manpage for ipmitool and ipmievd. (Closes: #306894)
+  * Correct the upstream URL in debian/changelog to the current one.
+  * Suggest package openipmi. (Closes: #305629)
+  * Add debian/watch file to detect new source versions.
+
+ -- Petter Reinholdtsen <pere@debian.org>  Sun,  5 Jun 2005 10:29:18 +0200
+
+ipmitool (1.8.1-1) unstable; urgency=low
+
+  * New upstream release.
+  * Install ipmievd into /usr/sbin/.
+
+ -- Petter Reinholdtsen <pere@debian.org>  Thu,  7 Apr 2005 01:18:44 +0200
+
+ipmitool (1.8.0-1) unstable; urgency=low
+
+  * Initial upload into Debian, based on the upstream build
+    rules. (Closes: #299924)
+  * Convert debian/changelog to UTF-8.
+  * Change section from 'contrib' to 'utils'.
+  * Build-depend on debhelper (>> 4.0.0) to match the rules file.
+  * Set Standards-version to 3.6.1.
+  * Make sure binary dependency is properly generated.
+  * Add long description, copied from the project README.
+  * Drop useless provides 'ipmitool', as the package is called 'ipmitool'.
+  * Don't install the COPYING file, as the license text already is
+    included in debian/copyright.
+  * Remove unused parts of the rules file.
+  * Correct clean target in rules file, to use 'distclean' and remove
+    configure-stamp not bogus config-stamp.
+
+ -- Petter Reinholdtsen <pere@debian.org>  Sun,  3 Apr 2005 20:52:02 +0200
+
+ipmitool (1.8.0) unstable; urgency=low
+
+  * Fix IPMIv2.0 issues
+  * Fix chassis boot parameter support
+  * Add support for linear sensors
+
+ -- Duncan Laurie <duncan@iceblink.org>  Wed, 16 Mar 2005 17:08:12 -0700
+
+ipmitool (1.7.1) unstable; urgency=low
+
+  * Update bmc plugin to work with new Solaris bmc driver (new ioctl
+    for interface detection and new STREAMS message-based interface).
+
+ -- Seth Goldberg <sethmeisterg@hotmail.com>  Mon,  7 Mar 2005 18:03:00 -0800
+
+ipmitool (1.7.0) unstable; urgency=low
+
+  * Propogate errors correctly so exit status will be useful
+  * More consistent display of errors including completion code text
+  * Errors and debug is send to stderr now
+  * New "sel get" command that will print details about SEL entry
+    and corresponding SDR records as well as FRUs via entity association
+  * Improved event generator, now supports reading events from text file
+  * New "-o oemtype" option for specifying OEM boards
+    exsting types are "supermicro" and "intelwv2"
+  * New PEF subsystem
+  * New "bmc" plugin for Solaris 10 x86
+  * Many bugfixes and contributed patches
+
+ -- Duncan Laurie <duncan@iceblink.org>  Fri,  7 Jan 2005 19:58:22 -0700
+
+ipmitool (1.6.2) unstable; urgency=low
+
+  * Support for Supermicro BMC OEM authentication method
+
+ -- Duncan Laurie <duncan@iceblink.org>  Mon, 16 Nov 2004 08:20:01 -0700
+
+ipmitool (1.6.1) unstable; urgency=low
+
+  * Fix minor problem with LAN parameter setting
+
+ -- Duncan Laurie <duncan@iceblink.org>  Wed, 29 Sep 2004 11:19:17 -0700
+
+ipmitool (1.6.0) unstable; urgency=low
+
+  * Add a README
+  * Add support for IPMIv2 and Serial-over-LAN from Newisys
+  * Add Solaris x86 lipmi interface
+  * Add support for building Solaris packages
+  * Add support for building RPMs as non-root user
+  * Fix segfault when doing "sel list" (from Matthew Braithwaite)
+  * Fix "chassis identify" on some BMCs (from ebrower@sourceforge)
+  * Add "bmc info" and related output (from ebrower@sourceforge)
+  * new "shell" and "exec" commands
+  * lots of other contributed patches
+
+ -- Duncan Laurie <duncan@iceblink.org>  Thu, 9 Sep 2004 21:39:37 -0700
+
+ipmitool (1.5.9) unstable; urgency=low
+
+  * Add ability to get a particular sensor by name
+  * Add ability to set a particular sensor threshold
+  * Add support for displaying V2 channel authentication levels
+  * Add README for rrdtool scripts in contrib directory
+  * Improve lan interface retry handling
+  * Support prompting for password or reading from environment
+  * Move chaninfo command into channel subcommand
+  * Fix reservation ID handling when two sessions open to BMC
+  * Fix reading of large FRU data
+  * Add configure option for changing binary to ipmiadm for Solaris
+  * Fix compile problem on Solaris 8
+
+ -- Duncan Laurie <duncan@sun.com>  Sat, 27 Mar 2004 00:11:37 -0700
+
+ipmitool (1.5.8) unstable; urgency=low
+
+  * Enable static compilation of interfaces
+  * Fix types to be 64-bit safe
+  * Fix compilation problems on Solaris
+  * Fix multiple big-endian problems for Solaris/SPARC
+  * Fix channel access to save settings to NVRAM
+  * Set channel privilege limit to ADMIN during "access on"
+  * Enable gratuitous ARP in bmcautoconf.sh
+  * Add support for Linux kernel panic messages in SEL output
+  * Add support for type 3 SDR records
+
+ -- Duncan Laurie <duncan@sun.com>  Tue, 27 Jan 2004 16:23:25 -0700
+
+ipmitool (1.5.7) unstable; urgency=low
+
+  * add IPMIv1.5 eratta fixes
+  * additions to FRU printing and FRU multirecords
+  * better handling of SDR printing
+  * contrib scripts for creating rrdtool graphs
+
+ -- Duncan Laurie <duncan@sun.com>  Mon,  5 Jan 2004 17:29:50 -0700
+
+ipmitool (1.5.6) unstable; urgency=low
+
+  * Fix SEL event decoding for generic events
+  * Handle empty SEL gracefully when doing "sel list"
+  * Fix sdr handling of sensors that do not return a reading
+  * Fix for CSV display of sensor readings/units from Fredrik Öhrn
+
+ -- Duncan Laurie <duncan@sun.com>  Thu,  4 Dec 2003 14:47:19 -0700
+
+ipmitool (1.5.5) unstable; urgency=low
+
+  * Add -U option for setting LAN username
+  * Fix -v usage for plugin interfaces
+
+ -- Duncan Laurie <duncan@sun.com>  Tue, 25 Nov 2003 15:10:48 -0700
+
+ipmitool (1.5.4) unstable; urgency=low
+
+  * Put interface plugin API into library
+  * Fix ipmievd
+
+ -- Duncan Laurie <duncan@sun.com>  Fri, 14 Nov 2003 15:16:34 -0700
+
+ipmitool (1.5.3) unstable; urgency=low
+
+  * Add -g option to work with grizzly bmc
+
+ -- Duncan Laurie <duncan@sun.com>  Mon,  3 Nov 2003 18:04:07 -0700
+
+ipmitool (1.5.2) unstable; urgency=low
+
+  * add support for setting gratuitous arp interval
+
+ -- Duncan Laurie <duncan@sun.com>  Fri, 24 Oct 2003 11:00:00 -0700
+
+ipmitool (1.5.1) unstable; urgency=low
+
+  * better SEL support
+  * fix display bug in SDR list
+
+ -- Duncan Laurie <duncan@sun.com>  Wed,  8 Oct 2003 17:28:51 -0700
+
+ipmitool (1.5.0) unstable; urgency=low
+
+  * more robust UDP packet handling
+  * add Intel IMB driver support
+  * use autoconf/automake/libtool
+
+ -- Duncan Laurie <duncan@sun.com>  Fri,  5 Sep 2003 11:57:32 -0700
+
+ipmitool (1.2-1) unstable; urgency=low
+
+  * New command line option parsing
+  * More chassis commands supported
+
+ -- Duncan Laurie <duncan@sun.com>  Wed,  2 Apr 2003 17:44:17 -0700
+
+ipmitool (1.1-1) unstable; urgency=low
+
+  * Minor fixes.
+
+ -- Duncan Laurie <duncan@sun.com>  Tue,  1 Apr 2003 14:31:10 -0700
+
+ipmitool (1.0-1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Duncan Laurie <duncan@sun.com>  Sun, 30 Mar 2003 21:30:46 -0700

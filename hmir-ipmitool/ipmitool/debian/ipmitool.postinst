@@ -1,0 +1,17 @@
+#!/bin/sh
+
+set -e
+
+
+ipmievd_initd_failed() {
+    echo "Unable to start ipmievd during installation.  Trying to disable."
+    if [ -f /etc/default/ipmievd ] && \
+           grep -q ^ENABLED=\"false\" /etc/default/ipmievd ; then
+        :
+    else
+        touch /etc/default/ipmievd
+        echo "ENABLED=\"false\"" >> /etc/default/ipmievd
+    fi
+}
+
+#DEBHELPER#

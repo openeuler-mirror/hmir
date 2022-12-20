@@ -8361,6 +8361,7 @@ fn bindgen_test_layout_sdr_record_list() {
         )
     );
 }
+
 // #[repr(C, packed)]
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]

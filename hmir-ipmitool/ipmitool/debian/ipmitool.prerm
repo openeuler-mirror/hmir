@@ -1,0 +1,9 @@
+#!/bin/sh
+
+set -e
+
+ipmievd_initd_failed() {
+    :
+}
+
+#DEBHELPER#

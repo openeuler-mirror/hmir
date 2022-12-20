@@ -1,0 +1,105 @@
+Description: Remove downloads at build time
+Author: Jörg Frings-Fürst <debian@jff.email>
+Forwarded: not-needed
+Last-Update: 2022-10-29
+---
+This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
+Index: trunk/configure.ac
+===================================================================
+--- trunk.orig/configure.ac
++++ trunk/configure.ac
+@@ -56,22 +56,22 @@ if test "x$exec_prefix" = "xNONE"; then
+ 	exec_prefix="$prefix"
+ fi
+ 
+-if test "x$WGET" = "x"; then
+-	if test "x$CURL" = "x"; then
+-		AC_MSG_WARN([** Neither wget nor curl could be found.])
+-		AC_MSG_WARN([** IANA PEN database will not be installed by `make install` !])
+-	else
+-		DOWNLOAD="$CURL --location --progress-bar"
+-		AM_CONDITIONAL([DOWNLOAD], [true])
+-	fi
+-else
+-	DOWNLOAD="$WGET -c -nd -O -"
+-	AM_CONDITIONAL([DOWNLOAD], [true])
+-fi
++#if test "x$WGET" = "x"; then
++#	if test "x$CURL" = "x"; then
++#		AC_MSG_WARN([** Neither wget nor curl could be found.])
++#		AC_MSG_WARN([** IANA PEN database will not be installed by `make install` !])
++#	else
++#		DOWNLOAD="$CURL --location --progress-bar"
++#		AM_CONDITIONAL([DOWNLOAD], [true])
++#	fi
++#else
++#	DOWNLOAD="$WGET -c -nd -O -"
++#	AM_CONDITIONAL([DOWNLOAD], [true])
++#fi
+ 
+-AC_MSG_WARN([** Download is:])
+-AC_MSG_WARN($DOWNLOAD)
+-AC_SUBST(DOWNLOAD, $DOWNLOAD)
++#AC_MSG_WARN([** Download is:])
++#AC_MSG_WARN($DOWNLOAD)
++#AC_SUBST(DOWNLOAD, $DOWNLOAD)
+ 
+ dnl
+ dnl set default option values
+Index: trunk/Makefile.am
+===================================================================
+--- trunk.orig/Makefile.am
++++ trunk/Makefile.am
+@@ -49,25 +49,25 @@ dist-hook:
+ .PHONY: install-pen-database uninstall-pen-database
+ .INTERMEDIATE: %.o %.la enterprise-numbers
+ 
+-if DOWNLOAD
++#if DOWNLOAD
+ 
+-enterprise-numbers:
+-	@echo Downloading IANA PEN database...
+-	@$(DOWNLOAD) "$(IANA_PEN)" > tmpfile.$$PPID || {\
+-		echo "FAILED to download the IANA PEN database"; \
+-		rm tmpfile.$$PPID; \
+-		false; \
+-	}
+-	@mv tmpfile.$$PPID $@
+-
+-install-pen-database: enterprise-numbers
+-	mkdir -m 755 -p $(DESTDIR)$(IANADIR)
+-	$(INSTALL_DATA) $< $(DESTDIR)$(IANADIR)/
+-
+-uninstall-pen-database:
+-	-rm -rf $(DESTDIR)$(IANADIR)/enterprise-numbers
+-
+-else
++#enterprise-numbers:
++#	@echo Downloading IANA PEN database...
++#	@$(DOWNLOAD) "$(IANA_PEN)" > tmpfile.$$PPID || {\
++#		echo "FAILED to download the IANA PEN database"; \
++#		rm tmpfile.$$PPID; \
++#		false; \
++#	}
++#	@mv tmpfile.$$PPID $@
++#
++#install-pen-database: enterprise-numbers
++#	mkdir -m 755 -p $(DESTDIR)$(IANADIR)
++#	$(INSTALL_DATA) $< $(DESTDIR)$(IANADIR)/
++#
++#uninstall-pen-database:
++#	-rm -rf $(DESTDIR)$(IANADIR)/enterprise-numbers
++#
++#else
+ 
+ install-pen-database:
+ 	@echo "*** NOT installing the IANA PEN database."
+@@ -77,7 +77,7 @@ uninstall-pen-database:
+ 	@echo "*** NOT uninstalling the IANA PEN database."
+ 	@echo "*** It was installed manually (if ever)."
+ 
+-endif
++#endif
+ 
+ install-data-local: install-pen-database
+ 	mkdir -p $(DESTDIR)$(DOCDIR)

@@ -14,6 +14,7 @@ use std::os::raw::c_char;
 
 
 
+
 pub fn ipmi_acquire_ipmb_address(intf : * mut ipmi_intf) -> u8
 {
     unsafe {
@@ -181,35 +182,35 @@ pub fn hmir_ipmi_sensor_print_fc_threshold(intf : * mut ipmi_intf,
     sensor : * mut sdr_record_common_sensor,sdr_record_type : u8) ->i32
 {
 
-    unsafe {
-
-        let mut thresh_available = 1;
-        let sr : *mut sensor_reading = ipmi_sdr_read_sensor_value(intf, sensor, sdr_record_type, 3);
-
-        if sr.is_null() {
-            println!("The sr is null");
-            return -1;
-        }
-
-        // const char *thresh_status = ipmi_sdr_get_thresh_status(sr, "ns");
-        let thresh_status = "ns";
-        let sensor_num = (*sensor).keys.sensor_num;
-        let owner_id = (*sensor).keys.owner_id;
-        let lun = (*sensor).keys._bitfield_1.get(0,2) as u8;
-        let channel = (*sensor).keys._bitfield_1.get(4,4) as u8;
-
-        // println!("sensor_num: {},owner_id: {},lun:{},channel:{}",sensor_num,owner_id,lun,channel);
-    
-        /*
-        * Get sensor thresholds
-        */
-        let rsp = ipmi_sdr_get_sensor_thresholds(intf,sensor_num, owner_id,lun, channel);
-        if !rsp.is_null() || (*rsp).ccode !=0 || (*rsp).data_len !=0 {
-            thresh_available = 0;
-        }
-
-        hmir_dump_sensor_fc_thredshold_csv(thresh_available, rsp, sr);
-    }
+    // unsafe {
+    //
+    //     let mut thresh_available = 1;
+    //     let sr : *mut sensor_reading = ipmi_sdr_read_sensor_value(intf, sensor, sdr_record_type, 3);
+    //
+    //     if sr.is_null() {
+    //         println!("The sr is null");
+    //         return -1;
+    //     }
+    //
+    //     // const char *thresh_status = ipmi_sdr_get_thresh_status(sr, "ns");
+    //     let thresh_status = "ns";
+    //     let sensor_num = (*sensor).keys.sensor_num;
+    //     let owner_id = (*sensor).keys.owner_id;
+    //     let lun = (*sensor).keys._bitfield_1.get(0,2) as u8;
+    //     let channel = (*sensor).keys._bitfield_1.get(4,4) as u8;
+    //
+    //     // println!("sensor_num: {},owner_id: {},lun:{},channel:{}",sensor_num,owner_id,lun,channel);
+    //
+    //     /*
+    //     * Get sensor thresholds
+    //     */
+    //     let rsp = ipmi_sdr_get_sensor_thresholds(intf,sensor_num, owner_id,lun, channel);
+    //     if !rsp.is_null() || (*rsp).ccode !=0 || (*rsp).data_len !=0 {
+    //         thresh_available = 0;
+    //     }
+    //
+    //     hmir_dump_sensor_fc_thredshold_csv(thresh_available, rsp, sr);
+    // }
 
 	// return (sr->s_reading_valid ? 0 : -1 );
     return 0;
@@ -226,9 +227,27 @@ pub fn hmir_ipmi_sensor_print_fc_discrete(intf : * mut ipmi_intf,
             println!("The sr is null");
             return -1;
         }
-        let s_id = CStr::from_ptr((*sr).s_id.as_ptr());
         // println!("s_id:{},{:p}",String::from_utf8_lossy(s_id.to_bytes()).to_string(),(*sr).s_a_units);
 
+        let s_id = CStr::from_ptr((*sr).s_id.as_ptr());
+        let s_a_units = CStr::from_ptr((*sr).s_a_units);
+        let s_a_str = CStr::from_ptr((*sr).s_a_str.as_ptr());
+        print!("{:<16}",String::from_utf8_lossy(s_id.to_bytes()).to_string());
+
+        if (*sr).s_reading_valid != 0 {
+            if (*sr).s_has_analog_value != 0 {
+                print!("|{:<10.3}|{:<10}|{:<6}", s_a_str.to_str().unwrap(), s_a_units.to_str().unwrap(), "ok");
+                // print!("|{:<10.3}|{:<10}|{:<6}", s_a_str.to_str().unwrap(), "dwj", "ok");
+
+            }else {
+                print!("|0x{:<8x}|{:<10}|0x{:x}{:<3x}", (*sr).s_data2, "discrete", (*sr).s_data2,(*sr).s_data3);
+            }
+        }else {
+            print!("|{:<10}|{:<10}|{:<6}", "na", "discrete", "na");
+        }
+
+        print!("|{:<10}|{:<10}|{:<10}|{:<10}|{:<10}|{:<10}", "na", "na", "na", "na", "na", "na");
+        println!("");
         
     }
 
@@ -246,7 +265,7 @@ pub fn hmir_ipmi_sensor_print_fc(intf : *mut ipmi_intf,
         let event_type = (*sensor).event_type;
         match event_type {
             1 => {
-                return hmir_ipmi_sensor_print_fc_threshold(intf, sensor, sdr_record_type);
+                // return hmir_ipmi_sensor_print_fc_threshold(intf, sensor, sdr_record_type);
             }
             _ => {
                 return hmir_ipmi_sensor_print_fc_discrete(intf, sensor, sdr_record_type);
@@ -257,6 +276,18 @@ pub fn hmir_ipmi_sensor_print_fc(intf : *mut ipmi_intf,
     0
 }
 
+
+pub fn org_ipmi_sensor_list()
+{
+    unsafe {
+        let intf = hmir_ipmi_intf_get();
+        // ipmi_sensor_list(intf);
+        let mut arg1 = std::ffi::CString::new("list").unwrap();
+        let mut argv = [arg1];
+        ipmi_sensor_main(intf,0,argv.as_mut_ptr() as *mut *mut i8);
+        hmir_ipmi_cleanup(intf);
+    }
+}
 
 
 pub fn hmir_ipmi_sensor_list() -> i32
@@ -309,7 +340,7 @@ mod tests {
 
     #[test]
     fn it_works() {
-
+        hmir_ipmi_sensor_list();
     }
 
 

@@ -1,0 +1,12 @@
+ Since the config file /etc/default/ipmitool is removed you can
+ change the start parameter on systemd systems by running
+
+  systemctl edit ipmievd
+
+ as root.
+
+ On SysV system you may edit 
+
+  /etc/init.d/ipmievd
+
+ -- Jörg Frings-Fürst <debian@jff.email>  Sat, 10 Sep 2022 15:35:32 +0200
