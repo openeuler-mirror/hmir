@@ -128,9 +128,9 @@ pub fn process_bind_cpu(pid : i32) -> std::string::String {
         let core_ids = core_affinity::get_core_ids().unwrap();
         let core_id = core_ids[0];
         core_affinity::set_for_current(core_id);
-        return string::String::from("Ok");
+        proc_default_result!(0);
     }
-    return string::String::from("Invalid process");
+    proc_default_result!(-1);
 }
 
 
