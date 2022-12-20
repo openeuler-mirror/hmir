@@ -32,6 +32,7 @@ iptables = "0.5.0"
 hmir-hash = {path = "hmir-hash" }
 hmir-systemd = {path = "hmir-systemd" }
 hmir-ovs = {path = "hmir-ovs" }
+hmir-ceph = {path = "hmir-ceph" }
 
 [[test]]
 name = "integration"
