@@ -16,44 +16,62 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug,Serialize,Deserialize)]
 pub struct HashWrap <K: Eq+Hash ,V> {
     // #[serde(serialize_with ="ordered_map")]
-    map: HashMap<K,V>
+    code : i32,
+    result: HashMap<K,V>
 }
-
-
 
 
 impl <K,V> HashWrap<K,V> where K: Eq + Hash {
     pub fn new() -> Self {
         HashWrap {
-            map: HashMap::new()
+            code : 0,
+            result: HashMap::new()
+        }
+    }
+
+    pub fn set_code(&mut self , code : i32){
+        self.code = code;
+    }
+
+    pub fn failed() -> Self {
+        HashWrap {
+            code : -1,
+            result: HashMap::new()
+        }
+    }
+
+    pub fn error(code : i32) -> Self {
+        HashWrap {
+            code : code,
+            result: HashMap::new()
         }
     }
 
     pub fn map<R>(&self, key: K, f: impl FnOnce(&V) -> R) -> Option<R> {
-        self.map.get(&key).map(f)
+        self.result.get(&key).map(f)
     }
 
     pub fn map_mut<R>(&mut self, key: K, f: impl FnOnce(&mut V) -> R) -> Option<R> {
-        self.map.get_mut(&key).map(f)
+        self.result.get_mut(&key).map(f)
     }
 
     pub fn get(&self, key:& K) -> Option<&V> {
-        self.map.get(key)
+        self.result.get(key)
     }
 
-    pub fn get_mut(&mut self, key: &K) -> Option<&mut V>  {self.map.get_mut(key)}
+    pub fn get_mut(&mut self, key: &K) -> Option<&mut V>  {self.result.get_mut(key)}
 
     pub fn insert(&mut self, key: K, value: V) {
         // You're taking `value` by value here, so you don't need to clone it.
-        self.map.insert(key, value/*.clone()*/);
+        self.result.insert(key, value/*.clone()*/);
     }
 
     pub fn remove(&mut self , key : K) {
-        self.map.remove(&key);
+        self.result.remove(&key);
     }
 
     pub fn contains_key(&self, k: &K) -> bool {
-        self.map.contains_key(k)
+        self.result.contains_key(k)
     }
 }
 
