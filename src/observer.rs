@@ -38,6 +38,15 @@ const SERVICE_STATUS : u32 = 0;
 use std::sync::{Arc, Mutex};
 use std::string;
 
+macro_rules! observer_default_result {
+    ($i:expr) =>{
+        let mut response = HashWrap::<i32,i32>:: new();
+        response.set_code($i);
+        let serialized = serde_json::to_string(&response).unwrap();
+        return serialized;
+    }
+}
+
 #[derive(Debug, Clone,Deserialize)]
 struct ObserverParam {
     url : std::string::String, //now only support https
@@ -88,8 +97,6 @@ pub fn is_valid_obs_cmd(t : u32) -> bool {
 
 
 fn do_remote_post(result : & std::string::String , url : & std::string::String ){
-
-
 
 
 }
@@ -154,7 +161,8 @@ fn reg_observer(obs_param : &ObserverParam) -> std::string::String
         }
 
     }
-    return string::String::from("Ok");
+
+    observer_default_result!(0);
 }
 
 pub fn unregister_observer(obs_cmd : u32) -> string::String
@@ -162,7 +170,7 @@ pub fn unregister_observer(obs_cmd : u32) -> string::String
     if let Some(metric) = OBSERVER_MAP.write().unwrap().get_mut(&obs_cmd) {
         metric.status = false;
     }
-    return string::String::from("Ok")
+    observer_default_result!(0);
 }
 
 
