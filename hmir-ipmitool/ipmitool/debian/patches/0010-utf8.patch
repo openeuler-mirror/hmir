@@ -1,0 +1,17 @@
+Description: conv AUTHORS to UTF-8
+Author: Jörg Frings-Fürst <debian@jff.email>
+Forwarded: not-needed
+Last-Update: 2020-07-28
+---
+This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
+Index: trunk/AUTHORS
+===================================================================
+--- trunk.orig/AUTHORS
++++ trunk/AUTHORS
+@@ -1,5 +1,5 @@
+ Duncan Laurie <duncan@iceblink.org>
+-Fredrik �hrn <ohrn@chl.chalmers.se>
++Fredrik Öhrn <ohrn@chl.chalmers.se>
+ Jon Cassorla <jon.cassorla@newisys.com>
+ Jeremy Ellington <jeremy@jeremye.net>
+ Petter Reinholdtsen <pere@hungry.com>

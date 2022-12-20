@@ -1,0 +1,1 @@
+rm_conffile /etc/default/ipmitool 1.8.18-11~ ipmitool
