@@ -31,7 +31,8 @@
 //! 下面是result字符串以json格式化的结果:
 //! ```
 //! {
-//!     "map":{
+//!     "code":0
+//!     "result":{
 //!         "collectl.service":{
 //!             "name":"collectl.service",
 //!             "description":"LSB: Collectl monitors system performance.",
@@ -101,6 +102,17 @@ lazy_static! {
     };
 }
 
+macro_rules! svr_default_result {
+    ( $result : expr ) =>{
+        let mut response = HashWrap::<String,Unit>:: new();
+        match $result {
+            Ok(x) => { response.set_code(0); },
+            Err(e) => { response.set_code(-1); },
+        }
+        let serialized = serde_json::to_string(&response).unwrap();
+        return serialized;
+    }
+}
 
 #[doc(hidden)]
 fn update_all_svr()
@@ -163,12 +175,10 @@ pub fn service_status(service: std::string::String) -> String
 ///
 /// 停止指定服务
 pub fn service_stop(service: std::string::String) -> String {
+    // let mut  response = HashWrap::<String,Unit>:: new();
     let client = build_blocking_client(SystemdObjectType::Manager).unwrap();
     let result = client.stop_unit(service.as_str(), "replace");
-    match result {
-        Ok(path) => String::from("Ok"),
-        Err(e) => String::from(e.name().unwrap())
-    }
+    svr_default_result!(result);
 }
 
 
@@ -179,10 +189,7 @@ pub fn service_stop(service: std::string::String) -> String {
 pub fn service_start(service: std::string::String) -> String {
     let client = build_blocking_client(SystemdObjectType::Manager).unwrap();
     let result = client.start_unit(service.as_str(), "replace");
-    match result {
-        Ok(path) => String::from("Ok"),
-        Err(e) => String::from(e.name().unwrap())
-    }
+    svr_default_result!(result);
 }
 
 
@@ -193,10 +200,7 @@ pub fn service_start(service: std::string::String) -> String {
 pub fn service_restart(service: std::string::String) -> String {
     let client = build_blocking_client(SystemdObjectType::Manager).unwrap();
     let result = client.restart_unit(service.as_str(), "replace");
-    match result {
-        Ok(path) => String::from("Ok"),
-        Err(e) => String::from(e.name().unwrap())
-    }
+    svr_default_result!(result);
 }
 
 ///
@@ -205,12 +209,8 @@ pub fn service_restart(service: std::string::String) -> String {
 /// disable指定服务
 pub fn service_disable(service: std::string::String) -> String {
     let client = build_blocking_client(SystemdObjectType::Manager).unwrap();
-    let vec = vec![service.as_str()];
-    let result = client.disable_unit_files(vec, true);
-    match result {
-        Ok(path) => String::from("Ok"),
-        Err(e) => String::from(e.name().unwrap())
-    }
+    let result = client.disable_unit_files(vec![service.as_str()], true);
+    svr_default_result!(result);
 }
 
 
@@ -220,12 +220,8 @@ pub fn service_disable(service: std::string::String) -> String {
 /// enable指定服务
 pub fn service_enable(service: std::string::String) -> String {
     let client = build_blocking_client(SystemdObjectType::Manager).unwrap();
-    let vec = vec![service.as_str()];
-    let result = client.enable_unit_files(vec, false,true);
-    match result {
-        Ok(path) => String::from("Ok"),
-        Err(e) => String::from(e.name().unwrap())
-    }
+    let result = client.enable_unit_files(vec![service.as_str()], false,true);
+    svr_default_result!(result);
 }
 
 
@@ -284,8 +280,24 @@ mod tests {
     use super::*;
     use serde_json::{Result, Value};
 
+    fn svr_result_test() -> std::string::String {
+        let client = build_blocking_client(SystemdObjectType::Manager).unwrap();
+        let vec = vec!["docker.service"];
+        let result = client.enable_unit_files(vec, false,true);
+        svr_default_result!(result);
+    }
+
+    #[test]
+    fn svr_result_it_work()  {
+
+        let s = svr_result_test();
+        println!("{}",s);
+    }
+
     #[test]
     fn service_all_it_works() {
+
+
         update_all_svr();
         let data = service_all();
         println!("{}",data);
