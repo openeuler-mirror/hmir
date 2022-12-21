@@ -5,7 +5,17 @@
 use jsonrpsee::ws_server::{RpcModule};
 use hmir_hash::HashWrap;
 use serde::{Deserialize, Serialize};
+use std::process::Command;
 
+
+macro_rules! kernel_default_result {
+    ($i:expr) =>{
+        let mut response = HashWrap::<i32,i32>:: new();
+        response.set_code($i);
+        let serialized = serde_json::to_string(&response).unwrap();
+        return serialized;
+    }
+}
 
 #[derive(Debug, Clone,Serialize)]
 pub struct ModuleInfo {
@@ -50,15 +60,31 @@ pub fn kernel_lsmod() -> std::string::String
     serialized
 }
 
-pub fn kernel_rmmod() -> std::string::String
+pub fn kernel_rmmod(module : std::string::String) -> std::string::String
 {
-    todo!()
+    let status = Command::new("rmmod")
+        .arg(module)
+        .status()
+        .expect("rmmod failed process");
+    if status.success() {
+        kernel_default_result!(0);
+    }
+
+    kernel_default_result!(-1);
 }
 
-pub fn kernel_insmod() -> std::string::String
+pub fn kernel_modprobe(module : std::string::String) -> std::string::String
 {
-    todo!()
+    let status = Command::new("modprobe")
+        .arg(module)
+        .status()
+        .expect("modprobe failed process");
+    if status.success() {
+        kernel_default_result!(0);
+    }
+    kernel_default_result!(-1);
 }
+
 
 
 #[cfg(test)]
@@ -69,6 +95,7 @@ mod tests {
         let s = kernel_lsmod();
         println!("{}",s);
     }
+
 }
 
 #[doc(hidden)]
@@ -77,6 +104,18 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
     module.register_method("kernel-lsmod", |_, _| {
         //默认没有error就是成功的
         Ok(kernel_lsmod())
+    })?;
+
+    module.register_method("kernel-rmmod", |params, _| {
+        //默认没有error就是成功的
+        let module = params.one::<std::string::String>()?;
+        Ok(kernel_rmmod(module))
+    })?;
+
+    module.register_method("kernel-modprobe", |params, _| {
+        //默认没有error就是成功的
+        let module = params.one::<std::string::String>()?;
+        Ok(kernel_modprobe(module))
     })?;
 
     Ok(())
