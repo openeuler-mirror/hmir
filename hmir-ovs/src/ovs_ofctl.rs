@@ -1,7 +1,7 @@
 //! ovs-ofctl实现
 //! 
 //! 支持以下的格式
-//! - ovs-ofctl-forbid-dstip: 
+//! - ovs-ofctl-forbid-dstip: 禁止虚拟机访问外部某IP
 //! 请求格式：
 //!  ```
 //! { 
@@ -19,7 +19,7 @@
 //!     "id":1
 //! }
 //! ```
-//! - ovs-ofctl-forbid-dstip: 
+//! - ovs-ofctl-clear-port-rules: 删除虚拟机网络接口的流表规则 
 //! 请求格式：
 //!  ```
 //! { 
@@ -29,9 +29,19 @@
 //!     "params": {"br_name":"ovsmgmt", "in_port":"vnet0"}
 //! }
 //!  ```
+//! - ovs-ofctl-add-default-rule:  为网桥设置默认流表规则，二层交换机能力
+//! 请求格式：
+//!  ```
+//! { 
+//!     "jsonrpc":"2.0", 
+//!     "id":1, 
+//!     "method":"ovs-ofctl-add-default-rule" ,
+//!     "params": {"br_name":"ovsmgmt"}
+//! }
+//!  ```
+use super::ovs_common::*;
 
-
-use std::process::Command;
+use std::process::{Command};
 use std::collections::HashMap;
 use jsonrpsee::ws_server::RpcModule;
 
@@ -43,6 +53,11 @@ const OFCTL_PRIO_SINGLE: &str= "20";
 
 pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
 
+    module.register_method("ovs-ofctl-add-default-rule", |params, _| {
+        let br_info = params.parse::<HashMap<String, String>>()?;
+        Ok(ovs_ofctl_add_default_rule(br_info))
+    })?;
+    
     module.register_method("ovs-ofctl-clear-port-rules", |params, _| {
         let br_info = params.parse::<HashMap<String, String>>()?;
         Ok(ovs_ofctl_clear_port_rules(br_info))
@@ -50,7 +65,7 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
 
     module.register_method("ovs-ofctl-forbid-dstip", |params, _| {
         let br_info = params.parse::<HashMap<String, String>>()?;
-        Ok(forbid_dstip(br_info))
+        Ok(ovs_ofctl_forbid_dstip(br_info))
     })?;
 
     Ok(())
@@ -65,15 +80,10 @@ fn ovs_ofctl_clear_port_rules(info_map : HashMap<String, String>) -> String {
                                         .arg(br_name)
                                         .arg(clear_rule)
                                         .output().expect("failed to execute ovs_ofctl_clear_port_rules");
-    
-    if output.status.success(){
-        String::from("Done")
-    } else {
-        String::from_utf8_lossy(&output.stderr).to_string()
-    }
+    reflect_cmd_result(output)
 }
 
-fn forbid_dstip(info_map : HashMap<String, String>) -> String {
+fn ovs_ofctl_forbid_dstip(info_map : HashMap<String, String>) -> String {
     let br_name = info_map.get("br_name").unwrap();
     let dst_ip = info_map.get("dst_ip").unwrap();
     let in_port = info_map.get("in_port").unwrap();
@@ -89,10 +99,17 @@ fn forbid_dstip(info_map : HashMap<String, String>) -> String {
                                         .arg("add-flow")
                                         .arg(br_name)
                                         .arg(flow_rule).
-                                        output().expect("failed to excute ovs-vsctl-add-port");
-    if output.status.success() {
-        String::from("Done")
-    }else {
-        String::from_utf8_lossy(&output.stderr).to_string()
-    } 
+                                        output().expect("failed to excute ovs-ofctl-forbid-dstip");
+    reflect_cmd_result(output)
+}
+
+fn ovs_ofctl_add_default_rule(info_map : HashMap<String, String>) -> String {
+    let br_name = info_map.get("br_name").unwrap();
+    let output = Command::new(OFCTL_CMD)
+                                        .arg("add-flow")
+                                        .arg(br_name)
+                                        .arg("priority=0,action=normal")
+                                        .output().expect("failed to execute ovs_ofctl_add_default_rule");
+    
+    reflect_cmd_result(output)
 }
