@@ -84,6 +84,8 @@
 //! }
 //!  ```
 
+use super::ovs_common::*;
+
 use std::process::Command;
 use std::collections::HashMap;
 use jsonrpsee::ws_server::RpcModule;
@@ -138,11 +140,7 @@ fn add_br(info_map : HashMap<String, String>) -> String {
                                         .arg("add-br")
                                         .arg(br_name).
                                         output().expect("failed to excute ovs-vsctl-add-br");
-    if output.status.success() {
-        String::from("Done")
-    }else {
-        String::from_utf8_lossy(&output.stderr).to_string()
-    } 
+    reflect_cmd_result(output)
 }
 
 fn del_br(info_map : HashMap<String, String>) -> String {
@@ -151,11 +149,7 @@ fn del_br(info_map : HashMap<String, String>) -> String {
                                         .arg("del-br")
                                         .arg(br_name).
                                         output().expect("failed to excute ovs-vsctl-del-br");
-    if output.status.success() {
-        String::from("Done")
-    }else {
-        String::from_utf8_lossy(&output.stderr).to_string()
-    }    
+    reflect_cmd_result(output)   
 }
 
 fn add_port(info_map : HashMap<String, String>) -> String {
@@ -166,11 +160,7 @@ fn add_port(info_map : HashMap<String, String>) -> String {
                                         .arg(br_name)
                                         .arg(port_name).
                                         output().expect("failed to excute ovs-vsctl-add-port");
-    if output.status.success() {
-        String::from("Done")
-    }else {
-        String::from_utf8_lossy(&output.stderr).to_string()
-    } 
+    reflect_cmd_result(output) 
 }
 
 fn del_port(info_map : HashMap<String, String>) -> String {
@@ -181,11 +171,7 @@ fn del_port(info_map : HashMap<String, String>) -> String {
                                         .arg(br_name)
                                         .arg(port_name).
                                         output().expect("failed to excute ovs-vsctl-del-port");
-    if output.status.success() {
-        String::from("Done")
-    }else {
-        String::from_utf8_lossy(&output.stderr).to_string()
-    } 
+    reflect_cmd_result(output) 
 }
 
 fn ovs_vsctl_set_netflow_rule(info_map : HashMap<String, String>) -> std::string::String {
@@ -199,11 +185,7 @@ fn ovs_vsctl_set_netflow_rule(info_map : HashMap<String, String>) -> std::string
                                         .arg(br_name)
                                         .arg(flow_rule).
                                         output().expect("failed to excute ovs-vsctl-set-netflow-rule");
-    if output.status.success() {
-        String::from("Done")
-    }else {
-        String::from_utf8_lossy(&output.stderr).to_string()
-    } 
+    reflect_cmd_result(output) 
 }
 
 fn ovs_vsctl_del_netflow_rule(info_map : HashMap<String, String>) -> String {
@@ -214,11 +196,7 @@ fn ovs_vsctl_del_netflow_rule(info_map : HashMap<String, String>) -> String {
                                         .arg(br_name)
                                         .arg("netflow").
                                         output().expect("failed to excute ovs-vsctl-del-netflow-rule");
-    if output.status.success() {
-        String::from("Done")
-    }else {
-        String::from_utf8_lossy(&output.stderr).to_string()
-    } 
+    reflect_cmd_result(output) 
 }
 
 fn ovs_vsctl_set_db_entry(table: String, row: String, key: String, value: String) -> String{
@@ -230,9 +208,5 @@ fn ovs_vsctl_set_db_entry(table: String, row: String, key: String, value: String
                                         .arg(row)
                                         .arg(set_rule).
                                         output().expect("failed to excute ovs_vsctl_set_db_entry");
-    if output.status.success() {
-        String::from("Done")
-    }else {
-        String::from_utf8_lossy(&output.stderr).to_string()
-    } 
+    reflect_cmd_result(output) 
 }
