@@ -4,7 +4,7 @@
 
 use jsonrpsee::ws_server::{RpcModule};
 use hmir_hash::HashWrap;
-use serde::{Deserialize, Serialize};
+use serde::{Serialize};
 use std::process::Command;
 
 

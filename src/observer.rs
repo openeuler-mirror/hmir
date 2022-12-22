@@ -30,12 +30,12 @@
 use jsonrpsee::ws_server::{RpcModule};
 use std::sync::RwLock;
 use hmir_hash::HashWrap;
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize};
 use crate::svr::service_all;
 use tokio::time;
 
 const SERVICE_STATUS : u32 = 0;
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc};
 use std::string;
 
 macro_rules! observer_default_result {
@@ -63,10 +63,10 @@ struct ObserverMetric {
 }
 
 
-type m_handle_t = Arc<RwLock<HashWrap<u32,ObserverMetric>>>;
+type HandleType = Arc<RwLock<HashWrap<u32,ObserverMetric>>>;
 
 lazy_static! {
-    static ref OBSERVER_MAP : m_handle_t = {
+    static ref OBSERVER_MAP : HandleType = {
         let m  = HashWrap::<u32,ObserverMetric>:: new();
         Arc::new(RwLock::new(m))
     };
@@ -77,10 +77,10 @@ pub fn do_nothing() -> std::string::String
     std::string::String::from("Ok")
 }
 
-type callback = fn() -> std::string::String;
+type Callback = fn() -> std::string::String;
 
 
-fn get_observer_callback(obs_cmd : u32) -> callback {
+fn get_observer_callback(obs_cmd : u32) -> Callback {
     match obs_cmd {
         SERVICE_STATUS => service_all,
         _ => do_nothing
@@ -102,7 +102,7 @@ fn do_remote_post(result : & std::string::String , url : & std::string::String )
 }
 
 
-fn create_obs_thread(map_handle : m_handle_t, obs_cmd : u32)
+fn create_obs_thread(map_handle : HandleType, obs_cmd : u32)
 {
     tokio::task::spawn(async move {
         //运行在一个不阻塞的线程
@@ -112,7 +112,7 @@ fn create_obs_thread(map_handle : m_handle_t, obs_cmd : u32)
                 let url = o.url.clone();
                 let duration = o.duration;
                 let status = o.status;
-                let call:callback = o.callback;
+                let call:Callback = o.callback;
 
                 if !status {
                     map_handle.write().unwrap().remove(obs_cmd);
@@ -123,7 +123,7 @@ fn create_obs_thread(map_handle : m_handle_t, obs_cmd : u32)
                     do_remote_post(&result,&url);
                     count = 0;
                 }
-                tokio::time::sleep(time::Duration::from_secs(1));
+                std::thread::sleep(time::Duration::from_secs(1));
                 count = count +1;
             }
         }
@@ -135,7 +135,7 @@ fn reg_observer(obs_param : &ObserverParam) -> std::string::String
     if is_valid_obs_cmd(obs_param.obs_cmd) {
 
         //remove the old and stop the thread
-        let mut metric = ObserverMetric {
+        let metric = ObserverMetric {
             url : obs_param.url.clone(),
             obs_cmd: obs_param.obs_cmd,
             duration : obs_param.duration,

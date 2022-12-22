@@ -71,9 +71,9 @@ fn build_lib() {
         // .file("ipmitool/src/plugins/lanplus/lanplus_strings.c")
         // .file("ipmitool/src/plugins/lan/lan.c")
         .include("ipmitool/lib/")
+        .include("ipmitool/include/")
         .include("ipmitool/")
         .define("HAVE_CONFIG_H","1")
-        .define("DEFAULT_INTF","open")
         .compile("ipmi");
 
 
