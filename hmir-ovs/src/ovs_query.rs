@@ -19,7 +19,7 @@
 //! }
 //! ```
 //! 
-//! - ovs-get-bridges： 查询ovs网桥信息
+//! - ovs-query-bridges： 查询ovs网桥信息
 //! 请求格式：
 //!  ```
 //! { 
@@ -38,7 +38,7 @@
 //! }
 //! ```
 //! 
-//!  - ovs-get-ports： 查询ovs端口信息
+//!  - ovs-query-ports： 查询ovs端口信息
 //! 请求格式：
 //!  ```
 //! { 
@@ -94,31 +94,31 @@
 //!     "id":1,
 //! }
 //! ```
+//! 
+//!  - ovs-query-interfaces： 查询ovs interface信息
+//! 请求格式：
+//!  ```
+//! { 
+//!     "jsonrpc":"2.0", 
+//!     "id":1, 
+//!     "method":"ovs-query-interfaces" 
+//! }
+//!  ```
+//! 响应格式：
+//! ```
+//! {
+//!     "jsonrpc":"2.0",
+//!      "result":"[{\"name\":\"br-eth-patch\",\"uuid\":\"f01fe186-f028-4514-a8e8-655fd0c0574c\",\"mac\":\"32:37:9d:53:2d:fc\"},{\"name\":\"br-test-patch\",\"uuid\":\"4d3d9983-4d5b-4a8f-ac98-31b7979aeec7\",\"mac\":\"42:7f:e2:9d:c4:fe\"}]",
+//!      "id":1
+//! }
 
 use jsonrpsee::ws_server::RpcModule;
 use std::collections::HashMap;
 
-use super::ovs_bridge::*;
 use super::ovs_port::*;
 use super::ovs_client::*;
 
 use serde_json::json;
-use serde::{Deserialize, Serialize};
-
-#[derive(Clone, Serialize)]
-pub struct RetPort{
-    pub ovs_ports: Vec<OvsPort>,
-}
-
-#[derive(Clone, Serialize)]
-pub struct RetBridge{
-    pub ovs_bridges: Vec<OvsBridge>,
-}
-
-#[derive(Clone, Serialize, Deserialize)]
-pub struct RetInfo {
-    pub message: String,
-}
 
 pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
         
@@ -132,6 +132,10 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
 
     module.register_method("ovs-query-bridges", |_, _| {
         Ok(get_bridges())
+    })?;
+
+    module.register_method("ovs-query-interfaces", |_, _| {
+        Ok(get_interfaces())
     })?;
 
     module.register_method("ovs-add-port", |params, _| {
@@ -151,26 +155,15 @@ fn check_connection() -> std::string::String{
     let ovsc = OvsClient::new();
     match ovsc{
         Err(e) => {
-            let ret_info = RetInfo {
-                message: e.error_detail.clone(),
-            };
-            let ret_message = serde_json::to_string(&ret_info).unwrap();
+            let ret_message = serde_json::to_string(&(e.error_detail.clone())).unwrap();
             ret_message
         },
         Ok(mut c) => {
             let is_connected = c.check_connection();
             if is_connected {
-                let ret_info = RetInfo {
-                    message: "Done".to_string(),
-                };
-                let ret_message = serde_json::to_string(&ret_info).unwrap();
-                ret_message
+                "Connected!".to_string()
             } else {
-                let ret_info = RetInfo {
-                    message: "Failure".to_string(),
-                };
-                let ret_message = serde_json::to_string(&ret_info).unwrap();
-                ret_message
+                "Failed to connect".to_string()
             }
         }      
     }    
@@ -180,77 +173,73 @@ fn get_ports() -> std::string::String{
     let ovsc = OvsClient::new();
     match ovsc{
         Err(e) => {
-            let ret_info = RetInfo {
-                message: e.error_detail.clone(),
-            };
-            let ret_message = serde_json::to_string(&ret_info).unwrap();
-            ret_message
+            e.error_detail.clone()
         },
         Ok(mut c)=>{
             let ports = c.get_ports();
             match ports{
                 Ok(ports) =>{
                     println!("number of port : {0}", ports.len());
-                    let ret_info = RetPort {
-                        ovs_ports: ports,
-                    };
-                    let ret_message = serde_json::to_string(&ret_info).unwrap();
+                    let ret_message = serde_json::to_string(&ports).unwrap();
                     ret_message    
                 },
                 Err(e) => {
-                    let ret_info = RetInfo {
-                        message: e.error_detail.clone(),
-                    };
-                    let ret_message = serde_json::to_string(&ret_info).unwrap();
-                    ret_message
+                    e.error_detail.clone()
                 }
             }
         }
     }
 }
 
-pub fn get_bridges() -> std::string::String {
+fn get_bridges() -> std::string::String {
     let ovsc = OvsClient::new();
     match ovsc{
         Err(e) => {
-            let ret_info = RetInfo {
-                message: e.error_detail.clone(),
-            };
-            let ret_message = serde_json::to_string(&ret_info).unwrap();
-            ret_message
+            e.error_detail.clone()
         },
         Ok(mut c)=>{
             let bridges = c.get_bridges();
             match bridges{
                 Ok(bridges) =>{
                     println!("number of bridge: {0}", bridges.len());
-                    let ret_info = RetBridge {
-                        ovs_bridges: bridges,
-                    };
-                    let ret_message = serde_json::to_string(&ret_info).unwrap();
+                    let ret_message = serde_json::to_string(&bridges).unwrap();
                     ret_message    
                 },
                 Err(e) => {
-                    let ret_info = RetInfo {
-                        message: e.error_detail.clone(),
-                    };
-                    let ret_message = serde_json::to_string(&ret_info).unwrap();
-                    ret_message
+                    e.error_detail.clone()
                 }
             }
         }
     }
 }
 
-pub fn add_port(info_map : HashMap<String, String>) -> std::string::String {
+fn get_interfaces() -> std::string::String{
     let ovsc = OvsClient::new();
     match ovsc{
         Err(e) => {
-            let ret_info = RetInfo {
-                message: e.error_detail.clone(),
-            };
-            let ret_message = serde_json::to_string(&ret_info).unwrap();
-            ret_message
+            e.error_detail.clone()
+        },
+        Ok(mut c)=>{
+            let interfaces = c.get_interfaces();
+            match interfaces{
+                Ok(interfaces) =>{
+                    println!("number of interfaces : {0}", interfaces.len());
+                    let ret_message = serde_json::to_string(&interfaces).unwrap();
+                    ret_message    
+                },
+                Err(e) => {
+                    e.error_detail.clone()
+                }
+            }
+        }
+    }
+}
+
+fn add_port(info_map : HashMap<String, String>) -> std::string::String {
+    let ovsc = OvsClient::new();
+    match ovsc{
+        Err(e) => {
+            e.error_detail.clone()
         },
         Ok(mut c)=>{
             let br_name = info_map.get("br_name").unwrap();
@@ -265,26 +254,18 @@ pub fn add_port(info_map : HashMap<String, String>) -> std::string::String {
                     ret_message 
                 },
                 Err(e) => {
-                    let ret_info = RetInfo {
-                        message: e.error_detail.clone(),
-                    };
-                    let ret_message = serde_json::to_string(&ret_info).unwrap();
-                    ret_message
+                    e.error_detail.clone()
                 }
             }
         }
     }
 }
 
-pub fn del_port(info_map : HashMap<String, String>) -> std::string::String {
+fn del_port(info_map : HashMap<String, String>) -> std::string::String {
     let ovsc = OvsClient::new();
     match ovsc{
         Err(e) => {
-            let ret_info = RetInfo {
-                message: e.error_detail.clone(),
-            };
-            let ret_message = serde_json::to_string(&ret_info).unwrap();
-            ret_message
+            e.error_detail.clone()
         },
         Ok(mut c)=>{
             let br_name = info_map.get("br_name").unwrap();
@@ -297,11 +278,7 @@ pub fn del_port(info_map : HashMap<String, String>) -> std::string::String {
                     ret_message 
                 },
                 Err(e) => {
-                    let ret_info = RetInfo {
-                        message: e.error_detail.clone(),
-                    };
-                    let ret_message = serde_json::to_string(&ret_info).unwrap();
-                    ret_message
+                    e.error_detail.clone()
                 }
             }
         }

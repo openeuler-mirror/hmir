@@ -101,8 +101,53 @@ impl OvsClient{
                 }
             }
         }
-        
+
         Ok(ports)
+    }
+
+    pub fn get_interfaces(&mut self) -> Result<Vec<OvsInterface>, OvsError>{
+
+        let query = serde_json::from_str(
+            "{\"method\": \"transact\",\"params\":[\"Open_vSwitch\",{\"op\":\"select\",\"table\":\"Interface\",\"where\":[]}],\"id\":0}"
+        ).unwrap();
+
+        let resp = self.send_msg(query);
+        let mut interfaces:Vec<OvsInterface> = Vec::new();
+
+        match resp{
+            Err(e) => return Err(e),
+            Ok(data) => {
+                for p in data["result"][0]["rows"].as_array().unwrap()
+                {
+                    let name: &str= p["name"].as_str().ok_or(
+                        OvsError::new(
+                            OvsErrorType::UnexpectedResponse,
+                            "key ['name'] is not found in response data"
+                        )
+                    )?;
+                    
+                    let uuid: &str= p["_uuid"][1].as_str().ok_or(
+                        OvsError::new(
+                            OvsErrorType::UnexpectedResponse,
+                            "key [_'uuid'][1] is not found in response data"
+                        )
+                    )?;
+
+                    let mac: &str= p["mac_in_use"].as_str().ok_or(
+                        OvsError::new(
+                            OvsErrorType::UnexpectedResponse,
+                            "key ['mac_in_use'] is not found in response data"
+                        )
+                    )?;
+                    interfaces.push(OvsInterface::new(
+                        name,
+                        uuid,
+                        mac
+                    ));
+                }
+            }
+        }
+        Ok(interfaces)
     }
 
     pub fn get_bridges(&mut self) -> Result<Vec<OvsBridge>, OvsError>{
@@ -428,4 +473,3 @@ impl OvsClient{
     }
     
 }
-
