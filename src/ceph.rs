@@ -4,6 +4,8 @@
 
 use jsonrpsee::ws_server::{RpcModule, WsServerBuilder,WsServerHandle};
 use hmir_ceph::ceph_client;
+use hmir_hash::HashWrap;
+
 
 #[doc(hidden)]
 pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
