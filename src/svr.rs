@@ -106,8 +106,8 @@ macro_rules! svr_default_result {
     ( $result : expr ) =>{
         let mut response = HashWrap::<String,Unit>:: new();
         match $result {
-            Ok(x) => { response.set_code(0); },
-            Err(e) => { response.set_code(-1); },
+            Ok(_x) => { response.set_code(0); },
+            Err(_e) => { response.set_code(-1); },
         }
         let serialized = serde_json::to_string(&response).unwrap();
         return serialized;
@@ -278,7 +278,6 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use serde_json::{Result, Value};
 
     fn svr_result_test() -> std::string::String {
         let client = build_blocking_client(SystemdObjectType::Manager).unwrap();

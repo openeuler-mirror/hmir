@@ -7,9 +7,9 @@ use jsonrpsee::ws_server::RpcModule;
 use hmir_ovs::*;
 
 pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
-    ovs_query::register_method(module);
-    ovs_vsctl::register_method(module);
-    ovs_ofctl::register_method(module);
+    ovs_query::register_method(module)?;
+    ovs_vsctl::register_method(module)?;
+    ovs_ofctl::register_method(module)?;
 
     Ok(())
 }

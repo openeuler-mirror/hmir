@@ -16,10 +16,8 @@
 use jsonrpsee::ws_server::{RpcModule};
 
 use procfs;
-use serde::{Deserialize, Serialize};
+use serde::{Serialize};
 use hmir_hash::HashWrap;
-use std::string;
-use std::error::Error;
 use nix::sys::signal;
 use nix::unistd;
 extern crate core_affinity;
@@ -106,7 +104,7 @@ pub fn process_status(pid : i32) -> std::string::String {
 fn is_valid_process(pid : i32) -> bool {
     let process = procfs::process::Process::new(pid);
     match process {
-        Err(e) => {
+        Err(_e) => {
             return false;
         },
         _ => {
