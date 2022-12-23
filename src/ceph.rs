@@ -4,6 +4,7 @@
 
 use jsonrpsee::ws_server::{RpcModule, WsServerBuilder,WsServerHandle};
 use hmir_ceph::ceph_client;
+use hmir_ceph::pool;
 use hmir_hash::HashWrap;
 
 
@@ -15,10 +16,22 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
         //获取ceph集群状态
         Ok(ceph_cluster_stat())
     })?;
+    
+    ///pool
+    module.register_method("ceph-pool-list", |_, _| {
+        //获取ceph集群状态
+        Ok(ceph_pool_list())
+    })?;
 
     Ok(())
 }
 
 pub fn ceph_cluster_stat() -> String {
     ceph_client::ceph_status()
+}
+
+///pool
+
+pub fn ceph_pool_list() -> String {
+    pool::pool_list()
 }
