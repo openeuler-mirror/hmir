@@ -1,5 +1,6 @@
 pub mod ceph_client;
 pub mod arg;
+pub mod pool;
 pub fn add(left: usize, right: usize) -> usize {
     left + right
 }

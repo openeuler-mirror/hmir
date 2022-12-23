@@ -27,8 +27,7 @@ pub fn ceph_status() -> String {
                     }
                     match outs { 
                         Some(outs) => { return outs; },
-                        None => { return String::new();
-                        }
+                        None => { return String::new(); }
                     }
                 },
                 Err(e) => {
