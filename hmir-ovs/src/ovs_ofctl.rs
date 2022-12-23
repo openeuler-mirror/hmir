@@ -39,6 +39,18 @@
 //!     "params": {"br_name":"ovsmgmt"}
 //! }
 //!  ```
+//! - ovs-ofctl-forbid-dstport:  禁止虚拟机访问外部端口
+//! 请求格式：
+//!  ```
+//! { 
+//!     "jsonrpc":"2.0", 
+//!     "id":1, 
+//!     "method":"ovs-ofctl-forbid-dstport" ,
+//!     "params": {"br_name":"ovsmgmt", "in_port":"vnet0", "dst_ip":"172.30.24.124","dst_port":"8080/0xffff"}
+//! }
+//!  ```
+
+
 use super::ovs_common::*;
 
 use std::process::{Command};
@@ -66,6 +78,11 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
     module.register_method("ovs-ofctl-forbid-dstip", |params, _| {
         let br_info = params.parse::<HashMap<String, String>>()?;
         Ok(ovs_ofctl_forbid_dstip(br_info))
+    })?;
+
+    module.register_method("ovs-ofctl-forbid-dstport", |params, _| {
+        let br_info = params.parse::<HashMap<String, String>>()?;
+        Ok(ovs_ofctl_forbid_dstport(br_info))
     })?;
 
     Ok(())
@@ -112,4 +129,34 @@ fn ovs_ofctl_add_default_rule(info_map : HashMap<String, String>) -> String {
                                         .output().expect("failed to execute ovs_ofctl_add_default_rule");
     
     reflect_cmd_result(output)
+}
+
+
+fn ovs_ofctl_forbid_dstport(info_map : HashMap<String, String>) -> String{
+    let br_name = info_map.get("br_name").unwrap();
+    let dst_ip = info_map.get("dst_ip").unwrap();
+    let in_port = info_map.get("in_port").unwrap();
+    let dst_port = info_map.get("dst_port").unwrap();
+    let flow_tcp = format!("dl_type=0x0800,nw_proto=6,nw_dst={},tp_dst={},in_port={},priority={},action=drop", 
+                                    dst_ip, dst_port, in_port, OFCTL_PRIO_BLK);
+    
+    let mut output = Command::new(OFCTL_CMD)
+                                        .arg("add-flow")
+                                        .arg(br_name)
+                                        .arg(flow_tcp)
+                                        .output().expect("failed to execute ovs_ofctl_add_default_rule_tcp");
+    if !output.status.success() {
+        return String::from_utf8_lossy(&output.stderr).to_string()
+    }
+
+    let flow_udp = format!("dl_type=0x0800,nw_proto=17,nw_dst={},tp_dst={},in_port={},priority={},action=drop", 
+                                        dst_ip, dst_port, in_port, OFCTL_PRIO_BLK);
+
+    output = Command::new(OFCTL_CMD)
+                                        .arg("add-flow")
+                                        .arg(br_name)
+                                        .arg(flow_udp)
+                                        .output().expect("failed to execute ovs_ofctl_add_default_rule_udp");
+    reflect_cmd_result(output)
+
 }
