@@ -39,6 +39,11 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
         //获取osd组件版本信息
         Ok(ceph_osd_versions())
     })?;
+
+    module.register_method("ceph-osd-metadata", |_, _| {
+        //获取osd组件元数据信息
+        Ok(ceph_osd_metadata())
+    })?;
     
     Ok(())
 }
@@ -66,4 +71,8 @@ pub fn ceph_osd_tree() -> String {
 
 pub fn ceph_osd_versions() -> String {
     osd::osd_versions()
+}
+
+pub fn ceph_osd_metadata() -> String {
+    osd::osd_metadata()
 }
