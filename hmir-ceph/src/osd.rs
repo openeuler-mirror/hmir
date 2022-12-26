@@ -18,3 +18,8 @@ pub fn osd_versions() -> String {
 pub fn osd_metadata() -> String {
     command::mon_exec("osd metadata")
 }
+
+//crush规则查询
+pub fn osd_crush_rule_dump() -> String {
+    command::mon_exec("osd crush rule dump")
+}

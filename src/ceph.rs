@@ -45,6 +45,12 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
         Ok(ceph_osd_metadata())
     })?;
     
+    ///osd crush
+    module.register_method("ceph-osd-crush-rule-dump", |_, _| {
+        //获取osd组件元数据信息
+        Ok(ceph_osd_metadata())
+    })?;
+    
     Ok(())
 }
 
@@ -75,4 +81,9 @@ pub fn ceph_osd_versions() -> String {
 
 pub fn ceph_osd_metadata() -> String {
     osd::osd_metadata()
+}
+
+///osd crush
+pub fn ceph_osd_crush_rule_dump() -> String {
+    osd::osd_crush_rule_dump()
 }
