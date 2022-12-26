@@ -31,8 +31,13 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
     
     ///osd
     module.register_method("ceph-osd-tree", |_, _| {
-        //获取ceph集群存储池状态
+        //获取osd拓扑结构
         Ok(ceph_osd_tree())
+    })?;
+
+    module.register_method("ceph-osd-versions", |_, _| {
+        //获取osd组件版本信息
+        Ok(ceph_osd_versions())
     })?;
     
     Ok(())
@@ -57,4 +62,8 @@ pub fn ceph_pool_stats() -> String {
 
 pub fn ceph_osd_tree() -> String {
     osd::osd_tree()
+}
+
+pub fn ceph_osd_versions() -> String {
+    osd::osd_versions()
 }

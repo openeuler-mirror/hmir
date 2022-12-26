@@ -8,3 +8,8 @@ use log::{error, info, warn};
 pub fn osd_tree() -> String {
     command::mon_exec("osd tree")
 }
+
+///osd组件版本查询
+pub fn osd_versions() -> String {
+    command::mon_exec("osd versions")
+}
