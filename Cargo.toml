@@ -30,6 +30,7 @@ procfs = "0.14.1"
 nix = "0.25.0"
 iptables = "0.5.0"
 core_affinity = "0.7.6"
+ssh2 = "0.9.3"
 
 hmir-hash = {path = "hmir-hash" }
 hmir-systemd = {path = "hmir-systemd" }
