@@ -44,11 +44,16 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
         //获取osd组件元数据信息
         Ok(ceph_osd_metadata())
     })?;
+
+    module.register_method("ceph-osd-perf", |_, _| {
+        //osd性能测试
+        Ok(ceph_osd_perf())
+    })?;
     
     ///osd crush
     module.register_method("ceph-osd-crush-rule-dump", |_, _| {
-        //获取osd组件元数据信息
-        Ok(ceph_osd_metadata())
+        //获取osd的crush规则
+        Ok(ceph_osd_crush_rule_dump())
     })?;
     
     Ok(())
@@ -81,6 +86,10 @@ pub fn ceph_osd_versions() -> String {
 
 pub fn ceph_osd_metadata() -> String {
     osd::osd_metadata()
+}
+
+pub fn ceph_osd_perf() -> String {
+    osd::osd_perf()
 }
 
 ///osd crush
