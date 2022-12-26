@@ -17,6 +17,7 @@ fn build_lib() {
         .flag("-Wno-unused-function")
         .flag("-Wno-format-extra-args")
         .flag("-Wno-format")
+        .flag("-Wno-address-of-packed-member")
         .file("ipmitool/src/ipmitool.c")
         .file("ipmitool/lib/dimm_spd.c")
         .file("ipmitool/lib/helper.c")
