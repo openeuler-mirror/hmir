@@ -1,11 +1,12 @@
-<script setup>
+<script setup >
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
 import Greet from "./components/Greet.vue";
+import { ElConfigProvider } from 'element-plus';
 </script>
 
 <template>
-  <div class="container">
+  <!-- <div class="container">
     <h1>Welcome to Tauri!</h1>
 
     <div class="row">
@@ -36,9 +37,19 @@ import Greet from "./components/Greet.vue";
         >rust-analyzer</a
       >
     </p>
-
-    <Greet />
-  </div>
+  </div> -->
+  <!-- <Greet /> -->
+  <el-config-provider>
+    <router-view />
+  </el-config-provider>
+  <!-- <el-row class="mb-4">
+    <el-button>Default</el-button>
+    <el-button type="primary">Primary</el-button>
+    <el-button type="success">Success</el-button>
+    <el-button type="info">Info</el-button>
+    <el-button type="warning">Warning</el-button>
+    <el-button type="danger">Danger</el-button>
+  </el-row> -->
 </template>
 
 <style scoped>
