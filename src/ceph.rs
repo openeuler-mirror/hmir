@@ -19,10 +19,15 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
     
     ///pool
     module.register_method("ceph-pool-list", |_, _| {
-        //获取ceph集群状态
+        //获取ceph集群存储池列表
         Ok(ceph_pool_list())
     })?;
-
+    
+    module.register_method("ceph-pool-stats", |_, _| {
+        //获取ceph集群存储池状态
+        Ok(ceph_pool_stats())
+    })?;
+    
     Ok(())
 }
 
@@ -34,4 +39,8 @@ pub fn ceph_cluster_stat() -> String {
 
 pub fn ceph_pool_list() -> String {
     pool::pool_list()
+}
+
+pub fn ceph_pool_stats() -> String {
+    pool::pool_stats()
 }
