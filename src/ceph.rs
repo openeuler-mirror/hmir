@@ -5,6 +5,7 @@
 use jsonrpsee::ws_server::{RpcModule, WsServerBuilder,WsServerHandle};
 use hmir_ceph::ceph_client;
 use hmir_ceph::pool;
+use hmir_ceph::osd;
 use hmir_hash::HashWrap;
 
 
@@ -28,6 +29,12 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
         Ok(ceph_pool_stats())
     })?;
     
+    ///osd
+    module.register_method("ceph-osd-tree", |_, _| {
+        //获取ceph集群存储池状态
+        Ok(ceph_osd_tree())
+    })?;
+    
     Ok(())
 }
 
@@ -43,4 +50,11 @@ pub fn ceph_pool_list() -> String {
 
 pub fn ceph_pool_stats() -> String {
     pool::pool_stats()
+}
+
+
+///osd
+
+pub fn ceph_osd_tree() -> String {
+    osd::osd_tree()
 }
