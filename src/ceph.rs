@@ -6,13 +6,18 @@ use jsonrpsee::ws_server::{RpcModule, WsServerBuilder,WsServerHandle};
 use hmir_ceph::ceph_client;
 use hmir_ceph::pool;
 use hmir_ceph::osd;
+use hmir_ceph::mon;
 use hmir_hash::HashWrap;
 
 
 #[doc(hidden)]
-pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
+pub fn register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
     //The svr module
 
+    ///mon
+    ceph_mon_register_method(module);
+    
+    
     module.register_method("ceph-cluster-stat", |_, _| {
         //获取ceph集群状态
         Ok(ceph_cluster_stat())
@@ -56,6 +61,17 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
         Ok(ceph_osd_crush_rule_dump())
     })?;
     
+    Ok(())
+}
+
+
+pub fn ceph_mon_register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
+    ///osd crush
+    module.register_method("ceph-mon-metadata", |_, _| {
+        //获取osd的crush规则
+        Ok(mon::mon_metadata())
+    })?;
+
     Ok(())
 }
 
