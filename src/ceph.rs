@@ -66,12 +66,18 @@ pub fn register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
 
 
 pub fn ceph_mon_register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
-    ///osd crush
+    ///mon metadata
     module.register_method("ceph-mon-metadata", |_, _| {
-        //获取osd的crush规则
+        //获取mon的元数据信息
         Ok(mon::mon_metadata())
     })?;
 
+    ///mon status
+    module.register_method("ceph-mon-status", |_, _| {
+        //获取mon集群的状态
+        Ok(mon::mon_status())
+    })?;
+    
     Ok(())
 }
 
