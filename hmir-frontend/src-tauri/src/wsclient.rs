@@ -4,10 +4,13 @@ use jsonrpsee::client_transport::ws::{Uri, WsTransportClientBuilder};
 use jsonrpsee::core::client::{Client, ClientBuilder, ClientT};
 use jsonrpsee::ws_server::{RpcModule, WsServerBuilder};
 use tokio::runtime::Builder;
+use jsonrpsee::rpc_params;
+use hmir_hash::HashWrap;
+
 
 pub struct RequestClient {
     pub client  : Client,
-    pub runtime : tokio::runtime::Runtime
+    pub runtime : tokio::runtime::Runtime,
 }
 
 impl RequestClient {
@@ -21,26 +24,40 @@ impl RequestClient {
             client
         });
 
-        RequestClient {
-            client: client,
-            runtime: runtime
-        }
+        RequestClient{ client: client, runtime: runtime }
     }
 
-    pub fn ttyd_start(&self) {
-        self.runtime.block_on(async {
+    pub fn ttyd_start(&self) -> bool {
+        let state = self.runtime.block_on(async {
             let response: String = self.client.request("ttyd-start", None).await.unwrap();
-            println!("{}",response);
+            let p: HashWrap::<i32,i32> = serde_json::from_str(response.as_str()).unwrap();
+            return p.is_success();
         });
+        return state;
     }
 
-    pub fn ttyd_stop(&self) {
-        self.runtime.block_on(async {
+    pub fn ttyd_stop(&self) -> bool {
+        let state = self.runtime.block_on(async {
             let response: String = self.client.request("ttyd-stop", None).await.unwrap();
-            println!("{}",response);
+            let p: HashWrap::<i32,i32> = serde_json::from_str(response.as_str()).unwrap();
+            return p.is_success();
         });
+        return state;
     }
 
+    pub fn login(&self,username : &str, password : &str ) -> bool {
+        let state = self.runtime.block_on(async {
+            let response: Result<String, _> = self.client.request("pam-auth", rpc_params![username,password]).await;
+            match response {
+                Ok(result) => {
+                    let p: HashWrap::<i32,i32> = serde_json::from_str(result.as_str()).unwrap();
+                    return p.is_success();
+                }
+                _ => { return false;}
+            }
+        });
+        return state;
+    }
 }
 
 
@@ -63,6 +80,20 @@ mod tests {
     #[test]
     fn ttyd_stop_worked() {
         let client = RequestClient::new("172.30.24.123:5898".to_string());
-        client.ttyd_start();
+        client.ttyd_stop();
+    }
+
+    #[test]
+    fn login_worked(){
+        let client = RequestClient::new("172.30.24.123:5898".to_string());
+        let login_state = client.login("root","root");
+        assert_eq!(login_state,false)
+    }
+
+    #[test]
+    fn login_success_worked(){
+        let client = RequestClient::new("172.30.24.123:5898".to_string());
+        let login_state = client.login("root","radlcdss");
+        assert_eq!(login_state,true)
     }
 }
