@@ -4,28 +4,14 @@ export const Layout = () => import('../layout/index.vue');
 
 // 静态路由
 export const constantRoutes = [
-  // {
-  //   path: '/redirect',
-  //   component: Layout,
-  //   meta: { hidden: true },
-  //   children: [
-  //     {
-  //       path: '/redirect/:path(.*)',
-  //       component: () => import('./views/redirect/index.vue')
-  //     }
-  //   ]
-  // },
-  // {
-  //   path: '/login',
-  //   component: () => import('@/views/login/index.vue'),
-  //   meta: { hidden: true }
-  // },
+  {
+    path: '/login',
+    component: () => import('../views/login/index.vue'),
+  },
   // {
   //   path: '/404',
-  //   component: () => import('@/views/error-page/404.vue'),
-  //   meta: { hidden: true }
+  //   component: () => import('../views/error-page/404.vue'),
   // },
-
   {
     path: '/',
     component: Layout,
@@ -39,7 +25,6 @@ export const constantRoutes = [
       {
         path: 'console',
         component: () => import('../views/consoleCommand/index.vue'),
-        meta: { hidden: true }
       }
     ]
   }
