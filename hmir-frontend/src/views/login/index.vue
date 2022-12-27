@@ -9,15 +9,14 @@
     >
       <div class="title-container">
         <h3 class="title">hmir</h3>
-        <lang-select class="set-language" />
       </div>
 
-      <el-form-item prop="ipAddress">
+      <el-form-item prop="ipAddress" class="ipAddress">
         <span class="svg-container">
-          <el-icon><User /></el-icon>
+          <el-icon><Location /></el-icon>
         </span>
         <el-input
-          ref="username"
+          ref="ipAddress"
           v-model="loginData.ipAddress"
           :placeholder="'IP地址'"
           name="username"
@@ -27,9 +26,11 @@
         />
       </el-form-item>
 
-      <el-form-item prop="ipPort">
+      <el-form-item prop="ipPort" class="ipPort">
+        <span class="ipPort-container">
+        </span>
         <el-input
-          ref="username"
+          ref="ipPort"
           v-model="loginData.ipPort"
           :placeholder="'端口'"
           name="username"
@@ -38,6 +39,7 @@
           auto-complete="on"
         />
       </el-form-item>
+
       <el-form-item prop="username">
         <span class="svg-container">
           <el-icon><User /></el-icon>
@@ -178,7 +180,19 @@ $light_gray: #eee;
   width: 100%;
   background-color: $bg;
   overflow: hidden;
-
+  .ipAddress{
+    width: 360px;
+    display: inline-block;
+  }
+  .ipPort{
+    width: 125px;
+    display: inline-block;
+    margin-left: 30px;
+    vertical-align: bottom;
+    .el-input{
+      width: 80px;
+    }
+  }
   .login-form {
     position: relative;
     width: 520px;
@@ -187,7 +201,9 @@ $light_gray: #eee;
     margin: 0 auto;
     overflow: hidden;
   }
-
+::v-deep  .el-input__wrapper {
+    width: 100%;
+  }
   .tips {
     font-size: 14px;
     color: #fff;
@@ -207,6 +223,12 @@ $light_gray: #eee;
     width: 30px;
     display: inline-block;
     text-align: center;
+  }
+  .ipPort-container{
+    padding: 7px 10px 3px 10px;
+    width: 30px;
+    height: 42px;
+    box-sizing: border-box;
   }
 
   .title-container {
