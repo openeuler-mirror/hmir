@@ -6,6 +6,11 @@ mod pkg;
 mod proc;
 mod kernel;
 mod observer;
+mod ttyd;
+mod wsclient;
+mod ssh;
+mod pam;
+// mod token;
 
 
 #[macro_use]
@@ -16,12 +21,48 @@ use single_instance::SingleInstance;
 use std::process;
 use constants::constants;
 use log4rs;
-use log::{error,info,warn};
+use log::{error,info};
 use clap::{Arg,App};
 
 use jsonrpsee::ws_server::{RpcModule, WsServerBuilder,WsServerHandle};
-use jsonrpsee_core::middleware::{WsMiddleware, Headers, MethodKind, Params};
-use std::{time::Instant, net::SocketAddr};
+use jsonrpsee::ws_client::{WsClientBuilder,WsClient};
+use jsonrpsee::core::middleware::{self, Headers, MethodKind, Params};
+use std::time::Instant;
+
+use std::{net::SocketAddr};
+
+
+#[derive(Clone)]
+struct Timings;
+
+impl middleware::WsMiddleware for Timings {
+    type Instant = Instant;
+
+    fn on_connect(&self, remote_addr: SocketAddr, headers: &Headers) {
+        println!("[Middleware::on_connect] remote_addr {}, headers: {:?}", remote_addr, headers);
+    }
+
+    fn on_request(&self) -> Self::Instant {
+
+        Instant::now()
+    }
+
+    fn on_call(&self, name: &str, params: Params, kind: MethodKind) {
+        println!("[Middleware::on_call] method: '{}', params: {:?}, kind: {}", name, params, kind);
+    }
+
+    fn on_result(&self, name: &str, succeess: bool, started_at: Self::Instant) {
+        println!("[Middleware::on_result] '{}', worked? {}, time elapsed {:?}", name, succeess, started_at.elapsed());
+    }
+
+    fn on_response(&self, result: &str, started_at: Self::Instant) {
+        println!("[Middleware::on_response] result: {}, time elapsed {:?}", result, started_at.elapsed());
+    }
+
+    fn on_disconnect(&self, remote_addr: SocketAddr) {
+        println!("[Middleware::on_disconnect] remote_addr: {}", remote_addr);
+    }
+}
 
 macro_rules! assert_single_instance{
     ()=>{
@@ -64,7 +105,7 @@ async fn main() -> anyhow::Result<()> {
     init_services();
 
     let mut app = App::new("hmir");
-    let mut matches = app.clone()
+    let matches = app.clone()
         .version(constants::VERSION)
         .author("duanwujie")
         .about("Host management in rust")
@@ -82,51 +123,68 @@ async fn main() -> anyhow::Result<()> {
 
     let ip = matches.value_of("host");
     if ip == None {
-        app.print_help();
+        app.print_help()?;
         error!("Argument error with ip {:?}",ip);
         hmir_exit!();
     }
 
     let port = matches.value_of("port");
     if port == None {
-        app.print_help();
+        app.print_help()?;
         error!("Argument error with ip {:?}",port);
         hmir_exit!();
     }
 
     // println!("Bind Address : {:?}:{:?}",ip,port);
-    let (server_addr, _handle) = run_ws_server(ip.unwrap(),port.unwrap()).await?;
+    let (_server_addr, _handle) = run_ws_server(ip.unwrap(),port.unwrap()).await?;
     futures::future::pending().await
 
 }
 
+// use jsonrpsee_core::client::Client;
+use jsonrpsee::async_client::Client;
 
 async fn run_ws_server(ip: &str , port : &str) -> anyhow::Result<(SocketAddr,WsServerHandle)> {
 
     let url: String =ip.to_owned();
     let url = url + ":" + port;
 
-    let server = WsServerBuilder::default().build(url.parse::<SocketAddr>()?).await?;
+    let server = WsServerBuilder::new().set_middleware(Timings).build(url.parse::<SocketAddr>()? ).await?;
+    // let server = WsServerBuilder::default().build(url.parse::<SocketAddr>()?).await?;
     let mut module = RpcModule::new(());
 
-    svr::register_method(& mut module);
-    pkg::register_method(& mut module);
-    ipmi::register_method(& mut module);
-    net::register_method(& mut module);
-    proc::register_method(& mut module);
-    kernel::register_method(& mut module);
-    observer::register_method(& mut module);
-    ceph::register_method(& mut module);
+
+    // println!("{:?}",client);
+
+    svr::register_method(& mut module)?;
+    pkg::register_method(& mut module)?;
+    ipmi::register_method(& mut module)?;
+    net::register_method(& mut module)?;
+    proc::register_method(& mut module)?;
+    kernel::register_method(& mut module)?;
+    observer::register_method(& mut module)?;
+    ceph::register_method(& mut module)?;
+    ttyd::register_method(& mut module)?;
+    pam::register_method(& mut module)?;
 
     let addr = server.local_addr()?;
     let server_handle = server.start(module)?;
     info!("Sucess start the service with {}:{}",ip,port);
-
-
     Ok((addr,server_handle))
 }
 
 
 
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use jsonrpsee::client_transport::ws::{Uri, WsTransportClientBuilder};
+    use jsonrpsee::core::client::{Client, ClientBuilder, ClientT};
+    use jsonrpsee::ws_server::{RpcModule, WsServerBuilder};
+    use anyhow;
+    use futures::executor::block_on;
+
+}
 
 
