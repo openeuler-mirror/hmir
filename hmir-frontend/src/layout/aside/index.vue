@@ -47,8 +47,8 @@ import {
 } from '@element-plus/icons-vue'
 import {useRouter} from 'vue-router'
 
-const handleRouter = ref([{indexRouter: 'index', title:'172.30.24.16',disabled: true,icon:'Menu'},
-              {indexRouter: 'home', title:'仪表板',disabled: false,classFooter: false,icon:'Menu'},
+const handleRouter = ref([{indexRouter: 'login', title:'172.30.24.16',disabled: false,icon:'Menu'},
+              {indexRouter: 'home', title:'仪表板',disabled: false,icon:'Menu'},
 ])
 const isCollapse = ref(false)
 const handleValue = ref('home')

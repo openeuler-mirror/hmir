@@ -25,7 +25,6 @@ function handleQuery() {
     <input id="greet-input" v-model="name" placeholder="Enter a name..." />
     <button type="button" @click="greet()">Greet</button>
   </div>
-
   <p>{{ greetMsg }}</p>
   <div class="iframe">
     <iframe  name = "iframeMap" id="iframeMapViewComponent"  :src="getPageUrl" width="100%" height="100%" frameborder="0" scrolling="yes" ref="iframeDom"></iframe>
@@ -33,6 +32,6 @@ function handleQuery() {
 </template>
 <style lang="scss" scoped>
 .iframe{
-   height: calc(100vh - 225px);
+   height: calc(100vh - 275px);
 }
 </style>
