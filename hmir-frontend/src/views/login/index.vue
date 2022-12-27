@@ -4,11 +4,11 @@
       ref="loginFormRef"
       :model="loginData"
       class="login-form"
-      auto-complete="on"
       label-position="left"
+      :rules="rules"
     >
       <div class="title-container">
-        <h3 class="title">hmir</h3>
+        <h3 class="title">HMIR</h3>
       </div>
 
       <el-form-item prop="ipAddress" class="ipAddress">
@@ -22,7 +22,6 @@
           name="username"
           type="text"
           tabindex="1"
-          auto-complete="on"
         />
       </el-form-item>
 
@@ -36,7 +35,6 @@
           name="username"
           type="text"
           tabindex="1"
-          auto-complete="on"
         />
       </el-form-item>
 
@@ -51,7 +49,6 @@
           name="username"
           type="text"
           tabindex="1"
-          auto-complete="on"
         />
       </el-form-item>
 
@@ -65,7 +62,6 @@
             placeholder="密码"
             name="password"
             tabindex="2"
-            auto-complete="on"
           />
       </el-form-item>
 
@@ -73,6 +69,7 @@
         size="default"
         type="primary"
         style="width: 100%; margin-bottom: 30px"
+        @click="submitForm(loginFormRef)"
         >登 录
       </el-button>
     </el-form>
@@ -82,13 +79,52 @@
 
 <script setup lang="ts">
 import { onMounted, reactive, ref, toRefs, watch, nextTick } from 'vue';
+import type { FormInstance, FormRules } from 'element-plus'
+
+const loginFormRef = ref<FormInstance>()
 const loginData=reactive({
   ipAddress:'',
   ipPort:'',
   username:'',
   password:''
 })
-
+const rules = reactive<FormRules>({
+  ipAddress: [
+    { required: true, message: '请输入IP地址', trigger: 'blur' },
+  ],
+  ipPort: [
+    {
+      required: true,
+      message: '请输入端口号',
+      trigger: 'blur',
+    },
+  ],
+  username: [
+    {
+      required: true,
+      message: '请输入用户名',
+      trigger: 'blur',
+    },
+  ],
+  password: [
+    {
+      required: true,
+      message: '请输入密码',
+      trigger: 'blur',
+    },
+  ]
+})
+const submitForm = async (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  
+  await formEl.validate((valid, fields) => {
+    if (valid) {
+      console.log('submit!')
+    } else {
+      console.log('error submit!', fields)
+    }
+  })
+}
 </script>
 
 <style lang="scss">
