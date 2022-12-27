@@ -7,6 +7,7 @@ use hmir_ceph::ceph_client;
 use hmir_ceph::pool;
 use hmir_ceph::osd;
 use hmir_ceph::mon;
+use hmir_ceph::pg;
 use hmir_hash::HashWrap;
 
 
@@ -17,6 +18,8 @@ pub fn register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
     ///mon
     ceph_mon_register_method(module);
     
+    ///pg
+    ceph_pg_register_method(module);
     
     module.register_method("ceph-cluster-stat", |_, _| {
         //获取ceph集群状态
@@ -64,7 +67,7 @@ pub fn register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
     Ok(())
 }
 
-
+///mon method register
 pub fn ceph_mon_register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
     ///mon metadata
     module.register_method("ceph-mon-metadata", |_, _| {
@@ -78,6 +81,18 @@ pub fn ceph_mon_register_method(module : & mut RpcModule<()>) -> anyhow::Result<
         Ok(mon::mon_status())
     })?;
     
+    Ok(())
+}
+
+
+///pg method register
+pub fn ceph_pg_register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
+    ///pg list
+    module.register_method("ceph-pg-list", |_, _| {
+        //获取mon的元数据信息
+        Ok(pg::pg_list())
+    })?;
+
     Ok(())
 }
 
