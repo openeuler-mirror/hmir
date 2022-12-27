@@ -12,33 +12,12 @@ use libc::stat;
 use log4rs;
 use log::{error, info, warn};
 use crate::arg;
+use crate::command;
 
 #[cfg(unix)]
 ///获取ceph集群的基本状态信息
 pub fn ceph_status() -> String {
-    let client = get_ceph_client();
-    match client {
-        Ok(client) => {
-            match client.ceph_mon_command("prefix", "status", Some("json")) {
-                Ok((outbuf, outs)) => {
-                    match outbuf { 
-                        Some(outbuf) => { return outbuf; },
-                        None => { return String::new(); }
-                    }
-                    match outs { 
-                        Some(outs) => { return outs; },
-                        None => { return String::new(); }
-                    }
-                },
-                Err(e) => {
-                    format!("Get status failed: {:?}", e)
-                }
-            }
-        },
-        Err(e) => {
-            format!("{}", arg::CONNECT_FAILED)
-        }
-    }
+    command::mon_exec("status")
 }
 
 ///获取ceph集群的client链接
