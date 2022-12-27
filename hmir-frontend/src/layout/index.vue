@@ -23,11 +23,12 @@ import Aside from './aside/index.vue';
 
 
 <style lang="scss" scoped>
-.layoutHeader{
+.layoutHeader {
   background-color: #1d1d1d;
   color: #fff;
 }
-.layoutBody{
+
+.layoutBody {
   height: calc(100vh - 60px);
 }
 </style>

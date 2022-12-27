@@ -1,76 +1,48 @@
 <template>
   <div class="login-container">
-    <el-form
-      ref="loginFormRef"
-      :model="loginData"
-      class="login-form"
-      label-position="left"
-      :rules="rules"
-    >
+    <el-form ref="loginFormRef" :model="loginData" class="login-form" label-position="left" :rules="rules">
       <div class="title-container">
-        <h3 class="title">HMIR</h3>
+        <h1 class="title">HMIR</h1>
       </div>
 
       <el-form-item prop="ipAddress" class="ipAddress">
         <span class="svg-container">
-          <el-icon><Location /></el-icon>
+          <el-icon>
+            <Location />
+          </el-icon>
         </span>
-        <el-input
-          ref="ipAddress"
-          v-model="loginData.ipAddress"
-          :placeholder="'IP地址'"
-          name="username"
-          type="text"
-          tabindex="1"
-        />
+        <el-input ref="ipAddress" v-model="loginData.ipAddress" :placeholder="'IP地址'" name="ipAddress" type="text"
+          clearable />
       </el-form-item>
 
       <el-form-item prop="ipPort" class="ipPort">
         <span class="ipPort-container">
         </span>
-        <el-input
-          ref="ipPort"
-          v-model="loginData.ipPort"
-          :placeholder="'端口'"
-          name="username"
-          type="text"
-          tabindex="1"
-        />
+        <el-input ref="ipPort" v-model.number="loginData.ipPort" :placeholder="'端口'" name="ipPort" type="text"
+          clearable />
       </el-form-item>
 
       <el-form-item prop="username">
         <span class="svg-container">
-          <el-icon><User /></el-icon>
+          <el-icon>
+            <User />
+          </el-icon>
         </span>
-        <el-input
-          ref="username"
-          v-model="loginData.username"
-          :placeholder="'用户名'"
-          name="username"
-          type="text"
-          tabindex="1"
-        />
+        <el-input ref="username" v-model="loginData.username" :placeholder="'用户名'" name="username" type="text"
+          clearable />
       </el-form-item>
 
       <el-form-item prop="password">
-          <span class="svg-container">
-            <el-icon><Lock /></el-icon>
-          </span>
-          <el-input
-            ref="passwordRef"
-            v-model="loginData.password"
-            placeholder="密码"
-            name="password"
-            tabindex="2"
-          />
+        <span class="svg-container">
+          <el-icon>
+            <Lock />
+          </el-icon>
+        </span>
+        <el-input ref="passwordRef" v-model="loginData.password" placeholder="密码" name="password" clearable />
       </el-form-item>
 
-      <el-button
-        size="default"
-        type="primary"
-        style="width: 100%; margin-bottom: 30px"
-        @click="submitForm(loginFormRef)"
-        >登 录
+      <el-button size="default" type="primary" style="width: 100%; margin-bottom: 30px; margin-top: 10px;"
+        @click="submitForm(loginFormRef)">登 录
       </el-button>
     </el-form>
 
@@ -82,11 +54,11 @@ import { onMounted, reactive, ref, toRefs, watch, nextTick } from 'vue';
 import type { FormInstance, FormRules } from 'element-plus'
 
 const loginFormRef = ref<FormInstance>()
-const loginData=reactive({
-  ipAddress:'',
-  ipPort:'',
-  username:'',
-  password:''
+const loginData = reactive({
+  ipAddress: '',
+  ipPort: '',
+  username: '',
+  password: ''
 })
 const rules = reactive<FormRules>({
   ipAddress: [
@@ -116,7 +88,7 @@ const rules = reactive<FormRules>({
 })
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
-  
+
   await formEl.validate((valid, fields) => {
     if (valid) {
       console.log('submit!')
@@ -159,10 +131,12 @@ $cursor: #fff;
     display: inline-block;
     height: 36px;
     width: 85%;
+
     .el-input__wrapper {
       padding: 0;
       background: transparent;
       box-shadow: none;
+
       .el-input__inner {
         background: transparent;
         border: 0px;
@@ -216,19 +190,23 @@ $light_gray: #eee;
   width: 100%;
   background-color: $bg;
   overflow: hidden;
-  .ipAddress{
+
+  .ipAddress {
     width: 360px;
     display: inline-block;
   }
-  .ipPort{
+
+  .ipPort {
     width: 125px;
     display: inline-block;
     margin-left: 30px;
     vertical-align: bottom;
-    .el-input{
+
+    .el-input {
       width: 80px;
     }
   }
+
   .login-form {
     position: relative;
     width: 520px;
@@ -237,9 +215,11 @@ $light_gray: #eee;
     margin: 0 auto;
     overflow: hidden;
   }
-::v-deep  .el-input__wrapper {
+
+  ::v-deep .el-input__wrapper {
     width: 100%;
   }
+
   .tips {
     font-size: 14px;
     color: #fff;
@@ -260,7 +240,8 @@ $light_gray: #eee;
     display: inline-block;
     text-align: center;
   }
-  .ipPort-container{
+
+  .ipPort-container {
     padding: 7px 10px 3px 10px;
     width: 30px;
     height: 42px;
