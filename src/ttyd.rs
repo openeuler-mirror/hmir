@@ -29,7 +29,7 @@ macro_rules! ttyd_default_result {
     }
 }
 
-pub fn ttyd_start() -> std::string::String
+pub fn ttyd_start() -> String
 {
     if *tty_id.lock().unwrap() != 0 {
         ttyd_default_result!(0);
@@ -42,7 +42,7 @@ pub fn ttyd_start() -> std::string::String
                 .spawn() {
                 *tty_id.lock().unwrap() = child.id();
 
-                
+
                 child.wait().expect("command wasn't running");
                 info!("The ttyd has finished its execution!");
             }
@@ -51,7 +51,7 @@ pub fn ttyd_start() -> std::string::String
     }
 }
 
-pub fn ttyd_stop() -> std::string::String
+pub fn ttyd_stop() -> String
 {
     if ( *tty_id.lock().unwrap() != 0 ){
         let id = *tty_id.lock().unwrap() as i32;
