@@ -8,3 +8,8 @@ use log::{error, info, warn};
 pub fn mon_metadata() -> String {
     command::mon_exec("mon metadata")
 }
+
+///mon组件状态获取
+pub fn mon_status() -> String {
+    command::mon_exec("mon_status")
+}
