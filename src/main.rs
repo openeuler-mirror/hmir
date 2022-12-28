@@ -10,6 +10,7 @@ mod ttyd;
 mod wsclient;
 mod ssh;
 mod pam;
+mod clientmgr;
 // mod token;
 
 
