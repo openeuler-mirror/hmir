@@ -11,15 +11,13 @@
             <Location />
           </el-icon>
         </span>
-        <el-input ref="ipAddress" v-model="loginData.ipAddress" :placeholder="'IP地址'" name="ipAddress" type="text"
-          clearable />
+        <el-input ref="ipAddress" v-model="loginData.ipAddress" :placeholder="'IP地址'" name="ipAddress" type="text" />
       </el-form-item>
 
       <el-form-item prop="ipPort" class="ipPort">
         <span class="ipPort-container">
         </span>
-        <el-input ref="ipPort" v-model.number="loginData.ipPort" :placeholder="'端口'" name="ipPort" type="text"
-          clearable />
+        <el-input ref="ipPort" v-model="loginData.ipPort" :placeholder="'端口'" name="ipPort" type="text" />
       </el-form-item>
 
       <el-form-item prop="username">
@@ -38,7 +36,8 @@
             <Lock />
           </el-icon>
         </span>
-        <el-input ref="passwordRef" v-model="loginData.password" placeholder="密码" name="password" clearable />
+        <el-input ref="passwordRef" v-model="loginData.password" placeholder="密码" name="password" clearable
+          type="password" show-password />
       </el-form-item>
 
       <el-button size="default" type="primary" style="width: 100%; margin-bottom: 30px; margin-top: 10px;"
@@ -51,8 +50,11 @@
 
 <script setup lang="ts">
 import { onMounted, reactive, ref, toRefs, watch, nextTick } from 'vue';
-import type { FormInstance, FormRules } from 'element-plus'
+import type { FormInstance, FormRules } from 'element-plus';
+import { useRouter } from 'vue-router';
+import { invoke } from "@tauri-apps/api/tauri";
 
+const router = useRouter()
 const loginFormRef = ref<FormInstance>()
 const loginData = reactive({
   ipAddress: '',
@@ -60,38 +62,59 @@ const loginData = reactive({
   username: '',
   password: ''
 })
+const checkipAddress = (rule: any, value: any, callback: any) => {
+  console.log(value, /([1-9]?\d|1\d{2}|2[0-4]\d|25[0-5])(\.([1-9]?\d|1\d{2}|2[0-4]\d|25[0-5])){3}$/.test(value));
+  if (!/([1-9]?\d|1\d{2}|2[0-4]\d|25[0-5])(\.([1-9]?\d|1\d{2}|2[0-4]\d|25[0-5])){3}$/.test(value)) {
+    callback(new Error('请输入合法的IP地址'))
+  } else {
+    callback()
+  }
+}
+const checkipPort = (rule: any, value: any, callback: any) => {
+  console.log(value, /^([0-9]|[1-9]\d|[1-9]\d{2}|[1-9]\d{3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/.test(value));
+  if (!/^([0-9]|[1-9]\d|[1-9]\d{2}|[1-9]\d{3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/.test(value)) {
+    callback(new Error('请输入合法的端口号'))
+  } else {
+    callback()
+  }
+}
+
 const rules = reactive<FormRules>({
   ipAddress: [
-    { required: true, message: '请输入IP地址', trigger: 'blur' },
+    { required: true, message: 'IP地址不能为空', trigger: 'blur' },
+    { validator: checkipAddress, trigger: 'blur' }
   ],
   ipPort: [
-    {
-      required: true,
-      message: '请输入端口号',
-      trigger: 'blur',
-    },
+    { required: true, message: '端口号不能为空', trigger: 'blur', },
+    { validator: checkipPort, trigger: 'blur' }
   ],
   username: [
     {
       required: true,
-      message: '请输入用户名',
+      message: '用户名不能为空',
       trigger: 'blur',
     },
   ],
   password: [
     {
       required: true,
-      message: '请输入密码',
+      message: '密码不能为空',
       trigger: 'blur',
     },
   ]
 })
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
-
-  await formEl.validate((valid, fields) => {
+  await formEl.validate(async (valid, fields) => {
     if (valid) {
-      console.log('submit!')
+      let req = { host: loginData.ipAddress, port: +loginData.ipPort, username: loginData.username, password: loginData.password }
+      console.log(req);
+      let value = await invoke("cmd_login", req);
+      console.log(value);
+      if (value) {
+        router.push({ path: '/home' })
+        console.log('submit!')
+      }
     } else {
       console.log('error submit!', fields)
     }
@@ -216,7 +239,7 @@ $light_gray: #eee;
     overflow: hidden;
   }
 
-  ::v-deep .el-input__wrapper {
+  :deep(.el-input__wrapper) {
     width: 100%;
   }
 
