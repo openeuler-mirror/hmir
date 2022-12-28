@@ -41,8 +41,9 @@ pub fn register_client(host : &str, port : i32) -> bool
         };
         CLIENT_MAP.lock().unwrap().insert(host.to_string(),ci);
         return true;
+    } else {
+        return true;
     }
-    return false;
 }
 
 pub fn unregister_client(host : &str) -> bool
