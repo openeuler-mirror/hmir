@@ -7,7 +7,7 @@ mod proc;
 mod kernel;
 mod observer;
 mod ttyd;
-mod wsclient;
+//mod wsclient;
 mod ssh;
 mod pam;
 mod clientmgr;

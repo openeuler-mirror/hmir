@@ -3,6 +3,9 @@ pub mod arg;
 pub mod pool;
 pub mod osd;
 pub mod mon;
+pub mod pg;
+pub mod base;
+pub mod auth;
 pub mod command;
 pub fn add(left: usize, right: usize) -> usize {
     left + right

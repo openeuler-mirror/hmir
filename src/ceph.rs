@@ -7,6 +7,9 @@ use hmir_ceph::ceph_client;
 use hmir_ceph::pool;
 use hmir_ceph::osd;
 use hmir_ceph::mon;
+use hmir_ceph::pg;
+use hmir_ceph::base;
+use hmir_ceph::auth;
 use hmir_hash::HashWrap;
 
 
@@ -17,6 +20,14 @@ pub fn register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
     ///mon
     ceph_mon_register_method(module);
     
+    ///pg
+    ceph_pg_register_method(module);
+    
+    ///base
+    ceph_base_register_method(module);
+    
+    ///auth
+    ceph_auth_register_method(module);
     
     module.register_method("ceph-cluster-stat", |_, _| {
         //获取ceph集群状态
@@ -64,12 +75,52 @@ pub fn register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
     Ok(())
 }
 
-
+///mon method register
 pub fn ceph_mon_register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
-    ///osd crush
+    ///mon metadata
     module.register_method("ceph-mon-metadata", |_, _| {
-        //获取osd的crush规则
+        //获取mon的元数据信息
         Ok(mon::mon_metadata())
+    })?;
+
+    ///mon status
+    module.register_method("ceph-mon-status", |_, _| {
+        //获取mon集群的状态
+        Ok(mon::mon_status())
+    })?;
+    
+    Ok(())
+}
+
+
+///pg method register
+pub fn ceph_pg_register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
+    ///pg list
+    module.register_method("ceph-pg-list", |_, _| {
+        //获取mon的元数据信息
+        Ok(pg::pg_list())
+    })?;
+
+    Ok(())
+}
+
+///base method register
+pub fn ceph_base_register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
+    ///集群基础命令
+    module.register_method("ceph-df", |_, _| {
+        //集群使用率
+        Ok(base::df())
+    })?;
+
+    Ok(())
+}
+
+///auth method register
+pub fn ceph_auth_register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
+    ///集群认证相关
+    module.register_method("ceph-auth-list", |_, _| {
+        //list authentication state
+        Ok(auth::auth_list())
     })?;
 
     Ok(())
