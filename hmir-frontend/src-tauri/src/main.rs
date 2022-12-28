@@ -39,7 +39,7 @@ fn cmd_login(host : & str, port : i32 , username : & str, password : & str) -> b
 }
 
 #[tauri::command]
-fn cmd_logout(host : &str)
+fn cmd_logout(host : &str) -> bool
 {
     return clientmgr::logout(host);
 }
