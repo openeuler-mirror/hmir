@@ -210,3 +210,38 @@ fn ovs_vsctl_set_db_entry(table: String, row: String, key: String, value: String
                                         output().expect("failed to excute ovs_vsctl_set_db_entry");
     reflect_cmd_result(output) 
 }
+
+
+#[cfg(test)]
+mod vsctl_tests{
+    use super::*;
+
+    fn ovs_reset_enviroment(){
+
+    }
+
+    #[test]
+    fn test_add_br(){
+        ovs_reset_enviroment();
+        
+        let mut br_info = HashMap::new();
+        br_info.insert("br_name".to_string(), "ovs_test_br".to_string());
+        assert_eq!(add_br(br_info.clone()), "Done".to_string());
+        assert_ne!(add_br(br_info.clone()), "Done".to_string());
+    }
+
+    #[test]
+    fn test_del_br(){
+
+    }
+
+    #[test]
+    fn test_add_port(){
+
+    }
+
+    #[test]
+    fn test_del_port(){
+
+    }
+}
