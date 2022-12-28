@@ -11,6 +11,7 @@ use hmir_ceph::pg;
 use hmir_ceph::base;
 use hmir_ceph::auth;
 use hmir_ceph::fs;
+use hmir_ceph::mgr;
 use hmir_hash::HashWrap;
 
 
@@ -32,6 +33,9 @@ pub fn register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
     
     ///fs
     ceph_fs_register_method(module);
+    
+    ///mgr
+    ceph_mgr_register_method(module);
     
     module.register_method("ceph-cluster-stat", |_, _| {
         //获取ceph集群状态
@@ -136,6 +140,17 @@ pub fn ceph_fs_register_method(module : & mut RpcModule<()>) -> anyhow::Result<(
     module.register_method("ceph-fs-list", |_, _| {
         //list authentication state
         Ok(fs::fs_list())
+    })?;
+
+    Ok(())
+}
+
+///mgr method register
+pub fn ceph_mgr_register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
+    ///集群文件系统相关
+    module.register_method("ceph-mgr-metadata", |_, _| {
+        //list authentication state
+        Ok(mgr::mgr_metadata())
     })?;
 
     Ok(())
