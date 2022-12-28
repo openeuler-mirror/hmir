@@ -9,6 +9,7 @@ use hmir_ceph::osd;
 use hmir_ceph::mon;
 use hmir_ceph::pg;
 use hmir_ceph::base;
+use hmir_ceph::auth;
 use hmir_hash::HashWrap;
 
 
@@ -24,6 +25,9 @@ pub fn register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
     
     ///base
     ceph_base_register_method(module);
+    
+    ///auth
+    ceph_auth_register_method(module);
     
     module.register_method("ceph-cluster-stat", |_, _| {
         //获取ceph集群状态
@@ -106,6 +110,17 @@ pub fn ceph_base_register_method(module : & mut RpcModule<()>) -> anyhow::Result
     module.register_method("ceph-df", |_, _| {
         //集群使用率
         Ok(base::df())
+    })?;
+
+    Ok(())
+}
+
+///auth method register
+pub fn ceph_auth_register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
+    ///集群认证相关
+    module.register_method("ceph-auth-list", |_, _| {
+        //list authentication state
+        Ok(auth::auth_list())
     })?;
 
     Ok(())
