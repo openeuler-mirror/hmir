@@ -66,14 +66,18 @@ fn cmd_logout(host : &str) -> bool
 
 fn main() {
 
-    log_init();
+    // log_init();
 
     // here `"quit".to_string()` defines the menu item id, and the second parameter is the menu item label.
     let quit = CustomMenuItem::new("quit".to_string(), "退出");
-    let submenu = Submenu::new("文件", Menu::new().add_item(quit));
+    let about = CustomMenuItem::new("about".to_string(), "关于");
+    let filemenu = Submenu::new("文件", Menu::new().add_item(quit));
+    let helpmenu = Submenu::new("帮助", Menu::new().add_item(about));
+
     let menu = Menu::new()
         .add_native_item(MenuItem::Copy)
-        .add_submenu(submenu);
+        .add_submenu(filemenu)
+        .add_submenu(helpmenu);
 
     tauri::Builder::default()
         .menu(menu)
