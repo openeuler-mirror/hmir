@@ -1,10 +1,10 @@
 <template>
   <div class="card">
-    <button type="button" @click="ttydStop()"  v-if="ttydStartMsg">断开连接</button>
+    <button type="button" @click="ttydStop()" v-if="ttydtMsg">断开连接</button>
     <button type="button" @click="ttydStart()" v-else>连接控制台</button>
   </div>
-  <p>{{ ttydStartMsg }}{{ ttydStopMsg }}</p>
-  <div class="iframe" v-if="ttydStartMsg">
+  <p>{{ ttydtMsg }}</p>
+  <div class="iframe" v-if="ttydtMsg">
     <iframe name="iframeMap" id="iframeMapViewComponent" :src="getPageUrl" width="100%" height="100%" frameborder="0"
       scrolling="yes" ref="iframeDom"></iframe>
   </div>
@@ -14,23 +14,25 @@
 import { ref, onMounted } from "vue";
 import { invoke } from "@tauri-apps/api/tauri";
 
-const ttydStartMsg = ref("");
-const ttydStopMsg = ref("");
+const ttydtMsg = ref("");
 const name = ref("");
 const getPageUrl = ref("http://172.30.24.123:5899/");
 async function ttydStart () {
   //连接控制台
-  ttydStartMsg.value = await invoke("cmd_ttyd_start", {});
-  console.log(ttydStartMsg.value);
+  ttydtMsg.value = await invoke("cmd_ttyd_start", { host: '172.30.24.123' });
+  console.log(ttydtMsg.value);
 }
 async function ttydStop () {
   // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-  ttydStartMsg.value = await invoke("cmd_ttyd_stop", {});
-  console.log(ttydStartMsg.value);
+  let value= await invoke("cmd_ttyd_stop", { host: '172.30.24.123' });
+  if(value){
+    ttydtMsg.value =false
+  }
+  console.log(ttydtMsg.value);
 }
 
 onMounted(() => {
-  handleQuery();
+  // handleQuery();
 });
 
 function handleQuery () {
