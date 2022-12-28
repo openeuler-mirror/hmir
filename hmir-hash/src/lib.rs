@@ -33,11 +33,11 @@ impl <K,V> HashWrap<K,V> where K: Eq + Hash {
         self.code = code;
     }
 
-    pub fn failed() -> Self {
-        HashWrap {
-            code : -1,
-            result: HashMap::new()
+    pub fn is_success(&self) -> bool {
+        if self.code != 0 {
+            return  false;
         }
+        return true;
     }
 
     pub fn error(code : i32) -> Self {
@@ -72,6 +72,10 @@ impl <K,V> HashWrap<K,V> where K: Eq + Hash {
 
     pub fn contains_key(&self, k: &K) -> bool {
         self.result.contains_key(k)
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.result.is_empty()
     }
 }
 
