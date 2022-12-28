@@ -51,6 +51,7 @@ fn main() {
         .invoke_handler(tauri::generate_handler![greet,
             cmd_login,
             cmd_logout,
+            cmd_ttyd_stop,
             cmd_ttyd_start])
         // .invoke_handler(tauri::generate_handler![ttyd_start])
         .run(tauri::generate_context!())
