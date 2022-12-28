@@ -21,6 +21,14 @@ lazy_static! {
     };
 }
 
+macro_rules! client_instance {
+    ($i:expr) =>{
+       CLIENT_MAP.lock().unwrap().get($i).unwrap().client
+    }
+}
+
+
+
 pub fn register_client(host : &str, port : i32) -> bool
 {
     if ! CLIENT_MAP.lock().unwrap().contains_key(&host.to_string()) {
@@ -37,7 +45,7 @@ pub fn register_client(host : &str, port : i32) -> bool
     return false;
 }
 
-pub fn unregister_client(host : &str, port : i32) -> bool
+pub fn unregister_client(host : &str) -> bool
 {
     if ! CLIENT_MAP.lock().unwrap().contains_key(&host.to_string()) {
         CLIENT_MAP.lock().unwrap().remove(host.to_string());
@@ -46,21 +54,23 @@ pub fn unregister_client(host : &str, port : i32) -> bool
     return false;
 }
 
-macro_rules! client_instance {
-    ($i:expr) =>{
-       CLIENT_MAP.lock().unwrap().get($i).unwrap().client
-    }
-}
 
 pub fn login(host : & str, username : &str, password : &str ) -> bool {
     let h = host.to_string();
     return client_instance!(&h).login(username, password);
 }
 
+pub fn logout(host : & str) -> bool
+{
+    return unregister_client(host);
+}
+
 pub fn ttyd_start(host : & str) -> bool {
     let h = host.to_string();
     return client_instance!(&h).ttyd_start();
 }
+
+
 
 
 #[cfg(test)]
@@ -74,23 +84,24 @@ mod tests {
 
     #[test]
     fn register_client_worked() {
-        regitster_client("172.30.24.123",5898);
+        register_client("172.30.24.123",5898);
+        ttyd_start("172.30.24.123");
     }
 
     #[test]
     fn unregister_client_worked() {
-        unregitster_client("172.30.24.123",5898);
+        unregister_client("172.30.24.123");
     }
 
 
     #[test]
     fn host_login_worked(){
         let host = "172.30.24.123".to_string();
-        regitster_client("172.30.24.123",5898);
+        register_client("172.30.24.123",5898);
         let login_state  = client_instance!(&host).login("root","radlcdss");
-        assert_eq!(login_state,true)
+        assert_eq!(login_state,true);
+        logout("172.30.24.123");
     }
-
 
 
 }
