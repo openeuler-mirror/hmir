@@ -57,6 +57,11 @@ pub fn login(host : & str, username : &str, password : &str ) -> bool {
     return client_instance!(&h).login(username, password);
 }
 
+pub fn ttyd_start(host : & str) -> bool {
+    let h = host.to_string();
+    return client_instance!(&h).ttyd_start();
+}
+
 
 #[cfg(test)]
 mod tests {
