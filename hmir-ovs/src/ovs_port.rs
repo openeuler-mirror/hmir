@@ -40,3 +40,18 @@ impl OvsInterface{
         }
     }
 }
+
+#[derive(Debug, Clone, Serialize)]
+pub struct OvsNetflow{
+    pub uuid : String,   
+    pub targets : String 
+}
+
+impl OvsNetflow{
+    pub fn new(uuid:&str, targets:&str) -> OvsNetflow{
+        OvsNetflow{
+            uuid : uuid.to_string(),
+            targets : targets.to_string()
+        }
+    }
+}

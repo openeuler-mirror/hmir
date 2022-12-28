@@ -111,6 +111,26 @@
 //!      "result":"[{\"name\":\"br-eth-patch\",\"uuid\":\"f01fe186-f028-4514-a8e8-655fd0c0574c\",\"mac\":\"32:37:9d:53:2d:fc\"},{\"name\":\"br-test-patch\",\"uuid\":\"4d3d9983-4d5b-4a8f-ac98-31b7979aeec7\",\"mac\":\"42:7f:e2:9d:c4:fe\"}]",
 //!      "id":1
 //! }
+//! ```
+//! 
+//!  - ovs-query-netflows： 查询ovs netflow信息
+//! 请求格式：
+//!  ```
+//! { 
+//!     "jsonrpc":"2.0", 
+//!     "id":1, 
+//!     "method":"ovs-query-netflows" 
+//! }
+//!  ```
+//! 响应格式：
+//! ```
+//! {
+//!     "jsonrpc":"2.0",
+//!      "result":"{\"uuid\":\"fcb7ca4d-c34c-405a-9b30-93bcb1f19257\",\"targets\":\"172.30.24.144:9996\"}",
+//!      "id":1
+//! }
+//! ```
+
 
 use jsonrpsee::ws_server::RpcModule;
 use std::collections::HashMap;
@@ -136,6 +156,10 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
 
     module.register_method("ovs-query-interfaces", |_, _| {
         Ok(get_interfaces())
+    })?;
+
+    module.register_method("ovs-query-netflows", |_, _| {
+        Ok(get_netflow())
     })?;
 
     module.register_method("ovs-add-port", |params, _| {
@@ -234,6 +258,29 @@ fn get_interfaces() -> std::string::String{
         }
     }
 }
+
+fn get_netflow() -> std::string::String{
+    let ovsc = OvsClient::new();
+    match ovsc{
+        Err(e) => {
+            e.error_detail.clone()
+        },
+        Ok(mut c)=>{
+            let netflow = c.get_netflows();
+            match netflow{
+                Ok(netflow) =>{
+                
+                    let ret_message = serde_json::to_string(&netflow).unwrap();
+                    ret_message    
+                },
+                Err(e) => {
+                    e.error_detail.clone()
+                }
+            }
+        }
+    }
+}
+
 
 fn add_port(info_map : HashMap<String, String>) -> std::string::String {
     let ovsc = OvsClient::new();
