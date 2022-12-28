@@ -150,6 +150,40 @@ impl OvsClient{
         Ok(interfaces)
     }
 
+    pub fn get_netflows(&mut self) -> Result<OvsNetflow, OvsError>{
+        let query = serde_json::from_str(
+            "{\"method\": \"transact\",\"params\":[\"Open_vSwitch\",{\"op\":\"select\",\"table\":\"NetFlow\",\"where\":[]}],\"id\":0}"
+        ).unwrap();
+
+        let resp = self.send_msg(query);
+        let mut netflow = OvsNetflow::new("", "");
+
+        match resp{
+            Err(e) => return Err(e),
+            Ok(data) => {
+                for p in data["result"][0]["rows"].as_array().unwrap()
+                {
+                    let uuid: &str= p["_uuid"][1].as_str().ok_or(
+                        OvsError::new(
+                            OvsErrorType::UnexpectedResponse,
+                            "key [_'uuid'][1] is not found in response data"
+                        )
+                    )?;
+
+                    let targets: &str= p["targets"].as_str().ok_or(
+                        OvsError::new(
+                            OvsErrorType::UnexpectedResponse,
+                            "key ['targets'] is not found in response data"
+                        )
+                    )?;
+                    netflow = OvsNetflow::new(uuid, targets);
+                }
+            }
+        }
+        Ok(netflow)
+
+    }
+
     pub fn get_bridges(&mut self) -> Result<Vec<OvsBridge>, OvsError>{
         let query = serde_json::from_str(
             "{\"method\": \"transact\",\"params\":[\"Open_vSwitch\",{\"op\":\"select\",\"table\":\"Bridge\",\"where\":[]}],\"id\":0}"
