@@ -53,6 +53,7 @@ import { onMounted, reactive, ref, toRefs, watch, nextTick } from 'vue';
 import type { FormInstance, FormRules } from 'element-plus';
 import { useRouter } from 'vue-router';
 import { invoke } from "@tauri-apps/api/tauri";
+import { ElMessage } from 'element-plus'
 
 const router = useRouter()
 const loginFormRef = ref<FormInstance>()
@@ -112,8 +113,25 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       let value = await invoke("cmd_login", req);
       console.log(value);
       if (value) {
-        router.push({ path: '/home' })
+        ElMessage({
+          message: '登录成功',
+          center: true,
+          type: 'success',
+          showClose: true,
+          customClass: 'login-message-error'
+        })
+        setTimeout(() => {
+          router.push({ path: '/home' })
+        },500);
         console.log('submit!')
+      } else {
+        ElMessage({
+          message: '登录失败，请重试',
+          center: true,
+          type: 'error',
+          showClose: true,
+          customClass: 'login-message-error'
+        })
       }
     } else {
       console.log('error submit!', fields)
@@ -126,6 +144,10 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 $bg: #283443;
 $light_gray: #fff;
 $cursor: #fff;
+
+.login-message-error {
+  width: 210px;
+}
 
 /* reset element-ui css */
 .login-container {
