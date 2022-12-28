@@ -29,6 +29,7 @@ macro_rules! client_instance {
 
 
 
+
 pub fn register_client(host : &str, port : i32) -> bool
 {
     if ! CLIENT_MAP.lock().unwrap().contains_key(&host.to_string()) {
@@ -56,6 +57,14 @@ pub fn unregister_client(host : &str) -> bool
 }
 
 
+pub fn client_ok(host : &str) -> bool
+{
+    if CLIENT_MAP.lock().unwrap().contains_key(&host.to_string()) {
+        return true;
+    }
+    return false;
+}
+
 pub fn login(host : & str, username : &str, password : &str ) -> bool {
     let h = host.to_string();
     return client_instance!(&h).login(username, password);
@@ -68,12 +77,18 @@ pub fn logout(host : & str) -> bool
 
 pub fn ttyd_start(host : & str) -> bool {
     let h = host.to_string();
-    return client_instance!(&h).ttyd_start();
+    if client_ok(host) {
+        return client_instance!(&h).ttyd_start();
+    }
+    return false;
 }
 
 pub fn ttyd_stop(host : & str) -> bool {
     let h = host.to_string();
-    return client_instance!(&h).ttyd_stop();
+    if client_ok(host) {
+        return client_instance!(&h).ttyd_stop();
+    }
+    return false;
 }
 
 
