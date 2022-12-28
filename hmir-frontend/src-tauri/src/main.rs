@@ -15,11 +15,14 @@ mod clientmgr;
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
-fn cmd_ttyd_start() -> bool {
-    let client = wsclient::RequestClient::new("172.30.24.123:5898".to_string());
-    return client.ttyd_start();
+fn cmd_ttyd_start(host : & str) -> bool {
+    return clientmgr::ttyd_start(host);
 }
 
+#[tauri::command]
+fn cmd_ttyd_stop(host : & str) -> bool {
+    return clientmgr::ttyd_stop(host);
+}
 
 #[tauri::command]
 fn greet(name : & str) -> String {
@@ -35,10 +38,20 @@ fn cmd_login(host : & str, port : i32 , username : & str, password : & str) -> b
     return false;
 }
 
+#[tauri::command]
+fn cmd_logout(host : &str)
+{
+    return clientmgr::logout(host);
+}
+
+
 fn main() {
 
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet,cmd_login,cmd_ttyd_start])
+        .invoke_handler(tauri::generate_handler![greet,
+            cmd_login,
+            cmd_logout,
+            cmd_ttyd_start])
         // .invoke_handler(tauri::generate_handler![ttyd_start])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
