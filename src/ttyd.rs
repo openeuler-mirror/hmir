@@ -8,6 +8,7 @@ use std::sync::{Arc, Mutex};
 use nix::sys::signal;
 use nix::unistd;
 use hmir_hash::HashWrap;
+use tokio::sync::mpsc;
 
 use log::{error,info};
 
@@ -31,6 +32,13 @@ macro_rules! ttyd_default_result {
 
 pub fn ttyd_start() -> String
 {
+    // return futures::executor::block_on(_ttyd_start());
+    return org_ttyd_start();
+}
+
+
+pub fn org_ttyd_start() -> String
+{
     if *tty_id.lock().unwrap() != 0 {
         ttyd_default_result!(0);
     } else {
@@ -39,14 +47,49 @@ pub fn ttyd_start() -> String
             info!("The ttyd has start its execution !");
             if let Ok(mut child) = Command::new("ttyd").arg("-p").arg("5899").arg("bash")
                 .stdout(Stdio::null())
-                .spawn() {
+                .spawn()
+            {
+                println!("lock tx.send called");
                 *tty_id.lock().unwrap() = child.id();
-
-
+                println!("before tx.send called");
+                println!("tx.send called");
                 child.wait().expect("command wasn't running");
                 info!("The ttyd has finished its execution!");
             }
         });
+        ttyd_default_result!(0);
+    }
+}
+
+pub fn aysnc_ttyd_start() -> String
+{
+    if *tty_id.lock().unwrap() != 0 {
+        ttyd_default_result!(0);
+    } else {
+        let (tx, mut rx) = mpsc::channel(32);
+        tokio::task::spawn(async move {
+            //运行在一个不阻塞的线程
+            info!("The ttyd has start its execution !");
+            if let Ok(mut child) = Command::new("ttyd").arg("-p").arg("5899").arg("bash")
+                .stdout(Stdio::null())
+                .spawn()
+            {
+                println!("lock tx.send called");
+                *tty_id.lock().unwrap() = child.id();
+                println!("before tx.send called");
+                tx.send("sending from first handle").await;
+                println!("tx.send called");
+                child.wait().expect("command wasn't running");
+                info!("The ttyd has finished its execution!");
+            }
+        });
+
+        println!("Before select ");
+        while let Some(message) = rx.recv().await {
+            println!("GOT = {}", message);
+        }
+        println!("After select ");
+
         ttyd_default_result!(0);
     }
 }
