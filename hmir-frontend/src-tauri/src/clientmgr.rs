@@ -70,7 +70,10 @@ pub fn ttyd_start(host : & str) -> bool {
     return client_instance!(&h).ttyd_start();
 }
 
-
+pub fn ttyd_stop(host : & str) -> bool {
+    let h = host.to_string();
+    return client_instance!(&h).ttyd_stop();
+}
 
 
 #[cfg(test)]
