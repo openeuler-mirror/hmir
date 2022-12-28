@@ -9,6 +9,13 @@ use jsonrpsee::ws_server::{RpcModule, WsServerBuilder};
 use anyhow;
 use futures::executor::block_on;
 use tokio;
+use tauri::{CustomMenuItem, Menu, MenuItem, Submenu};
+
+
+//use log4rs;
+//use log::{error,info};
+use std::process;
+
 
 mod wsclient;
 mod clientmgr;
@@ -45,9 +52,43 @@ fn cmd_logout(host : &str) -> bool
 }
 
 
+//fn log_init ()
+//{
+//    let log = log4rs::init_file("/etc/hmir/log4rs.yaml",Default::default());
+//    match log {
+//        Err(e) => {
+//            println!("Err for init log : {}",e);
+//            process::exit(1);
+//        }
+//        _ => ()
+//    }
+//}
+
 fn main() {
 
+    // log_init();
+
+    // here `"quit".to_string()` defines the menu item id, and the second parameter is the menu item label.
+    let quit = CustomMenuItem::new("quit".to_string(), "退出");
+    let about = CustomMenuItem::new("about".to_string(), "关于");
+    let filemenu = Submenu::new("文件", Menu::new().add_item(quit));
+    let helpmenu = Submenu::new("帮助", Menu::new().add_item(about));
+
+    let menu = Menu::new()
+        .add_native_item(MenuItem::Copy)
+        .add_submenu(filemenu)
+        .add_submenu(helpmenu);
+
     tauri::Builder::default()
+        .menu(menu)
+        .on_menu_event(|event| {
+            match event.menu_item_id() {
+                "quit" => {
+                    std::process::exit(0);
+                }
+                _ => {}
+            }
+        })
         .invoke_handler(tauri::generate_handler![greet,
             cmd_login,
             cmd_logout,
