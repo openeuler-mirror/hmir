@@ -3,92 +3,80 @@
 //! 支持以下的格式
 //! - ovs-vsctl-add-br: 添加网桥
 //! 请求格式：
-//!  ```
 //! { 
 //!     "jsonrpc":"2.0", 
 //!     "id":1, 
 //!     "method":"ovs-vsctl-add-br" ,
 //!     "params": {"br_name":"ovsmgmt"}
 //! }
-//!  ```
+//! 
 //! 响应格式：
-//! ```
 //! {
 //!     "jsonrpc":"2.0",
 //!     "result":"Done",
 //!     "id":1
 //! }
-//! ```
 //! 
 //! - ovs-vsctl-del-br： 删除网桥
 //! 请求格式：
-//!  ```
 //! { 
 //!     "jsonrpc":"2.0", 
 //!     "id":1, 
 //!     "method":"ovs-vsctl-del-br",
 //!     "params": {"br_name":"ovsmgmt"} 
 //! }
-//!  ```
 //!
 //! - ovs-vsctl-add-port： 网桥中添加端口
 //! 请求格式：
-//!  ```
 //! { 
 //!     "jsonrpc":"2.0", 
 //!     "id":1, 
 //!     "method":"ovs-vsctl-add-port",
 //!     "params": {"br_name":"ovsmgmt", "port_name":"ens4"} 
 //! }
-//!  ```
 //! 
 //! - ovs-vsctl-del-port： 网桥中删除端口
 //! 请求格式：
-//!  ```
 //! { 
 //!     "jsonrpc":"2.0", 
 //!     "id":1, 
 //!     "method":"ovs-vsctl-del-port",
 //!     "params": {"br_name":"ovsmgmt", "port_name": "ens4"} 
 //! }
-//!  ```
 //! 
 //! - ovs-vsctl-set-netflow-rule： 网桥中设置netflow 规则
 //! 请求格式：
-//!  ```
 //! { 
 //!     "jsonrpc":"2.0", 
 //!     "id":1, 
 //!     "method":"ovs-vsctl-set-netflow-rule",
 //!     "params": {"br_name":"ovsmgmt", "targets": "172.30.24.3:2055"} 
 //! }
-//!  ```
+//! 
 //! - ovs-vsctl-del-netflow-rule： 网桥中删除netflow 规则
 //! 请求格式：
-//!  ```
 //! { 
 //!     "jsonrpc":"2.0", 
 //!     "id":1, 
 //!     "method":"ovs-vsctl-del-netflow-rule",
 //!     "params": {"br_name":"ovsmgmt"} 
 //! }
-//!  ```
+//! 
 //! - ovs-vsctl-set-port-vlan： 设置ovs port vlanID
 //! 请求格式：
-//!  ```
 //! { 
 //!     "jsonrpc":"2.0", 
 //!     "id":1, 
 //!     "method":"vs-vsctl-set-port-vlan",
 //!     "params": {"port_name":"vnet0", "tag_value":"2"} 
 //! }
-//!  ```
+//! 
 
 use super::ovs_common::*;
 use std::collections::HashMap;
 use jsonrpsee::ws_server::RpcModule;
 
-const VSCTL_CMD: &str= "ovs-vsctl";
+const VSCTL_CMD: &str = "ovs-vsctl";
 
 pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
     module.register_method("ovs-vsctl-add-br", |params, _| {
@@ -139,7 +127,7 @@ fn ovs_vsctl_add_br(info_map : HashMap<String, String>) -> String {
 }
 
 fn ovs_vsctl_del_br(info_map : HashMap<String, String>) -> String {
-    let br_name = info_map.get(VSCTL_CMD).unwrap();
+    let br_name = info_map.get("br_name").unwrap();
     let rule = format!("{} del-br {}", VSCTL_CMD, br_name);
 
     let output = exec_rule(rule, "ovs_vsctl_del_br".to_string());
@@ -190,37 +178,71 @@ fn ovs_vsctl_set_port_vlan(info_map : HashMap<String, String>) -> String{
     reflect_cmd_result(output)
 }
 
-
+// 由于测试网桥会在用例中不断被清理，需保证串行执行用例：cargo test  -- --test-threads=1 
 #[cfg(test)]
 mod vsctl_tests{
     use super::*;
-
-    fn ovs_reset_enviroment(){
-
-    }
+    const BR_FOR_TEST: &str =  "ovs_test_br";
+    const PORT_FOR_TEST: &str = "ovs_test_port";
+    
+    fn clear_env(){
+        let mut br_info = HashMap::new();
+        br_info.insert("br_name".to_string(), BR_FOR_TEST.to_string());
+        ovs_vsctl_del_br(br_info);
+    }   
 
     #[test]
     fn test_add_br(){
-        ovs_reset_enviroment();
-        
+        clear_env();
+
         let mut br_info = HashMap::new();
-        br_info.insert("br_name".to_string(), "ovs_test_br".to_string());
+        br_info.insert("br_name".to_string(), BR_FOR_TEST.to_string());
+
         assert_eq!(ovs_vsctl_add_br(br_info.clone()), "Done".to_string());
         assert_ne!(ovs_vsctl_add_br(br_info.clone()), "Done".to_string());
+
+        clear_env();
     }
 
     #[test]
     fn test_del_br(){
+        clear_env();
 
+        let mut br_info = HashMap::new();
+        br_info.insert("br_name".to_string(), BR_FOR_TEST.to_string());
+        
+        assert_eq!(ovs_vsctl_add_br(br_info.clone()), "Done".to_string());
+        assert_eq!(ovs_vsctl_del_br(br_info.clone()), "Done".to_string());
+
+        clear_env();
     }
 
     #[test]
     fn test_add_port(){
-
+        clear_env();
+        
+        let mut br_info = HashMap::new();
+        br_info.insert("br_name".to_string(), BR_FOR_TEST.to_string());
+        br_info.insert("port_name".to_string(), PORT_FOR_TEST.to_string());
+        
+        assert_eq!(ovs_vsctl_add_br(br_info.clone()), "Done".to_string());
+        assert_eq!(ovs_vsctl_add_port(br_info.clone()), "Done".to_string());
+        
+        clear_env();
     }
 
     #[test]
     fn test_del_port(){
+        clear_env();
 
+        let mut br_info = HashMap::new();
+        br_info.insert("br_name".to_string(), BR_FOR_TEST.to_string());
+        br_info.insert("port_name".to_string(), PORT_FOR_TEST.to_string());
+
+        assert_eq!(ovs_vsctl_add_br(br_info.clone()), "Done".to_string());
+        assert_eq!(ovs_vsctl_add_port(br_info.clone()), "Done".to_string());
+        assert_eq!(ovs_vsctl_del_port(br_info.clone()), "Done".to_string());
+        
+        clear_env();
     }
 }
