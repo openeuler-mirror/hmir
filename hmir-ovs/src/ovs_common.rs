@@ -8,9 +8,6 @@ pub fn test_setup_env() {
     let rule_add_br = format!("ovs-vsctl add-br {}", BR_FOR_TEST);
     exec_rule(rule_add_br, "test_setup_env_br".to_string());
 
-    let rule_add_port = format!("ovs-vsctl add-port {} {}", BR_FOR_TEST, PORT_FOR_TEST);
-    exec_rule(rule_add_port, "test_setup_env_port".to_string());
-
     let rule_chmod_ofctl = format!("sudo chmod 777 /var/run/openvswitch/{}.mgmt", BR_FOR_TEST);
     exec_rule(rule_chmod_ofctl, "test_setup_chmod_ofctl".to_string());
 }
