@@ -11,7 +11,8 @@
             <Location />
           </el-icon>
         </span>
-        <el-input ref="ipAddress" v-model.trim="loginData.ipAddress" :placeholder="'IP地址'" name="ipAddress" type="text" />
+        <el-input ref="ipAddress" v-model.trim="loginData.ipAddress" :placeholder="'IP地址'" name="ipAddress"
+          type="text" />
       </el-form-item>
 
       <el-form-item prop="ipPort" class="ipPort">
@@ -108,38 +109,41 @@ const rules = reactive<FormRules>({
 })
 
 const submitForm = async (formEl: FormInstance | undefined) => {
-  if (!formEl){
+  if (!formEl || loading.value) {
     return
   }
-  await formEl.validate(async (valid, fields) => {
+  await formEl.validate((valid, fields) => {
     if (valid) {
       loading.value = true
       let req = { host: loginData.ipAddress, port: +loginData.ipPort, username: loginData.username, password: loginData.password }
       console.log(req);
-      let value = await invoke("cmd_login", req);
-      if (value) {
-        ElMessage({
-          message: '登录成功',
-          center: true,
-          type: 'success',
-          showClose: true,
-          customClass: 'login-message-error'
-        })
-         loading.value = false
-        setTimeout(() => {
-          router.push({ path: '/home' })
-        }, 500);
-        console.log('submit!')
-      } else {
-        ElMessage({
-          message: '登录失败，请重试',
-          center: true,
-          type: 'error',
-          showClose: true,
-          customClass: 'login-message-error'
-        })
-        loading.value = false
-      }
+      setTimeout(() => {
+        invoke("cmd_login", req).then(res => {
+          if (res) {
+            ElMessage({
+              message: '登录成功',
+              center: true,
+              type: 'success',
+              showClose: true,
+              customClass: 'login-message-error'
+            })
+            loading.value = false
+            setTimeout(() => {
+              router.push({ path: '/home' })
+            }, 500);
+            console.log('submit!')
+          } else {
+            ElMessage({
+              message: '登录失败，请重试',
+              center: true,
+              type: 'error',
+              showClose: true,
+              customClass: 'login-message-error'
+            })
+            loading.value = false
+          }
+        });
+      }, 50);
     } else {
       console.log('error submit!', fields)
     }
@@ -242,6 +246,7 @@ $light_gray: #eee;
   width: 100%;
   background-color: $bg;
   overflow: hidden;
+  user-select: none;
 
   .ipAddress {
     width: 360px;
