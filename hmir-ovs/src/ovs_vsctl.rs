@@ -182,18 +182,10 @@ fn ovs_vsctl_set_port_vlan(info_map : HashMap<String, String>) -> String{
 #[cfg(test)]
 mod vsctl_tests{
     use super::*;
-    const BR_FOR_TEST: &str =  "ovs_test_br";
-    const PORT_FOR_TEST: &str = "ovs_test_port";
-    
-    fn clear_env(){
-        let mut br_info = HashMap::new();
-        br_info.insert("br_name".to_string(), BR_FOR_TEST.to_string());
-        ovs_vsctl_del_br(br_info);
-    }   
 
     #[test]
     fn test_br(){
-        clear_env();
+        test_clear_env();
 
         let mut br_info = HashMap::new();
         br_info.insert("br_name".to_string(), BR_FOR_TEST.to_string());
@@ -201,12 +193,12 @@ mod vsctl_tests{
         assert_eq!(ovs_vsctl_add_br(br_info.clone()), "Done".to_string());
         assert_eq!(ovs_vsctl_del_br(br_info.clone()), "Done".to_string());
 
-        clear_env();
+        test_clear_env();
     }
 
     #[test]
     fn test_port(){
-        clear_env();
+        test_clear_env();
         
         let mut br_info = HashMap::new();
         br_info.insert("br_name".to_string(), BR_FOR_TEST.to_string());
@@ -218,22 +210,21 @@ mod vsctl_tests{
         assert_eq!(ovs_vsctl_set_port_vlan(br_info.clone()), "Done".to_string());
         assert_eq!(ovs_vsctl_del_port(br_info.clone()), "Done".to_string());
 
-        clear_env();
+        test_clear_env();
     }
 
     #[test]
     fn test_netflow(){
-        clear_env();
+        test_setup_env();
 
         let mut br_info = HashMap::new();
         br_info.insert("br_name".to_string(), BR_FOR_TEST.to_string());
         br_info.insert("targets".to_string(), "172.30.24.122:2055".to_string());
 
-        assert_eq!(ovs_vsctl_add_br(br_info.clone()), "Done".to_string());
         assert_eq!(ovs_vsctl_set_netflow_rule(br_info.clone()), "Done".to_string());
         assert_eq!(ovs_vsctl_del_netflow_rule(br_info.clone()), "Done".to_string());
 
-        clear_env();
+        test_clear_env();
     }
 
 }
