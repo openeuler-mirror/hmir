@@ -3,12 +3,16 @@
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
 import Greet from "./components/Greet.vue";
 import { ElConfigProvider } from 'element-plus';
+import windowHeader from "@/views/windowHeader/index.vue";
 </script>
 
 <template>
-  <el-config-provider>
-    <router-view />
-  </el-config-provider>
+  <windowHeader></windowHeader>
+  <div class="windowBody">
+    <el-config-provider>
+      <router-view />
+    </el-config-provider>
+  </div>
 </template>
 
 <style scoped>
@@ -18,5 +22,9 @@ import { ElConfigProvider } from 'element-plus';
 
 .logo.vue:hover {
   filter: drop-shadow(0 0 2em #249b73);
+}
+
+.windowBody{
+  margin-top: 30px;
 }
 </style>

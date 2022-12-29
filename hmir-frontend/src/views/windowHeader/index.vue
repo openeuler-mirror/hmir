@@ -1,0 +1,51 @@
+<template>
+  <div class="header">
+    <el-menu class="el-menu-demo" mode="horizontal" :ellipsis="false" @select="handleSelect" active-text-color="#000">
+      <el-menu-item index="0">文件</el-menu-item>
+      <el-menu-item index="1">帮助</el-menu-item>
+      <div class="flex-grow" />
+      <el-menu-item index="2">
+        <template #title>
+          <el-icon><CircleClose /></el-icon>
+        </template>
+      </el-menu-item>
+    </el-menu>
+  </div>
+</template>
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const handleSelect = (key: string, keyPath: string[]) => {
+  console.log(key, keyPath)
+}
+</script>
+
+
+<style lang="scss" scoped>
+.header {
+  width: 100%;
+  height: 30px;
+  position: fixed;
+  z-index: 9999;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  .el-menu-demo {
+    height: 30px;
+    background-color: #D0D0D0;
+    .is-active {
+      border: 0px;
+    }
+
+    .el-menu-item{
+      border: 0px;
+    }
+  }
+}
+
+
+.flex-grow {
+  flex-grow: 1;
+}
+</style>
