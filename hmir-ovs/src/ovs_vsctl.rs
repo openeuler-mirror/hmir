@@ -134,14 +134,16 @@ fn ovs_vsctl_add_br(info_map : HashMap<String, String>) -> String {
     let br_name = info_map.get("br_name").unwrap();
     let rule = format!("{} add-br {}", VSCTL_CMD, br_name);
     
-    exec_rule(rule, "ovs_vsctl_add_br".to_string())
+    let output = exec_rule(rule, "ovs_vsctl_add_br".to_string());
+    reflect_cmd_result(output)
 }
 
 fn ovs_vsctl_del_br(info_map : HashMap<String, String>) -> String {
     let br_name = info_map.get(VSCTL_CMD).unwrap();
     let rule = format!("{} del-br {}", VSCTL_CMD, br_name);
 
-    exec_rule(rule, "ovs_vsctl_del_br".to_string())
+    let output = exec_rule(rule, "ovs_vsctl_del_br".to_string());
+    reflect_cmd_result(output)
 }
 
 fn ovs_vsctl_add_port(info_map : HashMap<String, String>) -> String {
@@ -149,7 +151,8 @@ fn ovs_vsctl_add_port(info_map : HashMap<String, String>) -> String {
     let port_name = info_map.get("port_name").unwrap();
     let rule = format!("{} add-port {} {}", VSCTL_CMD, br_name, port_name);
 
-    exec_rule(rule, "ovs_vsctl_add_port".to_string())
+    let output = exec_rule(rule, "ovs_vsctl_add_port".to_string());
+    reflect_cmd_result(output)
 }
 
 fn ovs_vsctl_del_port(info_map : HashMap<String, String>) -> String {
@@ -157,7 +160,8 @@ fn ovs_vsctl_del_port(info_map : HashMap<String, String>) -> String {
     let port_name = info_map.get("port_name").unwrap();
     let rule = format!("{} del-port {} {}", VSCTL_CMD, br_name, port_name);
 
-    exec_rule(rule, "ovs_vsctl_del_port".to_string())
+    let output = exec_rule(rule, "ovs_vsctl_del_port".to_string());
+    reflect_cmd_result(output)
 }
 
 fn ovs_vsctl_set_netflow_rule(info_map : HashMap<String, String>) -> std::string::String {
@@ -165,14 +169,16 @@ fn ovs_vsctl_set_netflow_rule(info_map : HashMap<String, String>) -> std::string
     let targets =  info_map.get("targets").unwrap();
     let rule = format!("{} set Bridge {} netflow=@nf -- --id=@nf create NetFlow targets=\\\"{}\\\" active-timeout=60", VSCTL_CMD, br_name, targets);
     
-    exec_rule(rule, "ovs_vsctl_set_netflow_rule".to_string())
+    let output = exec_rule(rule, "ovs_vsctl_set_netflow_rule".to_string());
+    reflect_cmd_result(output)
 }
 
 fn ovs_vsctl_del_netflow_rule(info_map : HashMap<String, String>) -> String {
     let br_name = info_map.get("br_name").unwrap();
     let rule = format!("{} clear Bridge {} netflow", VSCTL_CMD, br_name);
     
-    exec_rule(rule, "ovs_vsctl_del_netflow_rule".to_string())
+    let output = exec_rule(rule, "ovs_vsctl_del_netflow_rule".to_string());
+    reflect_cmd_result(output)
 }
 
 fn ovs_vsctl_set_port_vlan(info_map : HashMap<String, String>) -> String{
@@ -180,7 +186,8 @@ fn ovs_vsctl_set_port_vlan(info_map : HashMap<String, String>) -> String{
     let tag_value =  info_map.get("tag_value").unwrap();
     let rule = format!("{} set Port {} tag={}", VSCTL_CMD, port_name, tag_value);
 
-    exec_rule(rule, "ovs_vsctl_set_port_vlan".to_string())
+    let output = exec_rule(rule, "ovs_vsctl_set_port_vlan".to_string());
+    reflect_cmd_result(output)
 }
 
 

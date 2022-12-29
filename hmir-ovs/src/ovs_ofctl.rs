@@ -72,7 +72,6 @@
 
 use super::ovs_common::*;
 
-use std::process::{Command};
 use std::collections::HashMap;
 use jsonrpsee::ws_server::RpcModule;
 
@@ -120,12 +119,9 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
 fn ovs_ofctl_clear_port_rules(info_map : HashMap<String, String>) -> String {
     let br_name = info_map.get("br_name").unwrap();
     let in_port = info_map.get("in_port").unwrap();
-    let clear_rule = format!("in_port={}", in_port);
-    let output = Command::new(OFCTL_CMD)
-                                        .arg("del-flows")
-                                        .arg(br_name)
-                                        .arg(clear_rule)
-                                        .output().expect("failed to execute ovs_ofctl_clear_port_rules");
+    let rule = format!("{} del-flows {} in_port={}", OFCTL_CMD, br_name, in_port);
+    
+    let output = exec_rule(rule, "ovs_ofctl_clear_port_rules".to_string());
     reflect_cmd_result(output)
 }
 
@@ -134,29 +130,22 @@ fn ovs_ofctl_forbid_dstip(info_map : HashMap<String, String>) -> String {
     let dst_ip = info_map.get("dst_ip").unwrap();
     let in_port = info_map.get("in_port").unwrap();
     
-    let mut flow_rule = String::new();
+    let mut rule = String::new();
     if in_port.is_empty() {
-        flow_rule = format!("dl_type=0x0800,nw_dst={},priority={},action=drop", dst_ip, OFCTL_PRIO_BLK);
+        rule = format!("{} add-flow {} dl_type=0x0800,nw_dst={},priority={},action=drop",OFCTL_CMD, br_name, dst_ip, OFCTL_PRIO_BLK);
     } else {
-        flow_rule = format!("dl_type=0x0800,nw_dst={},priority={},in_port={},action=drop", dst_ip, OFCTL_PRIO_BLK,in_port);
+        rule = format!("{} add-flow {} dl_type=0x0800,nw_dst={},priority={},in_port={},action=drop", OFCTL_CMD, br_name, dst_ip, OFCTL_PRIO_BLK,in_port);
     }
 
-    let output = Command::new(OFCTL_CMD)
-                                        .arg("add-flow")
-                                        .arg(br_name)
-                                        .arg(flow_rule).
-                                        output().expect("failed to excute ovs-ofctl-forbid-dstip");
+    let output = exec_rule(rule, "ovs_ofctl_forbid_dstip".to_string());
     reflect_cmd_result(output)
 }
 
 fn ovs_ofctl_add_default_rule(info_map : HashMap<String, String>) -> String {
     let br_name = info_map.get("br_name").unwrap();
-    let output = Command::new(OFCTL_CMD)
-                                        .arg("add-flow")
-                                        .arg(br_name)
-                                        .arg("priority=0,action=normal")
-                                        .output().expect("failed to execute ovs_ofctl_add_default_rule");
+    let rule = format!("{} add-flow {} priority=0,action=normal", OFCTL_CMD, br_name);
     
+    let output = exec_rule(rule, "ovs_ofctl_add_default_rule".to_string());
     reflect_cmd_result(output)
 }
 
@@ -166,28 +155,18 @@ fn ovs_ofctl_forbid_dstport(info_map : HashMap<String, String>) -> String{
     let dst_ip = info_map.get("dst_ip").unwrap();
     let in_port = info_map.get("in_port").unwrap();
     let dst_port = info_map.get("dst_port").unwrap();
-    let flow_tcp = format!("dl_type=0x0800,nw_proto=6,nw_dst={},tp_dst={},in_port={},priority={},action=drop", 
-                                    dst_ip, dst_port, in_port, OFCTL_PRIO_BLK);
     
-    let mut output = Command::new(OFCTL_CMD)
-                                        .arg("add-flow")
-                                        .arg(br_name)
-                                        .arg(flow_tcp)
-                                        .output().expect("failed to execute ovs_ofctl_add_default_rule_tcp");
+    let rule_tcp = format!("{} add-flow {} dl_type=0x0800,nw_proto=6,nw_dst={},tp_dst={},in_port={},priority={},action=drop", 
+                                    OFCTL_CMD, br_name, dst_ip, dst_port, in_port, OFCTL_PRIO_BLK);
+    let mut output = exec_rule(rule_tcp, "ovs_ofctl_forbid_dstport add rule_tcp".to_string());
     if !output.status.success() {
         return String::from_utf8_lossy(&output.stderr).to_string()
     }
 
-    let flow_udp = format!("dl_type=0x0800,nw_proto=17,nw_dst={},tp_dst={},in_port={},priority={},action=drop", 
-                                        dst_ip, dst_port, in_port, OFCTL_PRIO_BLK);
-
-    output = Command::new(OFCTL_CMD)
-                                        .arg("add-flow")
-                                        .arg(br_name)
-                                        .arg(flow_udp)
-                                        .output().expect("failed to execute ovs_ofctl_add_default_rule_udp");
+    let rule_udp = format!("{} add-flow {} dl_type=0x0800,nw_proto=17,nw_dst={},tp_dst={},in_port={},priority={},action=drop", 
+                                    OFCTL_CMD,  br_name, dst_ip, dst_port, in_port, OFCTL_PRIO_BLK);
+    output =  exec_rule(rule_udp, "ovs_ofctl_forbid_dstport add rule_udp".to_string());
     reflect_cmd_result(output)
-
 }
 
 
@@ -197,22 +176,17 @@ fn ovs_ofctl_pass_dstip(info_map : HashMap<String, String>) ->String{
     let dst_ip = info_map.get("dst_ip").unwrap();
     let in_port = info_map.get("in_port").unwrap();
 
-    let flow_tcp_forbid= format!("dl_type=0x0800,in_port={},priority={},action=drop", in_port, OFCTL_PRIO_BLK);
-    let mut output = Command::new(OFCTL_CMD)
-                                    .arg("add-flow")
-                                    .arg(br_name)
-                                    .arg(flow_tcp_forbid)
-                                    .output().expect("failed to execute flow_tcp_forbid");
+    let rule_tcp_forbid= format!("{} add-flow {} dl_type=0x0800,in_port={},priority={},action=drop", 
+
+                                            OFCTL_CMD, br_name, in_port, OFCTL_PRIO_BLK);
+    let mut output = exec_rule(rule_tcp_forbid, "ovs_ofctl_pass_dstip add rule_tcp_forbid".to_string());
     if !output.status.success() {                                    
-        println!("execute flow_tcp_forbid exception : {}",  String::from_utf8_lossy(&output.stderr));
+        println!("execute ovs_ofctl_pass_dstip exception : {}",  String::from_utf8_lossy(&output.stderr));
     }
 
-    let flow_tcp_pass = format!("dl_type=0x0800,nw_dst={},in_port={},priority={},action=drop", dst_ip, in_port, OFCTL_PRIO_WHI);
-    output = Command::new(OFCTL_CMD)
-                        .arg("add-flow")
-                        .arg(br_name)
-                        .arg(flow_tcp_pass)
-                        .output().expect("failed to execute flow_tcp_pass");
+    let rule_tcp_pass = format!("{} add-flow {} dl_type=0x0800,nw_dst={},in_port={},priority={},action=drop", 
+                                            OFCTL_CMD, br_name, dst_ip, in_port, OFCTL_PRIO_WHI);
+    output = exec_rule(rule_tcp_pass, "ovs_ofctl_pass_dstip add rule_tcp_pass".to_string());
     reflect_cmd_result(output)
 
 }
@@ -223,36 +197,24 @@ fn ovs_ofctl_pass_dstport(info_map : HashMap<String, String>) -> String{
     let in_port = info_map.get("in_port").unwrap();
     let dst_port = info_map.get("dst_port").unwrap();
     
-    let flow_forbid_dstip = format!("dl_type=0x0800,nw_dst={},priority={},in_port={},action=drop", dst_ip, OFCTL_PRIO_BLK,in_port);
-    let mut output = Command::new(OFCTL_CMD)
-                                        .arg("add-flow")
-                                        .arg(br_name)
-                                        .arg(flow_forbid_dstip).
-                                         output().expect("failed to excute ovs-ofctl-flow-forbid-dstip");
+    let rule_forbid_dstip = format!("{} add-flow {} dl_type=0x0800,nw_dst={},priority={},in_port={},action=drop",
+                                                OFCTL_CMD, br_name, dst_ip, OFCTL_PRIO_BLK,in_port);
+    let mut output = exec_rule(rule_forbid_dstip, "ovs_ofctl_pass_dstport add rule_forbid_dstip".to_string());
     if !output.status.success() {
             return String::from_utf8_lossy(&output.stderr).to_string()
     }
     
-    let flow_tcp_white = format!("dl_type=0x0800,nw_proto=6,nw_dst={},tp_dst={},in_port={},priority={},action=normal", 
-                                    dst_ip, dst_port, in_port, OFCTL_PRIO_WHI);
-    
-    output = Command::new(OFCTL_CMD)
-                                        .arg("add-flow")
-                                        .arg(br_name)
-                                        .arg(flow_tcp_white)
-                                        .output().expect("failed to execute ovs_ofctl_add_default_rule_tcp_whie");
+    let rule_tcp_white = format!("{} add-flow {} dl_type=0x0800,nw_proto=6,nw_dst={},tp_dst={},in_port={},priority={},action=normal", 
+                                            OFCTL_CMD, br_name, dst_ip, dst_port, in_port, OFCTL_PRIO_WHI);
+    output = exec_rule(rule_tcp_white, "ovs_ofctl_pass_dstport add rule_tcp_white".to_string());
     if !output.status.success() {
         return String::from_utf8_lossy(&output.stderr).to_string()
     }
 
-    let flow_udp_white = format!("dl_type=0x0800,nw_proto=17,nw_dst={},tp_dst={},in_port={},priority={},action=normal", 
-                                        dst_ip, dst_port, in_port, OFCTL_PRIO_WHI);
+    let rule_udp_white = format!("{} add-flow {} dl_type=0x0800,nw_proto=17,nw_dst={},tp_dst={},in_port={},priority={},action=normal", 
+                                            OFCTL_CMD, br_name, dst_ip, dst_port, in_port, OFCTL_PRIO_WHI);
 
-    output = Command::new(OFCTL_CMD)
-                                        .arg("add-flow")
-                                        .arg(br_name)
-                                        .arg(flow_udp_white)
-                                        .output().expect("failed to execute ovs_ofctl_add_default_rule_udp_white");
+    output = exec_rule(rule_udp_white, "ovs_ofctl_pass_dstport add rule_udp_white".to_string());
     reflect_cmd_result(output)
 
 }
