@@ -43,7 +43,7 @@
       </el-form-item>
 
       <el-button size="default" type="primary" style="width: 100%; margin-bottom: 30px; margin-top: 10px;"
-        @click="submitForm(loginFormRef)" :loading="loading">
+        @click="submitForm(loginFormRef)" :loading="loading" v-deBounce>
         登 录
       </el-button>
     </el-form>

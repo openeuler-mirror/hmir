@@ -6,9 +6,12 @@ import 'element-plus/dist/index.css'
 import "./style.css";
 import App from "./App.vue";
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+import { deBounce } from '@/directive/index.js';
+
 
 const app = createApp(App)
 
+app.directive('deBounce', deBounce);
 app.use(ElementPlus).use(router)
 app.mount('#app')
 
