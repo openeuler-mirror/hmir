@@ -11,13 +11,13 @@
             <Location />
           </el-icon>
         </span>
-        <el-input ref="ipAddress" v-model="loginData.ipAddress" :placeholder="'IP地址'" name="ipAddress" type="text" />
+        <el-input ref="ipAddress" v-model.trim="loginData.ipAddress" :placeholder="'IP地址'" name="ipAddress" type="text" />
       </el-form-item>
 
       <el-form-item prop="ipPort" class="ipPort">
         <span class="ipPort-container">
         </span>
-        <el-input ref="ipPort" v-model="loginData.ipPort" :placeholder="'端口'" name="ipPort" type="text" />
+        <el-input ref="ipPort" v-model.trim="loginData.ipPort" :placeholder="'端口'" name="ipPort" type="text" />
       </el-form-item>
 
       <el-form-item prop="username">
@@ -41,7 +41,7 @@
       </el-form-item>
 
       <el-button size="default" type="primary" style="width: 100%; margin-bottom: 30px; margin-top: 10px;"
-        @click="submitForm(loginFormRef)">登 录
+        @click="submitForm(loginFormRef)" :loading="loading">登 录
       </el-button>
     </el-form>
 
@@ -57,6 +57,8 @@ import { ElMessage } from 'element-plus'
 
 const router = useRouter()
 const loginFormRef = ref<FormInstance>()
+const loading = ref<boolean>(false)
+
 const loginData = reactive({
   ipAddress: '',
   ipPort: '',
@@ -104,14 +106,17 @@ const rules = reactive<FormRules>({
     },
   ]
 })
+
 const submitForm = async (formEl: FormInstance | undefined) => {
-  if (!formEl) return
+  if (!formEl){
+    return
+  }
   await formEl.validate(async (valid, fields) => {
     if (valid) {
+      loading.value = true
       let req = { host: loginData.ipAddress, port: +loginData.ipPort, username: loginData.username, password: loginData.password }
       console.log(req);
       let value = await invoke("cmd_login", req);
-      console.log(value);
       if (value) {
         ElMessage({
           message: '登录成功',
@@ -120,9 +125,10 @@ const submitForm = async (formEl: FormInstance | undefined) => {
           showClose: true,
           customClass: 'login-message-error'
         })
+         loading.value = false
         setTimeout(() => {
           router.push({ path: '/home' })
-        },500);
+        }, 500);
         console.log('submit!')
       } else {
         ElMessage({
@@ -132,6 +138,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
           showClose: true,
           customClass: 'login-message-error'
         })
+        loading.value = false
       }
     } else {
       console.log('error submit!', fields)
