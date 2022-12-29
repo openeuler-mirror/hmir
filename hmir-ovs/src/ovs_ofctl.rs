@@ -3,72 +3,64 @@
 //! 支持以下的格式
 //! - ovs-ofctl-forbid-dstip: 禁止虚拟机访问外部某IP
 //! 请求格式：
-//!  ```
 //! { 
 //!     "jsonrpc":"2.0", 
 //!     "id":1, 
 //!     "method":"ovs-ofctl-forbid-dstip" ,
 //!     "params": {"br_name":"ovsmgmt", "in_port":"vnet0", "dst_ip":"172.30.24.124"}
 //! }
-//!  ```
 //! 响应格式：
-//! ```
 //! {
 //!     "jsonrpc":"2.0",
 //!     "result":"Done",
 //!     "id":1
 //! }
-//! ```
+//! 
 //! - ovs-ofctl-clear-port-rules: 删除虚拟机网络接口的流表规则 
 //! 请求格式：
-//!  ```
 //! { 
 //!     "jsonrpc":"2.0", 
 //!     "id":1, 
 //!     "method":"ovs-ofctl-clear-port-rules" ,
 //!     "params": {"br_name":"ovsmgmt", "in_port":"vnet0"}
 //! }
-//!  ```
+//! 
 //! - ovs-ofctl-add-default-rule:  为网桥设置默认流表规则，二层交换机能力
 //! 请求格式：
-//!  ```
 //! { 
 //!     "jsonrpc":"2.0", 
 //!     "id":1, 
 //!     "method":"ovs-ofctl-add-default-rule" ,
 //!     "params": {"br_name":"ovsmgmt"}
 //! }
-//!  ```
+//! 
 //! - ovs-ofctl-forbid-dstport:  禁止虚拟机访问外部端口
 //! 请求格式：
-//!  ```
 //! { 
 //!     "jsonrpc":"2.0", 
 //!     "id":1, 
 //!     "method":"ovs-ofctl-forbid-dstport" ,
 //!     "params": {"br_name":"ovsmgmt", "in_port":"vnet0", "dst_ip":"172.30.24.124","dst_port":"8080/0xffff"}
 //! }
-//!  ```
+//! 
 //! - ovs-ofctl-pass-dstip:  放通访问外部Ip地址，白名单能力
 //! 请求格式：
-//!  ```
 //! { 
 //!     "jsonrpc":"2.0", 
 //!     "id":1, 
 //!     "method":"ovs-ofctl-pass-dstip" ,
 //!     "params": {"br_name":"ovsmgmt", "in_port":"vnet0", "dst_ip":"172.30.24.0/24",}
 //! }
-//!  ```
+//! 
 //! - ovs-ofctl-pass-dstport:  放通访问外部Ip地址的某端口，白名单能力
 //! 请求格式：
-//!  ```
 //! { 
 //!     "jsonrpc":"2.0", 
 //!     "id":1, 
 //!     "method":"ovs-ofctl-pass-dstport" ,
 //!     "params": {"br_name":"ovsmgmt", "in_port":"vnet0", "dst_ip":"172.30.24.124","dst_port":"8080/0xffff"}
 //! }
-//!  ```
+//! 
 
 use super::ovs_common::*;
 
@@ -149,7 +141,6 @@ fn ovs_ofctl_add_default_rule(info_map : HashMap<String, String>) -> String {
     reflect_cmd_result(output)
 }
 
-
 fn ovs_ofctl_forbid_dstport(info_map : HashMap<String, String>) -> String{
     let br_name = info_map.get("br_name").unwrap();
     let dst_ip = info_map.get("dst_ip").unwrap();
@@ -168,7 +159,6 @@ fn ovs_ofctl_forbid_dstport(info_map : HashMap<String, String>) -> String{
     output =  exec_rule(rule_udp, "ovs_ofctl_forbid_dstport add rule_udp".to_string());
     reflect_cmd_result(output)
 }
-
 
 // 先禁用端口所有的tcp请求，再放通白名单中的tcp请求
 fn ovs_ofctl_pass_dstip(info_map : HashMap<String, String>) ->String{
