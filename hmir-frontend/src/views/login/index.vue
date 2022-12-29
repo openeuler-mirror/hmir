@@ -109,42 +109,46 @@ const rules = reactive<FormRules>({
   ]
 })
 
+function login() {
+  loading.value = true
+  let req = { host: loginData.ipAddress, port: +loginData.ipPort, username: loginData.username, password: loginData.password }
+  console.log(req);
+  setTimeout(() => {
+    invoke("cmd_login", req).then(res => {
+      if (res) {
+        ElMessage({
+          message: '登录成功',
+          center: true,
+          type: 'success',
+          showClose: true,
+          customClass: 'login-message-error'
+        })
+        loading.value = false
+        setTimeout(() => {
+          router.push({ path: '/home' })
+        }, 500);
+      } else {
+        ElMessage.closeAll()
+        ElMessage({
+          message: '登录失败，请重试',
+          center: true,
+          type: 'error',
+          showClose: true,
+          customClass: 'login-message-error'
+        })
+        loading.value = false
+      }
+    });
+  }, 50);
+}
+
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl || loading.value) {
     return
   }
   await formEl.validate((valid, fields) => {
     if (valid) {
-      loading.value = true
-      let req = { host: loginData.ipAddress, port: +loginData.ipPort, username: loginData.username, password: loginData.password }
-      console.log(req);
-      setTimeout(() => {
-        invoke("cmd_login", req).then(res => {
-          if (res) {
-            ElMessage({
-              message: '登录成功',
-              center: true,
-              type: 'success',
-              showClose: true,
-              customClass: 'login-message-error'
-            })
-            loading.value = false
-            setTimeout(() => {
-              router.push({ path: '/home' })
-            }, 500);
-            console.log('submit!')
-          } else {
-            ElMessage({
-              message: '登录失败，请重试',
-              center: true,
-              type: 'error',
-              showClose: true,
-              customClass: 'login-message-error'
-            })
-            loading.value = false
-          }
-        });
-      }, 50);
+        login()
     } else {
       console.log('error submit!', fields)
     }
