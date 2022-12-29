@@ -9,11 +9,11 @@ pub fn reflect_cmd_result(output : Output) -> String{
     }
 }
 
-pub fn exec_rule(rule: String, cmd_name: String) -> String{
+pub fn exec_rule(rule: String, cmd_name: String) -> Output{
     let output = Command::new("sh")
                         .arg("-c")
                         .arg(rule).
                         output().expect(&format!("failed to excute {}", cmd_name));
-    
-    reflect_cmd_result(output) 
+
+    output 
 }
