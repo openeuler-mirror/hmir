@@ -108,6 +108,14 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
     Ok(())
 }
 
+fn ovs_ofctl_clear_br_rules(info_map : HashMap<String, String>) -> String {
+    let br_name = info_map.get("br_name").unwrap();
+    let rule = format!("{} del-flows {}", OFCTL_CMD, br_name);
+    
+    let output = exec_rule(rule, "ovs_ofctl_clear_br_rules".to_string());
+    reflect_cmd_result(output)
+}
+
 fn ovs_ofctl_clear_port_rules(info_map : HashMap<String, String>) -> String {
     let br_name = info_map.get("br_name").unwrap();
     let in_port = info_map.get("in_port").unwrap();
@@ -207,4 +215,36 @@ fn ovs_ofctl_pass_dstport(info_map : HashMap<String, String>) -> String{
     output = exec_rule(rule_udp_white, "ovs_ofctl_pass_dstport add rule_udp_white".to_string());
     reflect_cmd_result(output)
 
+}
+
+
+
+// 由于测试网桥会在用例中不断被清理，需保证串行执行用例：cargo test  -- --test-threads=1 
+#[cfg(test)]
+mod ofctl_tests{
+    use super::*;
+
+    #[test]
+    fn test_add_default_rule(){
+        test_setup_env();
+
+        let mut br_info = HashMap::new();
+        br_info.insert("br_name".to_string(), BR_FOR_TEST.to_string());
+
+        assert_eq!(ovs_ofctl_clear_br_rules(br_info.clone()), "Done".to_string());
+        assert_eq!(ovs_ofctl_add_default_rule(br_info.clone()), "Done".to_string());
+        
+        test_clear_env();
+    }
+
+    #[test]
+    fn test_forbid_rule(){
+
+    }
+
+
+    #[test]
+    fn test_pass_rule(){
+
+    }
 }
