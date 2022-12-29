@@ -129,6 +129,7 @@ fn ovs_ofctl_forbid_dstip(info_map : HashMap<String, String>) -> String {
     let br_name = info_map.get("br_name").unwrap();
     let dst_ip = info_map.get("dst_ip").unwrap();
     let in_port = info_map.get("in_port").unwrap();
+    println!("in_port:{}", in_port);
     
     let mut rule = String::new();
     if in_port.is_empty() {
@@ -218,7 +219,6 @@ fn ovs_ofctl_pass_dstport(info_map : HashMap<String, String>) -> String{
 }
 
 
-
 // 由于测试网桥会在用例中不断被清理，需保证串行执行用例：cargo test  -- --test-threads=1 
 #[cfg(test)]
 mod ofctl_tests{
@@ -239,12 +239,35 @@ mod ofctl_tests{
 
     #[test]
     fn test_forbid_rule(){
+        test_setup_env();
 
+        let mut br_info = HashMap::new();
+        br_info.insert("br_name".to_string(), BR_FOR_TEST.to_string());
+        br_info.insert("in_port".to_string(), BR_FOR_TEST.to_string());
+        br_info.insert("dst_ip".to_string(), "172.30.24.124".to_string());
+        br_info.insert("dst_port".to_string(), "8080/0xffff".to_string());
+
+        assert_eq!(ovs_ofctl_forbid_dstip(br_info.clone()), "Done".to_string());
+        assert_eq!(ovs_ofctl_clear_port_rules(br_info.clone()), "Done".to_string());
+        assert_eq!(ovs_ofctl_forbid_dstport(br_info.clone()), "Done".to_string());
+
+        test_clear_env();
     }
-
 
     #[test]
     fn test_pass_rule(){
+        test_setup_env();
 
+        let mut br_info = HashMap::new();
+        br_info.insert("br_name".to_string(), BR_FOR_TEST.to_string());
+        br_info.insert("in_port".to_string(), BR_FOR_TEST.to_string());
+        br_info.insert("dst_ip".to_string(), "172.30.24.124".to_string());
+        br_info.insert("dst_port".to_string(), "8080/0xffff".to_string());
+
+        assert_eq!(ovs_ofctl_pass_dstip(br_info.clone()), "Done".to_string());
+        assert_eq!(ovs_ofctl_clear_port_rules(br_info.clone()), "Done".to_string());
+        assert_eq!(ovs_ofctl_pass_dstport(br_info.clone()), "Done".to_string());
+
+        test_clear_env();
     }
 }
