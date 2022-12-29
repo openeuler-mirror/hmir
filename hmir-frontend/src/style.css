@@ -100,3 +100,11 @@ button {
     background-color: #0f0f0f98;
   }
 }
+
+.login-message-error {
+  width: 210px;
+}
+
+.login-message-success {
+  width: 160px;
+}
