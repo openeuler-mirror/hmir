@@ -1,6 +1,7 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginFormRef" :model="loginData" class="login-form" label-position="left" :rules="rules">
+    <el-form ref="loginFormRef" :model="loginData" class="login-form" label-position="left" :rules="rules"
+      @keyup.enter="submitForm(loginFormRef)">
       <div class="title-container">
         <h1 class="title">HMIR</h1>
       </div>
@@ -42,10 +43,10 @@
       </el-form-item>
 
       <el-button size="default" type="primary" style="width: 100%; margin-bottom: 30px; margin-top: 10px;"
-        @click="submitForm(loginFormRef)" :loading="loading">登 录
+        @click="submitForm(loginFormRef)" :loading="loading">
+        登 录
       </el-button>
     </el-form>
-
   </div>
 </template>
 
