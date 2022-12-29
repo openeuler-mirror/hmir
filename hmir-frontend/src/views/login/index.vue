@@ -42,10 +42,12 @@
           type="password" show-password />
       </el-form-item>
 
-      <el-button size="default" type="primary" style="width: 100%; margin-bottom: 30px; margin-top: 10px;"
-        @click="submitForm(loginFormRef)" :loading="loading" v-deBounce>
-        登 录
-      </el-button>
+      <el-config-provider :message="config">
+        <el-button size="default" type="primary" style="width: 100%; margin-bottom: 30px; margin-top: 10px;"
+          @click="submitForm(loginFormRef)" :loading="loading" v-deBounce>
+          登 录
+        </el-button>
+      </el-config-provider>
     </el-form>
   </div>
 </template>
@@ -60,6 +62,9 @@ import { ElMessage } from 'element-plus'
 const router = useRouter()
 const loginFormRef = ref<FormInstance>()
 const loading = ref<boolean>(false)
+const config = reactive({
+  max: 1,
+})
 
 const loginData = reactive({
   ipAddress: '',
@@ -121,20 +126,21 @@ function login() {
           center: true,
           type: 'success',
           showClose: true,
-          customClass: 'login-message-error'
+          customClass: 'login-message-success',
+          offset: 50
         })
         loading.value = false
         setTimeout(() => {
           router.push({ path: '/home' })
         }, 500);
       } else {
-        ElMessage.closeAll()
         ElMessage({
           message: '登录失败，请重试',
           center: true,
           type: 'error',
           showClose: true,
-          customClass: 'login-message-error'
+          customClass: 'login-message-error',
+          offset: 50
         })
         loading.value = false
       }
@@ -148,7 +154,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   }
   await formEl.validate((valid, fields) => {
     if (valid) {
-        login()
+      login()
     } else {
       console.log('error submit!', fields)
     }
@@ -160,10 +166,6 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 $bg: #283443;
 $light_gray: #fff;
 $cursor: #fff;
-
-.login-message-error {
-  width: 210px;
-}
 
 /* reset element-ui css */
 .login-container {
@@ -247,11 +249,12 @@ $dark_gray: #889aa4;
 $light_gray: #eee;
 
 .login-container {
-  min-height: 100vh;
+  min-height: calc(100vh - 30px);
   width: 100%;
   background-color: $bg;
   overflow: hidden;
   user-select: none;
+  -moz-user-select: none;
 
   .ipAddress {
     width: 360px;
