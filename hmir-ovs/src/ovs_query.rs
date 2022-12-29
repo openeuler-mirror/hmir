@@ -25,7 +25,7 @@
 //! 响应格式：
 //! {
 //!     "jsonrpc":"2.0",
-//!     "result":"{\"ovs_bridges\":[{\"name\":\"br-br0\",\"uuid\":\"d9879f03-fa8d-49ee-8905-61bf2e678a94\",\"ports\":[{\"name\":\"ens3\",\"uuid\":\"29bb1048-53f2-41c8-8d76-2592045312c9\",\"mode\":{\"Trunk\":[]}},{\"name\":\"br-br0\",\"uuid\":\"7a3c43b0-7cb6-47bb-9e73-b7acfbce3d78\",\"mode\":{\"Trunk\":[]}},{\"name\":\"patch-out\",\"uuid\":\"c863f5e9-e312-4694-9279-01650284d3ae\",\"mode\":{\"Trunk\":[]}}]},{\"name\":\"br-test\",\"uuid\":\"fbc4b9ea-930b-4a53-845a-68d9bf5d46e4\",\"ports\":[{\"name\":\"patch-in\",\"uuid\":\"1cc48e17-63b7-4af3-a2d2-d709f9152497\",\"mode\":{\"Trunk\":[]}},{\"name\":\"vnet1\",\"uuid\":\"715a810a-c3e4-4407-86d7-c003add84406\",\"mode\":{\"Access\":100}},{\"name\":\"br-test\",\"uuid\":\"c082c812-3a84-4104-a8d3-c93720cbd959\",\"mode\":{\"Trunk\":[]}}]}]}",
+//!     "result":"[{\"name\":\"br-br0\",\"uuid\":\"d9879f03-fa8d-49ee-8905-61bf2e678a94\",\"ports\":[{\"name\":\"ens3\",\"uuid\":\"29bb1048-53f2-41c8-8d76-2592045312c9\",\"mode\":{\"Trunk\":[]}},{\"name\":\"br-br0\",\"uuid\":\"7a3c43b0-7cb6-47bb-9e73-b7acfbce3d78\",\"mode\":{\"Trunk\":[]}},{\"name\":\"patch-out\",\"uuid\":\"c863f5e9-e312-4694-9279-01650284d3ae\",\"mode\":{\"Trunk\":[]}}]},{\"name\":\"br-test\",\"uuid\":\"fbc4b9ea-930b-4a53-845a-68d9bf5d46e4\",\"ports\":[{\"name\":\"patch-in\",\"uuid\":\"1cc48e17-63b7-4af3-a2d2-d709f9152497\",\"mode\":{\"Trunk\":[]}},{\"name\":\"vnet1\",\"uuid\":\"715a810a-c3e4-4407-86d7-c003add84406\",\"mode\":{\"Access\":100}},{\"name\":\"br-test\",\"uuid\":\"c082c812-3a84-4104-a8d3-c93720cbd959\",\"mode\":{\"Trunk\":[]}}]}]}",
 //!    "id":1
 //! }
 //! 
@@ -39,7 +39,7 @@
 //! 响应格式：
 //! {
 //!     "jsonrpc":"2.0",
-//!     "result":"{\"ovs_ports\":[{\"name\":\"br-br0\",\"uuid\":\"7a3c43b0-7cb6-47bb-9e73-b7acfbce3d78\",\"mode\":{\"Trunk\":[]}},{\"name\":\"br-test\",\"uuid\":\"c082c812-3a84-4104-a8d3-c93720cbd959\",\"mode\":{\"Trunk\":[]}},{\"name\":\"ens3\",\"uuid\":\"29bb1048-53f2-41c8-8d76-2592045312c9\",\"mode\":{\"Trunk\":[]}},{\"name\":\"patch-in\",\"uuid\":\"1cc48e17-63b7-4af3-a2d2-d709f9152497\",\"mode\":{\"Trunk\":[]}},{\"name\":\"patch-out\",\"uuid\":\"c863f5e9-e312-4694-9279-01650284d3ae\",\"mode\":{\"Trunk\":[]}},{\"name\":\"vnet1\",\"uuid\":\"715a810a-c3e4-4407-86d7-c003add84406\",\"mode\":{\"Access\":100}}]}",
+//!     "result":"[{\"name\":\"br-br0\",\"uuid\":\"7a3c43b0-7cb6-47bb-9e73-b7acfbce3d78\",\"mode\":{\"Trunk\":[]}},{\"name\":\"br-test\",\"uuid\":\"c082c812-3a84-4104-a8d3-c93720cbd959\",\"mode\":{\"Trunk\":[]}},{\"name\":\"ens3\",\"uuid\":\"29bb1048-53f2-41c8-8d76-2592045312c9\",\"mode\":{\"Trunk\":[]}},{\"name\":\"patch-in\",\"uuid\":\"1cc48e17-63b7-4af3-a2d2-d709f9152497\",\"mode\":{\"Trunk\":[]}},{\"name\":\"patch-out\",\"uuid\":\"c863f5e9-e312-4694-9279-01650284d3ae\",\"mode\":{\"Trunk\":[]}},{\"name\":\"vnet1\",\"uuid\":\"715a810a-c3e4-4407-86d7-c003add84406\",\"mode\":{\"Access\":100}}]}",
 //!     "id":1}
 //! }
 //! 
@@ -102,6 +102,7 @@
 //! }
 //! 
 
+use super::ovs_common::*;
 
 use jsonrpsee::ws_server::RpcModule;
 use std::collections::HashMap;
@@ -301,4 +302,33 @@ fn del_port(info_map : HashMap<String, String>) -> std::string::String {
             }
         }
     }
+}
+
+// 由于测试网桥会在用例中不断被清理，需保证串行执行用例：cargo test  -- --test-threads=1 
+#[cfg(test)]
+mod query_tests{
+    use super::*;
+
+    #[test]
+    fn test_query(){
+        test_setup_env();
+
+        assert_eq!(check_connection(), "Connected!".to_string());
+        let mut ret_str = get_bridges();
+        assert!(ret_str.contains(BR_FOR_TEST));
+
+        ret_str = get_ports();
+        assert!(ret_str.contains(BR_FOR_TEST));
+
+        ret_str = get_interfaces();
+        assert!(ret_str.contains(BR_FOR_TEST));
+
+        let rule_netflow = format!("ovs-vsctl set Bridge {} netflow=@nf -- --id=@nf create NetFlow targets=\\\"172.30.21.13:2055\\\" active-timeout=60", BR_FOR_TEST);
+        exec_rule(rule_netflow, "test_query rule_netflow".to_string());
+        ret_str = get_netflow();
+        assert!(ret_str.contains("172.30.21.13:2055"));
+
+        test_clear_env();
+    }
+
 }
