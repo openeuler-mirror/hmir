@@ -1,3 +1,6 @@
 
 
+
+ps aux | grep frontend | grep -v grep | awk '{print $2}' | xargs kill -9
+
 npm run tauri dev
