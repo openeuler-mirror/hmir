@@ -192,20 +192,7 @@ mod vsctl_tests{
     }   
 
     #[test]
-    fn test_add_br(){
-        clear_env();
-
-        let mut br_info = HashMap::new();
-        br_info.insert("br_name".to_string(), BR_FOR_TEST.to_string());
-
-        assert_eq!(ovs_vsctl_add_br(br_info.clone()), "Done".to_string());
-        assert_ne!(ovs_vsctl_add_br(br_info.clone()), "Done".to_string());
-
-        clear_env();
-    }
-
-    #[test]
-    fn test_del_br(){
+    fn test_br(){
         clear_env();
 
         let mut br_info = HashMap::new();
@@ -218,31 +205,35 @@ mod vsctl_tests{
     }
 
     #[test]
-    fn test_add_port(){
+    fn test_port(){
         clear_env();
         
         let mut br_info = HashMap::new();
         br_info.insert("br_name".to_string(), BR_FOR_TEST.to_string());
         br_info.insert("port_name".to_string(), PORT_FOR_TEST.to_string());
+        br_info.insert("tag_value".to_string(), "100".to_string());
         
         assert_eq!(ovs_vsctl_add_br(br_info.clone()), "Done".to_string());
         assert_eq!(ovs_vsctl_add_port(br_info.clone()), "Done".to_string());
-        
+        assert_eq!(ovs_vsctl_set_port_vlan(br_info.clone()), "Done".to_string());
+        assert_eq!(ovs_vsctl_del_port(br_info.clone()), "Done".to_string());
+
         clear_env();
     }
 
     #[test]
-    fn test_del_port(){
+    fn test_netflow(){
         clear_env();
 
         let mut br_info = HashMap::new();
         br_info.insert("br_name".to_string(), BR_FOR_TEST.to_string());
-        br_info.insert("port_name".to_string(), PORT_FOR_TEST.to_string());
+        br_info.insert("targets".to_string(), "172.30.24.122:2055".to_string());
 
         assert_eq!(ovs_vsctl_add_br(br_info.clone()), "Done".to_string());
-        assert_eq!(ovs_vsctl_add_port(br_info.clone()), "Done".to_string());
-        assert_eq!(ovs_vsctl_del_port(br_info.clone()), "Done".to_string());
-        
+        assert_eq!(ovs_vsctl_set_netflow_rule(br_info.clone()), "Done".to_string());
+        assert_eq!(ovs_vsctl_del_netflow_rule(br_info.clone()), "Done".to_string());
+
         clear_env();
     }
+
 }
