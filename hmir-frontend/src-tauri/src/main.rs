@@ -10,6 +10,8 @@ use anyhow;
 use futures::executor::block_on;
 use tokio;
 use tauri::{CustomMenuItem, Menu, MenuItem, Submenu};
+use tauri::Manager;
+use tauri::WindowBuilder;
 
 
 //use log4rs;
@@ -52,6 +54,17 @@ fn cmd_logout(host : &str) -> bool
 }
 
 
+#[tauri::command]
+async fn close_splashscreen(window: tauri::Window) {
+    // Close splashscreen
+    if let Some(splashscreen) = window.get_window("splashscreen") {
+        println!("--------------------call close");
+        splashscreen.close().unwrap();
+    }
+    // Show main window
+    window.get_window("main").unwrap().show().unwrap();
+}
+
 //fn log_init ()
 //{
 //    let log = log4rs::init_file("/etc/hmir/log4rs.yaml",Default::default());
@@ -80,7 +93,28 @@ fn main() {
         .add_submenu(helpmenu);
 
     tauri::Builder::default()
-        .menu(menu)
+        .setup(|app| {
+            let splashscreen_window = app.get_window("splashscreen").unwrap();
+            // let main_window = app.get_window("main").unwrap();
+
+            WindowBuilder::new(
+                app,
+                "main-window".to_string(),
+                tauri::WindowUrl::App("index.html".into()),
+            )
+            .menu(menu)
+            .build()?.hide();
+            let main_window = app.get_window("main-window").unwrap();
+            // we perform the initialization code on a new task so the app doesn't freeze
+            tauri::async_runtime::spawn(async move {
+                // initialize your app here instead of sleeping :)
+                std::thread::sleep(std::time::Duration::from_secs(2));
+                // After it's done, close the splashscreen and display the main window
+                splashscreen_window.close().unwrap();
+                main_window.show().unwrap();
+            });
+            Ok(())
+        })
         .on_menu_event(|event| {
             match event.menu_item_id() {
                 "quit" => {
@@ -93,7 +127,8 @@ fn main() {
             cmd_login,
             cmd_logout,
             cmd_ttyd_stop,
-            cmd_ttyd_start])
+            cmd_ttyd_start,
+            close_splashscreen])
         // .invoke_handler(tauri::generate_handler![ttyd_start])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
