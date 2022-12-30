@@ -129,7 +129,6 @@ fn ovs_ofctl_forbid_dstip(info_map : HashMap<String, String>) -> String {
     let br_name = info_map.get("br_name").unwrap();
     let dst_ip = info_map.get("dst_ip").unwrap();
     let in_port = info_map.get("in_port").unwrap();
-    println!("in_port:{}", in_port);
     
     let mut rule = String::new();
     if in_port.is_empty() {
