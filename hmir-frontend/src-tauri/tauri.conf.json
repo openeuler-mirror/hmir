@@ -58,7 +58,7 @@
         "width": 1250,
         "height": 700,
         "decorations": false,
-        "url": "../public/splashscreen.html",
+        "url": "../public/splashscreen/splashscreen.html",
         "label": "splashscreen",
         "center": true
       }
