@@ -55,11 +55,12 @@
     },
     "windows": [
       {
-        "width": 400,
-        "height": 200,
+        "width": 1250,
+        "height": 700,
         "decorations": false,
         "url": "../public/splashscreen.html",
-        "label": "splashscreen"
+        "label": "splashscreen",
+        "center": true
       }
     ]
   }
