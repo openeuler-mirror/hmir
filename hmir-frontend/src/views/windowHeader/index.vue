@@ -12,13 +12,6 @@
         <el-menu-item index="1-1" class="el-menu-item-height">关于</el-menu-item>
       </el-sub-menu>
       <div class="flex-grow" />
-      <el-menu-item index="2">
-        <template #title>
-          <el-icon>
-            <CircleClose />
-          </el-icon>
-        </template>
-      </el-menu-item>
     </el-menu>
   </div>
 </template>
