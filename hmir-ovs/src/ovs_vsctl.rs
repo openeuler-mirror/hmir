@@ -96,7 +96,17 @@
 //!     "id":1, 
 //!     "method":"ovs-vsctl-set-interface-policing",
 //!     "params": {"interface_name":"vnet0", "rate":"1000", "burst":"100"} 
-//! } 
+//! }
+//! 
+//! - ovs-vsctl-set-port-qos：设置port qos策略, max-rate单位bps
+//! 请求格式：
+//! { 
+//!     "jsonrpc":"2.0", 
+//!     "id":1, 
+//!     "method":"ovs-vsctl-set-port-qos",
+//!     "params": {"interface_name":"vnet0", "qos_type":"linux-htb", "max-rate":"1000000"} 
+//! }
+
 
 use super::ovs_common::*;
 use std::collections::HashMap;
@@ -153,6 +163,11 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
     module.register_method("ovs-vsctl-set-interface-policing", |params, _| {
         let br_info = params.parse::<HashMap<String, String>>()?;
         Ok(ovs_vsctl_set_interface_policing(br_info))
+    })?;
+
+    module.register_method("ovs-vsctl-set-port-qos", |params, _| {
+        let br_info = params.parse::<HashMap<String, String>>()?;
+        Ok(ovs_vsctl_set_port_qos(br_info))
     })?;
 
     Ok(())
@@ -253,6 +268,19 @@ fn ovs_vsctl_set_interface_policing(info_map : HashMap<String, String>) -> Strin
     reflect_cmd_result(output)
 }
 
+fn ovs_vsctl_set_port_qos(info_map : HashMap<String, String>) -> String{
+    let port_name = info_map.get("port_name").unwrap();
+    let qos_type = info_map.get("qos_type").unwrap();
+    let max_rate = info_map.get("max_rate").unwrap();
+
+    let rule = format!("{} set Port {} qos=@newqos -- \
+                                --id=@newqos create qos type={} queues=0=@q0 -- \
+                                --id=@q0 create queue other-config:max-rate={}", 
+                                VSCTL_CMD, port_name, qos_type, max_rate);
+    let output = exec_rule(rule, "ovs_vsctl_set_port_qos".to_string());
+    reflect_cmd_result(output)
+}
+
 // 由于测试网桥会在用例中不断被清理，需保证串行执行用例：cargo test  -- --test-threads=1 
 #[cfg(test)]
 mod vsctl_tests{
@@ -279,12 +307,15 @@ mod vsctl_tests{
         br_info.insert("br_name".to_string(), BR_FOR_TEST.to_string());
         br_info.insert("port_name".to_string(), PORT_FOR_TEST.to_string());
         br_info.insert("tag_value".to_string(), "100".to_string());
+        br_info.insert("qos_type".to_string(), "linux-htb".to_string());
+        br_info.insert("max_rate".to_string(), "1000000".to_string());
         
         assert_eq!(ovs_vsctl_add_br(br_info.clone()), "Done".to_string());
         assert_eq!(ovs_vsctl_add_port(br_info.clone()), "Done".to_string());
-        assert_eq!(ovs_vsctl_set_port_vlan(br_info.clone()), "Done".to_string());
+        assert_eq!(ovs_vsctl_set_port_vlan(br_info.clone()), "Done".to_string()); 
+        assert_eq!(ovs_vsctl_set_port_qos(br_info.clone()), "Done".to_string());
         assert_eq!(ovs_vsctl_del_port(br_info.clone()), "Done".to_string());
-
+        
         test_clear_env();
     }
 
