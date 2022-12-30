@@ -1,15 +1,144 @@
 <!DOCTYPE html>
-<html lang="en">
+<!-- saved from url=(0062)http://nkunited.de/jquery/plugins/waterrippleeffect/index.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-<head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HMIR</title>
+    
+    <title>Water ripple effect - Sample</title>
+    <script src="./jquery.min.js"></script>
+    <script src="./jquery.waterrippleeffect.min.js"></script>
+
+    <script>
+
+
+		//------------------------------------------------------------------------
+
+		function init() {
+
+			//Settings - params for WaterRippleEffect
+			var settings = {
+				image: 'bg.jpg',//image path
+				rippleRadius: 3,//radius of the ripple
+				width: 1920,//width
+				height: 1080,//height
+				delay: 1,//if auto param === true. 1 === 1 second delay for animation
+				auto: true//if auto param === true, animation starts on it´s own
+			};
+
+			//------------------------------------------------------------------------
+
+			//standalone
+
+			//init
+			
+			var waterRippleEffect = new WaterRippleEffect( document.getElementById( 'holder' ), settings );
+			document.getElementById( 'holder' ).style.cursor = 'pointer';
+
+			//on click
+			
+			document.getElementById( 'holder' ).addEventListener( 'click', function( e ) {
+
+				var mouseX = e.layerX;
+				var mouseY = e.layerY;
+
+				waterRippleEffect.disturb( mouseX, mouseY );
+
+			} );
+			
+
+			
+
+			//on mousemove
+			
+			document.getElementById( 'holder' ).addEventListener( 'mousemove', function( e ) {
+
+				var mouseX = e.layerX;
+				var mouseY = e.layerY;
+
+				waterRippleEffect.disturb( mouseX, mouseY );
+
+			} );
+		};
+    </script>
+	<style type="text/css">
+		#holder *{
+			position: relative;
+			left: 0;
+			top: 0;
+			z-index: -99;
+		}
+
+		#content{
+			position: absolute;
+			left: 0;
+			top: 0;
+			z-index: 99;
+		}
+
+		body{
+			margin: 0;
+			overflow:hidden;
+		}
+
+
+	</style>
+
 </head>
 
-<body>
-  <div>HMIR</div>
+<body onload="init()" id="holder">
+
+
+		<!--<div style="background-color: rgba(238,238,238,0.5);position: absolute;left: 0;top: 0;" id="holder" >-->
+	
+		<div id="content">
+		<span>
+			<img src="./logo_B.png" style="width: 20%;margin-top: 15%;margin-left: 8%;">
+		</span>
+
+        
+        <span style="width: 60%; ">
+            <div style="background-color: red;margin: -25% 12% 0 35%;  height: 30px;font-size: 20px;
+            text-align: center;border-radius:5px ;font-weight: bold;position: relative;padding: 8px" >使用说明</div>
+            <div style="margin:10px 12% 0 35%; background-color: #ffffff;height:500px;line-height: 1em
+                   ;border-radius: 10px;padding: 5px;font-size: 20px;" >
+                <blockquote>
+
+                        <p><b>常用快捷键:</b></p>
+							<blockquote>
+							<P>全屏:Shift+F11</P>
+							</blockquote>
+							<blockquote>
+							<P>虚拟机切换:Ctrl+Alt</P>
+							</blockquote>
+                        <P><b>版本信息:</b></P>
+							<blockquote>
+							<P>凝思安全云桌面系统 v1.1</P>
+							</blockquote>
+                        <p><b>许可(GPL):</b></p>
+							<blockquote>
+							<p>
+								This program is free software; you can redistribute it and/or modify
+								it under the terms of the GNU General Public License as published by
+								the Free Software Foundation; either version 2 of the License, or
+								(at your option) any later version.
+
+								This program is distributed in the hope that it will be useful,
+								but WITHOUT ANY WARRANTY; without even the implied warranty of
+								MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+								GNU General Public License for more details.
+
+								You should have received a copy of the GNU General Public License
+								along with this program; if not, write to the Free Software
+								Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+							</p>
+							</blockquote>
+                </blockquote>
+            </div>
+        </span>
+
+		</div>
+		</div>
+
+
 </body>
 
 </html>
