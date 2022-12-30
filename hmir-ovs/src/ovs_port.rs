@@ -55,3 +55,18 @@ impl OvsNetflow{
         }
     }
 }
+
+#[derive(Debug, Clone, Serialize)]
+pub struct OvsIpfix{
+    pub uuid : String,   
+    pub targets : String 
+}
+
+impl OvsIpfix{
+    pub fn new(uuid:&str, targets:&str) -> OvsIpfix{
+        OvsIpfix{
+            uuid : uuid.to_string(),
+            targets : targets.to_string()
+        }
+    }
+}

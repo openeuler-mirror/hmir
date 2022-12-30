@@ -134,6 +134,10 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
         Ok(get_netflow())
     })?;
 
+    module.register_method("ovs-query-ipfix", |_, _| {
+        Ok(get_ipfix())
+    })?;
+
     module.register_method("ovs-add-port", |params, _| {
         let port_info = params.parse::<HashMap<String, String>>()?;
         Ok(add_port(port_info))
@@ -143,6 +147,7 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
         let port_info = params.parse::<HashMap<String, String>>()?;
         Ok(del_port(port_info))
     })?;
+
     Ok(())
 }
 
@@ -253,6 +258,27 @@ fn get_netflow() -> std::string::String{
     }
 }
 
+fn get_ipfix() -> std::string::String{
+    let ovsc = OvsClient::new();
+    match ovsc{
+        Err(e) => {
+            e.error_detail.clone()
+        },
+        Ok(mut c)=>{
+            let ipfix = c.get_ipfix();
+            match ipfix{
+                Ok(ipfix) =>{
+                
+                    let ret_message = serde_json::to_string(&ipfix).unwrap();
+                    ret_message    
+                },
+                Err(e) => {
+                    e.error_detail.clone()
+                }
+            }
+        }
+    }
+}
 
 fn add_port(info_map : HashMap<String, String>) -> std::string::String {
     let ovsc = OvsClient::new();
@@ -327,6 +353,11 @@ mod query_tests{
         exec_rule(rule_netflow, "test_query rule_netflow".to_string());
         ret_str = get_netflow();
         assert!(ret_str.contains("172.30.21.13:2055"));
+
+        let rule_ipfix = format!("ovs-vsctl set Bridge {} ipfix=@i -- --id=@i create IPFIX targets=\\\"172.30.21.14:2055\\\"", BR_FOR_TEST);
+        exec_rule(rule_ipfix, "test_query rule_ipfix".to_string());
+        ret_str = get_ipfix();
+        assert!(ret_str.contains("172.30.21.14:2055"));
 
         test_clear_env();
     }
