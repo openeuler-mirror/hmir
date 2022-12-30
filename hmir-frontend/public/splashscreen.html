@@ -19,12 +19,12 @@
 
 			//Settings - params for WaterRippleEffect
 			var settings = {
-				image: 'bg.jpg',//image path
+				image: 'bg.png',//image path
 				rippleRadius: 3,//radius of the ripple
-				width: 1920,//width
-				height: 1080,//height
+				width: 1250,//width
+				height: 700,//height
 				delay: 1,//if auto param === true. 1 === 1 second delay for animation
-				auto: true//if auto param === true, animation starts on it´s own
+				auto: true//if auto param === true, animation starts on it´s ownconta
 			};
 
 			//------------------------------------------------------------------------
@@ -81,6 +81,10 @@
 			margin: 0;
 			overflow: hidden;
 		}
+
+		p {
+			font-size: 16px;
+		}
 	</style>
 
 </head>
@@ -97,9 +101,9 @@
 
 
 		<span style="width: 60%; ">
-			<div style="background-color: red;margin: -25% 12% 0 35%;  height: 30px;font-size: 20px;
+			<div style="background-color: rgba(235, 32, 9, 0.8);margin: -30% 12% 0 35%;  height: 30px;font-size: 20px;
             text-align: center;border-radius:5px ;font-weight: bold;position: relative;padding: 8px">使用说明</div>
-			<div style="margin:10px 12% 0 35%; background-color: #ffffff;height:500px;line-height: 1em
+			<div style="margin:10px 12% 0 35%; background-color: #fff8;height:500px;line-height: 1em
                    ;border-radius: 10px;padding: 5px;font-size: 20px;">
 				<blockquote>
 
@@ -135,11 +139,7 @@
 				</blockquote>
 			</div>
 		</span>
-
 	</div>
-	</div>
-
-
 </body>
 
 </html>
