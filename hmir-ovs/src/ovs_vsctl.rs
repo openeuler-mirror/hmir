@@ -71,6 +71,23 @@
 //!     "params": {"port_name":"vnet0", "tag_value":"2"} 
 //! }
 //! 
+//! - ovs-vsctl-set-ipfix-rule： 网桥中设置ipfix 规则
+//! 请求格式：
+//! { 
+//!     "jsonrpc":"2.0", 
+//!     "id":1, 
+//!     "method":"ovs-vsctl-set-ipfix-rule",
+//!     "params": {"br_name":"ovsmgmt", "targets": "172.30.24.3:2055"} 
+//! }
+//! 
+//! - ovs-vsctl-del-ipfix-rule： 网桥中删除ipfix 规则
+//! 请求格式：
+//! { 
+//!     "jsonrpc":"2.0", 
+//!     "id":1, 
+//!     "method":"ovs-vsctl-del-ipfix-rule",
+//!     "params": {"br_name":"ovsmgmt"} 
+//! } 
 
 use super::ovs_common::*;
 use std::collections::HashMap;
@@ -107,6 +124,16 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
     module.register_method("ovs-vsctl-del-netflow-rule", |params, _| {
         let br_info = params.parse::<HashMap<String, String>>()?;
         Ok(ovs_vsctl_del_netflow_rule(br_info))
+    })?;
+
+    module.register_method("ovs-vsctl-set-ipfix-rule", |params, _| {
+        let br_info = params.parse::<HashMap<String, String>>()?;
+        Ok(ovs_vsctl_set_ipfix_rule(br_info))
+    })?;
+
+    module.register_method("ovs-vsctl-del-ipfix-rule", |params, _| {
+        let br_info = params.parse::<HashMap<String, String>>()?;
+        Ok(ovs_vsctl_del_ipfix_rule(br_info))
     })?;
 
     module.register_method("ovs-vsctl-set-port-vlan", |params, _| {
@@ -169,6 +196,25 @@ fn ovs_vsctl_del_netflow_rule(info_map : HashMap<String, String>) -> String {
     reflect_cmd_result(output)
 }
 
+fn ovs_vsctl_set_ipfix_rule(info_map : HashMap<String, String>) -> String{
+
+    let br_name = info_map.get("br_name").unwrap();
+    let targets =  info_map.get("targets").unwrap();
+    let rule = format!("{} set Bridge {} ipfix=@i -- --id=@i create IPFIX targets=\\\"{}\\\"", 
+                                VSCTL_CMD, br_name, targets);
+    
+    let output = exec_rule(rule, "ovs_vsctl_set_ipfix_rule".to_string());
+    reflect_cmd_result(output)
+}
+
+fn ovs_vsctl_del_ipfix_rule(info_map : HashMap<String, String>) -> String{
+    let br_name = info_map.get("br_name").unwrap();
+    let rule = format!("{} clear Bridge {} ipfix", VSCTL_CMD, br_name);
+    
+    let output = exec_rule(rule, "ovs_vsctl_del_ipfix_rule".to_string());
+    reflect_cmd_result(output)
+}
+
 fn ovs_vsctl_set_port_vlan(info_map : HashMap<String, String>) -> String{
     let port_name = info_map.get("port_name").unwrap();
     let tag_value =  info_map.get("tag_value").unwrap();
@@ -227,4 +273,17 @@ mod vsctl_tests{
         test_clear_env();
     }
 
+    #[test]
+    fn test_ipfix(){
+        test_setup_env();
+
+        let mut br_info = HashMap::new();
+        br_info.insert("br_name".to_string(), BR_FOR_TEST.to_string());
+        br_info.insert("targets".to_string(), "172.30.24.122:2055".to_string());
+
+        assert_eq!(ovs_vsctl_set_ipfix_rule(br_info.clone()), "Done".to_string());
+        assert_eq!(ovs_vsctl_del_ipfix_rule(br_info.clone()), "Done".to_string());
+
+        test_clear_env();
+    }
 }
