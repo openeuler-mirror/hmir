@@ -87,6 +87,15 @@
 //!     "id":1, 
 //!     "method":"ovs-vsctl-del-ipfix-rule",
 //!     "params": {"br_name":"ovsmgmt"} 
+//! }
+//! 
+//! - ovs-vsctl-set-interface-policing：设置接口限流policing， rate单位kbps, burst单位kb
+//! 请求格式：
+//! { 
+//!     "jsonrpc":"2.0", 
+//!     "id":1, 
+//!     "method":"ovs-vsctl-set-interface-policing",
+//!     "params": {"interface_name":"vnet0", "rate":"1000", "burst":"100"} 
 //! } 
 
 use super::ovs_common::*;
@@ -139,6 +148,11 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
     module.register_method("ovs-vsctl-set-port-vlan", |params, _| {
         let br_info = params.parse::<HashMap<String, String>>()?;
         Ok(ovs_vsctl_set_port_vlan(br_info))
+    })?;
+
+    module.register_method("ovs-vsctl-set-interface-policing", |params, _| {
+        let br_info = params.parse::<HashMap<String, String>>()?;
+        Ok(ovs_vsctl_set_interface_policing(br_info))
     })?;
 
     Ok(())
@@ -224,6 +238,21 @@ fn ovs_vsctl_set_port_vlan(info_map : HashMap<String, String>) -> String{
     reflect_cmd_result(output)
 }
 
+fn ovs_vsctl_set_interface_policing(info_map : HashMap<String, String>) -> String{
+    let interface_name = info_map.get("interface_name").unwrap();
+    let rate =  info_map.get("rate").unwrap();
+    let burst = info_map.get("burst").unwrap();
+    let rule_rate = format!("{} set interface {} ingress_policing_rate={}", VSCTL_CMD, interface_name, rate);
+    let mut output = exec_rule(rule_rate, "ovs_vsctl_set_interface_policing rule_rate".to_string());
+    if !output.status.success() {
+        println!("execute ovs_vsctl_set_interface_policing rule_rate exception : {}",  String::from_utf8_lossy(&output.stderr));
+    }
+
+    let rule_burst = format!("{} set interface {} ingress_policing_burst={}", VSCTL_CMD, interface_name, burst);
+    output = exec_rule(rule_burst, "ovs_vsctl_set_interface_policing rule_burst".to_string());
+    reflect_cmd_result(output)
+}
+
 // 由于测试网桥会在用例中不断被清理，需保证串行执行用例：cargo test  -- --test-threads=1 
 #[cfg(test)]
 mod vsctl_tests{
@@ -284,6 +313,19 @@ mod vsctl_tests{
         assert_eq!(ovs_vsctl_set_ipfix_rule(br_info.clone()), "Done".to_string());
         assert_eq!(ovs_vsctl_del_ipfix_rule(br_info.clone()), "Done".to_string());
 
+        test_clear_env();
+    }
+
+    #[test]
+    fn test_interface(){
+        test_setup_env();
+
+        let mut br_info = HashMap::new();
+        br_info.insert("interface_name".to_string(), BR_FOR_TEST.to_string());
+        br_info.insert("rate".to_string(), "1000".to_string());
+        br_info.insert("burst".to_string(), "100".to_string());
+
+        assert_eq!(ovs_vsctl_set_interface_policing(br_info.clone()), "Done".to_string());
         test_clear_env();
     }
 }
