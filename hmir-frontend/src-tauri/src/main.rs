@@ -53,6 +53,12 @@ fn cmd_logout(host : &str) -> bool
     return clientmgr::logout(host);
 }
 
+
+#[tauri::command]
+fn cmd_quit(){
+    std::process::exit(0);
+}
+
 //fn log_init ()
 //{
 //    let log = log4rs::init_file("/etc/hmir/log4rs.yaml",Default::default());
@@ -99,7 +105,8 @@ fn main() {
             cmd_login,
             cmd_logout,
             cmd_ttyd_stop,
-            cmd_ttyd_start])
+            cmd_ttyd_start,
+            cmd_quit])
         // .invoke_handler(tauri::generate_handler![ttyd_start])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
