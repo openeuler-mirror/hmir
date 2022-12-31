@@ -55,8 +55,16 @@
     },
     "windows": [
       {
-        "width": 1250,
-        "height": 700,
+        "width": 1200,
+        "height": 800,
+        "resizable" : true,
+        "title": "hmir-frontend",
+        "visible" : false,
+        "center": true
+      },
+      {
+        "width": 400,
+        "height": 200,
         "decorations": false,
         "url": "../public/splashscreen/splashscreen.html",
         "label": "splashscreen",
