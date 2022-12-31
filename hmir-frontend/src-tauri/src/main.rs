@@ -53,18 +53,6 @@ fn cmd_logout(host : &str) -> bool
     return clientmgr::logout(host);
 }
 
-
-#[tauri::command]
-async fn close_splashscreen(window: tauri::Window) {
-    // Close splashscreen
-    if let Some(splashscreen) = window.get_window("splashscreen") {
-        println!("--------------------call close");
-        splashscreen.close().unwrap();
-    }
-    // Show main window
-    window.get_window("main").unwrap().show().unwrap();
-}
-
 //fn log_init ()
 //{
 //    let log = log4rs::init_file("/etc/hmir/log4rs.yaml",Default::default());
@@ -111,8 +99,7 @@ fn main() {
             cmd_login,
             cmd_logout,
             cmd_ttyd_stop,
-            cmd_ttyd_start,
-            close_splashscreen])
+            cmd_ttyd_start])
         // .invoke_handler(tauri::generate_handler![ttyd_start])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
