@@ -82,33 +82,17 @@ fn main() {
     // log_init();
 
     // here `"quit".to_string()` defines the menu item id, and the second parameter is the menu item label.
-    let quit = CustomMenuItem::new("quit".to_string(), "退出");
-    let about = CustomMenuItem::new("about".to_string(), "关于");
-    let filemenu = Submenu::new("文件", Menu::new().add_item(quit));
-    let helpmenu = Submenu::new("帮助", Menu::new().add_item(about));
 
-    let menu = Menu::new()
-        .add_native_item(MenuItem::Copy)
-        .add_submenu(filemenu)
-        .add_submenu(helpmenu);
+    const SPLASH_WAIT_TIME : u64 = 5;
 
     tauri::Builder::default()
         .setup(|app| {
             let splashscreen_window = app.get_window("splashscreen").unwrap();
-            // let main_window = app.get_window("main").unwrap();
-
-            WindowBuilder::new(
-                app,
-                "main-window".to_string(),
-                tauri::WindowUrl::App("index.html".into()),
-            )
-            .menu(menu)
-            .build()?.hide();
-            let main_window = app.get_window("main-window").unwrap();
+            let main_window = app.get_window("main").unwrap();
             // we perform the initialization code on a new task so the app doesn't freeze
             tauri::async_runtime::spawn(async move {
                 // initialize your app here instead of sleeping :)
-                std::thread::sleep(std::time::Duration::from_secs(2));
+                std::thread::sleep(std::time::Duration::from_secs(SPLASH_WAIT_TIME));
                 // After it's done, close the splashscreen and display the main window
                 splashscreen_window.close().unwrap();
                 main_window.show().unwrap();
