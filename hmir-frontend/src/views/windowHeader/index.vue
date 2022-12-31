@@ -18,6 +18,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { CircleClose } from '@element-plus/icons-vue'
+import { invoke } from "@tauri-apps/api/tauri";
+
 const menuTrigger = ref<string>('click')
 const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
@@ -31,7 +33,16 @@ const handleOpen = (key: string, keyPath: string[]) => {
 const handleClose = (key: string, keyPath: string[]) => {
   menuTrigger.value = 'click'
   console.log(key, keyPath)
+  processQuit()
 }
+
+
+async function processQuit () {
+  //连接控制台
+  await invoke("cmd_quit", {});
+}
+
+
 
 </script>
 
