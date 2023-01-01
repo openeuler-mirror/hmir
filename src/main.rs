@@ -1,17 +1,25 @@
-mod svr;
-mod ceph;
-mod ipmi;
 mod net;
 mod pkg;
-mod proc;
-mod kernel;
-mod observer;
 mod ttyd;
 mod wsclient;
 mod ssh;
 mod pam;
 mod clientmgr;
 // mod token;
+
+#[cfg(target_os = "linux")]
+mod ceph;
+
+#[cfg(target_os = "linux")]
+mod proc;
+#[cfg(target_os = "linux")]
+mod ipmi;
+#[cfg(target_os = "linux")]
+mod svr;
+#[cfg(target_os = "linux")]
+mod kernel;
+#[cfg(target_os = "linux")]
+mod observer;
 
 
 #[macro_use]
@@ -95,7 +103,10 @@ fn log_init ()
 
 #[doc(hidden)]
 fn init_services() {
-    svr::init_services_mg();
+    #[cfg(target_os = "linux")]
+    {
+        svr:init_services_mg();
+    }
 }
 
 #[tokio::main]
@@ -103,7 +114,10 @@ async fn main() -> anyhow::Result<()> {
 
     log_init();
     assert_single_instance!();
+
+
     init_services();
+
 
     let mut app = App::new("hmir");
     let matches = app.clone()
@@ -144,6 +158,8 @@ async fn main() -> anyhow::Result<()> {
 
 // use jsonrpsee_core::client::Client;
 use jsonrpsee::async_client::Client;
+use crate::ttyd::ttyd_start;
+
 
 async fn run_ws_server(ip: &str , port : &str) -> anyhow::Result<(SocketAddr,WsServerHandle)> {
 
@@ -157,14 +173,19 @@ async fn run_ws_server(ip: &str , port : &str) -> anyhow::Result<(SocketAddr,WsS
 
     // println!("{:?}",client);
 
-    svr::register_method(& mut module)?;
+    #[cfg(target_os  = "linux")]
+    {
+        svr::register_method(& mut module)?;
+        ipmi::register_method(& mut module)?;
+        proc::register_method(& mut module)?;
+        kernel::register_method(& mut module)?;
+        observer::register_method(& mut module)?;
+        ceph::register_method(& mut module)?;
+    }
+
+
     pkg::register_method(& mut module)?;
-    ipmi::register_method(& mut module)?;
     net::register_method(& mut module)?;
-    proc::register_method(& mut module)?;
-    kernel::register_method(& mut module)?;
-    observer::register_method(& mut module)?;
-    ceph::register_method(& mut module)?;
     ttyd::register_method(& mut module)?;
     pam::register_method(& mut module)?;
 
