@@ -1,9 +1,7 @@
 extern crate core;
 
 use serde::{Serialize, Deserialize};
-use jsonwebtoken::{encode, decode, Header, Algorithm, Validation, EncodingKey, DecodingKey,TokenData};
-use jsonwebtoken::errors::Result;
-use jsonwebtoken::errors::ErrorKind;
+use jsonwebtoken::{encode, decode, Header, Validation, EncodingKey, DecodingKey};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Claims {
