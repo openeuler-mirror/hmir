@@ -26,18 +26,22 @@ futures = "0.3"
 lazy_static = "1.4.0"
 serde_json = "1.0.87"
 serde = { version = "1.0.147", features = ["derive"] }
-procfs = "0.14.1"
 nix = "0.25.0"
-iptables = "0.5.0"
 core_affinity = "0.7.6"
 ssh2 = "0.9.3"
 pam = "0.7.0"
+cfg = "0.5.0"
 
 hmir-hash = {path = "hmir-hash" }
-hmir-systemd = {path = "hmir-systemd" }
 hmir-ovs = {path = "hmir-ovs" }
-hmir-ipmitool = { path = "hmir-ipmitool"}
 hmir-ceph = {path = "hmir-ceph" }
+
+[target.'cfg(linux)'.dependencies]
+procfs = "0.14.1"
+hmir-systemd = {path = "hmir-systemd" }
+iptables = "0.5.0"
+hmir-ipmitool = { path = "hmir-ipmitool"}
+
 
 [[test]]
 name = "integration"

@@ -65,19 +65,19 @@ mod tests {
 
     #[test]
     fn register_client_worked() {
-        regitster_client("172.30.24.123",5898);
+        register_client("172.30.24.123",5898);
     }
 
     #[test]
     fn unregister_client_worked() {
-        unregitster_client("172.30.24.123",5898);
+        unregister_client("172.30.24.123",5898);
     }
 
 
     #[test]
     fn host_login_worked(){
         let host = "172.30.24.123".to_string();
-        regitster_client("172.30.24.123",5898);
+        register_client("172.30.24.123",5898);
         let login_state  = client_instance!(&host).login("root","radlcdss");
         assert_eq!(login_state,true)
     }
