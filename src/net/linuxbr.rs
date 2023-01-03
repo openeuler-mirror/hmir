@@ -1,5 +1,49 @@
 //! linux bridge 网桥能力
 //! 网桥管理命令 brctl
+//! 
+//! 支持以下的格式：
+//! - brctl-add-br: 增加linux网桥
+//! 请求格式：
+//! { 
+//!     "jsonrpc":"2.0", 
+//!     "id":1, 
+//!     "method":"brctl-add-br" ,
+//!     "params": {"br_name":"ovirtmgmt"}
+//! }
+//! 响应格式：
+//! {
+//!     "jsonrpc":"2.0",
+//!     "result":"Done",
+//!     "id":1
+//! }
+//! 
+//! - brctl-del-br: 删除linux网桥
+//! 请求格式：
+//! { 
+//!     "jsonrpc":"2.0", 
+//!     "id":1, 
+//!     "method":"brctl-del-br" ,
+//!     "params": {"br_name":"ovirtmgmt"}
+//! }
+//! 
+//! - brctl-add-interface: linux网桥中增加网络接口
+//! 请求格式：
+//! { 
+//!     "jsonrpc":"2.0", 
+//!     "id":1, 
+//!     "method":"brctl-add-br" ,
+//!     "params": {"br_name":"ovirtmgmt", "port_name":"ens3"}
+//! }
+//! 
+//! - brctl-de-interface: linux网桥中删除网络接口
+//! 请求格式：
+//! { 
+//!     "jsonrpc":"2.0", 
+//!     "id":1, 
+//!     "method":"brctl-del-interface" ,
+//!     "params": {"br_name":"ovirtmgmt", "port_name":"ens3"}
+//! }
+//! 
 
 use jsonrpsee::ws_server::RpcModule;
 use std::collections::HashMap;
@@ -61,13 +105,22 @@ fn brctl_del_br(info_map : HashMap<String, String>) -> String{
 }
 
 fn brctl_add_interface(info_map : HashMap<String, String>) -> String{
+    let br_name = info_map.get("br_name").unwrap();
+    let port_name = info_map.get("port_name").unwrap();
+    let rule = format!("{} addif {} {}", BRCTL_CMD, br_name, port_name);
 
-    String::new()
+    let output = exec_rule(rule, "brctl_add_interface".to_string());
+    reflect_cmd_result(output)
+
 }
 
 fn brctl_del_interface(info_map : HashMap<String, String>) -> String{
+    let br_name = info_map.get("br_name").unwrap();
+    let port_name = info_map.get("port_name").unwrap();
+    let rule = format!("{} delif {} {}", BRCTL_CMD, br_name, port_name);
 
-    String::new()
+    let output = exec_rule(rule, "brctl_del_interface".to_string());
+    reflect_cmd_result(output)
 }
 
 fn brctl_stp_on(info_map : HashMap<String, String>) -> String{
