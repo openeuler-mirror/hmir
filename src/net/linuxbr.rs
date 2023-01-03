@@ -35,13 +35,31 @@
 //!     "params": {"br_name":"ovirtmgmt", "port_name":"ens3"}
 //! }
 //! 
-//! - brctl-de-interface: linux网桥中删除网络接口
+//! - brctl-del-interface: linux网桥中删除网络接口
 //! 请求格式：
 //! { 
 //!     "jsonrpc":"2.0", 
 //!     "id":1, 
 //!     "method":"brctl-del-interface" ,
 //!     "params": {"br_name":"ovirtmgmt", "port_name":"ens3"}
+//! }
+//! 
+//! - brctl-stp-on: linux网桥开启stp
+//! 请求格式：
+//! { 
+//!     "jsonrpc":"2.0", 
+//!     "id":1, 
+//!     "method":"brctl-stp-on" ,
+//!     "params": {"br_name":"ovirtmgmt"}
+//! }
+//! 
+//! - brctl-stp-off: linux网桥关闭stp
+//! 请求格式：
+//! { 
+//!     "jsonrpc":"2.0", 
+//!     "id":1, 
+//!     "method":"brctl-stp-off" ,
+//!     "params": {"br_name":"ovirtmgmt"}
 //! }
 //! 
 
@@ -124,13 +142,19 @@ fn brctl_del_interface(info_map : HashMap<String, String>) -> String{
 }
 
 fn brctl_stp_on(info_map : HashMap<String, String>) -> String{
-
-    String::new()
+    let br_name = info_map.get("br_name").unwrap();
+    let rule = format!("{} stp {} on", BRCTL_CMD, br_name);
+    
+    let output = exec_rule(rule, "brctl_del_br".to_string());
+    reflect_cmd_result(output)
 }
 
 fn brctl_stp_off(info_map : HashMap<String, String>) -> String{
-
-    String::new()
+    let br_name = info_map.get("br_name").unwrap();
+    let rule = format!("{} stp {} off", BRCTL_CMD, br_name);
+    
+    let output = exec_rule(rule, "brctl_del_br".to_string());
+    reflect_cmd_result(output)
 }
 
 fn reflect_cmd_result(output : Output) -> String{
