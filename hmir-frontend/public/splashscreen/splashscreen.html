@@ -40,8 +40,8 @@
 
 			document.getElementById('holder').addEventListener('click', function (e) {
 
-				var mouseX = e.layerX;
-				var mouseY = e.layerY;
+				var mouseX = e.clientX;
+				var mouseY = e.clientY;
 
 				waterRippleEffect.disturb(mouseX, mouseY);
 
@@ -54,8 +54,8 @@
 
 			document.getElementById('holder').addEventListener('mousemove', function (e) {
 
-				var mouseX = e.layerX;
-				var mouseY = e.layerY;
+				var mouseX = e.clientX;
+				var mouseY = e.clientY;
 
 				waterRippleEffect.disturb(mouseX, mouseY);
 
