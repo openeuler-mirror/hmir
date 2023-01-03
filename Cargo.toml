@@ -36,7 +36,7 @@ hmir-hash = {path = "hmir-hash" }
 hmir-ovs = {path = "hmir-ovs" }
 hmir-ceph = {path = "hmir-ceph" }
 
-[target.'cfg(unix)'.dependencies]
+[target.'cfg(linux)'.dependencies]
 procfs = "0.14.1"
 hmir-systemd = {path = "hmir-systemd" }
 iptables = "0.5.0"
