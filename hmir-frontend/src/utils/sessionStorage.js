@@ -4,12 +4,22 @@
 export const sessionStorage = {
   // 设置临时缓存
   set (key, val) {
-    window.sessionStorage.setItem(key, JSON.stringify(val));
+    try {
+      const newStateValue = typeof val === "object" ? JSON.stringify(val) : val;
+      window.sessionStorage.setItem(key, newStateValue);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(`Unable to store new value for ${key} in sessionStorage.`);
+    }
   },
   // 获取临时缓存
   get (key) {
-    const json = window.sessionStorage.getItem(key);
-    return JSON.parse(json);
+    try {
+      const json = window.sessionStorage.getItem(key);
+      return json ? JSON.parse(json) : key;
+    } catch (error) {
+      return key;
+    }
   },
   // 移除临时缓存
   remove (key) {

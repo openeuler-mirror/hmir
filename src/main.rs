@@ -105,7 +105,7 @@ fn log_init ()
 fn init_services() {
     #[cfg(target_os = "linux")]
     {
-        svr:init_services_mg();
+        svr::init_services_mg();
     }
 }
 
