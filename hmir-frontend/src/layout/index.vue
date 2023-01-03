@@ -1,11 +1,10 @@
-<script setup lang="ts">
-import Aside from './aside/index.vue';
-</script>
 
 <template>
   <div class="common-layout">
     <el-container>
-      <el-header class="layoutHeader">Header</el-header>
+      <el-header class="layoutHeader">
+        <Header></Header>
+      </el-header>
       <el-container class="layoutBody">
         <el-aside width="200px">
           <Aside></Aside>
@@ -21,14 +20,20 @@ import Aside from './aside/index.vue';
   </div>
 </template>
 
+<script setup lang="ts">
+import Aside from './aside/index.vue';
+import Header from './header/index.vue';
+</script>
 
 <style lang="scss" scoped>
+$headerHeight:50px;
 .layoutHeader {
   background-color: #1d1d1d;
   color: #fff;
+  height: $headerHeight;
 }
 
 .layoutBody {
-  height: calc(100vh - 60px);
+  height: calc(100vh - 80px);
 }
 </style>

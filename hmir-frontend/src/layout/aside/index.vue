@@ -76,7 +76,7 @@ onMounted(() => {
 <style lang="scss" scoped>
 .el-menu-vertical-demo-header:not(.el-menu--collapse) {
   width: 200px;
-  height: calc(100vh - 60px);
+  height: calc(100vh - 80px);
 }
 
 .el-menu-vertical-demo-footer:not(.el-menu--collapse) {
