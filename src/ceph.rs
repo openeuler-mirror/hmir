@@ -147,12 +147,18 @@ pub fn ceph_fs_register_method(module : & mut RpcModule<()>) -> anyhow::Result<(
 
 ///mgr method register
 pub fn ceph_mgr_register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
-    ///集群文件系统相关
+    ///mgr metadata
     module.register_method("ceph-mgr-metadata", |_, _| {
-        //list authentication state
+        //mgr metadata
         Ok(mgr::mgr_metadata())
     })?;
 
+    ///mgr versions
+    module.register_method("ceph-mgr-versions", |_, _| {
+        //mgr versions
+        Ok(mgr::mgr_versions())
+    })?;
+    
     Ok(())
 }
 

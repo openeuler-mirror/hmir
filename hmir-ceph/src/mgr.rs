@@ -8,3 +8,8 @@ use log::{error, info, warn};
 pub fn mgr_metadata() -> String {
     command::mon_exec("mgr metadata")
 }
+
+///mgr versions
+pub fn mgr_versions() -> String {
+    command::mon_exec("mgr versions")
+}
