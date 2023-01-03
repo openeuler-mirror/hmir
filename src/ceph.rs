@@ -158,6 +158,12 @@ pub fn ceph_mgr_register_method(module : & mut RpcModule<()>) -> anyhow::Result<
         //mgr versions
         Ok(mgr::mgr_versions())
     })?;
+
+    ///mgr services
+    module.register_method("ceph-mgr-services", |_, _| {
+        //列出MGR模块提供的服务端点
+        Ok(mgr::mgr_services())
+    })?;
     
     Ok(())
 }
