@@ -61,6 +61,15 @@
 //!     "params": {"br_name":"ovsmgmt", "in_port":"vnet0", "dst_ip":"172.30.24.124","dst_port":"8080/0xffff"}
 //! }
 //! 
+//! - ovs-ofctl-mod-vlan:  设置vlan id转换
+//! 请求格式：
+//! { 
+//!     "jsonrpc":"2.0", 
+//!     "id":1, 
+//!     "method":"ovs-ofctl-mod-vlan" ,
+//!     "params": {"br_name":"ovsmgmt", "in_port":"vnet0", "dl_valn":"100","mod_vlan":"10"}
+//! }
+//! 
 
 use super::ovs_common::*;
 
@@ -103,6 +112,11 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
     module.register_method("ovs-ofctl-pass-dstport", |params, _| {
         let br_info = params.parse::<HashMap<String, String>>()?;
         Ok(ovs_ofctl_pass_dstport(br_info))
+    })?;
+
+    module.register_method("ovs-ofctl-mod-vlan", |params, _| {
+        let br_info = params.parse::<HashMap<String, String>>()?;
+        Ok(ovs_ofctl_mod_vlan(br_info))
     })?;
 
     Ok(())
@@ -217,6 +231,17 @@ fn ovs_ofctl_pass_dstport(info_map : HashMap<String, String>) -> String{
 
 }
 
+fn ovs_ofctl_mod_vlan(info_map : HashMap<String, String>) -> String{
+    let br_name = info_map.get("br_name").unwrap();
+    let in_port = info_map.get("in_port").unwrap();
+    let dl_vlan = info_map.get("dl_vlan").unwrap();
+    let mod_vlan = info_map.get("mod_vlan").unwrap();
+
+    let rule = format!("{} add-flow {} priority=3,in_port={},dl_vlan={},actions=mod_vlan_vid:{},normal",
+                                OFCTL_CMD, br_name, in_port, dl_vlan, mod_vlan);
+    let output = exec_rule(rule, "ovs_ofctl_mod_vlan".to_string());
+    reflect_cmd_result(output)
+}
 
 // 由于测试网桥会在用例中不断被清理，需保证串行执行用例：cargo test  -- --test-threads=1 
 #[cfg(test)]
@@ -268,6 +293,21 @@ mod ofctl_tests{
 
         br_info.insert("dst_port".to_string(), "8080/0xffff".to_string());
         assert_eq!(ovs_ofctl_pass_dstport(br_info.clone()), "Done".to_string());
+
+        test_clear_env();
+    }
+
+    #[test]
+    fn test_vlan_rule(){
+        test_setup_env();
+
+        let mut br_info = HashMap::new();
+        br_info.insert("br_name".to_string(), BR_FOR_TEST.to_string());
+        br_info.insert("in_port".to_string(), BR_FOR_TEST.to_string());
+        br_info.insert("dl_vlan".to_string(), "100".to_string());
+        br_info.insert("mod_vlan".to_string(), "10".to_string());
+
+        assert_eq!(ovs_ofctl_mod_vlan(br_info.clone()), "Done".to_string());
 
         test_clear_env();
     }
