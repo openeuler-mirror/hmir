@@ -237,7 +237,7 @@ fn ovs_ofctl_mod_vlan(info_map : HashMap<String, String>) -> String{
     let dl_vlan = info_map.get("dl_vlan").unwrap();
     let mod_vlan = info_map.get("mod_vlan").unwrap();
 
-    let rule = format!("{} add-flow {} priority=3,in_port={},dl_vlan={},actions=mod_vlan_vid:{},normal",
+    let rule = format!("{} add-flow {} in_port={},dl_vlan={},actions=mod_vlan_vid:{},normal",
                                 OFCTL_CMD, br_name, in_port, dl_vlan, mod_vlan);
     let output = exec_rule(rule, "ovs_ofctl_mod_vlan".to_string());
     reflect_cmd_result(output)
