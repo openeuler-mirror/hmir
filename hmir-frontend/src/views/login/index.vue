@@ -20,7 +20,9 @@
       <el-form-item prop="ipPort" class="ipPort">
         <span class="ipPort-container">
         </span>
-        <el-input ref="ipPort" v-model.trim="loginData.ipPort" :placeholder="'端口'" name="ipPort" type="text" />
+        <el-autocomplete v-model.trim="loginData.ipPort" :fetch-suggestions="ipPortQuery" clearable class="ipPortAutocomplete"
+          placeholder="端口" @select="handleSelect">
+        </el-autocomplete>
       </el-form-item>
 
       <el-form-item prop="username">
@@ -177,6 +179,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 onMounted(() => {
   console.log(localStorage.get('login'));
   ipAddressResults.value = ipAddressAll()
+  ipPotrResults.value=ipPortAll()
 });
 
 //定义绑定的输入建议数据类型
@@ -186,13 +189,36 @@ interface RestaurantItem {
 
 //ip地址下拉数据
 const ipAddressResults= ref<RestaurantItem[]>([])
+//ip端口下拉数据
+const ipPotrResults= ref<RestaurantItem[]>([])
 
+//下拉菜单列表数据
+const ipAddressAll = () => {
+  return [
+    { value: '172.30.21.35' },
+  ]
+}
+const ipPortAll = () => {
+  return [
+    { value: '5898' },
+  ]
+}
 //过滤后的数据
-const querySearch = (queryString: string, cb: any) => {
+const ipAddressQuery = (queryString: string, cb: any) => {
   console.log(queryString, cb);
   const results = queryString
     ? ipAddressResults.value.filter(createFilter(queryString))
     : ipAddressResults.value
+  // call callback function to return suggestions
+  console.log(results);
+  cb(results)
+}
+
+const ipPortQuery = (queryString: string, cb: any) => {
+  console.log(queryString, cb);
+  const results = queryString
+    ? ipPotrResults.value.filter(createFilter(queryString))
+    : ipPotrResults.value
   // call callback function to return suggestions
   console.log(results);
   cb(results)
@@ -211,13 +237,6 @@ const createFilter = (queryString: string) => {
 //选中的数据
 const handleSelect = (item: RestaurantItem) => {
   console.log(item)
-}
-
-//下拉菜单列表数据
-const ipAddressAll = () => {
-  return [
-    { value: '172.30.21.35' },
-  ]
 }
 
 </script>
@@ -356,7 +375,6 @@ $light_gray: #eee;
       }
     }
   }
-
   .svg-container {
     padding: 7px 10px 3px 10px;
     color: $dark_gray;
