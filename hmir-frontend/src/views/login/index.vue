@@ -31,8 +31,9 @@
             <User />
           </el-icon>
         </span>
-        <el-input ref="username" v-model="loginData.username" :placeholder="'用户名'" name="username" type="text"
-          clearable />
+        <el-autocomplete v-model.trim="loginData.username" :fetch-suggestions="userQuery" clearable
+          class="" placeholder="用户名" @select="handleSelect">
+        </el-autocomplete>
       </el-form-item>
 
       <el-form-item prop="password">
@@ -178,8 +179,9 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 //生命周期
 onMounted(() => {
   console.log(localStorage.get('login'));
-  ipAddressResults.value = ipAddressAll()
-  ipPotrResults.value=ipPortAll()
+  ipAddressResults.value = ipAddressAll();
+  ipPotrResults.value = ipPortAll();
+  userResults.value = userAll();
 });
 
 //定义绑定的输入建议数据类型
@@ -188,9 +190,11 @@ interface RestaurantItem {
 }
 
 //ip地址下拉数据
-const ipAddressResults= ref<RestaurantItem[]>([])
+const ipAddressResults = ref<RestaurantItem[]>([])
 //ip端口下拉数据
-const ipPotrResults= ref<RestaurantItem[]>([])
+const ipPotrResults = ref<RestaurantItem[]>([])
+//用户名下拉数据
+const userResults = ref<RestaurantItem[]>([])
 
 //下拉菜单列表数据
 const ipAddressAll = () => {
@@ -201,6 +205,11 @@ const ipAddressAll = () => {
 const ipPortAll = () => {
   return [
     { value: '5898' },
+  ]
+}
+const userAll = () => {
+  return [
+    { value: 'root' },
   ]
 }
 //过滤后的数据
@@ -224,11 +233,21 @@ const ipPortQuery = (queryString: string, cb: any) => {
   cb(results)
 }
 
+const userQuery = (queryString: string, cb: any) => {
+  console.log(queryString, cb);
+  const results = queryString
+    ? userResults.value.filter(createFilter(queryString))
+    : userResults.value
+  // call callback function to return suggestions
+  console.log(results);
+  cb(results)
+}
+
 //过滤方法
 const createFilter = (queryString: string) => {
   return (restaurant: RestaurantItem) => {
     return (
-    //匹配过滤大小写后的地一个字母
+      //匹配过滤大小写后的第一个字母
       restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0
     )
   }
@@ -375,6 +394,7 @@ $light_gray: #eee;
       }
     }
   }
+
   .svg-container {
     padding: 7px 10px 3px 10px;
     color: $dark_gray;
