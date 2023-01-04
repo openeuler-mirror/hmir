@@ -12,16 +12,16 @@
             <Location />
           </el-icon>
         </span>
-        <el-autocomplete v-model.trim="loginData.ipAddress" :fetch-suggestions="querySearch" clearable class=""
-          placeholder="IP地址" @select="handleSelect">
+        <el-autocomplete v-model.trim="loginData.ipAddress" :fetch-suggestions="ipAddressQuery" clearable class=""
+          :trigger-on-focus="false" placeholder="IP地址" @select="handleSelect">
         </el-autocomplete>
       </el-form-item>
 
       <el-form-item prop="ipPort" class="ipPort">
         <span class="ipPort-container">
         </span>
-        <el-autocomplete v-model.trim="loginData.ipPort" :fetch-suggestions="ipPortQuery" clearable class="ipPortAutocomplete"
-          placeholder="端口" @select="handleSelect">
+        <el-autocomplete v-model.trim="loginData.ipPort" :fetch-suggestions="ipPortQuery" :trigger-on-focus="false"
+          clearable class="ipPortAutocomplete" placeholder="端口" @select="handleSelect">
         </el-autocomplete>
       </el-form-item>
 
@@ -31,8 +31,8 @@
             <User />
           </el-icon>
         </span>
-        <el-autocomplete v-model.trim="loginData.username" :fetch-suggestions="userQuery" clearable
-          class="" placeholder="用户名" @select="handleSelect">
+        <el-autocomplete v-model.trim="loginData.username" :fetch-suggestions="userQuery" :trigger-on-focus="false"
+          clearable class="" placeholder="用户名" @select="handleSelect">
         </el-autocomplete>
       </el-form-item>
 
@@ -62,6 +62,7 @@ import type { FormInstance, FormRules } from 'element-plus';
 import { useRouter } from 'vue-router';
 import { invoke } from "@tauri-apps/api/tauri";
 import { ElMessage } from 'element-plus'
+import { localStorage } from '@/utils/localStorage.js';
 
 const router = useRouter()
 
@@ -143,6 +144,7 @@ function login() {
           customClass: 'login-message-success',
           offset: 50
         })
+        localStorage.set('login', req)
         loading.value = false
         setTimeout(() => {
           router.push({ path: '/home' })
@@ -337,6 +339,10 @@ $cursor: #fff;
     font-size: 12px;
     text-align: center;
     color: #cccccc;
+  }
+
+  .ipPortAutocomplete {
+    width: 76% !important;
   }
 }
 </style>
