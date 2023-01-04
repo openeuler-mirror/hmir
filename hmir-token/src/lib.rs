@@ -76,6 +76,17 @@ pub fn token_verify(token : String) -> bool {
 }
 
 
+macro_rules! LoginChecker {
+    ($i:expr) => {
+        let verify = hmir_token::token_verify(token);
+        if !verify {
+            let mut response = HashWrap::<i32,i32>:: new();
+            response.set_code(-1);
+            let serialized = serde_json::to_string(&response).unwrap();
+            return Ok(serialized)
+        }
+    }
+}
 
 
 
