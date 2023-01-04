@@ -106,7 +106,15 @@
 //!     "method":"ovs-vsctl-set-port-qos",
 //!     "params": {"interface_name":"vnet0", "qos_type":"linux-htb", "max-rate":"1000000"} 
 //! }
-
+//! 
+//! - ovs-vsctl-set-port-patch：设置ovs网桥间的连接patch口
+//! 请求格式：
+//! { 
+//!     "jsonrpc":"2.0", 
+//!     "id":1, 
+//!     "method":"ovs-vsctl-set-port-patch",
+//!     "params": {"br_name":"ovsmgmt", "port_name":"patch1", "peer_name":"patch2"} 
+//! }
 
 use super::ovs_common::*;
 use std::collections::HashMap;
@@ -168,6 +176,11 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
     module.register_method("ovs-vsctl-set-port-qos", |params, _| {
         let br_info = params.parse::<HashMap<String, String>>()?;
         Ok(ovs_vsctl_set_port_qos(br_info))
+    })?;
+
+    module.register_method("ovs-vsctl-set-port-patch", |params, _| {
+        let br_info = params.parse::<HashMap<String, String>>()?;
+        Ok(ovs_vsctl_set_port_patch(br_info))
     })?;
 
     Ok(())
@@ -278,6 +291,19 @@ fn ovs_vsctl_set_port_qos(info_map : HashMap<String, String>) -> String{
                                 --id=@q0 create queue other-config:max-rate={}", 
                                 VSCTL_CMD, port_name, qos_type, max_rate);
     let output = exec_rule(rule, "ovs_vsctl_set_port_qos".to_string());
+    reflect_cmd_result(output)
+}
+
+fn ovs_vsctl_set_port_patch(info_map : HashMap<String, String>) -> String{
+    let br_name = info_map.get("br_name").unwrap();
+    let port_name = info_map.get("port_name").unwrap();
+    let peer_port = info_map.get("peer_port").unwrap();
+    let rule = format!("{} add-port {} {port} -- \
+                                    set Interface {port} type=patch -- \
+                                    set Interface {port} options:peer={peer}", 
+                                    VSCTL_CMD, br_name, port=port_name, peer=peer_port);
+    
+    let output = exec_rule(rule, "ovs_vsctl_set_port_patch".to_string());
     reflect_cmd_result(output)
 }
 
