@@ -22,7 +22,7 @@ import { invoke } from "@tauri-apps/api/tauri";
 const menuTrigger = ref<string>('click')
 // 菜单激活回调	
 const handleSelect = (key: string, keyPath: string[]) => {
-  if (key = 'processQuit') {
+  if (key === 'processQuit') {
     processQuit()
   }
   console.log(key, keyPath)
