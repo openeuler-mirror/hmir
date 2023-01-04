@@ -115,6 +115,15 @@
 //!     "method":"ovs-vsctl-set-port-patch",
 //!     "params": {"br_name":"ovsmgmt", "port_name":"patch1", "peer_name":"patch2"} 
 //! }
+//! 
+//! - ovs-vsctl-set-port-bond: ovs网桥添加bond接口
+//! 请求格式：
+//! { 
+//!     "jsonrpc":"2.0", 
+//!     "id":1, 
+//!     "method":"ovs-vsctl-set-port-bond",
+//!     "params": {"br_name":"ovsmgmt", "bond_name":"bond1", "nics":"eth1,eth2,eth3"} 
+//! }
 
 use super::ovs_common::*;
 use std::collections::HashMap;
@@ -181,6 +190,11 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
     module.register_method("ovs-vsctl-set-port-patch", |params, _| {
         let br_info = params.parse::<HashMap<String, String>>()?;
         Ok(ovs_vsctl_set_port_patch(br_info))
+    })?;
+
+    module.register_method("ovs-vsctl-set-port-bond", |params, _| {
+        let br_info = params.parse::<HashMap<String, String>>()?;
+        Ok(ovs_vsctl_set_port_bond(br_info))
     })?;
 
     Ok(())
@@ -307,6 +321,23 @@ fn ovs_vsctl_set_port_patch(info_map : HashMap<String, String>) -> String{
     reflect_cmd_result(output)
 }
 
+fn ovs_vsctl_set_port_bond(info_map : HashMap<String, String>) -> String{
+    let br_name = info_map.get("br_name").unwrap();
+    let bond_name = info_map.get("bond_name").unwrap();
+    let nics = info_map.get("nics").unwrap();
+    let nic_vec : Vec<&str> = nics.split(",").collect();
+
+    let mut nic_str = String::new();
+    for s in nic_vec.iter(){
+        nic_str = nic_str + s + " ";
+    }
+
+    let rule =  format!("{} add-bond {} {} {}", VSCTL_CMD, br_name, bond_name, nic_str);
+
+    let output = exec_rule(rule, "ovs_vsctl_set_port_patch".to_string());
+    reflect_cmd_result(output)
+}
+
 // 由于测试网桥会在用例中不断被清理，需保证串行执行用例：cargo test  -- --test-threads=1 
 #[cfg(test)]
 mod vsctl_tests{
@@ -388,7 +419,7 @@ mod vsctl_tests{
         br_info.insert("interface_name".to_string(), BR_FOR_TEST.to_string());
         br_info.insert("rate".to_string(), "1000".to_string());
         br_info.insert("burst".to_string(), "100".to_string());
-        
+
         assert_eq!(ovs_vsctl_set_interface_policing(br_info.clone()), "Done".to_string());
         test_clear_env();
     }
