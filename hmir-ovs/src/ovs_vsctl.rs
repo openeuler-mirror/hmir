@@ -331,15 +331,22 @@ mod vsctl_tests{
         
         let mut br_info = HashMap::new();
         br_info.insert("br_name".to_string(), BR_FOR_TEST.to_string());
-        br_info.insert("port_name".to_string(), PORT_FOR_TEST.to_string());
-        br_info.insert("tag_value".to_string(), "100".to_string());
-        br_info.insert("qos_type".to_string(), "linux-htb".to_string());
-        br_info.insert("max_rate".to_string(), "1000000".to_string());
         
         assert_eq!(ovs_vsctl_add_br(br_info.clone()), "Done".to_string());
+        br_info.insert("port_name".to_string(), PORT_FOR_TEST.to_string());
         assert_eq!(ovs_vsctl_add_port(br_info.clone()), "Done".to_string());
+        
+        br_info.insert("tag_value".to_string(), "100".to_string());
         assert_eq!(ovs_vsctl_set_port_vlan(br_info.clone()), "Done".to_string()); 
+
+        br_info.insert("qos_type".to_string(), "linux-htb".to_string());
+        br_info.insert("max_rate".to_string(), "1000000".to_string());
         assert_eq!(ovs_vsctl_set_port_qos(br_info.clone()), "Done".to_string());
+
+        br_info.insert("port_name".to_string(), "patch1".to_string());
+        br_info.insert("peer_port".to_string(), "patch2".to_string());
+        assert_eq!(ovs_vsctl_set_port_patch(br_info.clone()), "Done".to_string());
+
         assert_eq!(ovs_vsctl_del_port(br_info.clone()), "Done".to_string());
         
         test_clear_env();
@@ -381,7 +388,7 @@ mod vsctl_tests{
         br_info.insert("interface_name".to_string(), BR_FOR_TEST.to_string());
         br_info.insert("rate".to_string(), "1000".to_string());
         br_info.insert("burst".to_string(), "100".to_string());
-
+        
         assert_eq!(ovs_vsctl_set_interface_policing(br_info.clone()), "Done".to_string());
         test_clear_env();
     }

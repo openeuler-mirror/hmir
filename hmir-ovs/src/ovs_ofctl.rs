@@ -244,10 +244,11 @@ mod ofctl_tests{
         br_info.insert("br_name".to_string(), BR_FOR_TEST.to_string());
         br_info.insert("in_port".to_string(), BR_FOR_TEST.to_string());
         br_info.insert("dst_ip".to_string(), "172.30.24.124".to_string());
-        br_info.insert("dst_port".to_string(), "8080/0xffff".to_string());
-
+        
         assert_eq!(ovs_ofctl_forbid_dstip(br_info.clone()), "Done".to_string());
         assert_eq!(ovs_ofctl_clear_port_rules(br_info.clone()), "Done".to_string());
+
+        br_info.insert("dst_port".to_string(), "8080/0xffff".to_string());
         assert_eq!(ovs_ofctl_forbid_dstport(br_info.clone()), "Done".to_string());
 
         test_clear_env();
@@ -261,10 +262,11 @@ mod ofctl_tests{
         br_info.insert("br_name".to_string(), BR_FOR_TEST.to_string());
         br_info.insert("in_port".to_string(), BR_FOR_TEST.to_string());
         br_info.insert("dst_ip".to_string(), "172.30.24.124".to_string());
-        br_info.insert("dst_port".to_string(), "8080/0xffff".to_string());
 
         assert_eq!(ovs_ofctl_pass_dstip(br_info.clone()), "Done".to_string());
         assert_eq!(ovs_ofctl_clear_port_rules(br_info.clone()), "Done".to_string());
+
+        br_info.insert("dst_port".to_string(), "8080/0xffff".to_string());
         assert_eq!(ovs_ofctl_pass_dstport(br_info.clone()), "Done".to_string());
 
         test_clear_env();
