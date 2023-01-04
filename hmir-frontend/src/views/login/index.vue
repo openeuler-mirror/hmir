@@ -12,8 +12,9 @@
             <Location />
           </el-icon>
         </span>
-        <el-input ref="ipAddress" v-model.trim="loginData.ipAddress" :placeholder="'IP地址'" name="ipAddress"
-          type="text" />
+        <el-autocomplete v-model.trim="loginData.ipAddress" :fetch-suggestions="querySearch" clearable class=""
+          placeholder="IP地址" @select="handleSelect">
+        </el-autocomplete>
       </el-form-item>
 
       <el-form-item prop="ipPort" class="ipPort">
@@ -60,28 +61,37 @@ import { invoke } from "@tauri-apps/api/tauri";
 import { ElMessage } from 'element-plus'
 
 const router = useRouter()
+
+//表单校验绑定的ref
 const loginFormRef = ref<FormInstance>()
+
+//加载
 const loading = ref<boolean>(false)
+
+//弹出提示最大值
 const config = reactive({
   max: 1,
 })
 
+//定义表单绑定数据
 const loginData = reactive({
   ipAddress: '',
   ipPort: '',
   username: '',
   password: ''
 })
+
+//IP地址校验规则
 const checkipAddress = (rule: any, value: any, callback: any) => {
-  console.log(value, /([1-9]?\d|1\d{2}|2[0-4]\d|25[0-5])(\.([1-9]?\d|1\d{2}|2[0-4]\d|25[0-5])){3}$/.test(value));
   if (!/([1-9]?\d|1\d{2}|2[0-4]\d|25[0-5])(\.([1-9]?\d|1\d{2}|2[0-4]\d|25[0-5])){3}$/.test(value)) {
     callback(new Error('请输入合法的IP地址'))
   } else {
     callback()
   }
 }
+
+//端口校验规则
 const checkipPort = (rule: any, value: any, callback: any) => {
-  console.log(value, /^([0-9]|[1-9]\d|[1-9]\d{2}|[1-9]\d{3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/.test(value));
   if (!/^([0-9]|[1-9]\d|[1-9]\d{2}|[1-9]\d{3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/.test(value)) {
     callback(new Error('请输入合法的端口号'))
   } else {
@@ -89,6 +99,7 @@ const checkipPort = (rule: any, value: any, callback: any) => {
   }
 }
 
+//表单校验
 const rules = reactive<FormRules>({
   ipAddress: [
     { required: true, message: 'IP地址不能为空', trigger: 'blur' },
@@ -148,6 +159,7 @@ function login() {
   }, 50);
 }
 
+//登录
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl || loading.value) {
     return
@@ -160,6 +172,54 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     }
   })
 }
+
+//生命周期
+onMounted(() => {
+  console.log(localStorage.get('login'));
+  ipAddressResults.value = ipAddressAll()
+});
+
+//定义绑定的输入建议数据类型
+interface RestaurantItem {
+  value: string
+}
+
+//ip地址下拉数据
+const ipAddressResults= ref<RestaurantItem[]>([])
+
+//过滤后的数据
+const querySearch = (queryString: string, cb: any) => {
+  console.log(queryString, cb);
+  const results = queryString
+    ? ipAddressResults.value.filter(createFilter(queryString))
+    : ipAddressResults.value
+  // call callback function to return suggestions
+  console.log(results);
+  cb(results)
+}
+
+//过滤方法
+const createFilter = (queryString: string) => {
+  return (restaurant: RestaurantItem) => {
+    return (
+    //匹配过滤大小写后的地一个字母
+      restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0
+    )
+  }
+}
+
+//选中的数据
+const handleSelect = (item: RestaurantItem) => {
+  console.log(item)
+}
+
+//下拉菜单列表数据
+const ipAddressAll = () => {
+  return [
+    { value: '172.30.21.35' },
+  ]
+}
+
 </script>
 
 <style lang="scss">
@@ -304,6 +364,10 @@ $light_gray: #eee;
     width: 30px;
     display: inline-block;
     text-align: center;
+  }
+
+  :deep(.el-autocomplete) {
+    width: 86%;
   }
 
   .ipPort-container {
