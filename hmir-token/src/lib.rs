@@ -78,7 +78,7 @@ pub fn token_verify(token : String) -> bool {
 
 macro_rules! LoginChecker {
     ($i:expr) => {
-        let verify = hmir_token::token_verify(token);
+        let verify = hmir_token::token_verify($i);
         if !verify {
             let mut response = HashWrap::<i32,i32>:: new();
             response.set_code(-1);
@@ -93,6 +93,8 @@ macro_rules! LoginChecker {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+
 
 
 
