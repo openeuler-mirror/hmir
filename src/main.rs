@@ -20,6 +20,7 @@ mod svr;
 mod kernel;
 #[cfg(target_os = "linux")]
 mod observer;
+mod tokenmgr;
 
 
 #[macro_use]
@@ -112,8 +113,12 @@ fn init_services() {
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
 
-    log_init();
-    assert_single_instance!();
+    #[cfg(target_os = "linux")]
+    {
+        log_init();
+        assert_single_instance!();
+    }
+
 
 
     init_services();

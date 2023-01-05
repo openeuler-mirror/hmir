@@ -5,6 +5,7 @@ use std::io::Read;
 use log::{error,info};
 
 
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Claims {
     user : String, //The username
@@ -16,10 +17,10 @@ pub const PUBLIC_KEY : &str = "/tmp/hmir-public-key.pem";
 pub const PRIVATE_KEY : &str = "/tmp/hmir-private-key.pem";
 
 
-pub fn token_generate(user : String) -> String
+pub fn token_generate(user : &String) -> String
 {
     let my_claims = Claims {
-        user : user,
+        user : user.clone(),
         exp  : EXP_TIME //Never expiration
     };
 
@@ -37,6 +38,7 @@ pub fn token_generate(user : String) -> String
         std::process::exit(-1);
     }
 }
+
 
 pub fn _token_verify(token : String) -> bool {
     let mut file = std::fs::File::open(PUBLIC_KEY).unwrap();
@@ -74,18 +76,37 @@ pub fn token_verify(token : String) -> bool {
 }
 
 
+#[macro_export]
+macro_rules! LoginChecker {
+    ($i:expr) => {
+        let verify = hmir_token::token_verify($i);
+        if !verify {
+            let mut response = HashWrap::<i32,i32>:: new();
+            response.set_code(-1);
+            let serialized = serde_json::to_string(&response).unwrap();
+            return Ok(serialized)
+        }
+    }
+}
+
+
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
+
+
+
+
     #[test]
     fn token_genertate_it_works()
     {
-        let token = token_generate(String::from("root"));
+        let token = token_generate(&String::from("root"));
         println!("{}",token);
         let verify = token_verify(token);
         assert_eq!(verify,true);
     }
+
 
 }
