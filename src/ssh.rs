@@ -18,9 +18,9 @@ struct LoginParam {
 
 
 macro_rules! ssh_default_result {
-    ($i:expr,$j:expr) =>{
+    ($i:expr,$j:expr) => {
         let mut response = HashWrap::<String,String>:: new();
-        $i == 0 {
+        if $i == 0 {
             let token = hmir_token::token_generate($j);
             response.insert(String::from("token"),token);
         }
@@ -51,7 +51,10 @@ pub fn is_ssh_auth(username: &str, password: &str) -> bool
 pub fn ssh_auth(username : &str, password : &str) -> String
 
 {
-    todo!()
+    if is_ssh_auth(username,password) {
+        ssh_default_result!(0,&String::from(username));
+    }
+    ssh_default_result!(-1,&String::from(username));
 }
 
 #[doc(hidden)]
