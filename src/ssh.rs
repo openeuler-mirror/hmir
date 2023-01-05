@@ -17,6 +17,13 @@ struct LoginParam {
 }
 
 
+macro_rules! ssh_default_result {
+    ($i:expr,$j:expr) =>{
+        
+    }
+}
+
+
 pub fn is_ssh_auth(username: &str, password: &str) -> bool
 {
     let tcp = TcpStream::connect("127.0.0.1:22").unwrap();
