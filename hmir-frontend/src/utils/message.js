@@ -44,5 +44,11 @@ elMessage['info'] = function (options) {
   return elMessage(options)
 };
 
+//增加warning属性方法
+elMessage['warning'] = function (options) {
+  options.type = type
+  return elMessage(options)
+};
+
 //导出函数
 export default elMessage
