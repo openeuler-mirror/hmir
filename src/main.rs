@@ -22,6 +22,8 @@ mod kernel;
 mod observer;
 mod tokenmgr;
 
+#[cfg(target_os = "linux")]
+mod virt;
 
 #[macro_use]
 extern crate lazy_static;
@@ -186,6 +188,7 @@ async fn run_ws_server(ip: &str , port : &str) -> anyhow::Result<(SocketAddr,WsS
         kernel::register_method(& mut module)?;
         observer::register_method(& mut module)?;
         ceph::register_method(& mut module)?;
+        virt::register_method(& mut module)?;
     }
 
 
