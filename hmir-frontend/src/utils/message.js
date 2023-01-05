@@ -24,7 +24,13 @@ function elMessage (message) {
   }
   //执行弹出消息提示函数
   return ElMessage(option)
-}
+};
+
+//增加error属性方法
+elMessage['error'] = function (options) {
+  options.type = type
+  return elMessage(options)
+};
 
 //导出函数
 export default elMessage
