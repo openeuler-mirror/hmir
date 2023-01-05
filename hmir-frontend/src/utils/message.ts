@@ -16,6 +16,8 @@ const elMessage: any = function (options: any) {
     message: '',
     type: 'success',
     duration: 3000,
+    //是否显示关闭按钮
+    showClose: true,
     center: true,
     customClass: 'login-message-success',
     //offset	Message 距离窗口顶部的偏移量
