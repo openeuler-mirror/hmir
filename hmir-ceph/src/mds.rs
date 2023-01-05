@@ -19,3 +19,8 @@ pub fn mds_stat() -> String {
 pub fn mds_compat_show() -> String {
     command::mon_exec("mds compat show")
 }
+
+///查询mds组件元数据信息
+pub fn mds_metadata() -> String {
+    command::mon_exec("mds metadata")
+}
