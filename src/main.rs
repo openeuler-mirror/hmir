@@ -193,6 +193,7 @@ async fn run_ws_server(ip: &str , port : &str) -> anyhow::Result<(SocketAddr,WsS
     net::register_method(& mut module)?;
     ttyd::register_method(& mut module)?;
     pam::register_method(& mut module)?;
+    ssh::register_method(& mut module)?;
 
     let addr = server.local_addr()?;
     let server_handle = server.start(module)?;
