@@ -15,9 +15,13 @@ const elMessage: any = function (options: any) {
   let option: any = {
     message: '',
     type: 'success',
+    duration: 3000,
     center: true,
     customClass: 'login-message-success',
-    offset: 50
+    //offset	Message 距离窗口顶部的偏移量
+    offset: 50,
+    //合并内容相同的消息
+    grouping: true
   };
   //判断传过来的数据类型是string还是object
   if (typeof options === 'string') {
@@ -31,13 +35,13 @@ const elMessage: any = function (options: any) {
       type: 'error'
     })
   };
-  //当弹出的消息内容以及消息type相等时，结束函数，不更新消息提示框
-  if (messageValue && (messageValue.message == option.message && messageValue.type == option.type)) {
-    return
-  } else {
+  //当弹出的消息内容以及消息type相等时，不更新消息提示框
+  if (messageValue && (messageValue.message !== option.message && messageValue.type !== option.type)) {
+    //更新保存的数据信息
     messageValue.message = option.message
     messageValue.type = option.type
     //清除之前的所有的消息提示，解决一次性弹出多个消息提示的问题
+    //设置不管什么类型的消息都只会弹出一个
     ElMessage.closeAll()
   }
   //执行弹出消息提示函数
