@@ -102,6 +102,11 @@ pub fn ceph_mon_register_method(module : & mut RpcModule<()>) -> anyhow::Result<
         //输出格式化的mon map
         Ok(mon::mon_dump())
     })?;
+
+    ///mon versions
+    module.register_method("ceph-mon-versions", |_, _| {
+        Ok(mon::mon_versions())
+    })?;
     
     Ok(())
 }

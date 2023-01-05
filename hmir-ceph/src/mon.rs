@@ -18,3 +18,8 @@ pub fn mon_status() -> String {
 pub fn mon_dump() -> String {
     command::mon_exec("mon dump")
 }
+
+///mon组件版本信息查询
+pub fn mon_versions() -> String {
+    command::mon_exec("mon versions")
+}
