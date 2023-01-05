@@ -17,7 +17,7 @@ lazy_static! {
 }
 
 
-fn register_token(user : &String,token : &String) -> bool
+pub fn register_token(user : &String,token : &String) -> bool
 {
     if TOKEN_MAP.lock().unwrap().contains_key(user) {
         return false;
@@ -28,7 +28,7 @@ fn register_token(user : &String,token : &String) -> bool
 }
 
 
-fn unregister_token(user : &String, token : &String) -> bool
+pub fn unregister_token(user : &String, token : &String) -> bool
 {
     if TOKEN_MAP.lock().unwrap().contains_key(user){
         let stored_token = TOKEN_MAP.lock().unwrap().get(user).unwrap().token.clone();
