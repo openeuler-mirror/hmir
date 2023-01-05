@@ -3,6 +3,7 @@
 use pam::Authenticator;
 use jsonrpsee::ws_server::{RpcModule};
 use hmir_hash::HashWrap;
+use hmir_token;
 use serde::{Deserialize};
 
 
@@ -24,6 +25,9 @@ macro_rules! pam_default_result {
 pub fn pam_auth(username : &str, password : &str) -> String
 {
     if is_pam_auth(username,password) {
+
+        let token = hmir_token::token_generate(&String::from(username));
+        
         pam_default_result!(0);
     }
     pam_default_result!(-1);
@@ -50,6 +54,7 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
         let login_param = params.parse::<LoginParam>()?;
         //默认没有error就是成功的
         Ok(pam_auth(login_param.username.as_str(),login_param.password.as_str()))
+
     })?;
 
     Ok(())
