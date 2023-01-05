@@ -13,3 +13,8 @@ pub fn mon_metadata() -> String {
 pub fn mon_status() -> String {
     command::mon_exec("mon_status")
 }
+
+///dump formatted monmap
+pub fn mon_dump() -> String {
+    command::mon_exec("mon dump")
+}
