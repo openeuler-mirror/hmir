@@ -6,17 +6,13 @@ use jsonrpsee::ws_server::{RpcModule};
 
 use std::net::TcpStream;
 use ssh2::Session;
+use hmir_hash::HashWrap;
+use hmir_token;
+use serde::{Deserialize};
 
 
-#[doc(hidden)]
-pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
 
-
-    Ok(())
-}
-
-
-pub fn ssh_auth(username : & String, password: & String) -> bool
+pub fn is_ssh_auth(username: &str, password: &str) -> bool
 {
     let tcp = TcpStream::connect("127.0.0.1:22").unwrap();
     let mut sess = Session::new().unwrap();
@@ -33,6 +29,28 @@ pub fn ssh_auth(username : & String, password: & String) -> bool
     }
 }
 
+pub fn ssh_auth(username : &str, password : &str) -> String
+
+{
+    todo!()
+}
+
+#[doc(hidden)]
+pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
+
+    module.register_method("pam-auth", |params, _| {
+        let login_param = params.parse::<LoginParam>()?;
+        //默认没有error就是成功的
+        Ok(ssh_auth(login_param.username.as_str(),login_param.password.as_str()))
+
+    })?;
+
+    Ok(())
+}
+
+
+
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -40,7 +58,7 @@ mod tests {
 
     #[test]
     fn ssh_connect_it_worked(){
-        let auth = ssh_auth(&"root".to_string(),&"root".to_string());
+        let auth = ssh_auth(&"duanwujie".to_string(),&"linx".to_string());
 
         println!("The auth is : {}",auth);
     }
