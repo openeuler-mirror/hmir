@@ -63,8 +63,8 @@
         "center": true
       },
       {
-        "width": 1100,
-        "height": 700,
+        "width": 400,
+        "height": 200,
         "decorations": false,
         "url": "../public/splashscreen/splashscreen.html",
         "label": "splashscreen",
