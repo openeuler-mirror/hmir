@@ -19,7 +19,10 @@ struct LoginParam {
 
 macro_rules! ssh_default_result {
     ($i:expr,$j:expr) =>{
-        
+        let mut response = HashWrap::<String,String>:: new();
+        response.set_code($i);
+        let serialized = serde_json::to_string(&response).unwrap();
+        return serialized;
     }
 }
 
