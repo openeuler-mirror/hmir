@@ -38,5 +38,11 @@ elMessage['success'] = function (options) {
   return elMessage(options)
 };
 
+//增加info属性方法
+elMessage['info'] = function (options) {
+  options.type = type
+  return elMessage(options)
+};
+
 //导出函数
 export default elMessage
