@@ -5,7 +5,7 @@ use hmir_virt::*;
 
 pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
     
-    register_virt_method(module)?;
+    virt_query::register_virt_query(module)?;
 
     Ok(())
 }

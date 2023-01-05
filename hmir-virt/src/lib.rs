@@ -1,8 +1,3 @@
+pub mod virt_query;
+pub mod virt_type;
 
-use jsonrpsee::ws_server::RpcModule;
-use std::collections::HashMap;
-
-pub fn register_virt_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
-
-    Ok(())
-}
