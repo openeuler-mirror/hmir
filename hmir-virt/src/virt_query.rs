@@ -22,13 +22,13 @@
 //!     "method":"virt-show-domains"
 //! }
 
-const QEMU_URI: &str= "qemu:///system";
 use  virt::connect::Connect;
 use std::collections::HashMap;
 use super::virt_type::*;
 
 use jsonrpsee::ws_server::RpcModule;
 
+const QEMU_URI: &str= "qemu:///system";
 
 pub fn register_virt_query(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
     module.register_method("virt-check-connection", |params, _| {
@@ -53,12 +53,12 @@ fn virt_check_connection(info: HashMap<String, String>) -> String{
         Ok(mut c) => {
             c
         },
-        Err(e) => panic!("Not connected, code: {}, message: {}", e.code, e.message), 
+        Err(e) => return format!("Not connected, code: {}, message: {}", e.code, e.message), 
     };
     
     match conn.close() {
         Ok(_) => { "Connection Finished Normally".to_string() },
-        Err(e) => panic!("Failed to disconnect from hypervisor: code {}, message: {}",
+        Err(e) => format!("Failed to disconnect from hypervisor: code {}, message: {}",
         e.code,
         e.message),
     }
@@ -69,7 +69,7 @@ fn virt_show_hypervisor(info: HashMap<String, String>) -> String{
         Ok(mut c) => {
             c
         },
-        Err(e) => panic!("Not connected, code: {}, message: {}", e.code, e.message), 
+        Err(e) => return format!("Not connected, code: {}, message: {}", e.code, e.message), 
     };
 
     let mut hv_info = HmirHvisor::default();
@@ -86,8 +86,8 @@ fn virt_show_hypervisor(info: HashMap<String, String>) -> String{
     }
 
     match conn.close() {
-        Ok(_) => { serde_json::to_string(&hv_info).unwrap() },
-        Err(e) => panic!("Failed to disconnect from hypervisor: code {}, message: {}",
+        Ok(_) => { serde_json::to_string(&hv_info).unwrap_or_default() },
+        Err(e) => format!("Failed to disconnect from hypervisor: code {}, message: {}",
         e.code,
         e.message),
     }
@@ -98,7 +98,7 @@ fn virt_show_domains() -> String{
         Ok(mut c) => {
             c
         },
-        Err(e) => panic!("Not connected, code: {}, message: {}", e.code, e.message), 
+        Err(e) => return format!("Not connected, code: {}, message: {}", e.code, e.message),
     };
     let mut hmir_domains:Vec<HmirDomain> = Vec::new();
     let flags = virt::connect::VIR_CONNECT_LIST_DOMAINS_ACTIVE;
@@ -114,8 +114,8 @@ fn virt_show_domains() -> String{
     }
 
     match conn.close() {
-        Ok(_) => { serde_json::to_string(&hmir_domains).unwrap()},
-        Err(e) => panic!("Failed to disconnect from hypervisor: code {}, message: {}",
+        Ok(_) => { serde_json::to_string(&hmir_domains).unwrap_or_default()},
+        Err(e) => format!("Failed to disconnect from hypervisor: code {}, message: {}",
         e.code,
         e.message),
     }
