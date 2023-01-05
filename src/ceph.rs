@@ -138,8 +138,13 @@ pub fn ceph_auth_register_method(module : & mut RpcModule<()>) -> anyhow::Result
 pub fn ceph_fs_register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
     ///集群文件系统相关
     module.register_method("ceph-fs-list", |_, _| {
-        //list authentication state
+        //list fs
         Ok(fs::fs_list())
+    })?;
+
+    module.register_method("ceph-fs-dump", |_, _| {
+        //list fs status
+        Ok(fs::fs_dump())
     })?;
 
     Ok(())
