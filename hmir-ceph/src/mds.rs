@@ -14,3 +14,8 @@ pub fn mds_versions() -> String {
 pub fn mds_stat() -> String {
     command::mon_exec("mds stat")
 }
+
+///show mds compatibility settings
+pub fn mds_compat_show() -> String {
+    command::mon_exec("mds compat show")
+}
