@@ -8,3 +8,8 @@ use log::{error, info, warn};
 pub fn df() -> String {
     command::mon_exec("df")
 }
+
+///集群ID
+pub fn fsid() -> String {
+    command::mon_exec("fsid")
+}
