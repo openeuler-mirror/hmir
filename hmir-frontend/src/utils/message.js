@@ -32,5 +32,11 @@ elMessage['error'] = function (options) {
   return elMessage(options)
 };
 
+//增加success属性方法
+elMessage['success'] = function (options) {
+  options.type = type
+  return elMessage(options)
+};
+
 //导出函数
 export default elMessage
