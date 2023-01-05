@@ -61,9 +61,8 @@ import { onMounted, reactive, ref, toRefs, watch, nextTick } from 'vue';
 import type { FormInstance, FormRules } from 'element-plus';
 import { useRouter } from 'vue-router';
 import { invoke } from "@tauri-apps/api/tauri";
-import { ElMessage } from 'element-plus'
-import { localStorage } from '@/utils/localStorage.js';
-
+import ElMessage from '@/utils/message';
+import { localStorage } from '@/utils/localStorage';
 const router = useRouter()
 
 //表单校验绑定的ref
@@ -136,30 +135,19 @@ function login() {
   setTimeout(() => {
     invoke("cmd_login", req).then(res => {
       if (res) {
-        ElMessage({
-          message: '登录成功',
-          center: true,
-          type: 'success',
-          showClose: true,
-          customClass: 'login-message-success',
-          offset: 50
-        })
+        ElMessage.success('登录成功')
         localStorage.set('login', req)
-        loading.value = false
         setTimeout(() => {
           router.push({ path: '/home' })
         }, 500);
       } else {
         ElMessage({
           message: '登录失败，请重试',
-          center: true,
           type: 'error',
-          showClose: true,
           customClass: 'login-message-error',
-          offset: 50
         })
-        loading.value = false
       }
+      loading.value = false
     });
   }, 50);
 }
@@ -216,7 +204,6 @@ const userAll = () => {
 }
 //过滤后的数据
 const ipAddressQuery = (queryString: string, cb: any) => {
-  console.log(queryString, cb);
   const results = queryString
     ? ipAddressResults.value.filter(createFilter(queryString))
     : ipAddressResults.value
@@ -256,7 +243,7 @@ const createFilter = (queryString: string) => {
 }
 
 //选中的数据
-const handleSelect = (item: RestaurantItem) => {
+const handleSelect:any= (item: RestaurantItem) => {
   console.log(item)
 }
 

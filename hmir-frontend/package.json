@@ -23,6 +23,8 @@
   },
   "devDependencies": {
     "@tauri-apps/cli": "^1.1.0",
+    //解决编译器报错：TS2307: Cannot find module 'path' or its corresponding type declarations.
+    "@types/node": "^18.11.18",
     "@vitejs/plugin-vue": "^3.0.1",
     "node-sass": "^8.0.0",
     "sass": "^1.57.1",
