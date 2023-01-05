@@ -1,8 +1,16 @@
 import { ElMessage } from 'element-plus';
+//限制数据的内容以及格式
+interface messageInstance {
+  message: string,
+  type: string
+}
+//存储上一次弹出的消息提示信息
+let messageValue: messageInstance = {
+  message: '',
+  type: ''
+}
 
 const elMessage: any = function (options: any) {
-  //清除之前的所有的消息提示，解决一次性弹出多个消息提示的问题
-  ElMessage.closeAll()
   //ElMessage默认数据
   let option: any = {
     message: '',
@@ -23,6 +31,15 @@ const elMessage: any = function (options: any) {
       type: 'error'
     })
   };
+  //当弹出的消息内容以及消息type相等时，结束函数，不更新消息提示框
+  if (messageValue && (messageValue.message == option.message && messageValue.type == option.type)) {
+    return
+  } else {
+    messageValue.message = option.message
+    messageValue.type = option.type
+    //清除之前的所有的消息提示，解决一次性弹出多个消息提示的问题
+    ElMessage.closeAll()
+  }
   //执行弹出消息提示函数
   return ElMessage(option)
 };
