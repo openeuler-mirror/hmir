@@ -6,10 +6,12 @@ use jsonrpsee::ws_server::{RpcModule, WsServerBuilder};
 use tokio::runtime::Builder;
 use jsonrpsee::rpc_params;
 use hmir_hash::HashWrap;
+use nix::libc::stat;
 
 
 pub struct RequestClient {
     pub client  : Client,
+    pub token   : String,
     pub runtime : tokio::runtime::Runtime,
 }
 
@@ -24,12 +26,13 @@ impl RequestClient {
             client
         });
 
-        RequestClient{ client: client, runtime: runtime }
+        RequestClient{ client: client, token: "".to_string(), runtime: runtime }
     }
 
     pub fn ttyd_start(&self) -> bool {
+        let token = self.token.clone();
         let state = self.runtime.block_on(async {
-            let response: String = self.client.request("ttyd-start", None).await.unwrap();
+            let response: String = self.client.request("ttyd-start", rpc_params![token]).await.unwrap();
             let p: HashWrap::<i32,i32> = serde_json::from_str(response.as_str()).unwrap();
             return p.is_success();
         });
@@ -37,8 +40,10 @@ impl RequestClient {
     }
 
     pub fn ttyd_stop(&self) -> bool {
+        let token = self.token.clone();
         let state = self.runtime.block_on(async {
-            let response: String = self.client.request("ttyd-stop", None).await.unwrap();
+
+            let response: String = self.client.request("ttyd-stop", rpc_params![token]).await.unwrap();
             let p: HashWrap::<i32,i32> = serde_json::from_str(response.as_str()).unwrap();
             return p.is_success();
         });
@@ -46,34 +51,45 @@ impl RequestClient {
     }
 
     pub fn login(&self,username : &str, password : &str ) -> bool {
-        let state = self.runtime.block_on(async {
+        let (state,token) = self.runtime.block_on(async {
             let response: Result<String, _> = self.client.request("pam-auth", rpc_params![username,password]).await;
             match response {
                 Ok(result) => {
-                    let p: HashWrap::<i32,i32> = serde_json::from_str(result.as_str()).unwrap();
-                    return p.is_success();
+                    let p: HashWrap::<String,String> = serde_json::from_str(result.as_str()).unwrap();
+                    let token =  p.get(&String::from("token")).unwrap();
+
+                    return (p.is_success(),token.clone());
                 }
-                _ => { return false;}
+                _ => { return (false,String::from(""));}
             }
         });
         return state;
     }
 
-    pub fn ssh_login(&self,username : &str, password: &str) -> bool {
-        let state = self.runtime.block_on( async  {
+    pub fn ssh_login(& mut self,username : &str, password: &str) -> bool {
+        let (state,token) = self.runtime.block_on( async  {
             let response: Result<String, _> = self.client.request("ssh-auth", rpc_params![username,password]).await;
             match response {
                 Ok(result) => {
                     let p:HashWrap<String,String> = serde_json::from_str(result.as_str()).unwrap();
                     let token =  p.get(&String::from("token")).unwrap();
                     // println!("The token is : {}",token);
-                    // self.update_token(&token);
-                    return p.is_success();
+                    return (p.is_success(),token.clone());
                 }
-                _ => { return false ;}
+                _ => { return (false,String::from("")) ;}
             }
         });
+
+        if state {
+            self.update_token(&token);
+        }
+
         return state;
+    }
+
+    pub fn update_token(& mut self,token : &String)
+    {
+        self.token = token.clone();
     }
 
 
@@ -111,13 +127,13 @@ mod tests {
     }
 
     #[test]
-    fn ssh_login_worked(){
+    fn test_token_worked(){
         let mut client = RequestClient::new("127.0.0.1:5899".to_string());
         let login_state = client.ssh_login("duanwujie","linx");
-
         client.ttyd_stop();
         assert_eq!(login_state,true);
     }
+
 
     #[test]
     fn login_success_worked(){
