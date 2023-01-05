@@ -1,17 +1,19 @@
 import { createApp } from "vue";
 import ElementPlus from 'element-plus'
 import router from "./router"
-import 'normalize.css/normalize.css'
-import 'element-plus/dist/index.css'
-import "./style.css";
 import App from "./App.vue";
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
-import { deBounce } from '@/directive/index.js';
+import { deBounce } from './directive/index';
+import { setupStore } from '@/store';
+import 'normalize.css/normalize.css';
+import 'element-plus/dist/index.css';
+import "./style.css";
 import 'animate.css';
 
 const app = createApp(App)
-
 app.directive('deBounce', deBounce);
+//全局挂载
+setupStore(app)
 app.use(ElementPlus).use(router)
 app.mount('#app')
 

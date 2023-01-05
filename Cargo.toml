@@ -37,12 +37,13 @@ hmir-ovs = {path = "hmir-ovs" }
 hmir-ceph = {path = "hmir-ceph" }
 hmir-token = {path = "hmir-token"}
 
-[target.'cfg(linux)'.dependencies]
+
+[target.'cfg(target_os="linux")'.dependencies]
 procfs = "0.14.1"
 hmir-systemd = {path = "hmir-systemd" }
 iptables = "0.5.0"
 hmir-ipmitool = { path = "hmir-ipmitool"}
-
+hmir-virt = {path = "hmir-virt"}
 
 [[test]]
 name = "integration"

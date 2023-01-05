@@ -12,6 +12,7 @@ use hmir_ceph::base;
 use hmir_ceph::auth;
 use hmir_ceph::fs;
 use hmir_ceph::mgr;
+use hmir_ceph::mds;
 use hmir_hash::HashWrap;
 
 
@@ -36,6 +37,9 @@ pub fn register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
     
     ///mgr
     ceph_mgr_register_method(module);
+    
+    ///mds
+    ceph_mds_register_method(module);
     
     module.register_method("ceph-cluster-stat", |_, _| {
         //获取ceph集群状态
@@ -96,6 +100,22 @@ pub fn ceph_mon_register_method(module : & mut RpcModule<()>) -> anyhow::Result<
         //获取mon集群的状态
         Ok(mon::mon_status())
     })?;
+
+    ///mon dump
+    module.register_method("ceph-mon-dump", |_, _| {
+        //输出格式化的mon map
+        Ok(mon::mon_dump())
+    })?;
+
+    ///mon versions
+    module.register_method("ceph-mon-versions", |_, _| {
+        Ok(mon::mon_versions())
+    })?;
+    
+    ///列出可用的mon map特性
+    module.register_method("ceph-mon-feature-ls", |_, _| {
+        Ok(mon::mon_feature_ls())
+    })?;
     
     Ok(())
 }
@@ -120,6 +140,16 @@ pub fn ceph_base_register_method(module : & mut RpcModule<()>) -> anyhow::Result
         Ok(base::df())
     })?;
 
+    module.register_method("ceph-fsid", |_, _| {
+        //集群ID
+        Ok(base::fsid())
+    })?;
+    
+    module.register_method("ceph-node-ls", |_, _| {
+        //集群ID
+        Ok(base::node_ls())
+    })?;
+    
     Ok(())
 }
 
@@ -138,8 +168,13 @@ pub fn ceph_auth_register_method(module : & mut RpcModule<()>) -> anyhow::Result
 pub fn ceph_fs_register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
     ///集群文件系统相关
     module.register_method("ceph-fs-list", |_, _| {
-        //list authentication state
+        //list fs
         Ok(fs::fs_list())
+    })?;
+
+    module.register_method("ceph-fs-dump", |_, _| {
+        //list fs status
+        Ok(fs::fs_dump())
     })?;
 
     Ok(())
@@ -163,6 +198,44 @@ pub fn ceph_mgr_register_method(module : & mut RpcModule<()>) -> anyhow::Result<
     module.register_method("ceph-mgr-services", |_, _| {
         //列出MGR模块提供的服务端点
         Ok(mgr::mgr_services())
+    })?;
+
+    ///mgr module ls
+    module.register_method("ceph-mgr-module-ls", |_, _| {
+        //列出活跃的MGR模块
+        Ok(mgr::mgr_module_ls())
+    })?;
+
+    ///mgr dump
+    module.register_method("ceph-mgr-dump", |_, _| {
+        //列出最近的mgr map状态
+        Ok(mgr::mgr_dump())
+    })?;
+    
+    Ok(())
+}
+
+///mds method register
+pub fn ceph_mds_register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
+    ///元数据服务器组件相关
+    module.register_method("ceph-mds-versions", |_, _| {
+        //获取mds组件版本信息
+        Ok(mds::mds_versions())
+    })?;
+
+    module.register_method("ceph-mds-stat", |_, _| {
+        //获取mds组件状态信息
+        Ok(mds::mds_stat())
+    })?;
+
+    module.register_method("ceph-mds-compat-show", |_, _| {
+        //显示MDS兼容性设置
+        Ok(mds::mds_compat_show())
+    })?;
+
+    module.register_method("ceph-mds-metadata", |_, _| {
+        //查询mds组件元数据信息
+        Ok(mds::mds_metadata())
     })?;
     
     Ok(())

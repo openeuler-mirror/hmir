@@ -19,3 +19,15 @@ pub fn mgr_versions() -> String {
 pub fn mgr_services() -> String {
     command::mon_exec("mgr services")
 }
+
+///mgr module ls
+///list active mgr modules
+pub fn mgr_module_ls() -> String {
+    command::mon_exec("mgr module ls")
+}
+
+///mgr dump
+///dump the latest MgrMap
+pub fn mgr_dump() -> String {
+    command::mon_exec("mgr dump")
+}
