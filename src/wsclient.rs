@@ -58,6 +58,25 @@ impl RequestClient {
         });
         return state;
     }
+
+    pub fn ssh_login(&self,username : &str, password: &str) -> bool {
+        let state = self.runtime.block_on( async  {
+            let response: Result<String, _> = self.client.request("ssh-auth", rpc_params![username,password]).await;
+            match response {
+                Ok(result) => {
+                    let p:HashWrap<String,String> = serde_json::from_str(result.as_str()).unwrap();
+                    let token =  p.get(&String::from("token")).unwrap();
+                    // println!("The token is : {}",token);
+                    // self.update_token(&token);
+                    return p.is_success();
+                }
+                _ => { return false ;}
+            }
+        });
+        return state;
+    }
+
+
 }
 
 
@@ -70,6 +89,7 @@ mod tests {
     use jsonrpsee::ws_server::{RpcModule, WsServerBuilder};
     use anyhow;
     use futures::executor::block_on;
+    use serde_json::to_string;
 
     #[test]
     fn ttyd_start_workd() {
@@ -88,6 +108,15 @@ mod tests {
         let client = RequestClient::new("172.30.24.123:5898".to_string());
         let login_state = client.login("root","root");
         assert_eq!(login_state,false)
+    }
+
+    #[test]
+    fn ssh_login_worked(){
+        let mut client = RequestClient::new("127.0.0.1:5899".to_string());
+        let login_state = client.ssh_login("duanwujie","linx");
+
+        client.ttyd_stop();
+        assert_eq!(login_state,true);
     }
 
     #[test]
