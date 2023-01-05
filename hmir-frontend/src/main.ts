@@ -6,7 +6,7 @@ import 'element-plus/dist/index.css'
 import "./style.css";
 import App from "./App.vue";
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
-import { deBounce } from '@/directive/index.js';
+import { deBounce } from './directive/index';
 import 'animate.css';
 
 const app = createApp(App)
