@@ -144,7 +144,12 @@ pub fn ceph_base_register_method(module : & mut RpcModule<()>) -> anyhow::Result
         //集群ID
         Ok(base::fsid())
     })?;
-
+    
+    module.register_method("ceph-node-ls", |_, _| {
+        //集群ID
+        Ok(base::node_ls())
+    })?;
+    
     Ok(())
 }
 

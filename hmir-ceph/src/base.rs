@@ -13,3 +13,8 @@ pub fn df() -> String {
 pub fn fsid() -> String {
     command::mon_exec("fsid")
 }
+
+///列出相关服务运行节点
+pub fn node_ls() -> String {
+    command::mon_exec("node ls")
+}
