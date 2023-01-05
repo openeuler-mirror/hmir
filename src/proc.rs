@@ -122,8 +122,10 @@ pub fn process_kill(pid : i32) -> std::string::String {
 }
 
 pub fn process_bind_cpu(pid : i32) -> std::string::String {
+    // 进程绑定cpu运行
     if is_valid_process(pid) {
         let core_ids = core_affinity::get_core_ids().unwrap();
+        // 目前只能固定绑定第一个cpu
         let core_id = core_ids[0];
         core_affinity::set_for_current(core_id);
         proc_default_result!(0);
