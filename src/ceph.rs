@@ -108,6 +108,11 @@ pub fn ceph_mon_register_method(module : & mut RpcModule<()>) -> anyhow::Result<
         Ok(mon::mon_versions())
     })?;
     
+    ///列出可用的mon map特性
+    module.register_method("ceph-mon-feature-ls", |_, _| {
+        Ok(mon::mon_feature_ls())
+    })?;
+    
     Ok(())
 }
 
