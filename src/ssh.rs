@@ -10,6 +10,11 @@ use hmir_hash::HashWrap;
 use hmir_token;
 use serde::{Deserialize};
 
+#[derive(Debug, Clone,Deserialize)]
+struct LoginParam {
+    username : String,
+    password : String
+}
 
 
 pub fn is_ssh_auth(username: &str, password: &str) -> bool
