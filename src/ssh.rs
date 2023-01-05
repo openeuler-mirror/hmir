@@ -10,6 +10,17 @@
 //!    "method":"ssh-auth",
 //!    "params":["username","password"]
 //! }
+//! 返回格式：
+//!
+//!    {
+//!        "code":0,
+//!        "result":
+//!        {
+//!            "token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1c2VyIjoiZHVhbnd1amllIiwiZXhwIjo0ODUyMjgxNjAwfQ.QarvhdHuCpp87ipWD8hwN9bQg2dEdUtr5h3ksDu-MUXWeZRzXEef7jVP80n-Aj3fuDdiMglPF2btD_SO_pJnF1YUxipsDHG7cuumPXb4QynEDDtAKVtju5k3pHo9z7PryK7cycVoeNd3CWDR9rvdP0n-jJzBL2W-wN3TCpXH1Tey_NqC25VFZhqofQG3vuuw-XNo4DIwHGPnpJ5EwZ4CJSKgyzIDsciMyfPafBeKFCKRkx-tzX2OZHwF4DSKvnow4ifYC2KsLtdJFM5IewigSxAwdAs7sb4e9cyjNvfqZWfZgprMh8oR5xM_hfFUCUK5YFzDsLSdyzeFs45OL1X4hA"
+//!        }
+//!    }
+//! - code为0表示认证成功
+//! - 认证成功后，result中会返回对应的token值，该token值用于后续的请求。
 
 
 use jsonrpsee::ws_server::{RpcModule};
@@ -79,8 +90,6 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
 
     Ok(())
 }
-
-
 
 
 #[cfg(test)]
