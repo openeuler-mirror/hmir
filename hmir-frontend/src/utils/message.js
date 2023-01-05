@@ -29,6 +29,12 @@ const elMessage = function (options) {
 //统一封装error、success、info、warning属性方法
 ['error', 'success', 'info', 'warning'].forEach(type => {
   elMessage[type] = function (options) {
+    //判断传过来的数据类型是否为string
+    if (typeof options === 'string') {
+      options = {
+        message: options
+      }
+    }
     options.type = type
     return elMessage(options)
   }
