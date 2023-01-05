@@ -222,6 +222,11 @@ pub fn ceph_mds_register_method(module : & mut RpcModule<()>) -> anyhow::Result<
         //获取mds组件状态信息
         Ok(mds::mds_stat())
     })?;
+
+    module.register_method("ceph-mds-compat-show", |_, _| {
+        //显示MDS兼容性设置
+        Ok(mds::mds_compat_show())
+    })?;
     
     Ok(())
 }
