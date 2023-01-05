@@ -164,6 +164,12 @@ pub fn ceph_mgr_register_method(module : & mut RpcModule<()>) -> anyhow::Result<
         //列出MGR模块提供的服务端点
         Ok(mgr::mgr_services())
     })?;
+
+    ///mgr module ls
+    module.register_method("ceph-mgr-module-ls", |_, _| {
+        //列出活跃的MGR模块
+        Ok(mgr::mgr_module_ls())
+    })?;
     
     Ok(())
 }
