@@ -16,14 +16,13 @@
     "axios": "^1.2.1",
     "element-plus": "^2.2.27",
     "normalize.css": "^8.0.1",
+    "pinia": "^2.0.28",
     "typescript": "^4.9.4",
     "vue": "^3.2.37",
-    "vue-router": "^4.1.6",
-    "vuex": "^4.1.0"
+    "vue-router": "^4.1.6"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^1.1.0",
-    //解决编译器报错：TS2307: Cannot find module 'path' or its corresponding type declarations.
     "@types/node": "^18.11.18",
     "@vitejs/plugin-vue": "^3.0.1",
     "node-sass": "^8.0.0",
