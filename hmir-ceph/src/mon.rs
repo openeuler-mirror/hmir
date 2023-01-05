@@ -23,3 +23,8 @@ pub fn mon_dump() -> String {
 pub fn mon_versions() -> String {
     command::mon_exec("mon versions")
 }
+
+///list available mon map features
+pub fn mon_feature_ls() -> String {
+    command::mon_exec("mon feature ls")
+}
