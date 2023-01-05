@@ -218,6 +218,11 @@ pub fn ceph_mds_register_method(module : & mut RpcModule<()>) -> anyhow::Result<
         Ok(mds::mds_versions())
     })?;
 
+    module.register_method("ceph-mds-stat", |_, _| {
+        //获取mds组件状态信息
+        Ok(mds::mds_stat())
+    })?;
+    
     Ok(())
 }
 

@@ -9,3 +9,8 @@ use log::{error, info, warn};
 pub fn mds_versions() -> String {
     command::mon_exec("mds versions")
 }
+
+///获取mds组件状态信息
+pub fn mds_stat() -> String {
+    command::mon_exec("mds stat")
+}
