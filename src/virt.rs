@@ -4,6 +4,8 @@ use jsonrpsee::ws_server::RpcModule;
 use hmir_virt::*;
 
 pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
+    
+    register_virt_method(module)?;
 
     Ok(())
 }
