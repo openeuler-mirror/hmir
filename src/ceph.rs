@@ -96,6 +96,12 @@ pub fn ceph_mon_register_method(module : & mut RpcModule<()>) -> anyhow::Result<
         //获取mon集群的状态
         Ok(mon::mon_status())
     })?;
+
+    ///mon dump
+    module.register_method("ceph-mon-dump", |_, _| {
+        //输出格式化的mon map
+        Ok(mon::mon_dump())
+    })?;
     
     Ok(())
 }
