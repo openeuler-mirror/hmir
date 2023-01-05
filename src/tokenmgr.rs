@@ -17,13 +17,12 @@ lazy_static! {
 }
 
 
-fn register_token(user : &String) -> bool
+fn register_token(user : &String,token : &String) -> bool
 {
-    let token = hmir_token::token_generate(user);
     if TOKEN_MAP.lock().unwrap().contains_key(user) {
         return false;
     }
-    let userinfo =  UserInfo { user : user.clone() , token : token, };
+    let userinfo =  UserInfo { user : user.clone() , token : token.clone(), };
     TOKEN_MAP.lock().unwrap().insert(user.clone(),userinfo);
     return true;
 }
@@ -56,7 +55,8 @@ mod tests {
     fn test_register_token_worked()
     {
         let user = String::from("root");
-        let state = register_token(&user);
+        let token = hmir_token::token_generate(&user);
+        let state = register_token(&user,&token);
         assert_eq!(state,true);
         let stored_token = TOKEN_MAP.lock().unwrap().get(&user).unwrap().token.clone();
         println!("The gen token is : {}",stored_token);
