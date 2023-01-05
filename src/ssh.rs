@@ -1,5 +1,15 @@
-
-
+//! SSH认证模块，主要用于测试目的
+//!
+//!
+//! - ssh-auth : 使用用户名和密码完成远程认证。
+//! 请求格式:
+//! ```
+//! {
+//!    "jsonrpc":"2.0",
+//!    "id":1,
+//!    "method":"ssh-auth",
+//!    "params":["username","password"]
+//! }
 
 
 use jsonrpsee::ws_server::{RpcModule};
@@ -60,7 +70,7 @@ pub fn ssh_auth(username : &str, password : &str) -> String
 #[doc(hidden)]
 pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
 
-    module.register_method("pam-auth", |params, _| {
+    module.register_method("ssh-auth", |params, _| {
         let login_param = params.parse::<LoginParam>()?;
         //默认没有error就是成功的
         Ok(ssh_auth(login_param.username.as_str(),login_param.password.as_str()))
