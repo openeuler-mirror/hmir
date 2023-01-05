@@ -170,6 +170,12 @@ pub fn ceph_mgr_register_method(module : & mut RpcModule<()>) -> anyhow::Result<
         //列出活跃的MGR模块
         Ok(mgr::mgr_module_ls())
     })?;
+
+    ///mgr dump
+    module.register_method("ceph-mgr-dump", |_, _| {
+        //列出最近的mgr map状态
+        Ok(mgr::mgr_dump())
+    })?;
     
     Ok(())
 }
