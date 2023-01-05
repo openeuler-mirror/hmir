@@ -120,6 +120,11 @@ pub fn ceph_base_register_method(module : & mut RpcModule<()>) -> anyhow::Result
         Ok(base::df())
     })?;
 
+    module.register_method("ceph-fsid", |_, _| {
+        //集群ID
+        Ok(base::fsid())
+    })?;
+
     Ok(())
 }
 
