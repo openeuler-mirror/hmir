@@ -66,11 +66,16 @@ impl RequestClient {
             match response {
                 Ok(result) => {
                     let p: HashWrap::<String,String> = serde_json::from_str(result.as_str()).unwrap();
-                    let token =  p.get(&String::from("token")).unwrap();
-
-                    return (p.is_success(),token.clone());
+                    if p.is_success() {
+                        let token =  p.get(&String::from("token")).unwrap();
+                        return (p.is_success(),token.clone());
+                    }else {
+                        return (false,String::from(""));
+                    }
                 }
-                _ => { return (false,String::from(""));}
+                _ => {
+                    return (false,String::from(""));
+                }
             }
         });
         return state;
