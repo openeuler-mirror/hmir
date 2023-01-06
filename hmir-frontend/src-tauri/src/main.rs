@@ -1,3 +1,13 @@
+//! 给前端提供tauri-command，用于和tauri后端交互
+//!
+//!
+//! 支持的tauri命令
+//! - cmd_ttyd_start: 启动控制台
+//! - cmd_ttyd_stop : 停止控制台
+//! - cmd_login         : 登录HMIR后端
+//! - cmd_logout        : 注销
+//! - cmd_quit          : 退出系统
+//! ```
 #![cfg_attr(
     all(not(debug_assertions), target_os = "windows"),
     windows_subsystem = "windows"
