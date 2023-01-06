@@ -38,6 +38,13 @@
 //!     "method":"virt-show-nwfilters"
 //! }
 //!
+//! - virt-show-libvirt-version: virt 展示libvirt version
+//! 请求格式：
+//! { 
+//!     "jsonrpc":"2.0", 
+//!     "id":1, 
+//!     "method":"virt-show-libvirt-version"
+//! }
 
 use  virt::connect::Connect;
 use std::collections::HashMap;
@@ -69,6 +76,11 @@ pub fn register_virt_query(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
     module.register_method("virt-show-nwfilters", |_, _| {
         Ok(virt_show_nwfilters())
     })?;
+
+    module.register_method("virt-show-libvirt-version", |_, _| {
+        Ok(virt_show_libvirt_version())
+    })?;
+
     Ok(())
 }
 
@@ -100,11 +112,7 @@ fn virt_show_hypervisor(info: HashMap<String, String>) -> String{
 
     if let Ok(hv_type) = conn.get_type() {
         if let Ok(mut hv_ver) = conn.get_hyp_version() {
-            let major = hv_ver / 1000000;
-            hv_ver %= 1000000;
-            let minor = hv_ver / 1000;
-            let release = hv_ver % 1000;
-            let hv_ver_str = format!("{}.{}.{}", major, minor, release);
+            let hv_ver_str = translate_version(hv_ver);
             hv_info = HmirHvisor::new(hv_type, hv_ver_str);
         }
     }
@@ -192,3 +200,31 @@ fn virt_show_nwfilters() -> String{
     }
 }
 
+fn virt_show_libvirt_version() -> String{
+    let mut conn = match Connect::open(QEMU_URI) {
+        Ok(c) => {
+            c
+        },
+        Err(e) => return format!("Not connected, code: {}, message: {}", e.code, e.message),
+    };
+
+    let mut lib_ver = match conn.get_lib_version(){
+        Ok(ver) => translate_version(ver),
+        Err(e) =>  format!("Not connected, code: {}, message: {}", e.code, e.message),
+    };
+
+    match conn.close() {
+        Ok(_) => { lib_ver },
+        Err(e) => format!("Failed to disconnect from hypervisor: code {}, message: {}",
+        e.code,
+        e.message),
+    }
+}
+
+fn translate_version(mut ver: u32) -> String{
+    let major = ver / 1000000;
+    ver %= 1000000;
+    let minor = ver / 1000;
+    let release = ver % 1000;
+    format!("{}.{}.{}", major, minor, release)
+}
