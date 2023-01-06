@@ -20,12 +20,15 @@
 
 <script lang="ts" setup>
 import { useRouter } from 'vue-router';
-import { useUsersStore } from '@/store/modules/user'
+import { useUsersStore } from '@/store/modules/user';
+import { storeToRefs } from 'pinia';
 //引入store仓库
 const store = useUsersStore();
 
 //引入路由
 const router = useRouter()
+
+const {host}=storeToRefs(store)
 
 const handleCommand = (command: string | number | object) => {
   //点击退出调用退出功能函数
@@ -37,10 +40,11 @@ const handleCommand = (command: string | number | object) => {
 //退出功能函数
 function logout() {
   //调用退出功能接口
-  store.cmdlogout({ host: '172.30.21.35' }).then(res => {
-    //点击注销后跳转到登录页面
-    router.push({ path: '/login' })
-  })
+  store.cmdlogout({ host:host.value})
+    .then(res => {
+      //点击注销后跳转到登录页面
+      router.push({ path: '/login' })
+    })
     .catch(error => {
       console.log(error);
     })
