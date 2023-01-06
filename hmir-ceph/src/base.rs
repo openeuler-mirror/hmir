@@ -23,3 +23,8 @@ pub fn node_ls() -> String {
 pub fn status() -> String {
     command::mon_exec("status")
 }
+
+///show mon daemon version
+pub fn version() -> String {
+    command::mon_exec("version")
+}
