@@ -59,7 +59,8 @@ export const useUsersStore = defineStore('user', {
           .then(response => {
             //判断是否注销成功
             if (!response) {
-              this.resetUser()
+              //重置所有的用户信息
+              this.$reset()
               ElMessage.success('注销成功');
             } else {
               ElMessage.error({
@@ -73,12 +74,6 @@ export const useUsersStore = defineStore('user', {
             reject(error);
           });
       })
-    },
-    //重置所有的用户信息
-    resetUser() {
-      this.host = ''
-      this.port = 0
-      this.username = ''
     }
   }
 });
