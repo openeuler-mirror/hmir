@@ -62,6 +62,14 @@
 //!     "id":1, 
 //!     "method":"virt-show-networks"
 //! }
+//! 
+//! - virt-show-interfaces: virt 展示网络接口信息
+//! 请求格式：
+//! { 
+//!     "jsonrpc":"2.0", 
+//!     "id":1, 
+//!     "method":"virt-show-interfaces"
+//! }
 
 use  virt::connect::Connect;
 use std::collections::HashMap;
@@ -103,6 +111,10 @@ pub fn register_virt_query(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
 
     module.register_method("virt-show-networks", |_, _| {
         Ok(virt_show_networks())
+    })?;
+
+    module.register_method("virt-show-interfaces", |_, _| {
+        Ok(virt_show_interfaces())
     })?;
 
     Ok(())
@@ -299,4 +311,30 @@ fn virt_show_networks() -> String{
         e.message),
     }
 
+}
+
+fn virt_show_interfaces() ->String{
+    let mut conn = match Connect::open(QEMU_URI) {
+        Ok(c) => {
+            c
+        },
+        Err(e) => return format!("Not connected, code: {}, message: {}", e.code, e.message), 
+    };
+    
+    let mut vec_if: Vec<HmirInterface> = Vec::new();
+    if let Ok(interfaces) = conn.list_all_interfaces(0) {
+        for interface in interfaces{
+            let name = interface.get_name().unwrap_or_default();
+            let mac = interface.get_mac_string().unwrap_or_default();
+            let is_active = interface.is_active().unwrap_or_default();
+            vec_if.push(HmirInterface::new(name, mac, is_active));
+        }
+    }
+    
+    match conn.close() {
+        Ok(_) => { serde_json::to_string(&vec_if).unwrap_or_default() },
+        Err(e) => format!("Failed to disconnect from hypervisor: code {}, message: {}",
+        e.code,
+        e.message),
+    }
 }
