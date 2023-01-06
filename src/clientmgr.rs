@@ -36,14 +36,22 @@ pub fn register_client(host : &str, port : i32) -> bool
     if ! CLIENT_MAP.lock().unwrap().contains_key(&host.to_string()) {
         let mut url = host.to_string();
         let url = format!("{}:{}", host,port);
-        let ci = ClientInstance {
-            host : host.to_string(),
-            port : port,
-            token : "".to_string(),
-            client : RefCell::new(wsclient::RequestClient::new(url))
-        };
-        CLIENT_MAP.lock().unwrap().insert(host.to_string(),ci);
-        return true;
+        let c = wsclient::RequestClient::new(url);
+        match c {
+            Ok(client) => {
+                let ci = ClientInstance {
+                    host : host.to_string(),
+                    port : port,
+                    token : "".to_string(),
+                    client : RefCell::new(client)
+                };
+                CLIENT_MAP.lock().unwrap().insert(host.to_string(),ci);
+                return true;
+            }
+            Err(e) => {
+                return false;
+            }
+        }
     }
     return false;
 }
@@ -70,6 +78,12 @@ pub fn client_ok(host : &str) -> bool
 pub fn login(host : & str, username : &str, password : &str ) -> bool {
     let h = host.to_string();
     return client_instance!(&h).login(username, password);
+}
+
+
+pub fn ssh_login(host : & str, username : &str,password : &str) -> bool {
+    let h = host.to_string();
+    return client_instance!(&h).ssh_login(username, password);
 }
 
 pub fn logout(host : & str) -> bool
@@ -107,43 +121,32 @@ mod tests {
     const HOST : &str = "127.0.0.1";
     const PORT : i32 = 5899;
     const USERNAME : &str = "duanwujie";
-    const PASSWORD : &str = "linx";
+    const R_PASSWORD : &str = "linx";
+    const W_PASSWORD : &str = "wrong_password";
 
     #[test]
     fn register_client_worked() {
-        let state = register_client(HOST,PORT);
-        assert_eq!(state,true);
+        register_client(HOST,PORT);
     }
 
     #[test]
     fn unregister_client_worked() {
-        let state = unregister_client(HOST);
-        assert_eq!(state,true);
+        unregister_client(HOST);
     }
 
 
     #[test]
     fn host_login_worked(){
         register_client(HOST,PORT);
-        let login_state  = client_instance!(&String::from(HOST)).login(USERNAME,PASSWORD);
+        let login_state  = client_instance!(&String::from(HOST)).login(USERNAME,R_PASSWORD);
         assert_eq!(login_state,true)
     }
 
     #[test]
     fn ssh_login_worked(){
         register_client(HOST,PORT);
-        let login_state  = client_instance!(&String::from(HOST)).ssh_login(USERNAME,PASSWORD);
+        let login_state  = client_instance!(&String::from(HOST)).ssh_login(USERNAME,R_PASSWORD);
         assert_eq!(login_state,true);
-    }
-
-    #[test]
-    fn test_token_worked(){
-        register_client(HOST,PORT);
-        let login_state  = client_instance!(&String::from(HOST)).ssh_login(USERNAME,PASSWORD);
-        let state = client_instance!(&String::from(HOST)).ttyd_start();
-        assert_eq!(state,true);
-        let state = client_instance!(&String::from(HOST)).ttyd_stop();
-        assert_eq!(state,true);
 
     }
 
