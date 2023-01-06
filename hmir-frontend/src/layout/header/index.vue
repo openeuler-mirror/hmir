@@ -6,7 +6,7 @@
           <el-icon>
             <User />
           </el-icon>
-          root
+          {{ username || 'root' }}
         </el-button>
         <template #dropdown>
           <el-dropdown-menu>
@@ -28,7 +28,7 @@ const store = useUsersStore();
 //引入路由
 const router = useRouter()
 
-const {host}=storeToRefs(store)
+const { host, username } = storeToRefs(store)
 
 const handleCommand = (command: string | number | object) => {
   //点击退出调用退出功能函数
@@ -40,7 +40,7 @@ const handleCommand = (command: string | number | object) => {
 //退出功能函数
 function logout() {
   //调用退出功能接口
-  store.cmdlogout({ host:host.value})
+  store.cmdlogout({ host: host.value })
     .then(res => {
       //点击注销后跳转到登录页面
       router.push({ path: '/login' })
