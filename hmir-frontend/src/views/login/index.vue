@@ -60,7 +60,6 @@
 import { onMounted, reactive, ref, toRefs, watch, nextTick } from 'vue';
 import type { FormInstance, FormRules } from 'element-plus';
 import { useRouter } from 'vue-router';
-import { localStorage } from '@/utils/localStorage';
 import { useUsersStore } from '@/store/modules/user';
 //引入store仓库
 const store = useUsersStore();
@@ -158,8 +157,6 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   await formEl.validate((valid, fields) => {
     if (valid) {
       login()
-    } else {
-      console.log('error submit!', fields)
     }
   })
 }
@@ -205,7 +202,6 @@ const ipAddressQuery = (queryString: string, cb: any) => {
     ? ipAddressResults.value.filter(createFilter(queryString))
     : ipAddressResults.value
   // call callback function to return suggestions
-  console.log(results);
   cb(results)
 }
 
@@ -214,7 +210,6 @@ const ipPortQuery = (queryString: string, cb: any) => {
     ? ipPotrResults.value.filter(createFilter(queryString))
     : ipPotrResults.value
   // call callback function to return suggestions
-  console.log(results);
   cb(results)
 }
 
@@ -223,7 +218,6 @@ const userQuery = (queryString: string, cb: any) => {
     ? userResults.value.filter(createFilter(queryString))
     : userResults.value
   // call callback function to return suggestions
-  console.log(results);
   cb(results)
 }
 
