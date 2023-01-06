@@ -6,12 +6,13 @@ export const Layout = () => import('@/layout/index.vue');
 export const constantRoutes = [
   {
     path: '/login',
+    name: 'login',
     component: () => import('@/views/login/index.vue'),
   },
-  // {
-  //   path: '/404',
-  //   component: () => import('@/views/error-page/404.vue'),
-  // },
+  {
+    path: '/404',
+    component: () => import('@/views/errorPage/404.vue'),
+  },
   {
     path: '/',
     component: Layout,
@@ -19,11 +20,12 @@ export const constantRoutes = [
     children: [
       {
         path: 'home',
-        component: () => import('@/views/home/index.vue'),
         name: 'home',
+        component: () => import('@/views/home/index.vue'),
       },
       {
         path: 'console',
+        name: 'console',
         component: () => import('@/views/consoleCommand/index.vue'),
       }
     ]
