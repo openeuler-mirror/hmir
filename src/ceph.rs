@@ -150,6 +150,12 @@ pub fn ceph_base_register_method(module : & mut RpcModule<()>) -> anyhow::Result
         Ok(base::node_ls())
     })?;
     
+    //ceph status
+    module.register_method("ceph-status", |_, _| {
+        //集群ID
+        Ok(base::status())
+    })?;
+    
     Ok(())
 }
 
