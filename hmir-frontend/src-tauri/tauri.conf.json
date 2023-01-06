@@ -58,7 +58,7 @@
         "width": 1200,
         "height": 800,
         "resizable": true,
-        "title": "hmir-frontend",
+        "title": "HMIR运维管理系统",
         "visible": false,
         "center": true
       },
