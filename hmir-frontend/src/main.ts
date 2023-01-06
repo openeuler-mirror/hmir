@@ -5,6 +5,7 @@ import App from "./App.vue";
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import { deBounce } from './directive/index';
 import { setupStore } from '@/store';
+import '@/permission';
 import 'normalize.css/normalize.css';
 import 'element-plus/dist/index.css';
 import "./style.css";

@@ -62,39 +62,30 @@ async function processQuit() {
   top: 0;
   left: 0;
   right: 0;
-
   .el-menu-demo {
     height: 30px;
     background-color: #D0D0D0;
-
     .is-active {
       border: 0px;
     }
-
     .el-menu-item {
       border: 0px;
     }
   }
-
   .el-sub-menu {
     width: 68px;
-
     :deep(.el-sub-menu__title) {
       background-color: #D0D0D0 !important;
     }
   }
-
-
   :deep(.el-sub-menu__icon-arrow) {
     display: none;
   }
 
 }
-
 .el-menu-item-height {
   height: 25px !important;
 }
-
 .flex-grow {
   flex-grow: 1;
 }
@@ -102,6 +93,6 @@ async function processQuit() {
 
 <style lang="scss">
 .el-menu--popup {
-  min-width: 70px;
+  min-width: 70px !important;
 }
 </style>
