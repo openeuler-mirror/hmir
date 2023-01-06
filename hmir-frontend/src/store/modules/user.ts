@@ -18,10 +18,12 @@ interface logoutData {
 export const useUsersStore = defineStore('user', {
   //存储用户数据
   state: () => {
+    //获取登录成功后保存在本地的数据
+    const user = sessionStorage.get('user')
     return {
-      host: "",
-      port: 0,
-      username: "",
+      host: user.host || '',
+      port: user.port || 0,
+      username: user.username || '',
     };
   },
   //计算属性
