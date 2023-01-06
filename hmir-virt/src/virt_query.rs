@@ -30,6 +30,14 @@
 //!     "method":"virt-show-uri"
 //! }
 //!
+//! - virt-show-nwfilters: virt 展示nwfilter信息
+//! 请求格式：
+//! { 
+//!     "jsonrpc":"2.0", 
+//!     "id":1, 
+//!     "method":"virt-show-nwfilters"
+//! }
+//!
 
 use  virt::connect::Connect;
 use std::collections::HashMap;
@@ -58,12 +66,15 @@ pub fn register_virt_query(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
         Ok(virt_show_uri())
     })?;
 
+    module.register_method("virt-show-nwfilters", |_, _| {
+        Ok(virt_show_nwfilters())
+    })?;
     Ok(())
 }
 
 fn virt_check_connection(info: HashMap<String, String>) -> String{
     let mut conn = match Connect::open(QEMU_URI) {
-        Ok(mut c) => {
+        Ok(c) => {
             c
         },
         Err(e) => return format!("Not connected, code: {}, message: {}", e.code, e.message), 
@@ -79,7 +90,7 @@ fn virt_check_connection(info: HashMap<String, String>) -> String{
 
 fn virt_show_hypervisor(info: HashMap<String, String>) -> String{
     let mut conn = match Connect::open(QEMU_URI) {
-        Ok(mut c) => {
+        Ok(c) => {
             c
         },
         Err(e) => return format!("Not connected, code: {}, message: {}", e.code, e.message), 
@@ -108,7 +119,7 @@ fn virt_show_hypervisor(info: HashMap<String, String>) -> String{
 
 fn virt_show_domains() -> String{
     let mut conn = match Connect::open(QEMU_URI) {
-        Ok(mut c) => {
+        Ok(c) => {
             c
         },
         Err(e) => return format!("Not connected, code: {}, message: {}", e.code, e.message),
@@ -136,7 +147,7 @@ fn virt_show_domains() -> String{
 
 fn virt_show_uri() -> String{
     let mut conn = match Connect::open(QEMU_URI) {
-        Ok(mut c) => {
+        Ok(c) => {
             c
         },
         Err(e) => return format!("Not connected, code: {}, message: {}", e.code, e.message),
@@ -154,3 +165,30 @@ fn virt_show_uri() -> String{
         e.message),
     }
 }
+
+fn virt_show_nwfilters() -> String{
+    let mut conn = match Connect::open(QEMU_URI) {
+        Ok(c) => {
+            c
+        },
+        Err(e) => return format!("Not connected, code: {}, message: {}", e.code, e.message),
+    };
+
+    let mut hmir_nwfilters:Vec<HmirNwfilter> = Vec::new();
+
+    if let Ok(nwfilters) = conn.list_all_nw_filters(0) {
+        for nw in nwfilters {
+            let nw_name = nw.get_name().unwrap_or(String::from("no name"));
+            let nw_uuid = nw.get_uuid_string().unwrap_or(String::from("no uuid"));
+            hmir_nwfilters.push(HmirNwfilter::new(nw_name, nw_uuid));
+        }
+    }
+
+    match conn.close() {
+        Ok(_) => { serde_json::to_string(&hmir_nwfilters).unwrap_or_default() },
+        Err(e) => format!("Failed to disconnect from hypervisor: code {}, message: {}",
+        e.code,
+        e.message),
+    }
+}
+
