@@ -18,3 +18,13 @@ pub fn fsid() -> String {
 pub fn node_ls() -> String {
     command::mon_exec("node ls")
 }
+
+///列出集群状态
+pub fn status() -> String {
+    command::mon_exec("status")
+}
+
+///show mon daemon version
+pub fn version() -> String {
+    command::mon_exec("version")
+}

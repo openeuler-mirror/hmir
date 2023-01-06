@@ -146,8 +146,20 @@ pub fn ceph_base_register_method(module : & mut RpcModule<()>) -> anyhow::Result
     })?;
     
     module.register_method("ceph-node-ls", |_, _| {
-        //集群ID
+        //list all nodes in cluster
         Ok(base::node_ls())
+    })?;
+    
+    //ceph status
+    module.register_method("ceph-status", |_, _| {
+        //集群状态
+        Ok(base::status())
+    })?;
+
+    //ceph version
+    module.register_method("ceph-version", |_, _| {
+        //集群mon组件版本
+        Ok(base::version())
     })?;
     
     Ok(())
