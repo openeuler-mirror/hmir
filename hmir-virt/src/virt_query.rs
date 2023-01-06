@@ -21,6 +21,15 @@
 //!     "id":1, 
 //!     "method":"virt-show-domains"
 //! }
+//! 
+//! - virt-show-uri: virt 展示uri信息
+//! 请求格式：
+//! { 
+//!     "jsonrpc":"2.0", 
+//!     "id":1, 
+//!     "method":"virt-show-uri"
+//! }
+//!
 
 use  virt::connect::Connect;
 use std::collections::HashMap;
@@ -43,6 +52,10 @@ pub fn register_virt_query(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
 
     module.register_method("virt-show-domains", |_, _| {
         Ok(virt_show_domains())
+    })?;
+
+    module.register_method("virt-show-uri", |_, _| {
+        Ok(virt_show_uri())
     })?;
 
     Ok(())
@@ -115,6 +128,27 @@ fn virt_show_domains() -> String{
 
     match conn.close() {
         Ok(_) => { serde_json::to_string(&hmir_domains).unwrap_or_default()},
+        Err(e) => format!("Failed to disconnect from hypervisor: code {}, message: {}",
+        e.code,
+        e.message),
+    }
+}
+
+fn virt_show_uri() -> String{
+    let mut conn = match Connect::open(QEMU_URI) {
+        Ok(mut c) => {
+            c
+        },
+        Err(e) => return format!("Not connected, code: {}, message: {}", e.code, e.message),
+    };
+
+    let uri = match conn.get_uri(){
+        Ok(s) => s,
+        Err(e) => format!("Error, code:{}, message:{}", e.code, e.message),
+    };
+
+    match conn.close() {
+        Ok(_) => { uri },
         Err(e) => format!("Failed to disconnect from hypervisor: code {}, message: {}",
         e.code,
         e.message),
