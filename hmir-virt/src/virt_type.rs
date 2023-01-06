@@ -1,5 +1,4 @@
 use serde::{Serialize};
-use serde_json::json;
 
 #[derive(Debug, Default, Clone, Serialize)]
 pub struct HmirHvisor{
@@ -10,8 +9,8 @@ pub struct HmirHvisor{
 impl HmirHvisor{
     pub fn new(hv_type:String, hv_ver:String) -> HmirHvisor{
         HmirHvisor{
-            hv_type: hv_type,
-            hv_ver : hv_ver,
+            hv_type,
+            hv_ver,
         }
     }
 }
@@ -29,7 +28,7 @@ impl HmirDomain{
     pub fn new(id:u32, name:String, state:u32, max_mem:u64, cpus:u32) -> HmirDomain{
         HmirDomain { 
             id: id.to_string(), 
-            name: name, 
+            name, 
             state: state.to_string(), 
             max_mem: max_mem.to_string(), 
             cpus: cpus.to_string() 
@@ -46,8 +45,8 @@ pub struct HmirNwfilter{
 impl HmirNwfilter{
     pub fn new(name:String, uuid:String) -> HmirNwfilter{
         HmirNwfilter {  
-            name: name, 
-            uuid: uuid
+            name, 
+            uuid
         }
     }
 }
@@ -64,11 +63,11 @@ pub struct HmirNetwork{
 impl HmirNetwork {
     pub fn new(name:String, uuid:String, bridge:String, is_active:bool, is_persist:bool) -> HmirNetwork{
         HmirNetwork { 
-            name: name, 
-            uuid: uuid, 
-            bridge: bridge, 
-            is_active: is_active, 
-            is_persist: is_persist 
+            name, 
+            uuid, 
+            bridge, 
+            is_active, 
+            is_persist 
         }
     }
 }
@@ -83,9 +82,26 @@ pub struct HmirInterface{
 impl HmirInterface {
     pub fn new(name:String, mac:String, is_active:bool) -> HmirInterface{
         HmirInterface { 
-            name: name, 
-            mac: mac, 
-            is_active: is_active 
+            name, 
+            mac, 
+            is_active 
+        }
+    }
+}
+
+#[derive(Debug, Default, Clone, Serialize)]
+pub struct HmirSecret{
+    pub uuid: String,
+    pub usage: String,
+    pub usage_id: u32
+}
+
+impl HmirSecret {
+    pub fn new( uuid:String, usage:String, usage_id:u32) -> HmirSecret{
+        HmirSecret { 
+            uuid, 
+            usage,
+            usage_id
         }
     }
 }

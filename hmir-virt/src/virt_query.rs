@@ -70,6 +70,15 @@
 //!     "id":1, 
 //!     "method":"virt-show-interfaces"
 //! }
+//! 
+//! - virt-show-secrets: virt 展示加密管理信息
+//! 请求格式：
+//! { 
+//!     "jsonrpc":"2.0", 
+//!     "id":1, 
+//!     "method":"virt-show-secrets"
+//! }
+//! 
 
 use  virt::connect::Connect;
 use std::collections::HashMap;
@@ -117,6 +126,10 @@ pub fn register_virt_query(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
         Ok(virt_show_interfaces())
     })?;
 
+    module.register_method("virt-show-secrets", |_, _| {
+        Ok(virt_show_secrets())
+    })?;
+
     Ok(())
 }
 
@@ -147,7 +160,7 @@ fn virt_show_hypervisor() -> String{
     let mut hv_info = HmirHvisor::default();
 
     if let Ok(hv_type) = conn.get_type() {
-        if let Ok(mut hv_ver) = conn.get_hyp_version() {
+        if let Ok(hv_ver) = conn.get_hyp_version() {
             let hv_ver_str = translate_version(hv_ver);
             hv_info = HmirHvisor::new(hv_type, hv_ver_str);
         }
@@ -244,7 +257,7 @@ fn virt_show_libvirt_version() -> String{
         Err(e) => return format!("Not connected, code: {}, message: {}", e.code, e.message),
     };
 
-    let mut lib_ver = match conn.get_lib_version(){
+    let lib_ver = match conn.get_lib_version(){
         Ok(ver) => translate_version(ver),
         Err(e) =>  format!("Not connected, code: {}, message: {}", e.code, e.message),
     };
@@ -320,7 +333,7 @@ fn virt_show_interfaces() ->String{
         },
         Err(e) => return format!("Not connected, code: {}, message: {}", e.code, e.message), 
     };
-    
+
     let mut vec_if: Vec<HmirInterface> = Vec::new();
     if let Ok(interfaces) = conn.list_all_interfaces(0) {
         for interface in interfaces{
@@ -333,6 +346,32 @@ fn virt_show_interfaces() ->String{
     
     match conn.close() {
         Ok(_) => { serde_json::to_string(&vec_if).unwrap_or_default() },
+        Err(e) => format!("Failed to disconnect from hypervisor: code {}, message: {}",
+        e.code,
+        e.message),
+    }
+}
+
+fn virt_show_secrets() -> String {
+    let mut conn = match Connect::open(QEMU_URI) {
+        Ok(c) => {
+            c
+        },
+        Err(e) => return format!("Not connected, code: {}, message: {}", e.code, e.message), 
+    };
+
+    let mut vec_secs: Vec<HmirSecret> = Vec::new();
+    if let Ok(secrets) = conn.list_all_secrets(0){
+        for sec in secrets {
+            let uuid = sec.get_uuid_string().unwrap_or_default();
+            let usage = sec.get_usage_id().unwrap_or_default();
+            let usage_id = sec.get_usage_type().unwrap_or_default();
+            vec_secs.push(HmirSecret::new(uuid, usage, usage_id));
+        }
+    }
+
+    match conn.close() {
+        Ok(_) => { serde_json::to_string(&vec_secs).unwrap_or_default() },
         Err(e) => format!("Failed to disconnect from hypervisor: code {}, message: {}",
         e.code,
         e.message),
