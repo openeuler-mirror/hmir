@@ -27,11 +27,15 @@ export const useUsersStore = defineStore('user', {
   },
   //异步同步函数
   actions: {
+    //登录
     cmdLogin(loginData: LoginData) {
       return new Promise<void>((resolve, reject) => {
         invoke("cmd_login", { ...loginData })
           .then(response => {
             if (response) {
+              this.host = loginData.host
+              this.port = loginData.port
+              this.username = loginData.username
               ElMessage.success('登录成功');
               resolve();
             } else {
@@ -48,13 +52,14 @@ export const useUsersStore = defineStore('user', {
           });
       })
     },
-
+    //注销
     cmdlogout(logoutData: logoutData) {
       return new Promise<void>((resolve, reject) => {
         invoke("cmd_logout", { ...logoutData })
           .then(response => {
             //判断是否注销成功
             if (!response) {
+              this.resetUser()
               ElMessage.success('注销成功');
             } else {
               ElMessage.error({
@@ -69,5 +74,11 @@ export const useUsersStore = defineStore('user', {
           });
       })
     },
+    //重置所有的用户信息
+    resetUser() {
+      this.host = ''
+      this.port = 0
+      this.username = ''
+    }
   }
 });
