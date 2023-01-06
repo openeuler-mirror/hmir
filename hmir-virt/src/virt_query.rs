@@ -87,6 +87,14 @@
 //!     "method":"virt-show-storagepools"
 //! }
 //! 
+//! - virt-show-nodedevs: virt 展示节点所有设备名称
+//! 请求格式：
+//! { 
+//!     "jsonrpc":"2.0", 
+//!     "id":1, 
+//!     "method":"virt-show-nodedevs"
+//! }
+//! 
 
 use  virt::connect::Connect;
 use std::collections::HashMap;
@@ -140,6 +148,10 @@ pub fn register_virt_query(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
 
     module.register_method("virt-show-storagepools", |_, _| {
         Ok(virt_show_storagepools())
+    })?;
+
+    module.register_method("virt-show-nodedevs", |_, _| {
+        Ok(virt_show_nodedevs())
     })?;
 
     Ok(())
@@ -416,4 +428,32 @@ fn virt_show_storagepools() -> String{
         e.code,
         e.message),
     }
+}
+
+fn virt_show_nodedevs() -> String{
+    let mut conn = match Connect::open(QEMU_URI) {
+        Ok(c) => {
+            c
+        },
+        Err(e) => return format!("Not connected, code: {}, message: {}", e.code, e.message), 
+    };
+
+    let mut vec_caps : Vec<String> = Vec::new();
+    if let Ok(node_devs) = conn.list_all_node_devices(0){
+        for dev in node_devs{
+            if let Ok(caps) = dev.list_caps(){
+                for cap in caps {
+                    vec_caps.push(cap);
+                }
+            }
+        }
+    }
+
+    match conn.close() {
+        Ok(_) => { serde_json::to_string(&vec_caps).unwrap_or_default() },
+        Err(e) => format!("Failed to disconnect from hypervisor: code {}, message: {}",
+        e.code,
+        e.message),
+    }
+
 }
