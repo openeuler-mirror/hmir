@@ -36,3 +36,19 @@ impl HmirDomain{
         }
     }
 }
+
+#[derive(Debug, Default, Clone, Serialize)]
+pub struct HmirNwfilter{
+    pub name : String,
+    pub uuid : String
+}
+
+impl HmirNwfilter{
+    pub fn new(name:String, uuid:String) -> HmirNwfilter{
+        HmirNwfilter {  
+            name: name, 
+            uuid: uuid
+        }
+    }
+}
+
