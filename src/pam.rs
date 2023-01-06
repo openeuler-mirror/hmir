@@ -59,14 +59,51 @@ pub fn pam_auth(username : &str, password : &str) -> String
 
 pub fn is_pam_auth(username: &str, password: &str) -> bool
 {
-    let mut authenticator = Authenticator::with_password("system-auth")
-        .expect("Failed to init PAM client.");
-    authenticator.get_handler().set_credentials(username, password);
-    if authenticator.authenticate().is_ok() && authenticator.open_session().is_ok() {
-        return true;
-    }
-    else {
-        return false;
+    // let sy_time = std::time::SystemTime::now();
+    // let mut authenticator = Authenticator::with_password("system-auth")
+    //     .expect("Failed to init PAM client.");
+    // authenticator.get_handler().set_credentials(username, password);
+    // println!("Time cost : {:?}", std::time::SystemTime::now().duration_since(sy_time).unwrap().as_millis());
+    // if authenticator.authenticate().is_ok() && authenticator.open_session().is_ok() {
+    //     return true;
+    // }
+    // else {
+    //     return false;
+    // }
+
+    let (send, recv) = std::sync::mpsc::channel();
+    let user = String::from(username);
+    let pass = String::from(password);
+
+    std::thread::spawn(move || {
+        let sy_time = std::time::SystemTime::now();
+        let mut authenticator = Authenticator::with_password("system-auth")
+            .expect("Failed to init PAM client.");
+        authenticator.get_handler().set_credentials(user, pass);
+        println!("Time cost : {:?}", std::time::SystemTime::now().duration_since(sy_time).unwrap().as_millis());
+        if authenticator.authenticate().is_ok() && authenticator.open_session().is_ok() {
+            send.send("true").unwrap();
+            return true;
+        }
+        else {
+            send.send("false").unwrap();
+            return false;
+        }
+    });
+
+
+    let r = recv.recv_timeout(std::time::Duration::from_millis(500));
+    match r {
+        Ok(msg) => {
+            if msg == "true" {
+                return true;
+            }else {
+                return false;
+            }
+        }
+        _ => {
+            return false;
+        }
     }
 }
 
