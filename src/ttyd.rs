@@ -117,10 +117,14 @@ pub fn ttyd_stop() -> String
 
 
 
+
 pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
 
-    module.register_method("ttyd-start", |_, _| {
+    module.register_method("ttyd-start", |params, _| {
         //默认没有error就是成功的
+        let token = params.one::<std::string::String>()?;
+        LoginChecker!(token);
+
 
         Ok(ttyd_start())
     })?;
