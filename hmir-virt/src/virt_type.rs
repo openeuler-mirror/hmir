@@ -72,3 +72,20 @@ impl HmirNetwork {
         }
     }
 }
+
+#[derive(Debug, Default, Clone, Serialize)]
+pub struct HmirInterface{
+    pub name: String,
+    pub mac: String,
+    pub is_active: bool
+}
+
+impl HmirInterface {
+    pub fn new(name:String, mac:String, is_active:bool) -> HmirInterface{
+        HmirInterface { 
+            name: name, 
+            mac: mac, 
+            is_active: is_active 
+        }
+    }
+}
