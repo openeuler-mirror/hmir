@@ -2,12 +2,14 @@ import { ElMessage } from 'element-plus';
 //限制数据的内容以及格式
 interface messageInstance {
   message: string,
-  type: string
+  type: string,
+  messageInstance: any
 }
 //存储上一次弹出的消息提示信息
 let messageValue: messageInstance = {
   message: '',
-  type: ''
+  type: '',
+  messageInstance: null
 }
 
 const elMessage: any = function (options: any) {
@@ -38,16 +40,19 @@ const elMessage: any = function (options: any) {
     })
   };
   //当弹出的消息内容以及消息type相等时，不更新消息提示框
-  if (messageValue && (messageValue.message !== option.message && messageValue.type !== option.type)) {
+  if (messageValue.message !== option.message || messageValue.type !== option.type) {
     //更新保存的数据信息
-    messageValue.message = option.message
-    messageValue.type = option.type
+    messageValue.message = option.message;
+    messageValue.type = option.type;
     //清除之前的所有的消息提示，解决一次性弹出多个消息提示的问题
     //设置不管什么类型的消息都只会弹出一个
-    ElMessage.closeAll()
+    messageValue.messageInstance && messageValue.messageInstance.close()
   }
+  //转化为异步的形式执行消息提示函数
+  setTimeout(() => {
+    messageValue.messageInstance = ElMessage(option)
+  }, 0)
   //执行弹出消息提示函数
-  return ElMessage(option)
 };
 
 //统一封装error、success、info、warning属性方法
