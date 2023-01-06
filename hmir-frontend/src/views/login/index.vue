@@ -63,6 +63,11 @@ import { useRouter } from 'vue-router';
 import { invoke } from "@tauri-apps/api/tauri";
 import ElMessage from '@/utils/message';
 import { localStorage } from '@/utils/localStorage';
+import { useUsersStore } from '@/store/modules/user'
+//引入store仓库
+const store = useUsersStore();
+
+//引入路由
 const router = useRouter()
 
 //表单校验绑定的ref
@@ -133,22 +138,18 @@ function login() {
   let req = { host: loginData.ipAddress, port: +loginData.ipPort, username: loginData.username, password: loginData.password }
   console.log(req);
   setTimeout(() => {
-    invoke("cmd_login", req).then(res => {
-      if (res) {
-        ElMessage.success('登录成功')
-        localStorage.set('login', req)
+    store.cmdLogin(req)
+      .then(() => {
         setTimeout(() => {
           router.push({ path: '/home' })
         }, 500);
-      } else {
-        ElMessage({
-          message: '登录失败，请重试',
-          type: 'error',
-          customClass: 'login-message-error',
-        })
-      }
-      loading.value = false
-    });
+      })
+      .catch(error => {
+        console.log(error);
+      })
+      .finally(() => {
+        loading.value = false
+      });
   }, 50);
 }
 
@@ -168,7 +169,6 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 
 //生命周期
 onMounted(() => {
-  console.log(localStorage.get('login'));
   ipAddressResults.value = ipAddressAll();
   ipPotrResults.value = ipPortAll();
   userResults.value = userAll();
@@ -213,7 +213,6 @@ const ipAddressQuery = (queryString: string, cb: any) => {
 }
 
 const ipPortQuery = (queryString: string, cb: any) => {
-  console.log(queryString, cb);
   const results = queryString
     ? ipPotrResults.value.filter(createFilter(queryString))
     : ipPotrResults.value
@@ -223,7 +222,6 @@ const ipPortQuery = (queryString: string, cb: any) => {
 }
 
 const userQuery = (queryString: string, cb: any) => {
-  console.log(queryString, cb);
   const results = queryString
     ? userResults.value.filter(createFilter(queryString))
     : userResults.value
@@ -243,7 +241,7 @@ const createFilter = (queryString: string) => {
 }
 
 //选中的数据
-const handleSelect:any= (item: RestaurantItem) => {
+const handleSelect: any = (item: RestaurantItem) => {
   console.log(item)
 }
 

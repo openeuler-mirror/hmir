@@ -4,9 +4,9 @@
     <button type="button" @click="ttydStart()" v-else>连接控制台</button>
   </div>
   <p>{{ ttydtMsg }}</p>
-  <div class="iframe" v-if="ttydtMsg">
+  <div class="iframe">
     <iframe name="iframeMap" id="iframeMapViewComponent" :src="getPageUrl" width="100%" height="100%" frameborder="0"
-      scrolling="yes" ref="iframeDom"></iframe>
+      scrolling="yes" ref="iframeDom" v-if="ttydtMsg"></iframe>
   </div>
 </template>
 
@@ -24,9 +24,9 @@ async function ttydStart () {
 }
 async function ttydStop () {
   // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-  let value= await invoke("cmd_ttyd_stop", { host: '172.30.24.123' });
-  if(value){
-    ttydtMsg.value =false
+  let value = await invoke("cmd_ttyd_stop", { host: '172.30.24.123' });
+  if (value) {
+    ttydtMsg.value = false
   }
   console.log(ttydtMsg.value);
 }
