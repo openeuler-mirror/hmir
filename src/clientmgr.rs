@@ -4,6 +4,7 @@ use crate::wsclient;
 use std::sync::{Arc,Mutex};
 use hmir_hash::HashWrap;
 use crate::wsclient::RequestClient;
+use lazy_static::lazy_static;
 use std::cell::RefCell;
 
 
@@ -18,10 +19,17 @@ type ClientType = Arc<Mutex<HashWrap<String,ClientInstance>>>;
 
 lazy_static! {
     static ref CLIENT_MAP: ClientType = {
-        let m  = HashWrap::<String, ClientInstance>:: new();
+        let m  = HashWrap::<String,ClientInstance>:: new();
         Arc::new(Mutex::new(m))
     };
 }
+
+macro_rules! client_instance {
+    ($i:expr) =>{
+       *CLIENT_MAP.lock().unwrap().get($i).unwrap().client.borrow_mut()
+    }
+}
+
 
 pub fn register_client(host : &str, port : i32) -> bool
 {
@@ -40,7 +48,8 @@ pub fn register_client(host : &str, port : i32) -> bool
     return false;
 }
 
-pub fn unregister_client(host : &str, port : i32) -> bool
+
+pub fn unregister_client(host : &str) -> bool
 {
     if ! CLIENT_MAP.lock().unwrap().contains_key(&host.to_string()) {
         CLIENT_MAP.lock().unwrap().remove(host.to_string());
@@ -49,10 +58,39 @@ pub fn unregister_client(host : &str, port : i32) -> bool
     return false;
 }
 
-macro_rules! client_instance {
-    ($i:expr) =>{
-       *CLIENT_MAP.lock().unwrap().get($i).unwrap().client.borrow_mut()
+
+pub fn client_ok(host : &str) -> bool
+{
+    if CLIENT_MAP.lock().unwrap().contains_key(&host.to_string()) {
+        return true;
     }
+    return false;
+}
+
+pub fn login(host : & str, username : &str, password : &str ) -> bool {
+    let h = host.to_string();
+    return client_instance!(&h).login(username, password);
+}
+
+pub fn logout(host : & str) -> bool
+{
+    return unregister_client(host);
+}
+
+pub fn ttyd_start(host : & str) -> bool {
+    let h = host.to_string();
+    if client_ok(host) {
+        return client_instance!(&h).ttyd_start();
+    }
+    return false;
+}
+
+pub fn ttyd_stop(host : & str) -> bool {
+    let h = host.to_string();
+    if client_ok(host) {
+        return client_instance!(&h).ttyd_stop();
+    }
+    return false;
 }
 
 
@@ -66,31 +104,46 @@ mod tests {
     use anyhow;
     use futures::executor::block_on;
 
+    const HOST : &str = "127.0.0.1";
+    const PORT : i32 = 5899;
+    const USERNAME : &str = "duanwujie";
+    const PASSWORD : &str = "linx";
+
     #[test]
     fn register_client_worked() {
-        register_client("172.30.24.123",5898);
+        let state = register_client(HOST,PORT);
+        assert_eq!(state,true);
     }
 
     #[test]
     fn unregister_client_worked() {
-        unregister_client("172.30.24.123",5898);
+        let state = unregister_client(HOST);
+        assert_eq!(state,true);
     }
 
 
     #[test]
     fn host_login_worked(){
-        let host = "172.30.24.123".to_string();
-        register_client("172.30.24.123",5898);
-        let login_state  = client_instance!(&host).login("root","radlcdss");
+        register_client(HOST,PORT);
+        let login_state  = client_instance!(&String::from(HOST)).login(USERNAME,PASSWORD);
         assert_eq!(login_state,true)
     }
 
     #[test]
     fn ssh_login_worked(){
-        let host = "127.0.0.1".to_string();
-        register_client("127.0.0.1",5899);
-        let login_state  = client_instance!(&host).ssh_login("duanwujie","linx");
+        register_client(HOST,PORT);
+        let login_state  = client_instance!(&String::from(HOST)).ssh_login(USERNAME,PASSWORD);
         assert_eq!(login_state,true);
+    }
+
+    #[test]
+    fn test_token_worked(){
+        register_client(HOST,PORT);
+        let login_state  = client_instance!(&String::from(HOST)).ssh_login(USERNAME,PASSWORD);
+        let state = client_instance!(&String::from(HOST)).ttyd_start();
+        assert_eq!(state,true);
+        let state = client_instance!(&String::from(HOST)).ttyd_stop();
+        assert_eq!(state,true);
 
     }
 
