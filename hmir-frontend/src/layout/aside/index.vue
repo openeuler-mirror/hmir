@@ -65,7 +65,6 @@ const handleSelect = (key: string, keyPath: string[]) => {
 
 function handleQuery() {
   console.log(handleValue);
-
   router.push({ path: '/' + handleValue.value })
 }
 
