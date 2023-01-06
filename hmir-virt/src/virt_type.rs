@@ -105,3 +105,24 @@ impl HmirSecret {
         }
     }
 }
+
+#[derive(Debug, Default, Clone, Serialize)]
+pub struct HmirStoragePool{
+    pub uuid: String,
+    pub state: u32,
+    pub capacity: u64,
+    pub allocation: u64,
+    pub avaliable: u64
+}
+
+impl HmirStoragePool{
+    pub fn new(uuid:String, state:u32, capacity:u64, allocation:u64, avaliable:u64) -> HmirStoragePool{
+        HmirStoragePool { 
+            uuid, 
+            state, 
+            capacity, 
+            allocation, 
+            avaliable 
+        }
+    }
+}
