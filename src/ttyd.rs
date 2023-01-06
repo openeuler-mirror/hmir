@@ -9,13 +9,15 @@ use std::time::Duration;
 use nix::sys::signal;
 use nix::unistd;
 use hmir_hash::HashWrap;
-use tokio::sync::mpsc;
 use std::thread;
+use jsonrpsee::http_client::transport::Error;
 
 use log::{error,info};
 use tokio::time;
 
 type Pid = Arc<Mutex<u32>>;
+
+use hmir_token::LoginChecker;
 
 lazy_static! {
     static ref tty_id : Pid = {
@@ -66,10 +68,11 @@ pub fn org_ttyd_start() -> String
 
 pub async fn aysnc_ttyd_start() -> String
 {
+
     if *tty_id.lock().unwrap() != 0 {
         ttyd_default_result!(0);
     } else {
-        let (tx, mut rx) = mpsc::channel(32);
+        let (tx, mut rx) = std::sync::mpsc::channel();
         let thread_join_handle = thread::spawn(move || {
             info!("The ttyd has start its execution !");
             if let Ok(mut child) = Command::new("ttyd").arg("-p").arg("5899").arg("bash")
@@ -78,18 +81,25 @@ pub async fn aysnc_ttyd_start() -> String
             {
                 *tty_id.lock().unwrap() = child.id();
                 let rt = tokio::runtime::Runtime::new().unwrap();
-                rt.block_on(async {
-                    tx.send("sending from second handle").await;
-                });
+                tx.send("true");
                 child.wait().expect("command wasn't running");
                 info!("The ttyd has finished its execution!");
             }
         });
 
-        while let Some(message) = rx.recv().await {
-            break;
+        let r = rx.recv_timeout(std::time::Duration::from_millis(500));
+        match r {
+            Ok(msg) => {
+                if msg == "true" {
+                    ttyd_default_result!(0);
+                }else {
+                    ttyd_default_result!(-1);
+                }
+            }
+            _ => {
+                ttyd_default_result!(-1);
+            }
         }
-        ttyd_default_result!(0);
     }
 }
 
@@ -105,16 +115,39 @@ pub fn ttyd_stop() -> String
     ttyd_default_result!(0);
 }
 
+
+
 pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
 
     module.register_method("ttyd-start", |_, _| {
         //默认没有error就是成功的
+
         Ok(ttyd_start())
     })?;
 
-    module.register_method("ttyd-stop", |_, _| {
+    module.register_method("ttyd-stop", |params, _| {
         //默认没有error就是成功的
+
+        /*
+               {
+                    "jsonrpc":"2.0",
+                    "id":1,
+                    "method":"ttyd-stop",
+                    "params":["aaaaaaa"]
+               }
+
+               {
+                    "jsonrpc":"2.0",
+                    "id":1,
+                    "method":"ttyd-stop"
+               }
+         */
+        let token = params.one::<std::string::String>()?;
+        LoginChecker!(token);
+        
         Ok(ttyd_stop())
+
+
     })?;
 
     Ok(())
