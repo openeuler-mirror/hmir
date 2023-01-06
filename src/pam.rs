@@ -1,3 +1,26 @@
+//! 权限认证模块
+//!
+//! 支持以下的请求
+//! - pam-auth : 查询指定服务状态
+//!
+//! 请求格式:
+//! ```
+//! {
+//!    "jsonrpc":"2.0",
+//!    "id":1,
+//!    "method":"pam-auth",
+//!    "params":["username","password"]
+//! }
+//! ```
+//! 响应格式:
+//!
+//! ```
+//! {
+//!      "jsonrpc": "2.0",
+//!      "result": "{\"map\":{\"collectl.service\":{\"name\":\"collectl.service\",\"description\":\"LSB: Collectl monitors system performance.\",\"load_state\":\"Loaded\",\"active_state\":\"Inactive\",\"sub_state\":\"Dead\",\"follow_unit\":null,\"object_path\":\"/org/freedesktop/systemd1/unit/collectl_2eservice\",\"job_id\":0,\"job_ty\":\"\",\"job_object_path\":\"/\"}}}",
+//!      "id": 1
+//! }
+//! ```
 
 
 use pam::Authenticator;
@@ -14,8 +37,12 @@ struct LoginParam {
 }
 
 macro_rules! pam_default_result {
-    ($i:expr) =>{
-        let mut response = HashWrap::<i32,i32>:: new();
+    ($i:expr,$j:expr) =>{
+        let mut response = HashWrap::<String,String>:: new();
+        if $i == 0 {
+            let token = hmir_token::token_generate($j);
+            response.insert(String::from("token"),token);
+        }
         response.set_code($i);
         let serialized = serde_json::to_string(&response).unwrap();
         return serialized;
@@ -25,12 +52,9 @@ macro_rules! pam_default_result {
 pub fn pam_auth(username : &str, password : &str) -> String
 {
     if is_pam_auth(username,password) {
-
-        let token = hmir_token::token_generate(&String::from(username));
-        
-        pam_default_result!(0);
+        pam_default_result!(0,&String::from(username));
     }
-    pam_default_result!(-1);
+    pam_default_result!(-1,&String::from(username));
 }
 
 pub fn is_pam_auth(username: &str, password: &str) -> bool
@@ -70,7 +94,7 @@ mod tests {
 
     #[test]
     fn pam_auth_it_worked(){
-        let auth = pam_auth(&"linx",&"root");
+        let auth = pam_auth(&"duanwujie",&"linx");
         println!("The auth is : {}",auth);
     }
 
