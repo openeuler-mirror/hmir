@@ -130,8 +130,12 @@ mod tests {
     fn test_token_worked(){
         let mut client = RequestClient::new("127.0.0.1:5899".to_string());
         let login_state = client.ssh_login("duanwujie","linx");
-        client.ttyd_stop();
         assert_eq!(login_state,true);
+
+        let state = client.ttyd_start();
+        assert_eq!(state,true);
+        let state = client.ttyd_stop();
+        assert_eq!(state,true);
     }
 
 
