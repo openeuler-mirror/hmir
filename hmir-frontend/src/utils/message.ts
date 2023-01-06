@@ -15,7 +15,7 @@ const elMessage: any = function (options: any) {
   let option: any = {
     message: '',
     type: 'success',
-    duration: 3000,
+    duration: 3500,
     //是否显示关闭按钮
     showClose: true,
     center: true,

@@ -1,4 +1,12 @@
 import { defineStore } from 'pinia';
+import { invoke } from "@tauri-apps/api/tauri";
+import ElMessage from '@/utils/message';
+interface LoginData {
+  host: string;
+  port: number;
+  username: string;
+  password: string;
+}
 
 // 第一个参数是应用程序中 store 的唯一 id
 export const useUsersStore = defineStore('user', {
@@ -15,7 +23,7 @@ export const useUsersStore = defineStore('user', {
   },
   //异步同步函数
   actions: {
-    cmdLogin(loginData) {
+    cmdLogin(loginData: LoginData) {
       return new Promise<void>((resolve, reject) => {
         invoke("cmd_login", { ...loginData })
           .then(response => {
