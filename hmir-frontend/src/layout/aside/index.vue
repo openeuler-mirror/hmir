@@ -18,7 +18,6 @@
         </el-menu-item>
       </el-affix>
 
-
       <!-- <el-menu-item index="home">
         <el-icon><icon-menu /></el-icon>
         <template #title>仪表板</template>
@@ -32,16 +31,23 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { useUsersStore } from '@/store/modules/user';
+import { storeToRefs } from 'pinia';
+//引入store仓库
+const store = useUsersStore();
 
-const handleRouter = ref([{ indexRouter: 'login', title: '172.30.24.16', disabled: true, icon: 'Menu' },
+const { host } = storeToRefs(store)
+
+const handleRouter = ref([{ indexRouter: 'login', title: host.value || '127.0.0.1', disabled: true, icon: 'Menu' },
 { indexRouter: 'home', title: '仪表板', disabled: false, icon: 'Menu' },
 ])
+//左侧菜单栏是否关闭打开
 const isCollapse = ref(false)
+//进入后的初始页
 const handleValue = ref('home')
-const menuHeader = ref(null)
-const menuFooter = ref(null)
+//引入路由
 const router = useRouter()
 
 const handleOpen = (key: string, keyPath: string[]) => {
