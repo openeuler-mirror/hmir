@@ -52,3 +52,23 @@ impl HmirNwfilter{
     }
 }
 
+#[derive(Debug, Default, Clone, Serialize)]
+pub struct HmirNetwork{
+    pub name : String,
+    pub uuid : String,
+    pub bridge: String,
+    pub is_active: bool,
+    pub is_persist: bool    
+}
+
+impl HmirNetwork {
+    pub fn new(name:String, uuid:String, bridge:String, is_active:bool, is_persist:bool) -> HmirNetwork{
+        HmirNetwork { 
+            name: name, 
+            uuid: uuid, 
+            bridge: bridge, 
+            is_active: is_active, 
+            is_persist: is_persist 
+        }
+    }
+}

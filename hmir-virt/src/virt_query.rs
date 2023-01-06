@@ -51,10 +51,17 @@
 //! { 
 //!     "jsonrpc":"2.0", 
 //!     "id":1, 
-//!     "method":"virt-show-arch-models"
+//!     "method":"virt-show-arch-models",
 //!     "params": {"arch":"x86_64"}
 //! }
 //! 
+//! - virt-show-networks: virt 展示网络信息
+//! 请求格式：
+//! { 
+//!     "jsonrpc":"2.0", 
+//!     "id":1, 
+//!     "method":"virt-show-networks"
+//! }
 
 use  virt::connect::Connect;
 use std::collections::HashMap;
@@ -92,6 +99,10 @@ pub fn register_virt_query(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
     module.register_method("virt-show-arch-models", |params, _| {
         let info = params.parse::<HashMap<String, String>>()?;
         Ok(virt_show_arch_models(info))
+    })?;
+
+    module.register_method("virt-show-networks", |_, _| {
+        Ok(virt_show_networks())
     })?;
 
     Ok(())
@@ -251,7 +262,6 @@ fn virt_show_arch_models(info: HashMap<String, String>) -> String{
     };
 
     let arch_name = info.get("arch").unwrap();
-
     let models = conn.get_cpu_models_names(&arch_name, 0).unwrap();
 
     match conn.close() {
@@ -260,4 +270,33 @@ fn virt_show_arch_models(info: HashMap<String, String>) -> String{
         e.code,
         e.message),
     }
+}
+
+fn virt_show_networks() -> String{
+    let mut conn = match Connect::open(QEMU_URI) {
+        Ok(c) => {
+            c
+        },
+        Err(e) => return format!("Not connected, code: {}, message: {}", e.code, e.message), 
+    };
+
+    let mut vec_net: Vec<HmirNetwork> = Vec::new();
+    if let Ok(virt_networks) =  conn.list_all_networks(0){
+        for net in virt_networks{
+            let name = net.get_name().unwrap_or(String::from("no name"));
+            let uuid = net.get_uuid_string().unwrap_or(String::from("no uuid"));
+            let bridge = net.get_bridge_name().unwrap_or(String::from("no bridge"));
+            let is_active = net.is_active().unwrap_or_default();
+            let is_persist = net.is_persistent().unwrap_or_default();
+            vec_net.push(HmirNetwork::new(name, uuid, bridge, is_active, is_persist));
+        }
+    }
+
+    match conn.close() {
+        Ok(_) => { serde_json::to_string(&vec_net).unwrap_or_default() },
+        Err(e) => format!("Failed to disconnect from hypervisor: code {}, message: {}",
+        e.code,
+        e.message),
+    }
+
 }
