@@ -19,9 +19,11 @@
 </template>
 
 <script lang="ts" setup>
-import ElMessage from '@/utils/message';
-import { invoke } from "@tauri-apps/api/tauri";
 import { useRouter } from 'vue-router';
+import { useUsersStore } from '@/store/modules/user'
+//引入store仓库
+const store = useUsersStore();
+
 //引入路由
 const router = useRouter()
 
@@ -35,19 +37,13 @@ const handleCommand = (command: string | number | object) => {
 //退出功能函数
 function logout() {
   //调用退出功能接口
-  invoke("cmd_logout", { host: '172.30.21.35' }).then(res => {
-    //判断是否注销成功
-    if (res) {
-      ElMessage.success('注销成功')
-    } else {
-      ElMessage.error({
-        message: '注销失败,请联系管理员',
-        customClass: 'login-message-error'
-      })
-    }
+  store.cmdlogout({ host: '172.30.21.35' }).then(res => {
     //点击注销后跳转到登录页面
     router.push({ path: '/login' })
-  });
+  })
+    .catch(error => {
+      console.log(error);
+    })
 }
 </script>
 
