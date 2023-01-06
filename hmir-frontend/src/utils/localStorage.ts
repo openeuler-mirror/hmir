@@ -3,7 +3,7 @@
  */
 export const localStorage = {
   // 设置永久缓存
-  set (key, val) {
+  set(key: string, val: any) {
     // window.localStorage.setItem(key, JSON.stringify(val));
     try {
       const newStateValue = typeof val === "object" ? JSON.stringify(val) : val;
@@ -14,7 +14,7 @@ export const localStorage = {
     }
   },
   // 获取永久缓存
-  get (key) {
+  get(key: string) {
     try {
       const json = window.localStorage.getItem(key);
       return json ? JSON.parse(json) : key;
@@ -23,11 +23,11 @@ export const localStorage = {
     }
   },
   // 移除永久缓存
-  remove (key) {
+  remove(key: string) {
     window.localStorage.removeItem(key);
   },
   // 移除全部永久缓存
-  clear () {
+  clear() {
     window.localStorage.clear();
   }
 };
