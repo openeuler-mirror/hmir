@@ -79,6 +79,14 @@
 //!     "method":"virt-show-secrets"
 //! }
 //! 
+//! - virt-show-storagepools: virt 展示存储池信息
+//! 请求格式：
+//! { 
+//!     "jsonrpc":"2.0", 
+//!     "id":1, 
+//!     "method":"virt-show-storagepools"
+//! }
+//! 
 
 use  virt::connect::Connect;
 use std::collections::HashMap;
@@ -128,6 +136,10 @@ pub fn register_virt_query(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
 
     module.register_method("virt-show-secrets", |_, _| {
         Ok(virt_show_secrets())
+    })?;
+
+    module.register_method("virt-show-storagepools", |_, _| {
+        Ok(virt_show_storagepools())
     })?;
 
     Ok(())
@@ -372,6 +384,34 @@ fn virt_show_secrets() -> String {
 
     match conn.close() {
         Ok(_) => { serde_json::to_string(&vec_secs).unwrap_or_default() },
+        Err(e) => format!("Failed to disconnect from hypervisor: code {}, message: {}",
+        e.code,
+        e.message),
+    }
+}
+
+fn virt_show_storagepools() -> String{
+    let mut conn = match Connect::open(QEMU_URI) {
+        Ok(c) => {
+            c
+        },
+        Err(e) => return format!("Not connected, code: {}, message: {}", e.code, e.message), 
+    };
+
+    let mut vec_sps:Vec<HmirStoragePool> = Vec::new();
+
+    if let Ok(sps) = conn.list_all_storage_pools(0){
+        for sp in sps{
+            let uuid = sp.get_uuid_string().unwrap_or_default();
+            if let Ok(sp_info) = sp.get_info(){
+                vec_sps.push(HmirStoragePool::new(uuid, sp_info.state, 
+                    sp_info.capacity, sp_info.allocation, sp_info.available));
+            }
+        }
+    }
+
+    match conn.close() {
+        Ok(_) => { serde_json::to_string(&vec_sps).unwrap_or_default() },
         Err(e) => format!("Failed to disconnect from hypervisor: code {}, message: {}",
         e.code,
         e.message),
