@@ -45,6 +45,16 @@
 //!     "id":1, 
 //!     "method":"virt-show-libvirt-version"
 //! }
+//! 
+//! - virt-show-arch-models: virt 展示cpu架构支持的models
+//! 请求格式：
+//! { 
+//!     "jsonrpc":"2.0", 
+//!     "id":1, 
+//!     "method":"virt-show-arch-models"
+//!     "params": {"arch":"x86_64"}
+//! }
+//! 
 
 use  virt::connect::Connect;
 use std::collections::HashMap;
@@ -55,14 +65,12 @@ use jsonrpsee::ws_server::RpcModule;
 const QEMU_URI: &str= "qemu:///system";
 
 pub fn register_virt_query(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
-    module.register_method("virt-check-connection", |params, _| {
-        let info = params.parse::<HashMap<String, String>>()?;
-        Ok(virt_check_connection(info))
+    module.register_method("virt-check-connection", |_, _| {
+        Ok(virt_check_connection())
     })?;
 
-    module.register_method("virt-show-hypervisor", |params, _| {
-        let info = params.parse::<HashMap<String, String>>()?;
-        Ok(virt_show_hypervisor(info))
+    module.register_method("virt-show-hypervisor", |_, _| {
+        Ok(virt_show_hypervisor())
     })?;
 
     module.register_method("virt-show-domains", |_, _| {
@@ -81,10 +89,15 @@ pub fn register_virt_query(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
         Ok(virt_show_libvirt_version())
     })?;
 
+    module.register_method("virt-show-arch-models", |params, _| {
+        let info = params.parse::<HashMap<String, String>>()?;
+        Ok(virt_show_arch_models(info))
+    })?;
+
     Ok(())
 }
 
-fn virt_check_connection(info: HashMap<String, String>) -> String{
+fn virt_check_connection() -> String{
     let mut conn = match Connect::open(QEMU_URI) {
         Ok(c) => {
             c
@@ -100,7 +113,7 @@ fn virt_check_connection(info: HashMap<String, String>) -> String{
     }
 }
 
-fn virt_show_hypervisor(info: HashMap<String, String>) -> String{
+fn virt_show_hypervisor() -> String{
     let mut conn = match Connect::open(QEMU_URI) {
         Ok(c) => {
             c
@@ -227,4 +240,24 @@ fn translate_version(mut ver: u32) -> String{
     let minor = ver / 1000;
     let release = ver % 1000;
     format!("{}.{}.{}", major, minor, release)
+}
+
+fn virt_show_arch_models(info: HashMap<String, String>) -> String{
+    let mut conn = match Connect::open(QEMU_URI) {
+        Ok(c) => {
+            c
+        },
+        Err(e) => return format!("Not connected, code: {}, message: {}", e.code, e.message), 
+    };
+
+    let arch_name = info.get("arch").unwrap();
+
+    let models = conn.get_cpu_models_names(&arch_name, 0).unwrap();
+
+    match conn.close() {
+        Ok(_) => { serde_json::to_string(&models).unwrap_or_default() },
+        Err(e) => format!("Failed to disconnect from hypervisor: code {}, message: {}",
+        e.code,
+        e.message),
+    }
 }
