@@ -4,19 +4,21 @@ use crate::wsclient;
 use std::sync::{Arc,Mutex};
 use hmir_hash::HashWrap;
 use crate::wsclient::RequestClient;
+use std::cell::RefCell;
 
 
 struct ClientInstance{
     host : String,
     port : i32,
-    pub client : wsclient::RequestClient
+    token : String,
+    pub client : RefCell<RequestClient>
 }
 
 type ClientType = Arc<Mutex<HashWrap<String,ClientInstance>>>;
 
 lazy_static! {
     static ref CLIENT_MAP: ClientType = {
-        let m  = HashWrap::<String,ClientInstance>:: new();
+        let m  = HashWrap::<String, ClientInstance>:: new();
         Arc::new(Mutex::new(m))
     };
 }
@@ -29,7 +31,8 @@ pub fn register_client(host : &str, port : i32) -> bool
         let ci = ClientInstance {
             host : host.to_string(),
             port : port,
-            client : wsclient::RequestClient::new(url)
+            token : "".to_string(),
+            client : RefCell::new(wsclient::RequestClient::new(url))
         };
         CLIENT_MAP.lock().unwrap().insert(host.to_string(),ci);
         return true;
@@ -48,7 +51,7 @@ pub fn unregister_client(host : &str, port : i32) -> bool
 
 macro_rules! client_instance {
     ($i:expr) =>{
-       CLIENT_MAP.lock().unwrap().get($i).unwrap().client
+       *CLIENT_MAP.lock().unwrap().get($i).unwrap().client.borrow_mut()
     }
 }
 
@@ -82,6 +85,14 @@ mod tests {
         assert_eq!(login_state,true)
     }
 
+    #[test]
+    fn ssh_login_worked(){
+        let host = "127.0.0.1".to_string();
+        register_client("127.0.0.1",5899);
+        let login_state  = client_instance!(&host).ssh_login("duanwujie","linx");
+        assert_eq!(login_state,true);
+
+    }
 
 
 }
