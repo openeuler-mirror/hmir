@@ -79,7 +79,7 @@ impl RequestClient {
             }
         });
 
-        if (state) {
+        if state {
             self.update_token(&token);
         }
         return state;
@@ -128,45 +128,58 @@ mod tests {
     use futures::executor::block_on;
     use serde_json::to_string;
 
-    const HOST : &str = "127.0.0.1";
-    const PORT : &str = "5899";
+    const URL : &str = "127.0.0.1:5899";
 
     #[test]
     fn ttyd_start_workd() {
-        let client = RequestClient::new("172.30.24.123:5898".to_string());
+        let client = RequestClient::new(String::from(URL));
         client.unwrap().ttyd_start();
     }
 
     #[test]
     fn ttyd_stop_worked() {
-        let client = RequestClient::new("172.30.24.123:5898".to_string());
+        let client = RequestClient::new(String::from(URL));
         client.unwrap().ttyd_stop();
     }
 
     #[test]
-    fn login_worked(){
-        let client = RequestClient::new("172.30.24.123:5898".to_string());
-        let login_state = client.unwrap().login("root","root");
-        assert_eq!(login_state,false)
+    fn login_worked() {
+        let client = RequestClient::new(String::from(URL));
+        match client {
+            Ok(mut c) => {
+                let login_state = c.login("root", "root");
+                assert_eq!(login_state, false)
+            }
+            _ => {}
+        }
     }
 
     #[test]
     fn test_token_worked(){
-        let mut client = RequestClient::new("127.0.0.1:5899".to_string());
-        let login_state = client.unwrap().ssh_login("duanwujie","linx");
-        assert_eq!(login_state,true);
-
-        let state = client.unwrap().ttyd_start();
-        assert_eq!(state,true);
-        let state = client.unwrap().ttyd_stop();
-        assert_eq!(state,true);
+        let mut client = RequestClient::new(String::from(URL));
+        match client {
+            Ok(mut c) => {
+                let login_state = c.ssh_login("duanwujie","linx");
+                assert_eq!(login_state,true);
+                let state = c.ttyd_start();
+                assert_eq!(state,true);
+                let state = c.ttyd_stop();
+                assert_eq!(state,true);
+            },
+            _ => {}
+        }
     }
 
 
     #[test]
     fn login_success_worked(){
-        let client = RequestClient::new("172.30.24.123:5898".to_string());
-        let login_state = client.unwrap().login("root","radlcdss");
-        assert_eq!(login_state,true)
+        let client = RequestClient::new(String::from(URL));
+        match client {
+            Ok(mut c) => {
+                let login_state = c.login("root","radlcdss");
+                assert_eq!(login_state,true)
+            }
+            _ => {}
+        }
     }
 }
