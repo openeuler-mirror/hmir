@@ -58,6 +58,12 @@ struct ObserverParam {
     duration : u64, //the frenquence
 }
 
+#[derive(Debug,Clone,Deserialize)]
+struct ObserverUnRegParam {
+    token : String,
+    obs_cmd : u32
+}
+
 struct ObserverMetric {
     url : std::string::String, //now only support https
     obs_cmd : u32,
@@ -201,9 +207,12 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>
 
     module.register_method("unregister-observer", |params, _| {
         //默认没有error就是成功的
-        let obs_type = params.one::<u32>()?;
+        let obs_param = params.parse::<ObserverUnRegParam>()?;
+        let token = obs_param.token.clone();
+        TokenChecker!(token);
 
-        Ok(unregister_observer(obs_type))
+        let obs_cmd = obs_param.obs_cmd;
+        Ok(unregister_observer(obs_cmd))
     })?;
 
 
