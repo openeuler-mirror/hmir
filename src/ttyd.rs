@@ -17,7 +17,7 @@ use tokio::time;
 
 type Pid = Arc<Mutex<u32>>;
 
-use hmir_token::LoginChecker;
+use hmir_token::TokenChecker;
 
 lazy_static! {
     static ref tty_id : Pid = {
@@ -123,7 +123,7 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
     module.register_method("ttyd-start", |params, _| {
         //默认没有error就是成功的
         let token = params.one::<std::string::String>()?;
-        LoginChecker!(token);
+        TokenChecker!(token);
 
 
         Ok(ttyd_start())
@@ -147,7 +147,7 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
                }
          */
         let token = params.one::<std::string::String>()?;
-        LoginChecker!(token);
+        TokenChecker!(token);
         
         Ok(ttyd_stop())
 

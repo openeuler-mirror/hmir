@@ -77,7 +77,7 @@ pub fn token_verify(token : String) -> bool {
 
 
 #[macro_export]
-macro_rules! LoginChecker {
+macro_rules! TokenChecker {
     ($i:expr) => {
         let verify = hmir_token::token_verify($i);
         if !verify {
