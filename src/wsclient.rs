@@ -9,6 +9,7 @@ use hmir_hash::HashWrap;
 // use nix::libc::stat;
 
 
+#[derive(Debug)]
 pub struct RequestClient {
     pub client  : Client,
     pub token   : String,
@@ -42,9 +43,16 @@ impl RequestClient {
     pub fn ttyd_start(&self) -> bool {
         let token = self.token.clone();
         let state = self.runtime.block_on(async {
-            let response: String = self.client.request("ttyd-start", rpc_params![token]).await.unwrap();
-            let p: HashWrap::<i32,i32> = serde_json::from_str(response.as_str()).unwrap();
-            return p.is_success();
+            let response: Result<String,_>= self.client.request("ttyd-start", rpc_params![token]).await;
+            match response {
+                Ok(result) => {
+                    let p: HashWrap::<i32, i32> = serde_json::from_str(result.as_str()).unwrap();
+                    return p.is_success();
+                },
+                Err(e) => {
+                    return false;
+                }
+            }
         });
         return state;
     }
@@ -142,7 +150,13 @@ mod tests {
     #[test]
     fn ttyd_start_workd() {
         let client = RequestClient::new(String::from(URL));
-        client.unwrap().ttyd_start();
+        match client {
+            Ok(mut c) => {
+                let state = c.ttyd_start();
+                assert_eq!(state,true);
+            },
+            _ => {}
+        }
     }
 
     #[test]
