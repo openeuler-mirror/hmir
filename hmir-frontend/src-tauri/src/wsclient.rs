@@ -128,34 +128,37 @@ mod tests {
     use futures::executor::block_on;
     use serde_json::to_string;
 
+    const HOST : &str = "127.0.0.1";
+    const PORT : &str = "5899";
+
     #[test]
     fn ttyd_start_workd() {
         let client = RequestClient::new("172.30.24.123:5898".to_string());
-        client.ttyd_start();
+        client.unwrap().ttyd_start();
     }
 
     #[test]
     fn ttyd_stop_worked() {
         let client = RequestClient::new("172.30.24.123:5898".to_string());
-        client.ttyd_stop();
+        client.unwrap().ttyd_stop();
     }
 
     #[test]
     fn login_worked(){
         let client = RequestClient::new("172.30.24.123:5898".to_string());
-        let login_state = client.login("root","root");
+        let login_state = client.unwrap().login("root","root");
         assert_eq!(login_state,false)
     }
 
     #[test]
     fn test_token_worked(){
         let mut client = RequestClient::new("127.0.0.1:5899".to_string());
-        let login_state = client.ssh_login("duanwujie","linx");
+        let login_state = client.unwrap().ssh_login("duanwujie","linx");
         assert_eq!(login_state,true);
 
-        let state = client.ttyd_start();
+        let state = client.unwrap().ttyd_start();
         assert_eq!(state,true);
-        let state = client.ttyd_stop();
+        let state = client.unwrap().ttyd_stop();
         assert_eq!(state,true);
     }
 
@@ -163,7 +166,7 @@ mod tests {
     #[test]
     fn login_success_worked(){
         let client = RequestClient::new("172.30.24.123:5898".to_string());
-        let login_state = client.login("root","radlcdss");
+        let login_state = client.unwrap().login("root","radlcdss");
         assert_eq!(login_state,true)
     }
 }
