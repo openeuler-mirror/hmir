@@ -9,8 +9,8 @@ pub fn sysctl_os_type() -> String
     const CTLNAME: &str = "kern.ostype";
 
     let ctl = sysctl::Ctl::new(CTLNAME).unwrap();
-    let desc = ctl.description().unwrap();
-    return desc;
+    let val = ctl.value_string().unwrap();
+    return val;
 }
 
 pub fn add(left: usize, right: usize) -> usize {
@@ -25,5 +25,12 @@ mod tests {
     fn it_works() {
         let result = add(2, 2);
         assert_eq!(result, 4);
+    }
+
+    #[test]
+    fn sysctl_os_type_it_works(){
+        let value = sysctl_os_type();
+        println!("{}",value);
+
     }
 }
