@@ -42,12 +42,9 @@ impl <K,V> HashWrap<K,V> where K: Eq + Hash {
         return true;
     }
 
-    pub fn error(code : i32, message : String) -> Self {
-        HashWrap {
-            code : code,
-            errmsg : message,
-            result: HashMap::new()
-        }
+    pub fn error(&mut self,code : i32, message : String) {
+            self.code  = code;
+            self.errmsg = message;
     }
 
     pub fn map<R>(&self, key: K, f: impl FnOnce(&V) -> R) -> Option<R> {
