@@ -39,6 +39,7 @@ use tokio::time;
 const SERVICE_STATUS : u32 = 0;
 use std::sync::{Arc};
 use std::string;
+use hmir_token::TokenChecker;
 
 macro_rules! observer_default_result {
     ($i:expr) =>{
@@ -51,6 +52,7 @@ macro_rules! observer_default_result {
 
 #[derive(Debug, Clone,Deserialize)]
 struct ObserverParam {
+    token : String,
     url : String, //now only support https
     obs_cmd : u32,
     duration : u64, //the frenquence
@@ -184,6 +186,9 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>
         //默认没有error就是成功的
         let obs_param = params.parse::<ObserverParam>()?;
 
+
+        let token = obs_param.token.clone();
+        TokenChecker!(token);
 
 
 
