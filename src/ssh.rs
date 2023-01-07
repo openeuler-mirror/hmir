@@ -30,6 +30,7 @@ use ssh2::Session;
 use hmir_hash::HashWrap;
 use hmir_token;
 use serde::{Deserialize};
+use crate::tokenmgr::register_token;
 
 #[derive(Debug, Clone,Deserialize)]
 struct LoginParam {
@@ -43,6 +44,7 @@ macro_rules! ssh_default_result {
         let mut response = HashWrap::<String,String>:: new();
         if $i == 0 {
             let token = hmir_token::token_generate($j);
+            register_token($j,&token);
             response.insert(String::from("token"),token);
         }
         response.set_code($i);
@@ -99,6 +101,15 @@ mod tests {
 
     #[test]
     fn ssh_connect_it_worked(){
+
+        /*
+        {
+            "jsonrpc":"2.0",
+            "id":1,
+            "method":"ssh-auth",
+            "params":["duanwujie","linx"]
+        }
+         */
         let auth = ssh_auth(&"duanwujie".to_string(),&"linx".to_string());
 
         println!("The auth is : {}",auth);
