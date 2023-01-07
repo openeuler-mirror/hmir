@@ -145,8 +145,6 @@ fn create_obs_thread(map_handle : HandleType, obs_cmd : u32)
 fn reg_observer(obs_param : &ObserverParam) -> std::string::String
 {
     if is_valid_obs_cmd(obs_param.obs_cmd) {
-        println!("The valid cmd : {}", obs_param.obs_cmd);
-
         //remove the old and stop the thread
         let metric = ObserverMetric {
             url : obs_param.url.clone(),
@@ -159,9 +157,6 @@ fn reg_observer(obs_param : &ObserverParam) -> std::string::String
         let obs_cmd = metric.obs_cmd;
 
         let is_contain = OBSERVER_MAP.lock().unwrap().contains_key(&obs_cmd);
-
-        println!("{}",is_contain);
-
         match  is_contain {
             true => {
                 if let Some(obs) = OBSERVER_MAP.lock().unwrap().get_mut(&obs_cmd) {
@@ -232,14 +227,6 @@ mod test {
     use super::*;
 
     #[test]
-    fn test_unregister_observer_it_worked()
-    {
-
-
-
-    }
-
-    #[test]
     fn test_register_observer_it_worked()
     {
         let obs_param = ObserverParam {
@@ -250,6 +237,12 @@ mod test {
         };
 
         reg_observer(&obs_param);
+    }
 
+    #[test]
+    fn test_unregister_observer_it_worked()
+    {
+        let obs_cmd = 0;
+        unregister_observer(obs_cmd);
     }
 }
