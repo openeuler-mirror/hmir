@@ -17,7 +17,9 @@ use tokio::time;
 
 type Pid = Arc<Mutex<u32>>;
 
+use hmir_errno::errno;
 use hmir_token::TokenChecker;
+
 
 lazy_static! {
     static ref tty_id : Pid = {
