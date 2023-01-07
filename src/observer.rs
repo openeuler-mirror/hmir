@@ -220,3 +220,19 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>
     Ok(())
 
 }
+
+mod test {
+
+    #[test]
+    fn test_unregister_observer_it_worked()
+    {
+
+
+    }
+
+    #[test]
+    fn test_register_observer_it_worked()
+    {
+
+    }
+}
