@@ -41,7 +41,11 @@ fn greet(name : & str) -> String {
 #[tauri::command]
 fn cmd_login(host : & str, port : i32 , username : & str, password : & str) -> bool
 {
+    const use_ssh_login : bool = false;
     if clientmgr::register_client(host,port) {
+        if use_ssh_login {
+            return clientmgr::ssh_login(host,username,password);
+        }
         return clientmgr::login(host,username,password);
     }
     return false;
