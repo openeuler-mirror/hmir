@@ -107,7 +107,7 @@ pub async fn aysnc_ttyd_start() -> String
 
 pub fn ttyd_stop() -> String
 {
-    if ( *tty_id.lock().unwrap() != 0 ){
+    if *tty_id.lock().unwrap() != 0 {
         let id = *tty_id.lock().unwrap() as i32;
         signal::kill(unistd::Pid::from_raw(id), signal::Signal::SIGHUP).unwrap();
         *tty_id.lock().unwrap() = 0;
