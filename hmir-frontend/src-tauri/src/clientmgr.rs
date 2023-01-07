@@ -118,30 +118,34 @@ mod tests {
     use anyhow;
     use futures::executor::block_on;
 
+    const HOST : &str = "127.0.0.1";
+    const PORT : i32 = 5899;
+    const USERNAME : &str = "duanwujie";
+    const R_PASSWORD : &str = "linx";
+    const W_PASSWORD : &str = "wrong_password";
+
     #[test]
     fn register_client_worked() {
-        register_client("172.30.24.123",5898);
+        register_client(HOST,PORT);
     }
 
     #[test]
     fn unregister_client_worked() {
-        unregister_client("172.30.24.123",5898);
+        unregister_client(HOST);
     }
 
 
     #[test]
     fn host_login_worked(){
-        let host = "172.30.24.123".to_string();
-        register_client("172.30.24.123",5898);
-        let login_state  = client_instance!(&host).login("root","radlcdss");
+        register_client(HOST,PORT);
+        let login_state  = client_instance!(&String::from(HOST)).login(USERNAME,R_PASSWORD);
         assert_eq!(login_state,true)
     }
 
     #[test]
     fn ssh_login_worked(){
-        let host = "127.0.0.1".to_string();
-        register_client("127.0.0.1",5899);
-        let login_state  = client_instance!(&host).ssh_login("duanwujie","linx");
+        register_client(HOST,PORT);
+        let login_state  = client_instance!(&String::from(HOST)).ssh_login(USERNAME,R_PASSWORD);
         assert_eq!(login_state,true);
 
     }
