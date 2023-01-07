@@ -80,6 +80,12 @@ pub fn login(host : & str, username : &str, password : &str ) -> bool {
     return client_instance!(&h).login(username, password);
 }
 
+
+pub fn ssh_login(host : & str, username : &str,password : &str) -> bool {
+    let h = host.to_string();
+    return client_instance!(&h).ssh_login(username, password);
+}
+
 pub fn logout(host : & str) -> bool
 {
     return unregister_client(host);
