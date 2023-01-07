@@ -31,6 +31,8 @@ use jsonrpsee::ws_server::{RpcModule};
 use std::sync::RwLock;
 use hmir_hash::HashWrap;
 use serde::{Deserialize};
+
+#[cfg(target_os = "linux")]
 use crate::svr::service_all;
 use tokio::time;
 
@@ -49,7 +51,7 @@ macro_rules! observer_default_result {
 
 #[derive(Debug, Clone,Deserialize)]
 struct ObserverParam {
-    url : std::string::String, //now only support https
+    url : String, //now only support https
     obs_cmd : u32,
     duration : u64, //the frenquence
 }
@@ -82,6 +84,7 @@ type Callback = fn() -> std::string::String;
 
 fn get_observer_callback(obs_cmd : u32) -> Callback {
     match obs_cmd {
+        #[cfg(target_os = "linux")]
         SERVICE_STATUS => service_all,
         _ => do_nothing
     }
@@ -180,6 +183,10 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>
     module.register_method("register-observer", |params,_| {
         //默认没有error就是成功的
         let obs_param = params.parse::<ObserverParam>()?;
+
+
+
+
         // let obs_type = obs_type.one::<u32>()?;
         // let duration = duration.one::<u32>()?;
         // println!("{}:{}:{}",url,obs_type,duration);
