@@ -5,11 +5,14 @@ use std::sync::{Arc,Mutex};
 use hmir_hash::HashWrap;
 use crate::wsclient::RequestClient;
 use lazy_static::lazy_static;
+use std::cell::RefCell;
+
 
 struct ClientInstance{
     host : String,
     port : i32,
-    pub client : wsclient::RequestClient
+    token : String,
+    pub client : RefCell<RequestClient>
 }
 
 type ClientType = Arc<Mutex<HashWrap<String,ClientInstance>>>;
@@ -23,11 +26,9 @@ lazy_static! {
 
 macro_rules! client_instance {
     ($i:expr) =>{
-       CLIENT_MAP.lock().unwrap().get($i).unwrap().client
+       *CLIENT_MAP.lock().unwrap().get($i).unwrap().client.borrow_mut()
     }
 }
-
-
 
 
 pub fn register_client(host : &str, port : i32) -> bool
@@ -35,17 +36,26 @@ pub fn register_client(host : &str, port : i32) -> bool
     if ! CLIENT_MAP.lock().unwrap().contains_key(&host.to_string()) {
         let mut url = host.to_string();
         let url = format!("{}:{}", host,port);
-        let ci = ClientInstance {
-            host : host.to_string(),
-            port : port,
-            client : wsclient::RequestClient::new(url)
-        };
-        CLIENT_MAP.lock().unwrap().insert(host.to_string(),ci);
-        return true;
-    } else {
-        return true;
+        let c = wsclient::RequestClient::new(url);
+        match c {
+            Ok(client) => {
+                let ci = ClientInstance {
+                    host : host.to_string(),
+                    port : port,
+                    token : "".to_string(),
+                    client : RefCell::new(client)
+                };
+                CLIENT_MAP.lock().unwrap().insert(host.to_string(),ci);
+                return true;
+            }
+            Err(e) => {
+                return false;
+            }
+        }
     }
+    return false;
 }
+
 
 pub fn unregister_client(host : &str) -> bool
 {
@@ -92,6 +102,7 @@ pub fn ttyd_stop(host : & str) -> bool {
 }
 
 
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -104,12 +115,11 @@ mod tests {
     #[test]
     fn register_client_worked() {
         register_client("172.30.24.123",5898);
-        ttyd_start("172.30.24.123");
     }
 
     #[test]
     fn unregister_client_worked() {
-        unregister_client("172.30.24.123");
+        unregister_client("172.30.24.123",5898);
     }
 
 
@@ -118,8 +128,16 @@ mod tests {
         let host = "172.30.24.123".to_string();
         register_client("172.30.24.123",5898);
         let login_state  = client_instance!(&host).login("root","radlcdss");
+        assert_eq!(login_state,true)
+    }
+
+    #[test]
+    fn ssh_login_worked(){
+        let host = "127.0.0.1".to_string();
+        register_client("127.0.0.1",5899);
+        let login_state  = client_instance!(&host).ssh_login("duanwujie","linx");
         assert_eq!(login_state,true);
-        logout("172.30.24.123");
+
     }
 
 
