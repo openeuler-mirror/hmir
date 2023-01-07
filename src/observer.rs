@@ -28,7 +28,7 @@
 //!
 
 use jsonrpsee::ws_server::{RpcModule};
-use std::sync::RwLock;
+use std::sync::Mutex;
 use hmir_hash::HashWrap;
 use serde::{Deserialize};
 
@@ -64,6 +64,7 @@ struct ObserverUnRegParam {
     obs_cmd : u32
 }
 
+#[derive(Debug,Clone)]
 struct ObserverMetric {
     url : std::string::String, //now only support https
     obs_cmd : u32,
@@ -73,12 +74,12 @@ struct ObserverMetric {
 }
 
 
-type HandleType = Arc<RwLock<HashWrap<u32,ObserverMetric>>>;
+type HandleType = Arc<Mutex<HashWrap<u32,ObserverMetric>>>;
 
 lazy_static! {
     static ref OBSERVER_MAP : HandleType = {
         let m  = HashWrap::<u32,ObserverMetric>:: new();
-        Arc::new(RwLock::new(m))
+        Arc::new(Mutex::new(m))
     };
 }
 
@@ -115,18 +116,18 @@ fn do_remote_post(result : & std::string::String , url : & std::string::String )
 
 fn create_obs_thread(map_handle : HandleType, obs_cmd : u32)
 {
-    tokio::task::spawn(async move {
+    std::thread::spawn(move || {
         //运行在一个不阻塞的线程
         let mut count = 0;
         loop {
-            if let Some(o) = map_handle.read().unwrap().get(&obs_cmd) {
+            if let Some(o) = map_handle.lock().unwrap().get(&obs_cmd) {
                 let url = o.url.clone();
                 let duration = o.duration;
                 let status = o.status;
                 let call:Callback = o.callback;
 
                 if !status {
-                    map_handle.write().unwrap().remove(obs_cmd);
+                    map_handle.lock().unwrap().remove(obs_cmd);
                     break
                 }
                 if count == duration {
@@ -144,6 +145,7 @@ fn create_obs_thread(map_handle : HandleType, obs_cmd : u32)
 fn reg_observer(obs_param : &ObserverParam) -> std::string::String
 {
     if is_valid_obs_cmd(obs_param.obs_cmd) {
+        println!("The valid cmd : {}", obs_param.obs_cmd);
 
         //remove the old and stop the thread
         let metric = ObserverMetric {
@@ -156,16 +158,20 @@ fn reg_observer(obs_param : &ObserverParam) -> std::string::String
 
         let obs_cmd = metric.obs_cmd;
 
-        match  OBSERVER_MAP.read().unwrap().contains_key(&obs_cmd) {
+        let is_contain = OBSERVER_MAP.lock().unwrap().contains_key(&obs_cmd);
+
+        println!("{}",is_contain);
+
+        match  is_contain {
             true => {
-                if let Some(obs) = OBSERVER_MAP.write().unwrap().get_mut(&obs_cmd) {
+                if let Some(obs) = OBSERVER_MAP.lock().unwrap().get_mut(&obs_cmd) {
                     //just upgrade the duration and url
                     obs.duration = metric.duration;
                     obs.url = metric.url;
                 }
             }
             _ => {
-                OBSERVER_MAP.write().unwrap().insert(obs_cmd,metric);
+                OBSERVER_MAP.lock().unwrap().insert(obs_cmd,metric);
                 let map_handle = OBSERVER_MAP.clone();
                 create_obs_thread(map_handle,obs_cmd);
             }
@@ -178,7 +184,7 @@ fn reg_observer(obs_param : &ObserverParam) -> std::string::String
 
 pub fn unregister_observer(obs_cmd : u32) -> string::String
 {
-    if let Some(metric) = OBSERVER_MAP.write().unwrap().get_mut(&obs_cmd) {
+    if let Some(metric) = OBSERVER_MAP.lock().unwrap().get_mut(&obs_cmd) {
         metric.status = false;
     }
     observer_default_result!(0);
@@ -223,9 +229,12 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>
 
 mod test {
 
+    use super::*;
+
     #[test]
     fn test_unregister_observer_it_worked()
     {
+
 
 
     }
@@ -233,6 +242,14 @@ mod test {
     #[test]
     fn test_register_observer_it_worked()
     {
+        let obs_param = ObserverParam {
+            token: "".to_string(),
+            url: "".to_string(),
+            obs_cmd: 0,
+            duration: 100
+        };
+
+        reg_observer(&obs_param);
 
     }
 }
