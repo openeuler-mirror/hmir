@@ -108,6 +108,15 @@ impl RequestClient {
         return state;
     }
 
+    pub fn reg_observer(&mut self, url:&str,cmd:u32,duration: u64) ->String {
+        let token = self.token.clone();
+        let response = self.runtime.block_on( async {
+            let response: String = self.client.request("register-observer", rpc_params![token,url,cmd,duration]).await.unwrap();
+            return response;
+        });
+        return response;
+    }
+
     pub fn update_token(& mut self,token : &String)
     {
         self.token = token.clone();
