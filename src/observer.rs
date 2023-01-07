@@ -39,6 +39,7 @@ use tokio::time;
 const SERVICE_STATUS : u32 = 0;
 use std::sync::{Arc};
 use std::string;
+use hmir_errno::errno;
 use hmir_token::TokenChecker;
 
 macro_rules! observer_default_result {
@@ -192,12 +193,8 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>
     module.register_method("register-observer", |params,_| {
         //默认没有error就是成功的
         let obs_param = params.parse::<ObserverParam>()?;
-
-
         let token = obs_param.token.clone();
         TokenChecker!(token);
-
-
 
         // let obs_type = obs_type.one::<u32>()?;
         // let duration = duration.one::<u32>()?;
@@ -236,13 +233,16 @@ mod test {
             duration: 100
         };
 
-        reg_observer(&obs_param);
+        let result = reg_observer(&obs_param);
+        println!("{}",result);
     }
 
     #[test]
     fn test_unregister_observer_it_worked()
     {
         let obs_cmd = 0;
-        unregister_observer(obs_cmd);
+        let result = unregister_observer(obs_cmd);
+        println!("{}",result);
+
     }
 }
