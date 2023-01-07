@@ -91,6 +91,7 @@ pub fn logout(host : & str) -> bool
     return unregister_client(host);
 }
 
+/// 启动终端
 pub fn ttyd_start(host : & str) -> bool {
     let h = host.to_string();
     if client_ok(host) {
@@ -99,6 +100,7 @@ pub fn ttyd_start(host : & str) -> bool {
     return false;
 }
 
+/// 停止终端
 pub fn ttyd_stop(host : & str) -> bool {
     let h = host.to_string();
     if client_ok(host) {
