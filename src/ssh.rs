@@ -100,6 +100,9 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
 mod tests {
     use super::*;
 
+    const USERNAME : &str = "duanwujie";
+    const R_PASSWORD : &str = "linx";
+    const W_PASSWORD : &str = "wrong_password";
 
     #[test]
     fn ssh_connect_it_worked(){
@@ -112,15 +115,13 @@ mod tests {
             "params":["duanwujie","linx"]
         }
          */
-        let auth = ssh_auth(&"duanwujie".to_string(),&"linx".to_string());
-
+        let auth = ssh_auth(&String::from(USERNAME),&String::from(R_PASSWORD));
         println!("The auth is : {}",auth);
     }
 
     #[test]
     fn ssh_wrong_password_it_worked(){
-        let auth = ssh_auth(&"root".to_string(),&"noroot".to_string());
-
+        let auth = ssh_auth(&String::from(USERNAME),&String::from(W_PASSWORD));
         println!("The auth is : {}",auth);
     }
 }
