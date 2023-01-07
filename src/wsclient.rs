@@ -79,7 +79,7 @@ impl RequestClient {
             }
         });
 
-        if (state) {
+        if state {
             self.update_token(&token);
         }
         return state;
@@ -161,7 +161,6 @@ mod tests {
             Ok(mut c) => {
                 let login_state = c.ssh_login("duanwujie","linx");
                 assert_eq!(login_state,true);
-
                 let state = c.ttyd_start();
                 assert_eq!(state,true);
                 let state = c.ttyd_stop();
@@ -169,7 +168,6 @@ mod tests {
             },
             _ => {}
         }
-
     }
 
 
