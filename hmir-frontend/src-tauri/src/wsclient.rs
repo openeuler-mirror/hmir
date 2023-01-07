@@ -60,7 +60,7 @@ impl RequestClient {
         return state;
     }
 
-    pub fn login(&self,username : &str, password : &str ) -> bool {
+    pub fn login(& mut self,username : &str, password : &str ) -> bool {
         let (state,token) = self.runtime.block_on(async {
             let response: Result<String, _> = self.client.request("pam-auth", rpc_params![username,password]).await;
             match response {
@@ -78,6 +78,10 @@ impl RequestClient {
                 }
             }
         });
+
+        if (state) {
+            self.update_token(&token);
+        }
         return state;
     }
 
@@ -87,10 +91,12 @@ impl RequestClient {
             match response {
                 Ok(result) => {
                     let p:HashWrap<String,String> = serde_json::from_str(result.as_str()).unwrap();
-                    let token =  p.get(&String::from("token")).unwrap();
-                    // println!("The token is : {}",token);
-                    return (p.is_success(),token.clone());
-                }
+                    if p.is_success() {
+                        let token =  p.get(&String::from("token")).unwrap();
+                        return (p.is_success(),token.clone());
+                    }else {
+                        return (false,String::from(""));
+                    }                }
                 _ => { return (false,String::from("")) ;}
             }
         });
