@@ -154,6 +154,10 @@ pub fn register_virt_query(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
         Ok(virt_show_nodedevs())
     })?;
 
+    module.register_method("virt-show-sys-info", |_, _| {
+        Ok(virt_show_sys_info())
+    })?;
+
     Ok(())
 }
 
@@ -451,6 +455,25 @@ fn virt_show_nodedevs() -> String{
 
     match conn.close() {
         Ok(_) => { serde_json::to_string(&vec_caps).unwrap_or_default() },
+        Err(e) => format!("Failed to disconnect from hypervisor: code {}, message: {}",
+        e.code,
+        e.message),
+    }
+
+}
+
+fn virt_show_sys_info() -> String{
+    let mut conn = match Connect::open(QEMU_URI) {
+        Ok(c) => {
+            c
+        },
+        Err(e) => return format!("Not connected, code: {}, message: {}", e.code, e.message), 
+    };
+
+    let sys_info = conn.get_sys_info(0).unwrap_or_default();
+
+    match conn.close() {
+        Ok(_) => { sys_info },
         Err(e) => format!("Failed to disconnect from hypervisor: code {}, message: {}",
         e.code,
         e.message),
