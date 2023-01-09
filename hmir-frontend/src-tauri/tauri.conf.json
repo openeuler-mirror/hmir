@@ -68,6 +68,7 @@
         "decorations": false,
         "url": "../public/splashscreen/splashscreen.html",
         "label": "splashscreen",
+        "title": "HMIR运维管理系统",
         "center": true
       }
     ]
