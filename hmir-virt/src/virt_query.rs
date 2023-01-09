@@ -14,7 +14,7 @@
 //!     "method":"virt-show-hypervisor"
 //! }
 //! 
-//! - virt-show-domains: virt 展示active domains信息
+//! - virt-show-domains: virt 展示所有 domains信息
 //! 请求格式：
 //! { 
 //!     "jsonrpc":"2.0", 
@@ -222,7 +222,8 @@ fn virt_show_domains() -> String{
         Err(e) => return format!("Not connected, code: {}, message: {}", e.code, e.message),
     };
     let mut hmir_domains:Vec<HmirDomain> = Vec::new();
-    let flags = virt::connect::VIR_CONNECT_LIST_DOMAINS_ACTIVE;
+    let flags = virt::connect::VIR_CONNECT_LIST_DOMAINS_ACTIVE |
+                virt::connect::VIR_CONNECT_LIST_DOMAINS_INACTIVE;
 
     if let Ok(doms) = conn.list_all_domains(flags) {
         for dom in doms {
