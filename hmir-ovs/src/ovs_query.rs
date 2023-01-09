@@ -136,7 +136,9 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
         Ok(get_bridges())
     })?;
 
-    module.register_method("ovs-query-interfaces", |_, _| {
+    module.register_method("ovs-query-interfaces", |params, _| {
+        let token = params.one::<std::string::String>()?;
+        TokenChecker!(token);
         Ok(get_interfaces())
     })?;
 
