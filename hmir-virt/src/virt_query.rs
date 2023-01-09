@@ -95,6 +95,15 @@
 //!     "method":"virt-show-nodedevs"
 //! }
 //! 
+//! - virt-show-sys-info: virt 展示 sys info 说明
+//! 请求格式：
+//! { 
+//!     "jsonrpc":"2.0", 
+//!     "id":1, 
+//!     "method":"virt-show-sys-info"
+//! }
+//!
+
 
 use  virt::connect::Connect;
 use std::collections::HashMap;
