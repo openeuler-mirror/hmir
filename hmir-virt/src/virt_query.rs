@@ -229,9 +229,8 @@ fn virt_show_domains() -> String{
         for dom in doms {
             let id = dom.get_id().unwrap_or(0);
             let name = dom.get_name().unwrap_or(String::from("no name"));
-            if let Ok(dinfo) = dom.get_info(){
-                hmir_domains.push(HmirDomain::new(id, name, dinfo.state, dinfo.max_mem, dinfo.nr_virt_cpu));
-            }
+            let uuid = dom.get_uuid_string().unwrap_or_default();
+            hmir_domains.push(HmirDomain::new(id, name, uuid));
         }
     }
 

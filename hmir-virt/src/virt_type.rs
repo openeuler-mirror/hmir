@@ -10,7 +10,7 @@ pub struct HmirHvisor{
 }
 
 impl HmirHvisor{
-    pub fn new(hv_type:String, hv_ver:String, is_alive:bool, is_enc:bool, is_sec:bool) -> HmirHvisor{
+    pub fn new(hv_type:String, hv_ver:String, is_alive:bool, is_enc: bool, is_sec:bool) -> HmirHvisor{
         HmirHvisor{
             hv_type,
             hv_ver,
@@ -25,19 +25,15 @@ impl HmirHvisor{
 pub struct HmirDomain{
     pub id   : String,
     pub name : String,
-    pub state: String,
-    pub max_mem: String,
-    pub cpus : String
+    pub uuid: String
 }
 
 impl HmirDomain{
-    pub fn new(id:u32, name:String, state:u32, max_mem:u64, cpus:u32) -> HmirDomain{
+    pub fn new(id:u32, name:String, uuid:String) -> HmirDomain{
         HmirDomain { 
             id: id.to_string(), 
-            name, 
-            state: state.to_string(), 
-            max_mem: max_mem.to_string(), 
-            cpus: cpus.to_string() 
+            name,  
+            uuid
         }
     }
 }
