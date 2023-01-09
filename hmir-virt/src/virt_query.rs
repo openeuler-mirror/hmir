@@ -154,6 +154,10 @@ pub fn register_virt_query(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
         Ok(virt_show_nodedevs())
     })?;
 
+    module.register_method("virt-show-sys-info", |_, _| {
+        Ok(virt_show_sys_info())
+    })?;
+
     Ok(())
 }
 
@@ -456,4 +460,8 @@ fn virt_show_nodedevs() -> String{
         e.message),
     }
 
+}
+
+fn virt_show_sys_info() -> String{
+    String::new()
 }
