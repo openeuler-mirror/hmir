@@ -4,6 +4,9 @@ use jsonwebtoken::{encode, decode, Header, Validation, Algorithm,EncodingKey, De
 use std::io::Read;
 use log::{error,info};
 
+// use crate::hmir_errno::errno;
+
+
 
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -13,8 +16,17 @@ pub struct Claims {
 }
 
 pub const EXP_TIME : usize = 4852281600;//2023/10/7
-pub const PUBLIC_KEY : &str = "/tmp/hmir-public-key.pem";
-pub const PRIVATE_KEY : &str = "/tmp/hmir-private-key.pem";
+
+#[cfg(target_os = "macos")]
+pub const PUBLIC_KEY : &str = "/~/.config/hmir//hmir-public-key.pem";
+#[cfg(target_os = "macos")]
+pub const PRIVATE_KEY : &str = "~/.config/hmir/hmir-private-key.pem";
+
+#[cfg(target_os = "linux")]
+pub const PUBLIC_KEY : &str = "/etc/hmir//hmir-public-key.pem";
+#[cfg(target_os = "linux")]
+pub const PRIVATE_KEY : &str = "/etc/hmir/hmir-private-key.pem";
+
 
 
 pub fn token_generate(user : &String) -> String
@@ -73,6 +85,7 @@ pub fn token_verify(token : String) -> bool {
             return false;
         }
     }
+
 }
 
 
@@ -82,7 +95,7 @@ macro_rules! TokenChecker {
         let verify = hmir_token::token_verify($i);
         if !verify {
             let mut response = HashWrap::<i32,i32>:: new();
-            response.set_code(-1);
+            response.error(1,String::from(errno::HMIR_MSG[1]));
             let serialized = serde_json::to_string(&response).unwrap();
             return Ok(serialized)
         }
@@ -94,6 +107,7 @@ macro_rules! TokenChecker {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use hmir_errno::errno;
 
 
 
@@ -102,6 +116,8 @@ mod tests {
     #[test]
     fn token_genertate_it_works()
     {
+
+        let i = errno::HMIR_SUCCESS;
         let token = token_generate(&String::from("root"));
         println!("{}",token);
         let verify = token_verify(token);
