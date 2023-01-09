@@ -463,5 +463,20 @@ fn virt_show_nodedevs() -> String{
 }
 
 fn virt_show_sys_info() -> String{
-    String::new()
+    let mut conn = match Connect::open(QEMU_URI) {
+        Ok(c) => {
+            c
+        },
+        Err(e) => return format!("Not connected, code: {}, message: {}", e.code, e.message), 
+    };
+
+    let sys_info = conn.get_sys_info(0).unwrap_or_default();
+
+    match conn.close() {
+        Ok(_) => { sys_info },
+        Err(e) => format!("Failed to disconnect from hypervisor: code {}, message: {}",
+        e.code,
+        e.message),
+    }
+
 }
