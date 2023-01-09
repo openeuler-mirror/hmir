@@ -3,14 +3,20 @@ use serde::{Serialize};
 #[derive(Debug, Default, Clone, Serialize)]
 pub struct HmirHvisor{
     pub hv_type : String,
-    pub hv_ver : String
+    pub hv_ver : String,
+    pub is_alive: bool,
+    pub is_enc: bool,
+    pub is_sec:bool
 }
 
 impl HmirHvisor{
-    pub fn new(hv_type:String, hv_ver:String) -> HmirHvisor{
+    pub fn new(hv_type:String, hv_ver:String, is_alive:bool, is_enc:bool, is_sec:bool) -> HmirHvisor{
         HmirHvisor{
             hv_type,
             hv_ver,
+            is_alive,
+            is_enc,
+            is_sec
         }
     }
 }
