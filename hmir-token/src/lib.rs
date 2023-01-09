@@ -17,16 +17,9 @@ pub struct Claims {
 
 pub const EXP_TIME : usize = 4852281600;//2023/10/7
 
-#[cfg(target_os = "macos")]
-pub const PUBLIC_KEY : &str = "/~/.config/hmir//hmir-public-key.pem";
-#[cfg(target_os = "macos")]
-pub const PRIVATE_KEY : &str = "~/.config/hmir/hmir-private-key.pem";
 
-#[cfg(target_os = "linux")]
 pub const PUBLIC_KEY : &str = "/etc/hmir//hmir-public-key.pem";
-#[cfg(target_os = "linux")]
 pub const PRIVATE_KEY : &str = "/etc/hmir/hmir-private-key.pem";
-
 
 
 pub fn token_generate(user : &String) -> String
@@ -47,7 +40,9 @@ pub fn token_generate(user : &String) -> String
         token
     } else {
         error!("Could not find the private key {}",PRIVATE_KEY);
-        std::process::exit(-1);
+        println!("Could not find the private key {}",PRIVATE_KEY);
+        // std::process::exit(-1);
+        "".to_string()
     }
 }
 
@@ -103,15 +98,10 @@ macro_rules! TokenChecker {
 }
 
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
     use hmir_errno::errno;
-
-
-
-
 
     #[test]
     fn token_genertate_it_works()
