@@ -17,34 +17,43 @@
 
 /**
  * ----------------------------------------
- * animation text-shadow-pop-right
+ * animation text-shadow-pop-bottom
  * ----------------------------------------
  */
-@-webkit-keyframes text-shadow-pop-right {
+@-webkit-keyframes text-shadow-pop-bottom {
   0% {
     text-shadow: 0 0 #5552, 0 0 #5552, 0 0 #5552, 0 0 #5552, 0 0 #5552, 0 0 #5552;
-    -webkit-transform: translateX(0);
-    transform: translateX(0);
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
   }
 
   100% {
-    text-shadow: 1px 0 #5552, 2px 0 #5552, 3px 0 #5552, 4px 0 #5552, 5px 0 #5552, 6px 0 #5552;
-    -webkit-transform: translateX(-8px);
-    transform: translateX(-8px);
+    text-shadow: 0 1px #5552, 0 2px #5552, 0 3px #5552, 0 4px #5552, 0 5px #5552, 0 6px #5552;
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    -o-transform: translateY(0);
   }
 }
 
-@keyframes text-shadow-pop-right {
+@keyframes text-shadow-pop-bottom {
   0% {
     text-shadow: 0 0 #5552, 0 0 #5552, 0 0 #5552, 0 0 #5552, 0 0 #5552, 0 0 #5552;
-    -webkit-transform: translateX(0);
-    transform: translateX(0);
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    -o-transform: translateY(0);
   }
 
   100% {
-    text-shadow: 1px 0 #5552, 2px 0 #5552, 3px 0 #5552, 4px 0 #5552, 5px 0 #5552, 6px 0 #5552;
-    -webkit-transform: translateX(-8px);
-    transform: translateX(-8px);
+    text-shadow: 0 1px #5552, 0 2px #5552, 0 3px #5552, 0 4px #5552, 0 5px #5552, 0 6px #5552;
+    -webkit-transform: translateY(0px);
+    transform: translateY(0px);
+    -moz-transform: translateY(0px);
+    -ms-transform: translateY(0px);
+    -o-transform: translateY(0px);
   }
 }
 
