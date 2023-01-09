@@ -64,7 +64,7 @@ pub fn is_ssh_auth(username: &str, password: &str) -> bool
     sess.handshake().unwrap();
     let result = sess.userauth_password(&username, password);
     match result {
-        Ok(auth) => {
+        Ok(_auth) => {
             return sess.authenticated();
         }
         Err(_e) => {

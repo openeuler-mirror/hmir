@@ -2,7 +2,7 @@
 use serde::{Serialize, Deserialize};
 use jsonwebtoken::{encode, decode, Header, Validation, Algorithm,EncodingKey, DecodingKey};
 use std::io::Read;
-use log::{error,info};
+use log::{error};
 
 // use crate::hmir_errno::errno;
 
