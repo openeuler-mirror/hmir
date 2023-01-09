@@ -4,7 +4,6 @@
 
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
 	<link rel="stylesheet" href="./css/index.css" />
 	<title>HMIR运维管理系统</title>
 	<script src="./js/jquery.min.js"></script>
@@ -68,6 +67,8 @@
 			left: 0;
 			top: 0;
 			bottom: 0;
+			right: 0;
+			margin: auto;
 			z-index: -99;
 		}
 
@@ -76,6 +77,8 @@
 			left: 0;
 			top: 0;
 			bottom: 0;
+			right: 0;
+			margin: auto;
 			z-index: 99;
 		}
 
@@ -94,8 +97,13 @@
 		}
 
 		.hmirClass {
-			left: 105px !important;
+			position: absolute;
 			font-size: 30px;
+			width: 400px;
+			height: 200px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
 		}
 	</style>
 
@@ -107,7 +115,6 @@
 	<!--<div style="background-color: rgba(238,238,238,0.5);position: absolute;left: 0;top: 0;" id="holder" >-->
 
 	<div id="content">
-		<div>
 		<!-- <img src="./image/logo_B.png" style="width: 20%;margin-top: 15%;margin-left: 8%;"> -->
 		<div class="hmirClass">
 			<h4>欢迎使用 HMIR 运维系统</h4>
