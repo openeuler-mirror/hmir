@@ -13,3 +13,5 @@ serde_derive = "1.0"
 uuid = { version = "0.7", features = ["v4"] }
 anyhow = "1.0.66"
 jsonrpsee = { version = "0.15.1", features = ["full"] }
+hmir-token = {path = "../hmir-token"}
+hmir-hash = {path = "../hmir-hash" }

@@ -110,11 +110,16 @@ use std::collections::HashMap;
 use super::ovs_port::*;
 use super::ovs_client::*;
 
+use hmir_hash::HashWrap;
+use hmir_token::TokenChecker;
+
 use serde_json::json;
 
 pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
         
-    module.register_method("ovs-query-connection", |_, _| {
+    module.register_method("ovs-query-connection", |params, _| {
+        let token = params.one::<std::string::String>()?;
+        TokenChecker!(token);
         Ok(check_connection())
     })?;
     

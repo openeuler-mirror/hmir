@@ -51,7 +51,7 @@ fn greet(name : & str) -> String {
 #[tauri::command]
 fn cmd_login(host : & str, port : i32 , username : & str, password : & str) -> bool
 {
-    const use_ssh_login : bool = false;
+    const use_ssh_login : bool = true;
     if clientmgr::register_client(host,port) {
         if use_ssh_login {
             return clientmgr::ssh_login(host,username,password);
@@ -59,6 +59,12 @@ fn cmd_login(host : & str, port : i32 , username : & str, password : & str) -> b
         return clientmgr::login(host,username,password);
     }
     return false;
+}
+
+///返回后端进程信息，默认返回json字符串。
+#[tauri::command]
+fn cmd_process_info(host : & str) -> String {
+    todo!();
 }
 
 #[tauri::command]
@@ -69,25 +75,41 @@ fn cmd_logout(host : &str) -> bool
 
 
 #[tauri::command]
-fn cmd_quit(){
+fn cmd_quit() {
     std::process::exit(0);
 }
 
-//fn log_init ()
-//{
-//    let log = log4rs::init_file("/etc/hmir/log4rs.yaml",Default::default());
-//    match log {
-//        Err(e) => {
-//            println!("Err for init log : {}",e);
-//            process::exit(1);
-//        }
-//        _ => ()
-//    }
-//}
+fn log_init ()
+{
+    #[cfg(target_os = "linux")]
+    {
+        let log = log4rs::init_file("/etc/hmir/log4rs.yaml",Default::default());
+        match log {
+            Err(e) => {
+                println!("Err for init log : {}",e);
+                process::exit(1);
+            }
+            _ => ()
+        }
+    }
+
+    #[cfg(target_os = "unix")]
+    {
+        let log = log4rs::init_file("~/.config/hmir/log4rs.yaml",Default::default());
+        match log {
+            Err(e) => {
+                println!("Err for init log : {}",e);
+                process::exit(1);
+            }
+            _ => ()
+        }
+    }
+
+}
 
 fn main() {
 
-    // log_init();
+    log_init();
 
     // here `"quit".to_string()` defines the menu item id, and the second parameter is the menu item label.
 
