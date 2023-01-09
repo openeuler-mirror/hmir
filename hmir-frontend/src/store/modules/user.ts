@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import { invoke } from "@tauri-apps/api/tauri";
 import ElMessage from '@/utils/message';
 import { sessionStorage } from '@/utils/sessionStorage'
-
+import { userInformationList } from '@/utils/userInformationList'
 interface LoginData {
   host: string;
   port: number;
@@ -42,7 +42,8 @@ export const useUsersStore = defineStore('user', {
               this.username = loginData.username;
               //将清除password后的数据保存到会话存储中，防止刷新页面后丢失数据
               const { password, ...value } = loginData;
-              sessionStorage.set('user', value)
+              sessionStorage.set('user', value);
+              userInformationList(value);
               ElMessage.success('登录成功');
               resolve();
             } else {
