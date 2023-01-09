@@ -75,20 +75,36 @@ fn cmd_logout(host : &str) -> bool
 
 
 #[tauri::command]
-fn cmd_quit(){
+fn cmd_quit() {
     std::process::exit(0);
 }
 
 fn log_init ()
 {
-   let log = log4rs::init_file("/etc/hmir/log4rs.yaml",Default::default());
-   match log {
-       Err(e) => {
-           println!("Err for init log : {}",e);
-           process::exit(1);
-       }
-       _ => ()
-   }
+    #[cfg(target_os = "linux")]
+    {
+        let log = log4rs::init_file("/etc/hmir/log4rs.yaml",Default::default());
+        match log {
+            Err(e) => {
+                println!("Err for init log : {}",e);
+                process::exit(1);
+            }
+            _ => ()
+        }
+    }
+
+    #[cfg(target_os = "unix")]
+    {
+        let log = log4rs::init_file("~/.config/hmir/log4rs.yaml",Default::default());
+        match log {
+            Err(e) => {
+                println!("Err for init log : {}",e);
+                process::exit(1);
+            }
+            _ => ()
+        }
+    }
+
 }
 
 fn main() {
