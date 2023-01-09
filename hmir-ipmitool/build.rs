@@ -89,7 +89,7 @@ fn build_lib() {
 
 
 
-fn gen_bind() {
+fn _gen_bind() {
     system_deps::Config::new().probe().unwrap();
 
     // Invalidate the built crate whenever the wrapper and the build script changes.
