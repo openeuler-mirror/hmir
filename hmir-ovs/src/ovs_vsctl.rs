@@ -129,11 +129,20 @@ use super::ovs_common::*;
 use std::collections::HashMap;
 use jsonrpsee::ws_server::RpcModule;
 
+use serde_json::{json, Value};
+use std::collections::BTreeMap;
+
+use hmir_hash::HashWrap;
+use hmir_token::TokenChecker;
+use hmir_errno::errno;
 const VSCTL_CMD: &str = "ovs-vsctl";
 
 pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
     module.register_method("ovs-vsctl-add-br", |params, _| {
-        let br_info = params.parse::<HashMap<String, String>>()?;
+        let br_info = params.parse::<BTreeMap<&str, Value>>()?;
+        let token_exception = json!(String::from(""));
+        let token = br_info.get("token").unwrap_or(&token_exception).to_string();
+        TokenChecker!(token);
         Ok(ovs_vsctl_add_br(br_info))
     })?;
 
@@ -201,10 +210,11 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
 }
 
 
-fn ovs_vsctl_add_br(info_map : HashMap<String, String>) -> String {
+fn ovs_vsctl_add_br(info_map : BTreeMap<&str, Value>) -> String {
     let br_name = info_map.get("br_name").unwrap();
+    println!("br_name:{}", br_name);
     let rule = format!("{} add-br {}", VSCTL_CMD, br_name);
-    
+
     let output = exec_rule(rule, "ovs_vsctl_add_br".to_string());
     reflect_cmd_result(output)
 }
