@@ -14,6 +14,11 @@ export const constantRoutes = [
     component: () => import('@/views/errorPage/404.vue'),
   },
   {
+    path: '/about',
+    name: 'about',
+    component: () => import('@/views/windowHeader/about/index.vue'),
+  },
+  {
     path: '/',
     component: Layout,
     redirect: '/home',

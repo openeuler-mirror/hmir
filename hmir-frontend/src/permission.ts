@@ -5,7 +5,7 @@ import { sessionStorage } from '@/utils/sessionStorage'
 NProgress.configure({ showSpinner: false }); // 进度条
 
 // 白名单路由
-const whiteList = ['/login'];
+const whiteList = ['/login', '/about'];
 
 router.beforeEach((to, from, next) => {
   NProgress.start();
