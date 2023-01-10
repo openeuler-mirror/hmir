@@ -273,6 +273,10 @@ const handleSelect: any = (item: any) => {
     loginData.ipAddress = item.host;
     loginData.ipPort = item.port;
     loginData.username = item.username;
+    // 移除校验错误信息
+    loginFormRef.value && loginFormRef.value.validateField('ipAddress')
+    loginFormRef.value && loginFormRef.value.validateField('ipPort')
+    loginFormRef.value && loginFormRef.value.validateField('username')
   }
 }
 
