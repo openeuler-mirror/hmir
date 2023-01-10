@@ -197,9 +197,9 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 
 //生命周期
 onMounted(() => {
-  ipAddressResults.value = ipAddressAll(userInformation);
-  ipPotrResults.value = ipPortAll(userInformation);
-  userResults.value = userAll(userInformation);
+  ipAddressResults.value = userListAll(userInformation, 'host');
+  ipPotrResults.value = userListAll(userInformation, 'port');
+  userResults.value = userListAll(userInformation, 'username');
 });
 
 //ip地址下拉数据
@@ -210,52 +210,53 @@ const ipPotrResults = ref<RestaurantItem[]>([])
 const userResults = ref<RestaurantItem[]>([])
 
 //下拉菜单列表数据
-const ipAddressAll = (value: Array<userList>) => {
+const userListAll = (value: Array<userList>, field: string) => {
   if (typeof value === 'string') {
     return []
   }
-  let ipAddressList: Array<string> = []
-  for (let i of value) {
-    ipAddressList.push(i.host)
+  let list: Array<string> = []
+  for (let item of value) {
+    list.push(item[field])
   }
-  return arrayFilter(ipAddressList)
-}
-const ipPortAll = (value: Array<userList>) => {
-  let ipPortList: Array<string> = []
-  for (let i of value) {
-    ipPortList.push(i.port + '')
-  }
-  return arrayFilter(ipPortList)
-}
-const userAll = (value: Array<userList>) => {
-  let userList: Array<string> = []
-  for (let i of value) {
-    userList.push(i.username)
-  }
-  return arrayFilter(userList)
+  return arrayFilter(list)
 }
 
 //过滤后的数据
 const ipAddressQuery = (queryString: string, cb: any) => {
-  const results = queryString
+  let results: any  = queryString
     ? ipAddressResults.value.filter(createFilter(queryString))
     : userInformation
+    if (!!queryString
+    && results.length === 1
+    && results[0].value === queryString) {
+    results = []
+  }
   // call callback function to return suggestions
   cb(results)
 }
 
 const ipPortQuery = (queryString: string, cb: any) => {
-  const results = queryString
+  let results: any  = queryString
     ? ipPotrResults.value.filter(createFilter(queryString))
     : ipPotrResults.value
+    if (!!queryString
+    && results.length === 1
+    && results[0].value === queryString) {
+    results = []
+  }
   // call callback function to return suggestions
   cb(results)
 }
 
 const userQuery = (queryString: string, cb: any) => {
-  const results = queryString
+  let results: any = queryString
     ? userResults.value.filter(createFilter(queryString))
     : userInformation
+  if (!!queryString
+    && results.length === 1
+    && results[0].value === queryString) {
+    results = []
+  }
   // call callback function to return suggestions
   cb(results)
 }
@@ -287,6 +288,10 @@ const handleSelect: any = (item: any) => {
     loginData.ipAddress = item.host;
     loginData.ipPort = item.port;
     loginData.username = item.username;
+    // 移除校验错误信息
+    loginFormRef.value && loginFormRef.value.validateField('ipAddress')
+    loginFormRef.value && loginFormRef.value.validateField('ipPort')
+    loginFormRef.value && loginFormRef.value.validateField('username')
   }
 }
 
