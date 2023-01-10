@@ -9,8 +9,11 @@ use std::cell::RefCell;
 
 
 struct ClientInstance{
+    #[allow(dead_code)]
     host : String,
+    #[allow(dead_code)]
     port : i32,
+    #[allow(dead_code)]
     token : String,
     pub client : RefCell<RequestClient>
 }
@@ -34,7 +37,6 @@ macro_rules! client_instance {
 pub fn register_client(host : &str, port : i32) -> bool
 {
     if ! CLIENT_MAP.lock().unwrap().contains_key(&host.to_string()) {
-        let mut url = host.to_string();
         let url = format!("{}:{}", host,port);
         let c = wsclient::RequestClient::new(url);
         match c {
@@ -48,7 +50,7 @@ pub fn register_client(host : &str, port : i32) -> bool
                 CLIENT_MAP.lock().unwrap().insert(host.to_string(),ci);
                 return true;
             }
-            Err(e) => {
+            Err(_e) => {
                 return false;
             }
         }
@@ -66,7 +68,7 @@ pub fn unregister_client(host : &str) -> bool
     return false;
 }
 
-
+#[allow(dead_code)]
 pub fn client_ok(host : &str) -> bool
 {
     if CLIENT_MAP.lock().unwrap().contains_key(&host.to_string()) {
@@ -75,24 +77,28 @@ pub fn client_ok(host : &str) -> bool
     return false;
 }
 
+#[allow(dead_code)]
 pub fn login(host : & str, username : &str, password : &str ) -> bool {
     let h = host.to_string();
     return client_instance!(&h).login(username, password);
 }
 
 
+#[allow(dead_code)]
 pub fn ssh_login(host : & str, username : &str,password : &str) -> bool {
     let h = host.to_string();
     return client_instance!(&h).ssh_login(username, password);
 }
 
 /// 注销系统
+#[allow(dead_code)]
 pub fn logout(host : & str) -> bool
 {
     return unregister_client(host);
 }
 
 /// 启动终端
+#[allow(dead_code)]
 pub fn ttyd_start(host : & str) -> bool {
     let h = host.to_string();
     if client_ok(host) {
@@ -102,6 +108,7 @@ pub fn ttyd_start(host : & str) -> bool {
 }
 
 /// 停止终端
+#[allow(dead_code)]
 pub fn ttyd_stop(host : & str) -> bool {
     let h = host.to_string();
     if client_ok(host) {
@@ -114,11 +121,6 @@ pub fn ttyd_stop(host : & str) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use jsonrpsee::client_transport::ws::{Uri, WsTransportClientBuilder};
-    use jsonrpsee::core::client::{Client, ClientBuilder, ClientT};
-    use jsonrpsee::ws_server::{RpcModule, WsServerBuilder};
-    use anyhow;
-    use futures::executor::block_on;
 
     const HOST : &str = "127.0.0.1";
     const PORT : i32 = 5899;
@@ -143,6 +145,7 @@ mod tests {
         let login_state  = client_instance!(&String::from(HOST)).login(USERNAME,R_PASSWORD);
         assert_eq!(login_state,true)
     }
+
 
     #[test]
     fn ssh_login_worked(){
