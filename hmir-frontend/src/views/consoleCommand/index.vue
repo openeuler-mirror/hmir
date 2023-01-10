@@ -1,9 +1,9 @@
 <template>
   <div class="card">
-    <button type="button" @click="ttydStop()" v-if="ttydtMsg">断开连接</button>
-    <button type="button" @click="ttydStart()" v-else>连接控制台</button>
+    <span>HMIR控制台</span>
+    <button type="button" @click="refresh()" v-loading="loading">刷新</button>
   </div>
-  <div class="iframe">
+  <div class="iframe" v-loading="loading">
     <iframe name="iframeMap" id="iframeMapViewComponent" :src="getPageUrl" width="100%" height="100%" frameborder="0"
       scrolling="yes" ref="iframeDom" v-if="ttydtMsg"></iframe>
   </div>
@@ -26,7 +26,7 @@ const store = useUsersStore();
 const getPageUrl = ref("");
 
 //连接终端
-async function ttydStart () {
+async function ttydStart() {
   //连接控制台
   ttydtMsg.value = await cmd_ttyd_start({ host: store.host });
   if (!ttydtMsg.value) {
@@ -60,6 +60,18 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .iframe {
-  height: calc(100vh - 275px);
+  height: calc(100vh - 220px);
+}
+
+.card {
+  position: relative;
+  height: 40px;
+
+  button {
+    position: absolute;
+    height: 32px;
+    font-size: 15px;
+    right: 0;
+  }
 }
 </style>
