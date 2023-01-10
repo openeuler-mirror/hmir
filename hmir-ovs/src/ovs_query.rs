@@ -142,7 +142,9 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
         Ok(get_interfaces())
     })?;
 
-    module.register_method("ovs-query-netflows", |_, _| {
+    module.register_method("ovs-query-netflows", |params, _| {
+        let token = params.one::<std::string::String>()?;
+        TokenChecker!(token);
         Ok(get_netflow())
     })?;
 
