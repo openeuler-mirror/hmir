@@ -2,7 +2,7 @@
 //!
 //!
 
-use jsonrpsee::ws_server::{RpcModule, WsServerBuilder,WsServerHandle};
+use jsonrpsee::ws_server::{RpcModule};
 use hmir_ceph::ceph_client;
 use hmir_ceph::pool;
 use hmir_ceph::osd;
@@ -13,32 +13,24 @@ use hmir_ceph::auth;
 use hmir_ceph::fs;
 use hmir_ceph::mgr;
 use hmir_ceph::mds;
-use hmir_hash::HashWrap;
 
 
 #[doc(hidden)]
 pub fn register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
     //The svr module
 
-    ///mon
     ceph_mon_register_method(module);
     
-    ///pg
     ceph_pg_register_method(module);
     
-    ///base
     ceph_base_register_method(module);
     
-    ///auth
     ceph_auth_register_method(module);
     
-    ///fs
     ceph_fs_register_method(module);
     
-    ///mgr
     ceph_mgr_register_method(module);
     
-    ///mds
     ceph_mds_register_method(module);
     
     module.register_method("ceph-cluster-stat", |_, _| {
