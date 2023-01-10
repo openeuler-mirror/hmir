@@ -79,7 +79,11 @@ use jsonrpsee::ws_server::RpcModule;
 const OFCTL_CMD: &str= "ovs-ofctl";
 const OFCTL_PRIO_BLK: &str= "1";
 const OFCTL_PRIO_WHI: &str= "2";
+
+#[allow(dead_code)]
 const OFCTL_PRIO_GROUP: &str= "10";
+
+#[allow(dead_code)]
 const OFCTL_PRIO_SINGLE: &str= "20";
 
 pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
@@ -122,6 +126,7 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
     Ok(())
 }
 
+#[allow(dead_code)]
 fn ovs_ofctl_clear_br_rules(info_map : HashMap<String, String>) -> String {
     let br_name = info_map.get("br_name").unwrap();
     let rule = format!("{} del-flows {}", OFCTL_CMD, br_name);
@@ -143,13 +148,15 @@ fn ovs_ofctl_forbid_dstip(info_map : HashMap<String, String>) -> String {
     let br_name = info_map.get("br_name").unwrap();
     let dst_ip = info_map.get("dst_ip").unwrap();
     let in_port = info_map.get("in_port").unwrap();
-    
-    let mut rule = String::new();
-    if in_port.is_empty() {
-        rule = format!("{} add-flow {} dl_type=0x0800,nw_dst={},priority={},action=drop",OFCTL_CMD, br_name, dst_ip, OFCTL_PRIO_BLK);
-    } else {
-        rule = format!("{} add-flow {} dl_type=0x0800,nw_dst={},priority={},in_port={},action=drop", OFCTL_CMD, br_name, dst_ip, OFCTL_PRIO_BLK,in_port);
-    }
+
+    let rule = match in_port.is_empty() {
+        true => {
+            format!("{} add-flow {} dl_type=0x0800,nw_dst={},priority={},action=drop",OFCTL_CMD, br_name, dst_ip, OFCTL_PRIO_BLK)
+        },
+        false => {
+            format!("{} add-flow {} dl_type=0x0800,nw_dst={},priority={},in_port={},action=drop", OFCTL_CMD, br_name, dst_ip, OFCTL_PRIO_BLK,in_port)
+        }
+    };
 
     let output = exec_rule(rule, "ovs_ofctl_forbid_dstip".to_string());
     reflect_cmd_result(output)
