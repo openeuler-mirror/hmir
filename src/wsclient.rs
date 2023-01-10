@@ -7,6 +7,9 @@ use jsonrpsee::rpc_params;
 use hmir_hash::HashWrap;
 // use nix::libc::stat;
 
+use jsonrpsee_types::ParamsSer;
+use serde_json::json;
+use std::collections::BTreeMap;
 
 #[derive(Debug)]
 pub struct RequestClient {
@@ -189,6 +192,20 @@ impl RequestClient {
         let state = self.runtime.block_on(async {
 
             let response: String = self.client.request("ovs-query-ipfix", rpc_params![token]).await.unwrap();
+            let p: HashWrap::<i32,i32> = serde_json::from_str(response.as_str()).unwrap();
+            return p.is_success();
+        });
+        return state;
+    }
+
+    pub fn ovs_vsctl_add_br(&self, br_name:&str) -> bool{
+        let token = json!(self.token.clone());
+        let mut br_info = BTreeMap::new();
+        br_info.insert("br_name", json!(br_name));
+        br_info.insert("token", token);
+
+        let state = self.runtime.block_on(async {
+            let response: String = self.client.request("ovs-vsctl-add-br", Some(ParamsSer::Map(br_info))).await.unwrap();
             let p: HashWrap::<i32,i32> = serde_json::from_str(response.as_str()).unwrap();
             return p.is_success();
         });
