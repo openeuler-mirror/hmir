@@ -315,10 +315,10 @@ impl OvsClient{
         
         port_list.push(vec!("named-uuid".to_string(), port_tmp_uuid.clone()));
         
-        let mut row_json = json!({});
+        let mut _row_json = json!({});
         match port_mode{
             &OvsPortMode::Access(vlan)=>{
-                row_json = json!({
+                _row_json = json!({
                     "name" : port_name,
                     "interfaces":[
                         "named-uuid",
@@ -333,7 +333,7 @@ impl OvsClient{
                     vlan_list.push(vlan.clone().into());
                 }
                 let trunks = json!(["set",vlan_list]);
-                row_json = json!({
+                _row_json = json!({
                     "name" : port_name,
                     "interfaces":[
                         "named-uuid",
@@ -361,7 +361,7 @@ impl OvsClient{
                     "uuid-name": port_tmp_uuid,
                     "op" : "insert",
                     "table" : "Port",
-                    "row":row_json
+                    "row":_row_json
                 },
                 {
                     "where": [

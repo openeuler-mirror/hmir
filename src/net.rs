@@ -6,14 +6,14 @@
 
 pub mod ovs;
 pub mod linuxbr;
-use jsonrpsee::ws_server::{RpcModule, WsServerBuilder,WsServerHandle};
+use jsonrpsee::ws_server::{RpcModule};
 
 #[doc(hidden)]
 pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
 
-    ovs::register_method(module);
+    ovs::register_method(module)?;
 
-    linuxbr:: register_method(module);
+    linuxbr:: register_method(module)?;
 
     Ok(())
 }

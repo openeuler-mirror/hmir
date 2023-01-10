@@ -102,7 +102,6 @@
 //! }
 //! 
 
-use super::ovs_common::*;
 
 use jsonrpsee::ws_server::RpcModule;
 use std::collections::HashMap;
@@ -112,6 +111,7 @@ use super::ovs_client::*;
 
 use hmir_hash::HashWrap;
 use hmir_token::TokenChecker;
+use hmir_errno::errno;
 
 use serde_json::json;
 
@@ -123,23 +123,33 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
         Ok(check_connection())
     })?;
     
-    module.register_method("ovs-query-ports", |_, _| {
+    module.register_method("ovs-query-ports", |params, _| {
+        let token = params.one::<std::string::String>()?;
+        TokenChecker!(token);
         Ok(get_ports())
     })?;
 
-    module.register_method("ovs-query-bridges", |_, _| {
+    module.register_method("ovs-query-bridges", |params, _| {
+        let token = params.one::<std::string::String>()?;
+        TokenChecker!(token);
         Ok(get_bridges())
     })?;
 
-    module.register_method("ovs-query-interfaces", |_, _| {
+    module.register_method("ovs-query-interfaces", |params, _| {
+        let token = params.one::<std::string::String>()?;
+        TokenChecker!(token);
         Ok(get_interfaces())
     })?;
 
-    module.register_method("ovs-query-netflows", |_, _| {
+    module.register_method("ovs-query-netflows", |params, _| {
+        let token = params.one::<std::string::String>()?;
+        TokenChecker!(token);
         Ok(get_netflow())
     })?;
 
-    module.register_method("ovs-query-ipfix", |_, _| {
+    module.register_method("ovs-query-ipfix", |params, _| {
+        let token = params.one::<std::string::String>()?;
+        TokenChecker!(token);
         Ok(get_ipfix())
     })?;
 
