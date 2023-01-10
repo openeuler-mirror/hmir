@@ -247,7 +247,7 @@ const createFilter = (queryString: string) => {
   return (restaurant: RestaurantItem) => {
     return (
       //匹配过滤大小写后的第一个字母
-      restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0
+      restaurant.value.toString().toLowerCase().indexOf(queryString.toLowerCase()) === 0
     )
   }
 }
