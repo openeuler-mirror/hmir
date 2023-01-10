@@ -105,6 +105,10 @@ button {
   width: 210px;
 }
 
+.logout-message-error {
+  min-width: 250px;
+}
+
 .login-message-success {
   width: 160px;
 }

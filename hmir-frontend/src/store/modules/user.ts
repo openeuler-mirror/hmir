@@ -76,7 +76,7 @@ export const useUsersStore = defineStore('user', {
             } else {
               ElMessage.error({
                 message: '注销失败,请联系管理员',
-                customClass: 'login-message-error'
+                customClass: 'logout-message-error'
               });
               reject();
             }

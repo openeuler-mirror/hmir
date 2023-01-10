@@ -13,7 +13,7 @@
           </el-icon>
         </span>
         <el-autocomplete v-model.trim="loginData.ipAddress" :fetch-suggestions="ipAddressQuery" clearable class=""
-          placeholder="IP地址" highlight-first-item @select="handleSelect" :loading="inputLoading">
+          placeholder="IP地址" highlight-first-item @select="handleSelect">
           <template #default="{ item }">
             <div v-if="!loginData.ipAddress">
               <div>{{ item.host }}:{{ item.port }}</div>
@@ -79,7 +79,7 @@ import { onMounted, reactive, ref, toRefs, watch, nextTick } from 'vue';
 import type { FormInstance, FormRules } from 'element-plus';
 import { useRouter } from 'vue-router';
 import { useUsersStore } from '@/store/modules/user';
-import { localStorage } from '@/utils/localStorage'
+import { localStorage } from '@/utils/localStorage';
 //限制用户信息类型
 interface userList {
   host: string;
@@ -223,10 +223,10 @@ const userListAll = (value: Array<userList>, field: string) => {
 
 //过滤后的数据
 const ipAddressQuery = (queryString: string, cb: any) => {
-  let results: any  = queryString
+  let results: any = queryString
     ? ipAddressResults.value.filter(createFilter(queryString))
     : userInformation
-    if (!!queryString
+  if (!!queryString
     && results.length === 1
     && results[0].value === queryString) {
     results = []
@@ -236,10 +236,10 @@ const ipAddressQuery = (queryString: string, cb: any) => {
 }
 
 const ipPortQuery = (queryString: string, cb: any) => {
-  let results: any  = queryString
+  let results: any = queryString
     ? ipPotrResults.value.filter(createFilter(queryString))
     : ipPotrResults.value
-    if (!!queryString
+  if (!!queryString
     && results.length === 1
     && results[0].value === queryString) {
     results = []
@@ -283,7 +283,6 @@ const arrayFilter = (queryString: Array<string>) => {
 
 //选中的数据
 const handleSelect: any = (item: any) => {
-  console.log(item)
   if (!item.value) {
     loginData.ipAddress = item.host;
     loginData.ipPort = item.port;
