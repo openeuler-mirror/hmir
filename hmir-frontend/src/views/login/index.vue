@@ -218,21 +218,21 @@ const ipAddressAll = (value: Array<userList>) => {
   for (let i of value) {
     ipAddressList.push(i.host)
   }
-  return ipAddressList
+  return arrayFilter(ipAddressList)
 }
 const ipPortAll = (value: Array<userList>) => {
   let ipPortList: Array<string> = []
   for (let i of value) {
     ipPortList.push(i.port + '')
   }
-  return ipPortList
+  return arrayFilter(ipPortList)
 }
 const userAll = (value: Array<userList>) => {
   let userList: Array<string> = []
   for (let i of value) {
     userList.push(i.username)
   }
-  return userList
+  return arrayFilter(userList)
 }
 
 //过滤后的数据
@@ -268,6 +268,16 @@ const createFilter = (queryString: string) => {
       restaurant.value.toString().toLowerCase().indexOf(queryString.toLowerCase()) === 0
     )
   }
+}
+
+//过滤重复项
+const arrayFilter = (queryString: Array<string>) => {
+  queryString = [...new Set(queryString)]
+  let value: Array<RestaurantItem> = []
+  for (let item of queryString) {
+    value.push({ value: item })
+  }
+  return value
 }
 
 //选中的数据
