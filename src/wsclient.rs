@@ -330,4 +330,17 @@ mod tests {
             _ => {}
         }
     } 
+
+    #[test]
+    fn ovs_query_ipfix_worked(){
+        let client = RequestClient::new(String::from(URL));
+        match client {
+            Ok(mut c) => {
+                let state = c.ovs_query_ipfix();
+                assert_eq!(state, true)
+            }
+            _ => {}
+        }
+    } 
+
 }
