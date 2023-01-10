@@ -197,9 +197,9 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 
 //生命周期
 onMounted(() => {
-  ipAddressResults.value = userListAll(userInformation,'host');
-  ipPotrResults.value = userListAll(userInformation,'port');
-  userResults.value = userListAll(userInformation,'username');
+  ipAddressResults.value = userListAll(userInformation, 'host');
+  ipPotrResults.value = userListAll(userInformation, 'port');
+  userResults.value = userListAll(userInformation, 'username');
 });
 
 //ip地址下拉数据
@@ -223,25 +223,40 @@ const userListAll = (value: Array<userList>, field: string) => {
 
 //过滤后的数据
 const ipAddressQuery = (queryString: string, cb: any) => {
-  const results = queryString
+  let results: any  = queryString
     ? ipAddressResults.value.filter(createFilter(queryString))
     : userInformation
+    if (!!queryString
+    && results.length === 1
+    && results[0].value === queryString) {
+    results = []
+  }
   // call callback function to return suggestions
   cb(results)
 }
 
 const ipPortQuery = (queryString: string, cb: any) => {
-  const results = queryString
+  let results: any  = queryString
     ? ipPotrResults.value.filter(createFilter(queryString))
     : ipPotrResults.value
+    if (!!queryString
+    && results.length === 1
+    && results[0].value === queryString) {
+    results = []
+  }
   // call callback function to return suggestions
   cb(results)
 }
 
 const userQuery = (queryString: string, cb: any) => {
-  const results = queryString
+  let results: any = queryString
     ? userResults.value.filter(createFilter(queryString))
     : userInformation
+  if (!!queryString
+    && results.length === 1
+    && results[0].value === queryString) {
+    results = []
+  }
   // call callback function to return suggestions
   cb(results)
 }
