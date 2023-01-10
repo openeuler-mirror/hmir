@@ -353,4 +353,16 @@ mod tests {
         }
     } 
 
+    #[test]
+    fn ovs_vsctl_add_br_worked(){
+        let client = RequestClient::new(String::from(URL));
+        match client {
+            Ok(c) => {
+                let state = c.ovs_vsctl_add_br("br-ckxu");
+                assert_eq!(state, true)
+            }
+            _ => {}
+        }
+    } 
+
 }
