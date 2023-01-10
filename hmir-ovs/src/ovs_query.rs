@@ -147,7 +147,9 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
         Ok(get_netflow())
     })?;
 
-    module.register_method("ovs-query-ipfix", |_, _| {
+    module.register_method("ovs-query-ipfix", |params, _| {
+        let token = params.one::<std::string::String>()?;
+        TokenChecker!(token);
         Ok(get_ipfix())
     })?;
 
