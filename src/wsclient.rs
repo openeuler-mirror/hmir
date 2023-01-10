@@ -185,6 +185,17 @@ impl RequestClient {
         return state;
     }
 
+    pub fn ovs_query_ipfix(&self) -> bool{
+        let token = self.token.clone();
+        let state = self.runtime.block_on(async {
+
+            let response: String = self.client.request("ovs-query-ipfix", rpc_params![token]).await.unwrap();
+            let p: HashWrap::<i32,i32> = serde_json::from_str(response.as_str()).unwrap();
+            return p.is_success();
+        });
+        return state;
+    }
+
 }
 
 
