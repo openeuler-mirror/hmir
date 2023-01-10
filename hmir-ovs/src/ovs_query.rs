@@ -102,7 +102,6 @@
 //! }
 //! 
 
-use super::ovs_common::*;
 
 use jsonrpsee::ws_server::RpcModule;
 use std::collections::HashMap;
