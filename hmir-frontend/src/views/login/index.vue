@@ -102,7 +102,7 @@ const router = useRouter()
 const loginFormRef = ref<FormInstance>()
 
 //获取本地保持的所有用户数据
-const userInformation: Array<userList> = localStorage.get('userInformation') 
+const userInformation: Array<userList> = localStorage.get('userInformation') === 'userInformation' ? [] : localStorage.get('userInformation')
 
 //加载
 const loading = ref<boolean>(false)
