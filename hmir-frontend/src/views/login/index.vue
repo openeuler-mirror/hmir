@@ -13,7 +13,16 @@
           </el-icon>
         </span>
         <el-autocomplete v-model.trim="loginData.ipAddress" :fetch-suggestions="ipAddressQuery" clearable class=""
-          :trigger-on-focus="false" placeholder="IP地址" @select="handleSelect">
+          placeholder="IP地址" highlight-first-item @select="handleSelect" :loading="inputLoading">
+          <template #default="{ item }">
+            <div v-if="!loginData.ipAddress">
+              <div>{{ item.host }}:{{ item.port }}</div>
+              <div>{{ item.username }}</div>
+            </div>
+            <div v-else>
+              {{ item.value }}
+            </div>
+          </template>
         </el-autocomplete>
       </el-form-item>
 
@@ -221,7 +230,7 @@ const userAll = (value: Array<userList>) => {
 const ipAddressQuery = (queryString: string, cb: any) => {
   const results = queryString
     ? ipAddressResults.value.filter(createFilter(queryString))
-    : ipAddressResults.value
+    : userInformation
   // call callback function to return suggestions
   cb(results)
 }
@@ -237,7 +246,7 @@ const ipPortQuery = (queryString: string, cb: any) => {
 const userQuery = (queryString: string, cb: any) => {
   const results = queryString
     ? userResults.value.filter(createFilter(queryString))
-    : userResults.value
+    : userInformation
   // call callback function to return suggestions
   cb(results)
 }
