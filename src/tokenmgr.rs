@@ -58,7 +58,7 @@ mod tests {
         println!("The gen token is : {}",stored_token);
 
         let state = unregister_token(&user,&stored_token);
-        // assert_eq!(state,true);
+        assert_eq!(state,true);
 
 
     }
