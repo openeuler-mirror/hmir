@@ -61,6 +61,19 @@ import { onMounted, reactive, ref, toRefs, watch, nextTick } from 'vue';
 import type { FormInstance, FormRules } from 'element-plus';
 import { useRouter } from 'vue-router';
 import { useUsersStore } from '@/store/modules/user';
+import { localStorage } from '@/utils/localStorage'
+//限制用户信息类型
+interface userList {
+  host: string;
+  port: number;
+  username: string;
+}
+
+//定义绑定的输入建议数据类型
+interface RestaurantItem {
+  value: string;
+}
+
 //引入store仓库
 const store = useUsersStore();
 
@@ -171,11 +184,6 @@ onMounted(() => {
   userResults.value = userAll(userInformation);
 });
 
-//定义绑定的输入建议数据类型
-interface RestaurantItem {
-  value: string
-}
-
 //ip地址下拉数据
 const ipAddressResults = ref<RestaurantItem[]>([])
 //ip端口下拉数据
@@ -184,7 +192,7 @@ const ipPotrResults = ref<RestaurantItem[]>([])
 const userResults = ref<RestaurantItem[]>([])
 
 //下拉菜单列表数据
-const ipAddressAll = (value: any) => {
+const ipAddressAll = (value: Array<userList>) => {
   if (typeof value === 'string') {
     return []
   }
@@ -194,20 +202,21 @@ const ipAddressAll = (value: any) => {
   }
   return ipAddressList
 }
-const ipPortAll = (value: any) => {
+const ipPortAll = (value: Array<userList>) => {
   let ipPortList: Array<string> = []
   for (let i of value) {
     ipPortList.push(i.port + '')
   }
   return ipPortList
 }
-const userAll = (value: any) => {
+const userAll = (value: Array<userList>) => {
   let userList: Array<string> = []
   for (let i of value) {
     userList.push(i.username)
   }
   return userList
 }
+
 //过滤后的数据
 const ipAddressQuery = (queryString: string, cb: any) => {
   const results = queryString
