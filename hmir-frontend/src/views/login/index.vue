@@ -281,8 +281,13 @@ const arrayFilter = (queryString: Array<string>) => {
 }
 
 //选中的数据
-const handleSelect: any = (item: RestaurantItem) => {
+const handleSelect: any = (item: any) => {
   console.log(item)
+  if (!item.value) {
+    loginData.ipAddress = item.host;
+    loginData.ipPort = item.port;
+    loginData.username = item.username;
+  }
 }
 
 </script>
