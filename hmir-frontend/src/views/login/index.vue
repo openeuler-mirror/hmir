@@ -30,7 +30,7 @@
         <span class="ipPort-container">
         </span>
         <el-autocomplete v-model.trim="loginData.ipPort" :fetch-suggestions="ipPortQuery" :trigger-on-focus="false"
-          clearable class="ipPortAutocomplete" placeholder="端口" @select="handleSelect">
+          clearable class="ipPortAutocomplete" placeholder="端口" highlight-first-item @select="handleSelect">
         </el-autocomplete>
       </el-form-item>
 
@@ -40,8 +40,17 @@
             <User />
           </el-icon>
         </span>
-        <el-autocomplete v-model.trim="loginData.username" :fetch-suggestions="userQuery" :trigger-on-focus="false"
-          clearable class="" placeholder="用户名" @select="handleSelect">
+        <el-autocomplete v-model.trim="loginData.username" :fetch-suggestions="userQuery" clearable class=""
+          placeholder="用户名" highlight-first-item @select="handleSelect">
+          <template #default="{ item }">
+            <div v-if="!loginData.ipAddress">
+              <div>{{ item.host }}:{{ item.port }}</div>
+              <div>{{ item.username }}</div>
+            </div>
+            <div v-else>
+              {{ item.value }}
+            </div>
+          </template>
         </el-autocomplete>
       </el-form-item>
 
