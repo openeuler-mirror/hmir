@@ -118,6 +118,7 @@ impl RequestClient {
         return state;
     }
 
+    #[allow(dead_code)]
     pub fn reg_observer(&mut self, url:&str,cmd:u32,duration: u64) ->String {
         let token = self.token.clone();
         let response = self.runtime.block_on( async {
@@ -132,6 +133,7 @@ impl RequestClient {
         self.token = token.clone();
     }
 
+    #[allow(dead_code)]
     pub fn ovs_query_connection(&self) -> bool{
         let token = self.token.clone();
         let state = self.runtime.block_on(async {
@@ -143,6 +145,7 @@ impl RequestClient {
         return state;
     }
 
+    #[allow(dead_code)]
     pub fn ovs_query_ports(&self) -> bool{
         let token = self.token.clone();
         let state = self.runtime.block_on(async {
@@ -154,6 +157,7 @@ impl RequestClient {
         return state;
     }
 
+    #[allow(dead_code)]
     pub fn ovs_query_bridges(&self) -> bool{
         let token = self.token.clone();
         let state = self.runtime.block_on(async {
@@ -165,6 +169,7 @@ impl RequestClient {
         return state;
     }
 
+    #[allow(dead_code)]
     pub fn ovs_query_interfaces(&self) -> bool{
         let token = self.token.clone();
         let state = self.runtime.block_on(async {
@@ -176,6 +181,7 @@ impl RequestClient {
         return state;
     }
 
+    #[allow(dead_code)]
     pub fn ovs_query_netflow(&self) -> bool{
         let token = self.token.clone();
         let state = self.runtime.block_on(async {
@@ -187,6 +193,7 @@ impl RequestClient {
         return state;
     }
 
+    #[allow(dead_code)]
     pub fn ovs_query_ipfix(&self) -> bool{
         let token = self.token.clone();
         let state = self.runtime.block_on(async {

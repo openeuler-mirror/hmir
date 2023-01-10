@@ -27,13 +27,14 @@ lazy_static! {
     };
 }
 
+#[macro_export]
 macro_rules! client_instance {
     ($i:expr) =>{
        *CLIENT_MAP.lock().unwrap().get($i).unwrap().client.borrow_mut()
     }
 }
 
-
+#[allow(dead_code)]
 pub fn register_client(host : &str, port : i32) -> bool
 {
     if ! CLIENT_MAP.lock().unwrap().contains_key(&host.to_string()) {
@@ -61,7 +62,7 @@ pub fn register_client(host : &str, port : i32) -> bool
 
 pub fn unregister_client(host : &str) -> bool
 {
-    if ! CLIENT_MAP.lock().unwrap().contains_key(&host.to_string()) {
+    if CLIENT_MAP.lock().unwrap().contains_key(&host.to_string()) {
         CLIENT_MAP.lock().unwrap().remove(host.to_string());
         return true;
     }
