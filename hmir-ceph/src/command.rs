@@ -1,7 +1,5 @@
 use crate::arg;
 use crate::ceph_client;
-use log4rs;
-use log::{error, info, warn};
 
 ///ceph_mon_command命令执行接口封装
 pub fn mon_exec(cmd: &str) -> String {
@@ -24,7 +22,7 @@ pub fn mon_exec(cmd: &str) -> String {
                 }
             }
         },
-        Err(e) => {
+        Err(_e) => {
             format!("{}", arg::CONNECT_FAILED)
         }
     }
