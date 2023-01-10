@@ -14,6 +14,7 @@ import { ref, onMounted } from "vue";
 import ElMessage from '@/utils/message';
 import { invoke } from "@tauri-apps/api/tauri";
 import { useUsersStore } from '@/store/modules/user';
+import { cmd_ttyd_start, cmd_ttyd_stop } from '@/api/index';
 
 //判断控制台是否显示
 const ttydtMsg = ref("");
@@ -27,7 +28,7 @@ const getPageUrl = ref("");
 //连接终端
 async function ttydStart () {
   //连接控制台
-  ttydtMsg.value = await invoke("cmd_ttyd_start", { host: store.host });
+  ttydtMsg.value = await cmd_ttyd_start({ host: store.host });
   if (!ttydtMsg.value) {
     ElMessage({
       message: '连接失败，请重试',
@@ -41,7 +42,7 @@ async function ttydStart () {
 //断开终端
 async function ttydStop () {
   // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-  let value = await invoke("cmd_ttyd_stop", { host: store.host });
+  let value = await cmd_ttyd_stop({ host: store.host });
   if (value) {
     ttydtMsg.value = false
   }
