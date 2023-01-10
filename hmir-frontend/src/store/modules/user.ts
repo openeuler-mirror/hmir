@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia';
-import { invoke } from "@tauri-apps/api/tauri";
 import ElMessage from '@/utils/message';
-import { sessionStorage } from '@/utils/sessionStorage'
-import { userInformationList } from '@/utils/userInformationList'
+import { sessionStorage } from '@/utils/sessionStorage';
+import { userInformationList } from '@/utils/userInformationList';
+import { cmd_login, cmd_logout } from '@/api/index'
 
 interface loginData {
   host: string;
@@ -35,7 +35,7 @@ export const useUsersStore = defineStore('user', {
     //登录
     cmdLogin(loginData: loginData) {
       return new Promise<void>((resolve, reject) => {
-        invoke("cmd_login", { ...loginData })
+        cmd_login({ ...loginData })
           .then(response => {
             if (response) {
               this.host = loginData.host;
@@ -64,21 +64,22 @@ export const useUsersStore = defineStore('user', {
     //注销
     cmdlogout(logoutData: logoutData) {
       return new Promise<void>((resolve, reject) => {
-        invoke("cmd_logout", { ...logoutData })
+        cmd_logout({ ...logoutData })
           .then(response => {
             //判断是否注销成功
-            if (!response) {
+            if (response) {
               //重置所有的用户信息
               this.$reset()
               sessionStorage.remove('user')
               ElMessage.success('注销成功');
+              resolve();
             } else {
               ElMessage.error({
                 message: '注销失败,请联系管理员',
                 customClass: 'login-message-error'
               });
+              reject();
             }
-            resolve();
           })
           .catch(error => {
             reject(error);
