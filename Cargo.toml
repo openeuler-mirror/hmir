@@ -36,6 +36,7 @@ hmir-hash = {path = "hmir-hash" }
 hmir-ovs = {path = "hmir-ovs" }
 hmir-ceph = {path = "hmir-ceph" }
 hmir-token = {path = "hmir-token"}
+hmir-errno = {path = "hmir-errno"}
 
 
 [target.'cfg(target_os="linux")'.dependencies]
