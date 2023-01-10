@@ -148,6 +148,14 @@ mod tests {
 
 
     #[test]
+    fn host_login_failed_worked(){
+        register_client(HOST,PORT);
+        let login_state  = client_instance!(&String::from(HOST)).login(USERNAME,W_PASSWORD);
+        assert_eq!(login_state,false)
+    }
+
+
+    #[test]
     fn ssh_login_worked(){
         register_client(HOST,PORT);
         let login_state  = client_instance!(&String::from(HOST)).ssh_login(USERNAME,R_PASSWORD);
