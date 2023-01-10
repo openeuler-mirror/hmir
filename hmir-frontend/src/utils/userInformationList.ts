@@ -13,9 +13,13 @@ export const userInformationList = function (user: any) {
       }
       //当所有的数据都没有时，则直接保存
       if (history.length === +i + 1) {
-        console.log(3);
         history.push(user)
       }
+    }
+    //限制保存的最长用户信息条数，暂定为10
+    if (history.length > 10) {
+      //当长度为10时，删除数组的第一项
+      history.shift()
     }
   }
   localStorage.set('userInformation', history)
