@@ -126,8 +126,8 @@
 //! }
 
 use super::ovs_common::*;
-use std::collections::HashMap;
-use jsonrpsee::ws_server::RpcModule;
+use std::{collections::HashMap, error::Error};
+use jsonrpsee::{ws_server::RpcModule, types::Params};
 
 use serde_json::{json, Value};
 use std::collections::BTreeMap;
@@ -137,17 +137,25 @@ use hmir_token::TokenChecker;
 use hmir_errno::errno;
 const VSCTL_CMD: &str = "ovs-vsctl";
 
+#[macro_export]
+macro_rules! VsctlTokenChecker {
+    ($br_info:expr) => {
+        let token_exception = json!(String::from(""));
+        let token = ($br_info).get("token").unwrap_or(&token_exception).to_string();
+        TokenChecker!(token);
+    }
+}
+
 pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
     module.register_method("ovs-vsctl-add-br", |params, _| {
         let br_info = params.parse::<BTreeMap<&str, Value>>()?;
-        let token_exception = json!(String::from(""));
-        let token = br_info.get("token").unwrap_or(&token_exception).to_string();
-        TokenChecker!(token);
+        VsctlTokenChecker!(br_info);
         Ok(ovs_vsctl_add_br(br_info))
     })?;
 
     module.register_method("ovs-vsctl-del-br", |params, _| {
-        let br_info = params.parse::<HashMap<String, String>>()?;
+        let br_info = params.parse::<BTreeMap<&str, Value>>()?;
+        VsctlTokenChecker!(br_info);
         Ok(ovs_vsctl_del_br(br_info))
     })?;
 
@@ -219,7 +227,7 @@ fn ovs_vsctl_add_br(info_map : BTreeMap<&str, Value>) -> String {
     reflect_cmd_result(output)
 }
 
-fn ovs_vsctl_del_br(info_map : HashMap<String, String>) -> String {
+fn ovs_vsctl_del_br(info_map : BTreeMap<&str, Value>) -> String {
     let br_name = info_map.get("br_name").unwrap();
     let rule = format!("{} del-br {}", VSCTL_CMD, br_name);
 
