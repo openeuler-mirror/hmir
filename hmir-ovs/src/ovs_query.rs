@@ -115,6 +115,23 @@ use hmir_errno::errno;
 
 use serde_json::json;
 
+#[macro_export]
+macro_rules! ExecOvsResult {
+    ($i:expr, $j:expr, $k:expr) => {
+        let mut response = HashWrap::<String,String>:: new();
+        if $i == 0 {
+            response.insert(String::from("ovs_ret"), $j);
+        }
+
+        if $i !=0 {
+            response.error($i, $k);
+        } 
+        response.set_code($i);
+        let serialized = serde_json::to_string(&response).unwrap();
+        return serialized;
+    }
+}
+
 pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
         
     module.register_method("ovs-query-connection", |params, _| {
@@ -172,14 +189,15 @@ fn check_connection() -> std::string::String{
     match ovsc{
         Err(e) => {
             let ret_message = serde_json::to_string(&(e.error_detail.clone())).unwrap();
-            ret_message
+            ExecOvsResult!(-1, "".to_string(), ret_message);
         },
         Ok(mut c) => {
             let is_connected = c.check_connection();
             if is_connected {
-                "Connected!".to_string()
+                ExecOvsResult!(0, "Connected!".to_string(), "".to_string());
+                
             } else {
-                "Failed to connect".to_string()
+                ExecOvsResult!(-1, "Failed to connect".to_string(), "".to_string());
             }
         }      
     }    

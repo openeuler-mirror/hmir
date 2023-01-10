@@ -1,6 +1,8 @@
 use std::process::{Output};
 use std::process::Command;
 
+use hmir_hash::HashWrap;
+
 pub const BR_FOR_TEST: &str =  "ovs_test_br";
 pub const PORT_FOR_TEST: &str = "ovs_test_port";
 
