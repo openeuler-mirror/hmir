@@ -345,7 +345,7 @@ $light_gray: #eee;
     width: 125px;
     display: inline-block;
     margin-left: 30px;
-    vertical-align: bottom;
+    vertical-align: top;
 
     .el-input {
       width: 80px;
