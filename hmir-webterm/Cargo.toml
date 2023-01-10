@@ -1,0 +1,15 @@
+[package]
+name = "hmir-webterm"
+version = "0.1.0"
+edition = "2021"
+
+
+[dependencies]
+ws = { path="../hmir-websocket" }
+tokio = { version = "1", features = ["full"] }
+nix = "0.25.0"
+log = "0"
+env_logger = "0"
+structopt = "0"
+base64 = "0"
+pam-client = { version = "0", default-features = false }
