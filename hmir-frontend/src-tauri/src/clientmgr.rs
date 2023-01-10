@@ -62,7 +62,7 @@ pub fn register_client(host : &str, port : i32) -> bool
 
 pub fn unregister_client(host : &str) -> bool
 {
-    if ! CLIENT_MAP.lock().unwrap().contains_key(&host.to_string()) {
+    if CLIENT_MAP.lock().unwrap().contains_key(&host.to_string()) {
         CLIENT_MAP.lock().unwrap().remove(host.to_string());
         return true;
     }
