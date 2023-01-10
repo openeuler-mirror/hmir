@@ -3,6 +3,7 @@ use hmir_hash::HashWrap;
 use hmir_token;
 
 pub struct UserInfo {
+    #[allow(dead_code)]
     user : String,
     token : String,
 }

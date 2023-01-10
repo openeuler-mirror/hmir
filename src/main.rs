@@ -37,7 +37,6 @@ use log::{error,info};
 use clap::{Arg,App};
 
 use jsonrpsee::ws_server::{RpcModule, WsServerBuilder,WsServerHandle};
-use jsonrpsee::ws_client::{WsClientBuilder,WsClient};
 use jsonrpsee::core::middleware::{self, Headers, MethodKind, Params};
 use std::time::Instant;
 
@@ -164,8 +163,6 @@ async fn main() -> anyhow::Result<()> {
 }
 
 // use jsonrpsee_core::client::Client;
-use jsonrpsee::async_client::Client;
-use crate::ttyd::ttyd_start;
 
 
 async fn run_ws_server(ip: &str , port : &str) -> anyhow::Result<(SocketAddr,WsServerHandle)> {
@@ -205,17 +202,5 @@ async fn run_ws_server(ip: &str , port : &str) -> anyhow::Result<(SocketAddr,WsS
 }
 
 
-
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use jsonrpsee::client_transport::ws::{Uri, WsTransportClientBuilder};
-    use jsonrpsee::core::client::{Client, ClientBuilder, ClientT};
-    use jsonrpsee::ws_server::{RpcModule, WsServerBuilder};
-    use anyhow;
-    use futures::executor::block_on;
-
-}
 
 
