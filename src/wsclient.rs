@@ -2,7 +2,6 @@
 
 use jsonrpsee::client_transport::ws::{Uri, WsTransportClientBuilder};
 use jsonrpsee::core::client::{Client, ClientBuilder, ClientT};
-use jsonrpsee::ws_server::{RpcModule, WsServerBuilder};
 use tokio::runtime::Builder;
 use jsonrpsee::rpc_params;
 use hmir_hash::HashWrap;
@@ -27,7 +26,7 @@ impl RequestClient {
                     let client: Client = ClientBuilder::default().build_with_tokio(tx, rx);
                     Ok(client)
                 },
-                Err(e) => Err(false)
+                Err(_e) => Err(false)
             }
         });
 
@@ -35,7 +34,7 @@ impl RequestClient {
             Ok(c) => {
                 Ok(RequestClient{ client: c, token: "".to_string(), runtime: runtime })
             },
-            Err(e) => Err(false)
+            Err(_e) => Err(false)
         }
     }
 
@@ -49,7 +48,7 @@ impl RequestClient {
                     let p: HashWrap::<i32, i32> = serde_json::from_str(result.as_str()).unwrap();
                     return p.is_success();
                 },
-                Err(e) => {
+                Err(_e) => {
                     return false;
                 }
             }
@@ -192,12 +191,6 @@ impl RequestClient {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use jsonrpsee::client_transport::ws::{Uri, WsTransportClientBuilder};
-    use jsonrpsee::core::client::{Client, ClientBuilder, ClientT};
-    use jsonrpsee::ws_server::{RpcModule, WsServerBuilder};
-    use anyhow;
-    use futures::executor::block_on;
-    use serde_json::to_string;
 
     const URL : &str = "127.0.0.1:5899";
 
@@ -205,7 +198,7 @@ mod tests {
     fn ttyd_start_workd() {
         let client = RequestClient::new(String::from(URL));
         match client {
-            Ok(mut c) => {
+            Ok(c) => {
                 let state = c.ttyd_start();
                 assert_eq!(state,true);
             },
@@ -233,7 +226,7 @@ mod tests {
 
     #[test]
     fn test_token_worked(){
-        let mut client = RequestClient::new(String::from(URL));
+        let client = RequestClient::new(String::from(URL));
         match client {
             Ok(mut c) => {
                 let login_state = c.ssh_login("duanwujie","linx");
@@ -264,7 +257,7 @@ mod tests {
     fn ovs_query_connection_worked(){
         let client = RequestClient::new(String::from(URL));
         match client {
-            Ok(mut c) => {
+            Ok(c) => {
                 let state = c.ovs_query_connection();
                 assert_eq!(state, true)
             }
@@ -276,7 +269,7 @@ mod tests {
     fn ovs_query_ports_worked(){
         let client = RequestClient::new(String::from(URL));
         match client {
-            Ok(mut c) => {
+            Ok(c) => {
                 let state = c.ovs_query_ports();
                 assert_eq!(state, true)
             }
@@ -288,7 +281,7 @@ mod tests {
     fn ovs_query_bridges_worked(){
         let client = RequestClient::new(String::from(URL));
         match client {
-            Ok(mut c) => {
+            Ok(c) => {
                 let state = c.ovs_query_bridges();
                 assert_eq!(state, true)
             }
@@ -300,7 +293,7 @@ mod tests {
     fn ovs_query_interfaces_worked(){
         let client = RequestClient::new(String::from(URL));
         match client {
-            Ok(mut c) => {
+            Ok(c) => {
                 let state = c.ovs_query_interfaces();
                 assert_eq!(state, true)
             }
@@ -312,7 +305,7 @@ mod tests {
     fn ovs_query_netflow_worked(){
         let client = RequestClient::new(String::from(URL));
         match client {
-            Ok(mut c) => {
+            Ok(c) => {
                 let state = c.ovs_query_netflow();
                 assert_eq!(state, true)
             }
