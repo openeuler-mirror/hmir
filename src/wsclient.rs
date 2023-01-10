@@ -130,6 +130,16 @@ impl RequestClient {
         self.token = token.clone();
     }
 
+    pub fn test_ovs_query_connection(&self) -> bool{
+        let token = self.token.clone();
+        let state = self.runtime.block_on(async {
+
+            let response: String = self.client.request("ovs-query-connection", rpc_params![token]).await.unwrap();
+            let p: HashWrap::<i32,i32> = serde_json::from_str(response.as_str()).unwrap();
+            return p.is_success();
+        });
+        return state;
+    }
 
 }
 
@@ -205,4 +215,17 @@ mod tests {
             _ => {}
         }
     }
+
+    #[test]
+    fn ovs_query_connection_worked(){
+        let client = RequestClient::new(String::from(URL));
+        match client {
+            Ok(mut c) => {
+                let login_state = c.test_ovs_query_connection();
+                assert_eq!(login_state, true)
+            }
+            _ => {}
+        }
+    } 
+
 }
