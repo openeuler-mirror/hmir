@@ -41,7 +41,7 @@ const store = useUsersStore();
 const { host } = storeToRefs(store)
 
 const handleRouter = ref([{ indexRouter: 'login', title: host.value || '127.0.0.1', disabled: true, icon: 'Menu' },
-{ indexRouter: 'home', title: '仪表板', disabled: false, icon: 'Menu' },
+{ indexRouter: 'home', title: '服务', disabled: false, icon: 'Menu' },
 ])
 //左侧菜单栏是否关闭打开
 const isCollapse = ref(false)
