@@ -80,7 +80,7 @@ pub async fn aysnc_ttyd_start() -> String
             {
                 *TTY_ID.lock().unwrap() = child.id();
                 let _rt = tokio::runtime::Runtime::new().unwrap();
-                tx.send("true");
+                tx.send("true").unwrap();
                 child.wait().expect("command wasn't running");
                 info!("The ttyd has finished its execution!");
             }
