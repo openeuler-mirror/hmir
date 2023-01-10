@@ -285,6 +285,16 @@ mod tests {
         }
     } 
 
-
+    #[test]
+    fn ovs_query_interfaces_worked(){
+        let client = RequestClient::new(String::from(URL));
+        match client {
+            Ok(mut c) => {
+                let state = c.ovs_query_interfaces();
+                assert_eq!(state, true)
+            }
+            _ => {}
+        }
+    } 
 
 }
