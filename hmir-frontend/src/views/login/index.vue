@@ -70,6 +70,9 @@ const router = useRouter()
 //表单校验绑定的ref
 const loginFormRef = ref<FormInstance>()
 
+//获取本地保持的所有用户数据
+const userInformation: Array<userList> = localStorage.get('userInformation') 
+
 //加载
 const loading = ref<boolean>(false)
 
@@ -163,9 +166,9 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 
 //生命周期
 onMounted(() => {
-  ipAddressResults.value = ipAddressAll();
-  ipPotrResults.value = ipPortAll();
-  userResults.value = userAll();
+  ipAddressResults.value = ipAddressAll(userInformation);
+  ipPotrResults.value = ipPortAll(userInformation);
+  userResults.value = userAll(userInformation);
 });
 
 //定义绑定的输入建议数据类型
@@ -181,20 +184,29 @@ const ipPotrResults = ref<RestaurantItem[]>([])
 const userResults = ref<RestaurantItem[]>([])
 
 //下拉菜单列表数据
-const ipAddressAll = () => {
-  return [
-    { value: '172.30.21.35' },
-  ]
+const ipAddressAll = (value: any) => {
+  if (typeof value === 'string') {
+    return []
+  }
+  let ipAddressList: Array<string> = []
+  for (let i of value) {
+    ipAddressList.push(i.host)
+  }
+  return ipAddressList
 }
-const ipPortAll = () => {
-  return [
-    { value: '5898' },
-  ]
+const ipPortAll = (value: any) => {
+  let ipPortList: Array<string> = []
+  for (let i of value) {
+    ipPortList.push(i.port + '')
+  }
+  return ipPortList
 }
-const userAll = () => {
-  return [
-    { value: 'root' },
-  ]
+const userAll = (value: any) => {
+  let userList: Array<string> = []
+  for (let i of value) {
+    userList.push(i.username)
+  }
+  return userList
 }
 //过滤后的数据
 const ipAddressQuery = (queryString: string, cb: any) => {
