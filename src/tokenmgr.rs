@@ -32,15 +32,11 @@ pub fn unregister_token(user : &String, token : &String) -> bool
 {
     if TOKEN_MAP.lock().unwrap().contains_key(user){
         let stored_token = TOKEN_MAP.lock().unwrap().get(user).unwrap().token.clone();
-        match stored_token {
-            token => {
-                TOKEN_MAP.lock().unwrap().remove(user.clone());
-                return true;
-            }
-            _ => {
-                return false;
-            }
+        if stored_token.eq(token) {
+            TOKEN_MAP.lock().unwrap().remove(user.clone());
+            return true;
         }
+        return false;
     }
     return false;
 }
@@ -62,7 +58,7 @@ mod tests {
         println!("The gen token is : {}",stored_token);
 
         let state = unregister_token(&user,&stored_token);
-        // assert_eq!(state,true);
+        assert_eq!(state,true);
 
 
     }
