@@ -3,7 +3,8 @@ import { invoke } from "@tauri-apps/api/tauri";
 import ElMessage from '@/utils/message';
 import { sessionStorage } from '@/utils/sessionStorage'
 import { userInformationList } from '@/utils/userInformationList'
-interface LoginData {
+
+interface loginData {
   host: string;
   port: number;
   username: string;
@@ -32,7 +33,7 @@ export const useUsersStore = defineStore('user', {
   //异步同步函数
   actions: {
     //登录
-    cmdLogin(loginData: LoginData) {
+    cmdLogin(loginData: loginData) {
       return new Promise<void>((resolve, reject) => {
         invoke("cmd_login", { ...loginData })
           .then(response => {

@@ -1,10 +1,12 @@
 <template>
   <div>
-    main
+    about
   </div>
 </template>
 
 <script setup lang="ts">
+
+
 
 </script>
 
