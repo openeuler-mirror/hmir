@@ -224,7 +224,7 @@ impl RequestClient {
     pub fn ovs_query_netflow(&self) -> (bool,String) {
         let token = self.token.clone();
         let (state, ret_str) = self.runtime.block_on(async {
-            let response : Result<String, _>= self.client.request("ovs-query-interfaces", rpc_params![token]).await;
+            let response : Result<String, _>= self.client.request("ovs-query-netflow", rpc_params![token]).await;
             match response {
                 Ok(result) => {
                     let p:HashWrap<String,String> = serde_json::from_str(result.as_str()).unwrap();
@@ -235,7 +235,7 @@ impl RequestClient {
                         return (false, p.get_err());
                     }
                 },
-                _=>{return (false, String::from("ovs-query-interfaces Failed!"));}
+                _=>{return (false, String::from("ovs-query-netflow Failed!"));}
             }
         });
         
@@ -243,15 +243,25 @@ impl RequestClient {
     }
 
     #[allow(dead_code)]
-    pub fn ovs_query_ipfix(&self) -> bool{
+    pub fn ovs_query_ipfix(&self) -> (bool,String) {
         let token = self.token.clone();
-        let state = self.runtime.block_on(async {
-
-            let response: String = self.client.request("ovs-query-ipfix", rpc_params![token]).await.unwrap();
-            let p: HashWrap::<i32,i32> = serde_json::from_str(response.as_str()).unwrap();
-            return p.is_success();
+        let (state, ret_str) = self.runtime.block_on(async {
+            let response : Result<String, _>= self.client.request("ovs-query-ipfix", rpc_params![token]).await;
+            match response {
+                Ok(result) => {
+                    let p:HashWrap<String,String> = serde_json::from_str(result.as_str()).unwrap();
+                    if p.is_success() {
+                        let ret_str =  p.get(&String::from("ovs_ret")).unwrap();
+                        return (true, ret_str.clone());
+                    } else {
+                        return (false, p.get_err());
+                    }
+                },
+                _=>{return (false, String::from("ovs-query-ipfix Failed!"));}
+            }
         });
-        return state;
+        
+        return (state, ret_str)
     }
 
     pub fn ovs_vsctl_add_br(&self, br_name:&str) -> bool{
@@ -402,7 +412,7 @@ mod tests {
         let client = RequestClient::new(String::from(URL));
         match client {
             Ok(c) => {
-                let state = c.ovs_query_ipfix();
+                let (state,_) = c.ovs_query_ipfix();
                 assert_eq!(state, true)
             }
             _ => {}
