@@ -88,3 +88,8 @@ export const useUsersStore = defineStore('user', {
     }
   }
 });
+
+//在 非setup 中进行引入
+export default function useUsersStoreHook() {
+  return useUsersStore(store)
+};
