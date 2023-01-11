@@ -1,6 +1,6 @@
 <template>
   <div>
-    main
+    系统
   </div>
 </template>
 
