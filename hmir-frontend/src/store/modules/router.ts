@@ -32,7 +32,8 @@ export const useRouterStore = defineStore('router', {
             meta: { title: '控制台', icon: 'Setting', disabled: false }
           },
         ]
-      }]
+      }],
+      addRouter: false
     };
   },
   //计算属性

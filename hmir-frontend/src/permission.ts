@@ -18,11 +18,13 @@ router.beforeEach((to, from, next) => {
   let value = sessionStorage.get('user')
   //判断用户是否登录
   if (value !== 'user') {
-    const accessRoutes: RouteRecordRaw[] = useRouterStore.router;
-    accessRoutes.forEach((route: any) => {
-      router.addRoute(route);
-    });
-    next({ ...to, replace: true });
+    if (!useRouterStore.addRouter) {
+      const accessRoutes: RouteRecordRaw[] = useRouterStore.router;
+      accessRoutes.forEach((route: any) => {
+        router.addRoute(route);
+      });
+      next({ ...to, replace: true });
+    } 
   } else {
     // 未登录可以访问白名单页面
     if (whiteList.includes(to.path)) {
