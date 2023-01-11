@@ -56,7 +56,7 @@ pub fn register_client(host : &str, port : i32) -> bool
             }
         }
     }
-    return false;
+    return true;
 }
 
 
@@ -161,7 +161,6 @@ mod tests {
         register_client(HOST,PORT);
         let login_state  = client_instance!(&String::from(HOST)).ssh_login(USERNAME,R_PASSWORD);
         assert_eq!(login_state,true);
-
     }
 
 
