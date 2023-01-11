@@ -1,7 +1,4 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-
-export const Layout = () => import('@/layout/index.vue');
-
 // 静态路由
 export const constantRoutes = [
   {
@@ -11,29 +8,13 @@ export const constantRoutes = [
   },
   {
     path: '/404',
+    name: '404',
     component: () => import('@/views/errorPage/404.vue'),
   },
   {
     path: '/about',
     name: 'about',
     component: () => import('@/views/windowHeader/about/index.vue'),
-  },
-  {
-    path: '/',
-    component: Layout,
-    redirect: '/home',
-    children: [
-      {
-        path: 'home',
-        name: 'home',
-        component: () => import('@/views/home/index.vue'),
-      },
-      {
-        path: 'console',
-        name: 'console',
-        component: () => import('@/views/consoleCommand/index.vue'),
-      }
-    ]
   }
 ];
 
