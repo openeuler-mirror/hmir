@@ -43,3 +43,9 @@ export const useRouterStore = defineStore('router', {
   actions: {
   }
 });
+
+
+//在 非setup 中进行引入
+export default function useRouterStoreHook() {
+  return useRouterStore(store)
+}
