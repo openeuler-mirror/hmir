@@ -37,6 +37,17 @@ const isCollapse = ref<Boolean>(false)
 //引入路由
 const router = useRouter()
 
+//进入后的初始页
+const handleValue = computed<string>(() => {
+  const { meta, path } = router.currentRoute.value;
+  console.log(meta, path);
+  if (meta?.handleValue) {
+    return meta.handleValue as string;
+  }
+  return path;
+});
+
+
 const handleOpen = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
   // handleOpenValue.value=key
