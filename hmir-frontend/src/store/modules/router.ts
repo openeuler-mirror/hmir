@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { store } from '../index'
 
 //引入Layout组件
 export const Layout = () => import('@/layout/index.vue');
@@ -33,7 +34,8 @@ export const useRouterStore = defineStore('router', {
           },
         ]
       }],
-      addRouter: false
+      addRouter: false,
+      allRouter: ['/login', '/about', '/system', '/service', '/console']
     };
   },
   //计算属性
