@@ -32,13 +32,14 @@ async fn main() -> Result<(), Box<dyn Error>> {
         info!("当前以非 root 权限执行，只有执行本程序的用户可以登录");
     }
 
+    // hmir-terminal -b 5899
     let opt: Opt = Opt::from_args();
      let bind_str = match opt.bind.contains(":") {
         true =>{
             opt.bind
         },
         false =>{
-            format!("127.0.0.1:{}",opt.bind)
+            format!("0.0.0.0:{}",opt.bind)
         }
     };
     
