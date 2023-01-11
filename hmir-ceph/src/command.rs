@@ -10,7 +10,7 @@ pub fn mon_exec(cmd: &str) -> String {
                 Ok((outbuf, outs)) => {
                     match outbuf {
                         Some(outbuf) => { return outbuf; },
-                        None => { return String::new(); }
+                        _ => {}
                     }
                     match outs {
                         Some(outs) => { return outs; },
