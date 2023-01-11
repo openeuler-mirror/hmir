@@ -104,7 +104,7 @@
 //!     "jsonrpc":"2.0", 
 //!     "id":1, 
 //!     "method":"ovs-vsctl-set-port-qos",
-//!     "params": {"interface_name":"vnet0", "qos_type":"linux-htb", "max-rate":"1000000"} 
+//!     "params": {"interface_name":"vnet0", "qos_type":"linux-htb",ovs_vsctl_add_port "max-rate":"1000000"} 
 //! }
 //! 
 //! - ovs-vsctl-set-port-patch：设置ovs网桥间的连接patch口
@@ -126,8 +126,8 @@
 //! }
 
 use super::ovs_common::*;
-use std::collections::HashMap;
-use jsonrpsee::ws_server::RpcModule;
+use std::{collections::HashMap};
+use jsonrpsee::{ws_server::RpcModule};
 
 use serde_json::{json, Value};
 use std::collections::BTreeMap;
@@ -137,27 +137,37 @@ use hmir_token::TokenChecker;
 use hmir_errno::errno;
 const VSCTL_CMD: &str = "ovs-vsctl";
 
+#[macro_export]
+macro_rules! VsctlTokenChecker {
+    ($br_info:expr) => {
+        let token_exception = json!(String::from(""));
+        let token = ($br_info).get("token").unwrap_or(&token_exception).to_string();
+        TokenChecker!(token);
+    }
+}
+
 pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
     module.register_method("ovs-vsctl-add-br", |params, _| {
         let br_info = params.parse::<BTreeMap<&str, Value>>()?;
-        let token_exception = json!(String::from(""));
-        let token = br_info.get("token").unwrap_or(&token_exception).to_string();
-        TokenChecker!(token);
+        VsctlTokenChecker!(br_info);
         Ok(ovs_vsctl_add_br(br_info))
     })?;
 
     module.register_method("ovs-vsctl-del-br", |params, _| {
-        let br_info = params.parse::<HashMap<String, String>>()?;
+        let br_info = params.parse::<BTreeMap<&str, Value>>()?;
+        VsctlTokenChecker!(br_info);
         Ok(ovs_vsctl_del_br(br_info))
     })?;
 
     module.register_method("ovs-vsctl-add-port", |params, _| {
-        let br_info = params.parse::<HashMap<String, String>>()?;
+        let br_info = params.parse::<BTreeMap<&str, Value>>()?;
+        VsctlTokenChecker!(br_info);
         Ok(ovs_vsctl_add_port(br_info))
     })?;
 
     module.register_method("ovs-vsctl-del-port", |params, _| {
-        let br_info = params.parse::<HashMap<String, String>>()?;
+        let br_info = params.parse::<BTreeMap<&str, Value>>()?;
+        VsctlTokenChecker!(br_info);
         Ok(ovs_vsctl_del_port(br_info))
     })?;
 
@@ -219,7 +229,7 @@ fn ovs_vsctl_add_br(info_map : BTreeMap<&str, Value>) -> String {
     reflect_cmd_result(output)
 }
 
-fn ovs_vsctl_del_br(info_map : HashMap<String, String>) -> String {
+fn ovs_vsctl_del_br(info_map : BTreeMap<&str, Value>) -> String {
     let br_name = info_map.get("br_name").unwrap();
     let rule = format!("{} del-br {}", VSCTL_CMD, br_name);
 
@@ -227,7 +237,7 @@ fn ovs_vsctl_del_br(info_map : HashMap<String, String>) -> String {
     reflect_cmd_result(output)
 }
 
-fn ovs_vsctl_add_port(info_map : HashMap<String, String>) -> String {
+fn ovs_vsctl_add_port(info_map : BTreeMap<&str, Value>) -> String {
     let br_name = info_map.get("br_name").unwrap();
     let port_name = info_map.get("port_name").unwrap();
     let rule = format!("{} add-port {} {}", VSCTL_CMD, br_name, port_name);
@@ -236,7 +246,7 @@ fn ovs_vsctl_add_port(info_map : HashMap<String, String>) -> String {
     reflect_cmd_result(output)
 }
 
-fn ovs_vsctl_del_port(info_map : HashMap<String, String>) -> String {
+fn ovs_vsctl_del_port(info_map : BTreeMap<&str, Value>) -> String {
     let br_name = info_map.get("br_name").unwrap();
     let port_name = info_map.get("port_name").unwrap();
     let rule = format!("{} del-port {} {}", VSCTL_CMD, br_name, port_name);
