@@ -1,4 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
+import useRouterStoreHook from '@/store/modules/router'
+
 // 静态路由
 export const constantRoutes = [
   {
@@ -25,5 +27,17 @@ const router = createRouter({
   // 刷新时，滚动条位置还原
   scrollBehavior: () => ({ left: 0, top: 0 })
 });
+
+// 重置路由
+export function resetRouter() {
+  const permissionStore = useRouterStoreHook();
+  permissionStore.addRouter = false;
+  permissionStore.router.forEach(route => {
+    const name = route.name;
+    if (name && router.hasRoute(name)) {
+      router.removeRoute(name);
+    }
+  });
+}
 
 export default router;

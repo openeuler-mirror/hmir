@@ -12,7 +12,7 @@
           <el-main>
             <router-view />
           </el-main>
-          <el-footer>Footer</el-footer>
+          <el-footer></el-footer>
         </el-container>
       </el-container>
     </el-container>
@@ -25,7 +25,8 @@ import Header from './header/index.vue';
 </script>
 
 <style lang="scss" scoped>
-$headerHeight:50px;
+$headerHeight: 50px;
+
 .layoutHeader {
   background-color: #1d1d1d;
   color: #fff;

@@ -4,7 +4,7 @@ import { sessionStorage } from '@/utils/sessionStorage';
 import { userInformationList } from '@/utils/userInformationList';
 import { cmd_login, cmd_logout } from '@/api/index';
 import { store } from '../index';
-
+import { resetRouter } from '@/router'
 interface loginData {
   host: string;
   port: number;
@@ -72,6 +72,8 @@ export const useUsersStore = defineStore('user', {
               //重置所有的用户信息
               this.$reset()
               sessionStorage.remove('user');
+              //注销成功后重置路由
+              resetRouter()
               ElMessage.success('注销成功');
               resolve();
             } else {
