@@ -18,6 +18,7 @@ pub struct RequestClient {
     pub runtime : tokio::runtime::Runtime,
 }
 
+
 impl RequestClient {
     pub fn new(uri : std::string::String) -> Result<Self,bool> {
         let runtime = Builder::new_current_thread().enable_all().build().unwrap();
@@ -205,7 +206,8 @@ impl RequestClient {
         return state;
     }
 
-    pub fn ovs_vsctl_add_br(&self, br_name:&str) -> bool{
+    pub fn ovs_vsctl_add_br(&self, br_name:&str) -> bool
+    {
         let token = json!(self.token.clone());
         let mut br_info = BTreeMap::new();
         br_info.insert("br_name", json!(br_name));
@@ -219,6 +221,25 @@ impl RequestClient {
         return state;
     }
 
+    pub fn service_all(&self) -> String {
+
+        let token = self.token.clone();
+
+        let (service,state) = self.runtime.block_on(async{
+            let response: String = self.client.request("service-all", rpc_params![token]).await.unwrap();
+            let p: HashWrap::<String,String> = serde_json::from_str(response.as_str()).unwrap();
+            if p.is_success() {
+                // return (serde_json::to_string(&p.result).unwrap(),true);
+                return ("".to_string(),false);
+            }else {
+                return ("".to_string(),false);
+            }
+        });
+
+        return service;
+    }
+
+
 }
 
 
@@ -228,6 +249,7 @@ mod tests {
     use super::*;
 
     const URL : &str = "127.0.0.1:5899";
+
 
     #[test]
     fn ttyd_start_workd() {
