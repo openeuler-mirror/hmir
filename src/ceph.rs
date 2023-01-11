@@ -13,6 +13,7 @@ use hmir_ceph::auth;
 use hmir_ceph::fs;
 use hmir_ceph::mgr;
 use hmir_ceph::mds;
+use hmir_ceph::config_key;
 
 
 #[doc(hidden)]
@@ -32,6 +33,8 @@ pub fn register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
     ceph_mgr_register_method(module)?;
     
     ceph_mds_register_method(module)?;
+
+    ceph_config_key_register_method(module);
     
     module.register_method("ceph-cluster-stat", |_, _| {
         //获取ceph集群状态
@@ -241,6 +244,18 @@ pub fn ceph_mds_register_method(module : & mut RpcModule<()>) -> anyhow::Result<
         Ok(mds::mds_metadata())
     })?;
     
+    Ok(())
+}
+
+///config key method register
+pub fn ceph_config_key_register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
+
+    //config key
+    module.register_method("ceph-config-key-exists", |params, _| {
+        //exist
+        Ok(config_key::exists(&params.one::<String>()?).unwrap())
+    })?;
+
     Ok(())
 }
 
