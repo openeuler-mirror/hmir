@@ -27,6 +27,7 @@ use pam::Authenticator;
 use jsonrpsee::ws_server::{RpcModule};
 use hmir_hash::HashWrap;
 use hmir_token;
+use hmir_errno::errno;
 use serde::{Deserialize};
 
 
@@ -54,7 +55,7 @@ pub fn pam_auth(username : &str, password : &str) -> String
     if is_pam_auth(username,password) {
         pam_default_result!(0,&String::from(username));
     }
-    pam_default_result!(-1,&String::from(username));
+    pam_default_result!(errno::HMIR_ERR_COMM,&String::from(username));
 }
 
 pub fn is_pam_auth(username: &str, password: &str) -> bool

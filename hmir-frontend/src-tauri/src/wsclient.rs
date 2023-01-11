@@ -6,7 +6,8 @@ use tokio::runtime::Builder;
 use jsonrpsee::rpc_params;
 use hmir_hash::HashWrap;
 // use nix::libc::stat;
-
+use log4rs;
+use log::{error,info};
 
 #[derive(Debug)]
 pub struct RequestClient {
@@ -19,14 +20,17 @@ impl RequestClient {
     pub fn new(uri : std::string::String) -> Result<Self,bool> {
         let runtime = Builder::new_current_thread().enable_all().build().unwrap();
         let client = runtime.block_on(async {
-            let uri: Uri = format!("ws://{}", uri).parse().unwrap();
-            let client_builder = WsTransportClientBuilder::default().build(uri).await;
+            let uri: Uri = format!("ws://{}", uri.clone()).parse().unwrap();
+            let client_builder = WsTransportClientBuilder::default().build(uri.clone()).await;
             match client_builder {
                 Ok((tx,rx)) => {
                     let client: Client = ClientBuilder::default().build_with_tokio(tx, rx);
                     Ok(client)
                 },
-                Err(_e) => Err(false)
+                Err(_e) => {
+                    error!("Connect the remote {} failed, Reason : {}",uri.clone(),_e.to_string());
+                    Err(false)
+                }
             }
         });
 
@@ -34,7 +38,9 @@ impl RequestClient {
             Ok(c) => {
                 Ok(RequestClient{ client: c, token: "".to_string(), runtime: runtime })
             },
-            Err(_e) => Err(false)
+            Err(_e) => {
+                Err(false)
+            }
         }
     }
 

@@ -6,6 +6,7 @@ use jsonrpsee::ws_server::{RpcModule};
 use hmir_hash::HashWrap;
 use serde::{Serialize};
 use std::process::Command;
+use hmir_errno::errno;
 
 
 macro_rules! kernel_default_result {
@@ -70,7 +71,7 @@ pub fn kernel_rmmod(module : std::string::String) -> std::string::String
         kernel_default_result!(0);
     }
 
-    kernel_default_result!(-1);
+    kernel_default_result!(errno::HMIR_ERR_COMM);
 }
 
 pub fn kernel_modprobe(module : std::string::String) -> std::string::String
@@ -82,7 +83,7 @@ pub fn kernel_modprobe(module : std::string::String) -> std::string::String
     if status.success() {
         kernel_default_result!(0);
     }
-    kernel_default_result!(-1);
+    kernel_default_result!(errno::HMIR_ERR_COMM);
 }
 
 

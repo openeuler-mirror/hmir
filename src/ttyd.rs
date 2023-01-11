@@ -92,11 +92,11 @@ pub async fn aysnc_ttyd_start() -> String
                 if msg == "true" {
                     ttyd_default_result!(0);
                 }else {
-                    ttyd_default_result!(-1);
+                    ttyd_default_result!(errno::HMIR_ERR_COMM);
                 }
             }
             _ => {
-                ttyd_default_result!(-1);
+                ttyd_default_result!(errno::HMIR_ERR_COMM);
             }
         }
     }
