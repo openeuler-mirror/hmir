@@ -28,7 +28,7 @@ lazy_static! {
 macro_rules! ttyd_default_result {
     ($i:expr) =>{
         let mut response = HashWrap::<i32,i32>:: new();
-        response.set_code($i);
+        response.error($i,String::from(errno::HMIR_MSG[$i]));
         let serialized = serde_json::to_string(&response).unwrap();
         return serialized;
     }
@@ -41,29 +41,6 @@ pub fn ttyd_start() -> String
 }
 
 
-pub fn _org_ttyd_start() -> String
-{
-    if *TTY_ID.lock().unwrap() != 0 {
-        ttyd_default_result!(0);
-    } else {
-        tokio::task::spawn(async move {
-            //运行在一个不阻塞的线程
-            info!("The ttyd has start its execution !");
-            if let Ok(mut child) = Command::new("ttyd").arg("-p").arg("5899").arg("bash")
-                .stdout(Stdio::null())
-                .spawn()
-            {
-                println!("lock tx.send called");
-                *TTY_ID.lock().unwrap() = child.id();
-                println!("before tx.send called");
-                println!("tx.send called");
-                child.wait().expect("command wasn't running");
-                info!("The ttyd has finished its execution!");
-            }
-        });
-        ttyd_default_result!(0);
-    }
-}
 
 pub async fn aysnc_ttyd_start() -> String
 {
@@ -74,7 +51,12 @@ pub async fn aysnc_ttyd_start() -> String
         let (tx, rx) = std::sync::mpsc::channel();
         let _thread_join_handle = thread::spawn(move || {
             info!("The ttyd has start its execution !");
-            if let Ok(mut child) = Command::new("ttyd").arg("-p").arg("5899").arg("bash")
+            if let Ok(mut child) = Command::new("ttyd")
+                .arg("-p").arg("3001")
+                .arg("-u").arg("0")
+                .arg("-g").arg("0")
+                .arg("-w").arg("/root")
+                .arg("/bin/login")
                 .stdout(Stdio::null())
                 .spawn()
             {
