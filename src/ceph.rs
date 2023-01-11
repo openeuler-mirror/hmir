@@ -14,7 +14,7 @@ use hmir_ceph::fs;
 use hmir_ceph::mgr;
 use hmir_ceph::mds;
 use hmir_ceph::config_key;
-
+use std::collections::HashMap;
 
 #[doc(hidden)]
 pub fn register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
@@ -162,6 +162,13 @@ pub fn ceph_auth_register_method(module : & mut RpcModule<()>) -> anyhow::Result
     module.register_method("ceph-auth-list", |_, _| {
         //list authentication state
         Ok(auth::auth_list())
+    })?;
+
+    module.register_method("ceph-auth-get-key", |params, _| {
+        //list authentication state
+        let params_map = params.parse::<HashMap<String, String>>()?;
+        Ok(auth::get_key(params_map.get("client_type").unwrap(),
+                         params_map.get("id").unwrap()).unwrap())
     })?;
 
     Ok(())
