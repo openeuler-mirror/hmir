@@ -2,7 +2,8 @@ import { defineStore } from 'pinia';
 import ElMessage from '@/utils/message';
 import { sessionStorage } from '@/utils/sessionStorage';
 import { userInformationList } from '@/utils/userInformationList';
-import { cmd_login, cmd_logout } from '@/api/index'
+import { cmd_login, cmd_logout } from '@/api/index';
+import { store } from '../index';
 
 interface loginData {
   host: string;
@@ -70,7 +71,7 @@ export const useUsersStore = defineStore('user', {
             if (response) {
               //重置所有的用户信息
               this.$reset()
-              sessionStorage.remove('user')
+              sessionStorage.remove('user');
               ElMessage.success('注销成功');
               resolve();
             } else {
