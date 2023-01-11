@@ -24,7 +24,11 @@ router.beforeEach((to, from, next) => {
         router.addRoute(route);
       });
       next({ ...to, replace: true });
-    } 
+    } else if (useRouterStore.allRouter.includes(to.path)) {
+      next();
+    } else {
+      next('/404');
+    }
   } else {
     // 未登录可以访问白名单页面
     if (whiteList.includes(to.path)) {
