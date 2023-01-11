@@ -115,6 +115,23 @@ use hmir_errno::errno;
 
 use serde_json::json;
 
+#[macro_export]
+macro_rules! ExecOvsQueryResult {
+    ($i:expr, $j:expr, $k:expr) => {
+        let mut response = HashWrap::<String,String>:: new();
+        if $i == 0 {
+            response.insert(String::from("ovs_ret"), $j);
+        }
+
+        if $i !=0 {
+            response.error($i, $k);
+        } 
+        response.set_code($i);
+        let serialized = serde_json::to_string(&response).unwrap();
+        return serialized;
+    }
+}
+
 pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
         
     module.register_method("ovs-query-connection", |params, _| {
@@ -171,15 +188,14 @@ fn check_connection() -> std::string::String{
     let ovsc = OvsClient::new();
     match ovsc{
         Err(e) => {
-            let ret_message = serde_json::to_string(&(e.error_detail.clone())).unwrap();
-            ret_message
+            ExecOvsQueryResult!(-1, "".to_string(), e.error_detail.clone());
         },
         Ok(mut c) => {
             let is_connected = c.check_connection();
             if is_connected {
-                "Connected!".to_string()
+                ExecOvsQueryResult!(0, "Connected!".to_string(), "".to_string());
             } else {
-                "Failed to connect".to_string()
+                ExecOvsQueryResult!(-1, "Failed to connect".to_string(), "".to_string());
             }
         }      
     }    
@@ -189,7 +205,7 @@ fn get_ports() -> std::string::String{
     let ovsc = OvsClient::new();
     match ovsc{
         Err(e) => {
-            e.error_detail.clone()
+            ExecOvsQueryResult!(-1, "".to_string(), e.error_detail.clone());
         },
         Ok(mut c)=>{
             let ports = c.get_ports();
@@ -197,10 +213,10 @@ fn get_ports() -> std::string::String{
                 Ok(ports) =>{
                     println!("number of port : {0}", ports.len());
                     let ret_message = serde_json::to_string(&ports).unwrap();
-                    ret_message    
+                    ExecOvsQueryResult!(0, ret_message, "".to_string());
                 },
                 Err(e) => {
-                    e.error_detail.clone()
+                    ExecOvsQueryResult!(-1, "".to_string(), e.error_detail.clone());
                 }
             }
         }
@@ -211,7 +227,7 @@ fn get_bridges() -> std::string::String {
     let ovsc = OvsClient::new();
     match ovsc{
         Err(e) => {
-            e.error_detail.clone()
+            ExecOvsQueryResult!(-1, "".to_string(), e.error_detail.clone());
         },
         Ok(mut c)=>{
             let bridges = c.get_bridges();
@@ -219,10 +235,10 @@ fn get_bridges() -> std::string::String {
                 Ok(bridges) =>{
                     println!("number of bridge: {0}", bridges.len());
                     let ret_message = serde_json::to_string(&bridges).unwrap();
-                    ret_message    
+                    ExecOvsQueryResult!(0, ret_message, "".to_string());   
                 },
                 Err(e) => {
-                    e.error_detail.clone()
+                    ExecOvsQueryResult!(-1, "".to_string(), e.error_detail.clone());
                 }
             }
         }
@@ -233,7 +249,7 @@ fn get_interfaces() -> std::string::String{
     let ovsc = OvsClient::new();
     match ovsc{
         Err(e) => {
-            e.error_detail.clone()
+            ExecOvsQueryResult!(-1, "".to_string(), e.error_detail.clone());
         },
         Ok(mut c)=>{
             let interfaces = c.get_interfaces();
@@ -241,10 +257,10 @@ fn get_interfaces() -> std::string::String{
                 Ok(interfaces) =>{
                     println!("number of interfaces : {0}", interfaces.len());
                     let ret_message = serde_json::to_string(&interfaces).unwrap();
-                    ret_message    
+                    ExecOvsQueryResult!(0, ret_message, "".to_string()); 
                 },
                 Err(e) => {
-                    e.error_detail.clone()
+                    ExecOvsQueryResult!(-1, "".to_string(), e.error_detail.clone());
                 }
             }
         }
@@ -255,18 +271,17 @@ fn get_netflow() -> std::string::String{
     let ovsc = OvsClient::new();
     match ovsc{
         Err(e) => {
-            e.error_detail.clone()
+            ExecOvsQueryResult!(-1, "".to_string(), e.error_detail.clone());
         },
         Ok(mut c)=>{
             let netflow = c.get_netflows();
             match netflow{
                 Ok(netflow) =>{
-                
                     let ret_message = serde_json::to_string(&netflow).unwrap();
-                    ret_message    
+                    ExecOvsQueryResult!(0, ret_message, "".to_string()); 
                 },
                 Err(e) => {
-                    e.error_detail.clone()
+                    ExecOvsQueryResult!(-1, "".to_string(), e.error_detail.clone());
                 }
             }
         }
@@ -277,18 +292,17 @@ fn get_ipfix() -> std::string::String{
     let ovsc = OvsClient::new();
     match ovsc{
         Err(e) => {
-            e.error_detail.clone()
+            ExecOvsQueryResult!(-1, "".to_string(), e.error_detail.clone());
         },
         Ok(mut c)=>{
             let ipfix = c.get_ipfix();
             match ipfix{
                 Ok(ipfix) =>{
-                
                     let ret_message = serde_json::to_string(&ipfix).unwrap();
-                    ret_message    
+                    ExecOvsQueryResult!(0, ret_message, "".to_string());
                 },
                 Err(e) => {
-                    e.error_detail.clone()
+                    ExecOvsQueryResult!(-1, "".to_string(), e.error_detail.clone());
                 }
             }
         }
