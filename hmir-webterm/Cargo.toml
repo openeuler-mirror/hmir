@@ -2,6 +2,8 @@
 name = "hmir-webterm"
 version = "0.1.0"
 edition = "2021"
+authors = ["Wujie Duan <dev17001@linx-info.com>"]
+description = "web term in rust "
 
 
 [dependencies]

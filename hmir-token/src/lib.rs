@@ -90,7 +90,7 @@ macro_rules! TokenChecker {
         let verify = hmir_token::token_verify($i);
         if !verify {
             let mut response = HashWrap::<i32,i32>:: new();
-            response.error(1,String::from(errno::HMIR_MSG[1]));
+            response.error(errno::HMIR_ERR_TOKEN,String::from(errno::HMIR_MSG[errno::HMIR_ERR_TOKEN]));
             let serialized = serde_json::to_string(&response).unwrap();
             return Ok(serialized)
         }

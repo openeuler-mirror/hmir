@@ -18,9 +18,11 @@ use jsonrpsee::ws_server::{RpcModule};
 use procfs;
 use serde::{Serialize};
 use hmir_hash::HashWrap;
+use hmir_errno::errno;
 use nix::sys::signal;
 use nix::unistd;
 extern crate core_affinity;
+
 
 #[derive(Clone, Debug,Serialize)]
 struct ProcInfo {
@@ -97,7 +99,7 @@ pub fn process_status(pid : i32) -> std::string::String {
         return serialized;
     }
 
-    proc_default_result!(-1);
+    proc_default_result!(errno::HMIR_ERR_COMM);
 }
 
 
@@ -118,7 +120,7 @@ pub fn process_kill(pid : i32) -> std::string::String {
         signal::kill(unistd::Pid::from_raw(pid), signal::Signal::SIGTERM).unwrap();
         proc_default_result!(0);
     }
-    proc_default_result!(-1);
+    proc_default_result!(errno::HMIR_ERR_COMM);
 }
 
 pub fn process_bind_cpu(pid : i32) -> std::string::String {
@@ -130,7 +132,7 @@ pub fn process_bind_cpu(pid : i32) -> std::string::String {
         core_affinity::set_for_current(core_id);
         proc_default_result!(0);
     }
-    proc_default_result!(-1);
+    proc_default_result!(errno::HMIR_ERR_COMM);
 }
 
 

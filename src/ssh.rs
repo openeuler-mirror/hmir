@@ -31,6 +31,7 @@ use std::net::TcpStream;
 use ssh2::Session;
 use hmir_hash::HashWrap;
 use hmir_token;
+use hmir_errno::errno;
 use serde::{Deserialize};
 use crate::tokenmgr::register_token;
 
@@ -79,7 +80,7 @@ pub fn ssh_auth(username : &str, password : &str) -> String
     if is_ssh_auth(username,password) {
         ssh_default_result!(0,&String::from(username));
     }
-    ssh_default_result!(-1,&String::from(username));
+    ssh_default_result!(errno::HMIR_ERR_COMM,&String::from(username));
 }
 
 #[doc(hidden)]

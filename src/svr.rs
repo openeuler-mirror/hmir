@@ -84,6 +84,7 @@
 use jsonrpsee::ws_server::{RpcModule};
 use std::sync::RwLock;
 use hmir_hash::HashWrap;
+use hmir_errno::errno;
 use std::{thread, time};
 
 
@@ -107,7 +108,7 @@ macro_rules! svr_default_result {
         let mut response = HashWrap::<String,Unit>:: new();
         match $result {
             Ok(_x) => { response.set_code(0); },
-            Err(_e) => { response.set_code(-1); },
+            Err(_e) => { response.set_code(errno::HMIR_ERR_COMM); },
         }
         let serialized = serde_json::to_string(&response).unwrap();
         return serialized;

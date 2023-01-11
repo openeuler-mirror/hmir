@@ -188,14 +188,14 @@ fn check_connection() -> std::string::String{
     let ovsc = OvsClient::new();
     match ovsc{
         Err(e) => {
-            ExecOvsQueryResult!(-1, "".to_string(), e.error_detail.clone());
+            ExecOvsQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), e.error_detail.clone());
         },
         Ok(mut c) => {
             let is_connected = c.check_connection();
             if is_connected {
                 ExecOvsQueryResult!(0, "Connected!".to_string(), "".to_string());
             } else {
-                ExecOvsQueryResult!(-1, "Failed to connect".to_string(), "".to_string());
+                ExecOvsQueryResult!(errno::HMIR_ERR_COMM, "Failed to connect".to_string(), "".to_string());
             }
         }      
     }    
@@ -205,7 +205,7 @@ fn get_ports() -> std::string::String{
     let ovsc = OvsClient::new();
     match ovsc{
         Err(e) => {
-            ExecOvsQueryResult!(-1, "".to_string(), e.error_detail.clone());
+            ExecOvsQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), e.error_detail.clone());
         },
         Ok(mut c)=>{
             let ports = c.get_ports();
@@ -216,7 +216,7 @@ fn get_ports() -> std::string::String{
                     ExecOvsQueryResult!(0, ret_message, "".to_string());
                 },
                 Err(e) => {
-                    ExecOvsQueryResult!(-1, "".to_string(), e.error_detail.clone());
+                    ExecOvsQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), e.error_detail.clone());
                 }
             }
         }
@@ -227,7 +227,7 @@ fn get_bridges() -> std::string::String {
     let ovsc = OvsClient::new();
     match ovsc{
         Err(e) => {
-            ExecOvsQueryResult!(-1, "".to_string(), e.error_detail.clone());
+            ExecOvsQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), e.error_detail.clone());
         },
         Ok(mut c)=>{
             let bridges = c.get_bridges();
@@ -238,7 +238,7 @@ fn get_bridges() -> std::string::String {
                     ExecOvsQueryResult!(0, ret_message, "".to_string());   
                 },
                 Err(e) => {
-                    ExecOvsQueryResult!(-1, "".to_string(), e.error_detail.clone());
+                    ExecOvsQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), e.error_detail.clone());
                 }
             }
         }
@@ -249,7 +249,7 @@ fn get_interfaces() -> std::string::String{
     let ovsc = OvsClient::new();
     match ovsc{
         Err(e) => {
-            ExecOvsQueryResult!(-1, "".to_string(), e.error_detail.clone());
+            ExecOvsQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), e.error_detail.clone());
         },
         Ok(mut c)=>{
             let interfaces = c.get_interfaces();
@@ -260,7 +260,7 @@ fn get_interfaces() -> std::string::String{
                     ExecOvsQueryResult!(0, ret_message, "".to_string()); 
                 },
                 Err(e) => {
-                    ExecOvsQueryResult!(-1, "".to_string(), e.error_detail.clone());
+                    ExecOvsQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), e.error_detail.clone());
                 }
             }
         }
@@ -271,7 +271,7 @@ fn get_netflow() -> std::string::String{
     let ovsc = OvsClient::new();
     match ovsc{
         Err(e) => {
-            ExecOvsQueryResult!(-1, "".to_string(), e.error_detail.clone());
+            ExecOvsQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), e.error_detail.clone());
         },
         Ok(mut c)=>{
             let netflow = c.get_netflows();
@@ -281,7 +281,7 @@ fn get_netflow() -> std::string::String{
                     ExecOvsQueryResult!(0, ret_message, "".to_string()); 
                 },
                 Err(e) => {
-                    ExecOvsQueryResult!(-1, "".to_string(), e.error_detail.clone());
+                    ExecOvsQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), e.error_detail.clone());
                 }
             }
         }
@@ -292,7 +292,7 @@ fn get_ipfix() -> std::string::String{
     let ovsc = OvsClient::new();
     match ovsc{
         Err(e) => {
-            ExecOvsQueryResult!(-1, "".to_string(), e.error_detail.clone());
+            ExecOvsQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), e.error_detail.clone());
         },
         Ok(mut c)=>{
             let ipfix = c.get_ipfix();
@@ -302,7 +302,7 @@ fn get_ipfix() -> std::string::String{
                     ExecOvsQueryResult!(0, ret_message, "".to_string());
                 },
                 Err(e) => {
-                    ExecOvsQueryResult!(-1, "".to_string(), e.error_detail.clone());
+                    ExecOvsQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), e.error_detail.clone());
                 }
             }
         }

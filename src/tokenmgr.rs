@@ -17,7 +17,7 @@ lazy_static! {
     };
 }
 
-
+#[allow(dead_code)]
 pub fn register_token(user : &String,token : &String) -> bool
 {
     if TOKEN_MAP.lock().unwrap().contains_key(user) {
@@ -29,6 +29,7 @@ pub fn register_token(user : &String,token : &String) -> bool
 }
 
 
+#[allow(dead_code)]
 pub fn unregister_token(user : &String, token : &String) -> bool
 {
     if TOKEN_MAP.lock().unwrap().contains_key(user){
@@ -60,8 +61,6 @@ mod tests {
 
         let state = unregister_token(&user,&stored_token);
         assert_eq!(state,true);
-
-
     }
 
 
