@@ -1,6 +1,6 @@
 use std::error::Error;
 use std::io;
-use std::net::SocketAddr;
+//use std::net::SocketAddr;
 use std::time::Duration;
 
 use log::{debug, error, info};
@@ -20,7 +20,8 @@ mod terminal;
 struct Opt {
     /// 要绑定的地址，格式 ip:port
     #[structopt(short, long)]
-    bind: SocketAddr,
+    bind: String,
+//    bind: SocketAddr,
 }
 
 #[tokio::main(flavor = "current_thread")]
@@ -32,7 +33,16 @@ async fn main() -> Result<(), Box<dyn Error>> {
     }
 
     let opt: Opt = Opt::from_args();
-    let listener = TcpListener::bind(opt.bind).await?;
+     let bind_str = match opt.bind.contains(":") {
+        true =>{
+            opt.bind
+        },
+        false =>{
+            format!("127.0.0.1:{}",opt.bind)
+        }
+    };
+    
+    let listener = TcpListener::bind(bind_str).await?;
     info!("server started at {}", listener.local_addr()?);
     loop {
         let (stream, addr) = listener.accept().await?;
