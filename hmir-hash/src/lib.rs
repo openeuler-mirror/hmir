@@ -16,7 +16,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug,Serialize,Deserialize)]
 pub struct HashWrap <K: Eq+Hash ,V> {
     // #[serde(serialize_with ="ordered_map")]
-    code : i32,
+    code : usize,
     errmsg : String,
     result: HashMap<K,V>
 }
@@ -31,7 +31,7 @@ impl <K,V> HashWrap<K,V> where K: Eq + Hash {
         }
     }
 
-    pub fn set_code(&mut self , code : i32){
+    pub fn set_code(&mut self , code : usize){
         self.code = code;
     }
 
@@ -42,7 +42,7 @@ impl <K,V> HashWrap<K,V> where K: Eq + Hash {
         return true;
     }
 
-    pub fn error(&mut self,code : i32, message : String) {
+    pub fn error(&mut self,code : usize, message : String) {
             self.code  = code;
             self.errmsg = message;
     }
