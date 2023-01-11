@@ -78,8 +78,10 @@
 import { onMounted, reactive, ref, toRefs, watch, nextTick } from 'vue';
 import type { FormInstance, FormRules } from 'element-plus';
 import { useRouter } from 'vue-router';
+import { useRouterStore } from '@/store/modules/router';
 import { useUsersStore } from '@/store/modules/user';
 import { localStorage } from '@/utils/localStorage';
+
 //限制用户信息类型
 interface userList {
   host: string;
@@ -94,6 +96,7 @@ interface RestaurantItem {
 
 //引入store仓库
 const store = useUsersStore();
+const routerStore = useRouterStore();
 
 //引入路由
 const router = useRouter()
@@ -171,7 +174,7 @@ function login() {
     store.cmdLogin(req)
       .then(() => {
         setTimeout(() => {
-          router.push({ path: '/home' })
+          router.push({ path: '/system' })
         }, 500);
       })
       .catch(error => {

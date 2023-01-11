@@ -23,6 +23,7 @@ router.beforeEach((to, from, next) => {
       accessRoutes.forEach((route: any) => {
         router.addRoute(route);
       });
+      useRouterStore.addRouter = true;
       next({ ...to, replace: true });
     } else if (useRouterStore.allRouter.includes(to.path)) {
       next();
