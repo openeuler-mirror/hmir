@@ -250,6 +250,8 @@ dependencies = [
  "libc",
  "log",
  "log4rs",
+ "serde",
+ "serde_json",
  "tokio",
 ]
 

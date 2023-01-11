@@ -15,6 +15,7 @@ use hmir_ceph::mgr;
 use hmir_ceph::mds;
 use hmir_ceph::config_key;
 use std::collections::HashMap;
+use serde_json::json;
 
 #[doc(hidden)]
 pub fn register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
@@ -169,6 +170,22 @@ pub fn ceph_auth_register_method(module : & mut RpcModule<()>) -> anyhow::Result
         let params_map = params.parse::<HashMap<String, String>>()?;
         Ok(auth::get_key(params_map.get("client_type").unwrap(),
                          params_map.get("id").unwrap()).unwrap())
+    })?;
+
+    module.register_method("ceph-auth-get", |params, _| {
+        //write keyring file with requested key
+        let params_map = params.parse::<HashMap<String, String>>()?;
+        let result = auth::auth_get(params_map.get("client_type").unwrap(),
+                                    params_map.get("id").unwrap());
+        match result {
+            Ok(result) => {
+                let result = json!(&result).to_string();
+                Ok(result)
+            },
+            Err(result) => {
+                Ok("Error to get auth".to_string())
+            },
+        }
     })?;
 
     Ok(())
