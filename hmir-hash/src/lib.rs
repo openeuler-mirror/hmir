@@ -18,11 +18,11 @@ pub struct HashWrap <K: Eq+Hash ,V> {
     // #[serde(serialize_with ="ordered_map")]
     code : usize,
     errmsg : String,
-    result: HashMap<K,V>
+    pub result: HashMap<K,V>
 }
 
 
-impl <K,V> HashWrap<K,V> where K: Eq + Hash {
+impl <K,V> HashWrap<K,V> where K: Eq + Hash + Serialize {
     pub fn new() -> Self {
         HashWrap {
             code : 0,
@@ -40,6 +40,10 @@ impl <K,V> HashWrap<K,V> where K: Eq + Hash {
             return  false;
         }
         return true;
+    }
+
+    pub fn code(&self) -> usize {
+        return self.code;
     }
 
     pub fn error(&mut self,code : usize, message : String) {
