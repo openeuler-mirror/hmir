@@ -280,19 +280,30 @@ impl RequestClient {
         return (state, ret_str)
     }
 
-    pub fn ovs_vsctl_add_br(&self, br_name:&str) -> bool
+    #[allow(dead_code)]
+    pub fn ovs_vsctl_add_br(&self, br_name:&str) -> (usize, String)
     {
         let token = json!(self.token.clone());
         let mut br_info = BTreeMap::new();
         br_info.insert("br_name", json!(br_name));
         br_info.insert("token", token);
 
-        let state = self.runtime.block_on(async {
-            let response: String = self.client.request("ovs-vsctl-add-br", Some(ParamsSer::Map(br_info))).await.unwrap();
-            let p: HashWrap::<i32,i32> = serde_json::from_str(response.as_str()).unwrap();
-            return p.is_success();
+        let (state, ret_str) = self.runtime.block_on(async {
+            let response : Result<String, _> = self.client.request("ovs-vsctl-add-br", Some(ParamsSer::Map(br_info))).await;
+            match response {
+                Ok(result) =>{
+                    let p:HashWrap<String,String> = serde_json::from_str(result.as_str()).unwrap();
+                    if p.is_success() {
+                        let ret_str =  p.get(&String::from("ovs_ret")).unwrap();
+                        return (p.get_code(), ret_str.clone());
+                    } else {
+                        return (p.get_code(), p.get_err());
+                    }
+                },
+                _=> {return (errno::HMIR_ERR_COMM, String::from("ovs-vsctl-add-br Failed!"));}
+            }
         });
-        return state;
+        return (state, ret_str);
     }
 
     pub fn service_all(&self) -> (String,usize) {
@@ -461,12 +472,12 @@ mod tests {
         let client = RequestClient::new(String::from(URL));
         match client {
             Ok(c) => {
-                let state = c.ovs_vsctl_add_br("br-ckxu");
-                assert_eq!(state, true)
+                let (state ,_) = c.ovs_vsctl_add_br("br-ckxu");
+                assert_eq!(state, errno::HMIR_SUCCESS)
             }
             _ => {}
         }
-    }
+    } 
 
 
     #[test]
