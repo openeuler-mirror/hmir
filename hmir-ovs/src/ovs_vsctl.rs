@@ -166,46 +166,55 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
 
     module.register_method("ovs-vsctl-set-netflow-rule", |params, _| {
         let br_info = params.parse::<BTreeMap<&str, Value>>()?;
+        OvsTokenChecker!(br_info);
         Ok(ovs_vsctl_set_netflow_rule(br_info))
     })?;
 
     module.register_method("ovs-vsctl-del-netflow-rule", |params, _| {
         let br_info = params.parse::<BTreeMap<&str, Value>>()?;
+        OvsTokenChecker!(br_info);
         Ok(ovs_vsctl_del_netflow_rule(br_info))
     })?;
 
     module.register_method("ovs-vsctl-set-ipfix-rule", |params, _| {
         let br_info = params.parse::<BTreeMap<&str, Value>>()?;
+        OvsTokenChecker!(br_info);
         Ok(ovs_vsctl_set_ipfix_rule(br_info))
     })?;
 
     module.register_method("ovs-vsctl-del-ipfix-rule", |params, _| {
         let br_info = params.parse::<BTreeMap<&str, Value>>()?;
+        OvsTokenChecker!(br_info);
         Ok(ovs_vsctl_del_ipfix_rule(br_info))
     })?;
 
     module.register_method("ovs-vsctl-set-port-vlan", |params, _| {
         let br_info = params.parse::<BTreeMap<&str, Value>>()?;
+        OvsTokenChecker!(br_info);
         Ok(ovs_vsctl_set_port_vlan(br_info))
     })?;
 
     module.register_method("ovs-vsctl-set-interface-policing", |params, _| {
         let br_info = params.parse::<BTreeMap<&str, Value>>()?;
+        OvsTokenChecker!(br_info);
         Ok(ovs_vsctl_set_interface_policing(br_info))
     })?;
 
     module.register_method("ovs-vsctl-set-port-qos", |params, _| {
         let br_info = params.parse::<BTreeMap<&str, Value>>()?;
+        OvsTokenChecker!(br_info);
         Ok(ovs_vsctl_set_port_qos(br_info))
     })?;
 
     module.register_method("ovs-vsctl-set-port-patch", |params, _| {
         let br_info = params.parse::<BTreeMap<&str, Value>>()?;
+        OvsTokenChecker!(br_info);
         Ok(ovs_vsctl_set_port_patch(br_info))
     })?;
 
     module.register_method("ovs-vsctl-set-port-bond", |params, _| {
         let br_info = params.parse::<BTreeMap<&str, Value>>()?;
+        OvsTokenChecker!(br_info);
         Ok(ovs_vsctl_set_port_bond(br_info))
     })?;
 
