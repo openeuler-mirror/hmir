@@ -30,6 +30,16 @@ export function cmd_quit() {
   return invoke('cmd_ttyd_stop')
 }
 
+//系统服务的启动
+export function cmd_service_enabled(data: any) {
+  return invoke('cmd_service_enabled', data)
+}
+
+//系统服务的禁用
+export function cmd_service_disabled(data: any) {
+  return invoke('cmd_service_disabled', data)
+}
+
 //返回后端进程信息，默认返回json字符串。
 export function cmd_process_info() {
   // return invoke('cmd_process_info', data)
