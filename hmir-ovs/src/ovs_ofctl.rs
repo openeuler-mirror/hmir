@@ -81,6 +81,7 @@ use hmir_errno::errno;
 use hmir_hash::HashWrap;
 use hmir_token::TokenChecker;
 use crate::OvsTokenChecker;
+use crate::ExecOvsQueryResult;
 
 const OFCTL_CMD: &str= "ovs-ofctl";
 const OFCTL_PRIO_BLK: &str= "1";
@@ -143,7 +144,6 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
 fn ovs_ofctl_clear_br_rules(info_map : BTreeMap<&str, Value>) -> String {
     let br_name = info_map.get("br_name").unwrap();
     let rule = format!("{} del-flows {}", OFCTL_CMD, br_name);
-    
     let output = exec_rule(rule, "ovs_ofctl_clear_br_rules".to_string());
     reflect_cmd_result(output)
 }
@@ -193,7 +193,8 @@ fn ovs_ofctl_forbid_dstport(info_map : BTreeMap<&str, Value>) -> String{
                                     OFCTL_CMD, br_name, dst_ip, dst_port, in_port, OFCTL_PRIO_BLK);
     let mut output = exec_rule(rule_tcp, "ovs_ofctl_forbid_dstport add rule_tcp".to_string());
     if !output.status.success() {
-        return String::from_utf8_lossy(&output.stderr).to_string()
+        let err_str = String::from_utf8_lossy(&output.stderr).to_string();
+        ExecOvsQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), err_str);
     }
 
     let rule_udp = format!("{} add-flow {} dl_type=0x0800,nw_proto=17,nw_dst={},tp_dst={},in_port={},priority={},action=drop", 
@@ -232,14 +233,16 @@ fn ovs_ofctl_pass_dstport(info_map : BTreeMap<&str, Value>) -> String{
                                                 OFCTL_CMD, br_name, dst_ip, OFCTL_PRIO_BLK,in_port);
     let mut output = exec_rule(rule_forbid_dstip, "ovs_ofctl_pass_dstport add rule_forbid_dstip".to_string());
     if !output.status.success() {
-            return String::from_utf8_lossy(&output.stderr).to_string()
+        let err_str = String::from_utf8_lossy(&output.stderr).to_string();
+        ExecOvsQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), err_str);
     }
     
     let rule_tcp_white = format!("{} add-flow {} dl_type=0x0800,nw_proto=6,nw_dst={},tp_dst={},in_port={},priority={},action=normal", 
                                             OFCTL_CMD, br_name, dst_ip, dst_port, in_port, OFCTL_PRIO_WHI);
     output = exec_rule(rule_tcp_white, "ovs_ofctl_pass_dstport add rule_tcp_white".to_string());
     if !output.status.success() {
-        return String::from_utf8_lossy(&output.stderr).to_string()
+        let err_str = String::from_utf8_lossy(&output.stderr).to_string();
+        ExecOvsQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), err_str);
     }
 
     let rule_udp_white = format!("{} add-flow {} dl_type=0x0800,nw_proto=17,nw_dst={},tp_dst={},in_port={},priority={},action=normal", 
@@ -271,11 +274,11 @@ mod ofctl_tests{
     fn test_add_default_rule(){
         test_setup_env();
 
-        let mut br_info = HashMap::new();
-        br_info.insert("br_name".to_string(), BR_FOR_TEST.to_string());
+        let mut br_info = BTreeMap::new();
+        br_info.insert("br_name", json!(BR_FOR_TEST));
 
-        assert_eq!(ovs_ofctl_clear_br_rules(br_info.clone()), "Done".to_string());
-        assert_eq!(ovs_ofctl_add_default_rule(br_info.clone()), "Done".to_string());
+        assert_eq!(test_ovs_ret(ovs_ofctl_clear_br_rules(br_info.clone())), true);
+        assert_eq!(test_ovs_ret(ovs_ofctl_add_default_rule(br_info.clone())), true);
         
         test_clear_env();
     }
@@ -284,16 +287,16 @@ mod ofctl_tests{
     fn test_forbid_rule(){
         test_setup_env();
 
-        let mut br_info = HashMap::new();
-        br_info.insert("br_name".to_string(), BR_FOR_TEST.to_string());
-        br_info.insert("in_port".to_string(), BR_FOR_TEST.to_string());
-        br_info.insert("dst_ip".to_string(), "172.30.24.124".to_string());
+        let mut br_info = BTreeMap::new();
+        br_info.insert("br_name", json!(BR_FOR_TEST));
+        br_info.insert("in_port", json!(BR_FOR_TEST));
+        br_info.insert("dst_ip", json!("172.30.24.124"));
         
-        assert_eq!(ovs_ofctl_forbid_dstip(br_info.clone()), "Done".to_string());
-        assert_eq!(ovs_ofctl_clear_port_rules(br_info.clone()), "Done".to_string());
+        assert_eq!(test_ovs_ret(ovs_ofctl_forbid_dstip(br_info.clone())), true);
+        assert_eq!(test_ovs_ret(ovs_ofctl_clear_port_rules(br_info.clone())), true);
 
-        br_info.insert("dst_port".to_string(), "8080/0xffff".to_string());
-        assert_eq!(ovs_ofctl_forbid_dstport(br_info.clone()), "Done".to_string());
+        br_info.insert("dst_port", json!("8080/0xffff"));
+        assert_eq!(test_ovs_ret(ovs_ofctl_forbid_dstport(br_info.clone())), true);
 
         test_clear_env();
     }
@@ -302,16 +305,16 @@ mod ofctl_tests{
     fn test_pass_rule(){
         test_setup_env();
 
-        let mut br_info = HashMap::new();
-        br_info.insert("br_name".to_string(), BR_FOR_TEST.to_string());
-        br_info.insert("in_port".to_string(), BR_FOR_TEST.to_string());
-        br_info.insert("dst_ip".to_string(), "172.30.24.124".to_string());
+        let mut br_info = BTreeMap::new();
+        br_info.insert("br_name", json!(BR_FOR_TEST));
+        br_info.insert("in_port", json!(BR_FOR_TEST));
+        br_info.insert("dst_ip", json!("172.30.24.124"));
 
-        assert_eq!(ovs_ofctl_pass_dstip(br_info.clone()), "Done".to_string());
-        assert_eq!(ovs_ofctl_clear_port_rules(br_info.clone()), "Done".to_string());
+        assert_eq!(test_ovs_ret(ovs_ofctl_pass_dstip(br_info.clone())), true);
+        assert_eq!(test_ovs_ret(ovs_ofctl_clear_port_rules(br_info.clone())), true);
 
-        br_info.insert("dst_port".to_string(), "8080/0xffff".to_string());
-        assert_eq!(ovs_ofctl_pass_dstport(br_info.clone()), "Done".to_string());
+        br_info.insert("dst_port", json!("8080/0xffff"));
+        assert_eq!(test_ovs_ret(ovs_ofctl_pass_dstport(br_info.clone())), true);
 
         test_clear_env();
     }
@@ -320,13 +323,13 @@ mod ofctl_tests{
     fn test_vlan_rule(){
         test_setup_env();
 
-        let mut br_info = HashMap::new();
-        br_info.insert("br_name".to_string(), BR_FOR_TEST.to_string());
-        br_info.insert("in_port".to_string(), BR_FOR_TEST.to_string());
-        br_info.insert("dl_vlan".to_string(), "100".to_string());
-        br_info.insert("mod_vlan".to_string(), "10".to_string());
+        let mut br_info = BTreeMap::new();
+        br_info.insert("br_name", json!(BR_FOR_TEST));
+        br_info.insert("in_port", json!(BR_FOR_TEST));
+        br_info.insert("dl_vlan", json!("100"));
+        br_info.insert("mod_vlan", json!("10"));
 
-        assert_eq!(ovs_ofctl_mod_vlan(br_info.clone()), "Done".to_string());
+        assert_eq!(test_ovs_ret(ovs_ofctl_mod_vlan(br_info.clone())), true);
 
         test_clear_env();
     }
