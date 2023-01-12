@@ -2,9 +2,7 @@
   <div class="demo-collapse">
     <el-collapse v-model="activeName" accordion>
       <el-collapse-item v-for="item of description" :key="item.value" :title="item.value" :name="item.value">
-        <div>
-          <serviceTable :tableList="item.tableList" :tableProp="item.tableProp"></serviceTable>
-        </div>
+        <serviceTable :tableList="item.tableList" :tableProp="item.tableProp"></serviceTable>
       </el-collapse-item>
     </el-collapse>
   </div>
