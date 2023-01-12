@@ -203,6 +203,21 @@ pub fn ceph_auth_register_method(module : & mut RpcModule<()>) -> anyhow::Result
             }
         }
     })?;
+
+    module.register_method("ceph-auth-add-osd", |params, _| {
+        //创建用户，生成密钥并添加任何指定的功能
+        let osd_id = params.one::<u64>()?;
+        let result = auth::add_osd(osd_id);
+        match result {
+            Ok(_) => {
+                Ok(true)
+            },
+            Err(result) => {
+                error!("Add osd auth failed. Err: {}", result);
+                Ok(false)
+            }
+        }
+    })?;
     
     Ok(())
 }
