@@ -119,6 +119,18 @@ pub fn ttyd_stop(host : & str) -> bool {
 }
 
 
+pub fn service_list_disabled(host : & str) -> (usize,String)
+{
+    let h = host.to_string();
+    return client_instance!(&h).service_list_disabled();
+}
+
+pub fn service_list_enabled(host : & str) -> (usize,String)
+{
+    let h = host.to_string();
+    return client_instance!(&h).service_all();
+}
+
 #[cfg(test)]
 mod tests {
     use hmir_errno::errno;

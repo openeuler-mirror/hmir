@@ -8,12 +8,11 @@ use hmir_hash::HashWrap;
 // use nix::libc::stat;
 use log4rs;
 use log::{error,info};
+use hmir_errno::errno;
 
 use jsonrpsee_types::ParamsSer;
 use serde_json::json;
 use std::collections::BTreeMap;
-use hmir_errno::errno;
-use hmir_errno::errno::HMIR_ERR_COMM;
 
 #[derive(Debug)]
 pub struct RequestClient {
@@ -150,7 +149,7 @@ impl RequestClient {
         self.token = token.clone();
     }
 
-    pub fn ovs_query_connection(&self) -> (bool, String) {
+    pub fn ovs_query_connection(&self) -> (usize, String) {
         let token = self.token.clone();
         let (state, ret_str) = self.runtime.block_on(async {
             let response : Result<String, _>= self.client.request("ovs-query-connection", rpc_params![token]).await;
@@ -159,12 +158,12 @@ impl RequestClient {
                     let p:HashWrap<String,String> = serde_json::from_str(result.as_str()).unwrap();
                     if p.is_success() {
                         let ret_str =  p.get(&String::from("ovs_ret")).unwrap();
-                        return (true, ret_str.clone());
+                        return (p.get_code(), ret_str.clone());
                     } else {
-                        return (false, p.get_err());
+                        return (p.get_code(), p.get_err());
                     }
                 },
-                _=>{return (false, String::from("ovs-query-connection Failed!"));}
+                _=>{return (errno::HMIR_ERR_COMM, String::from("ovs-query-connection Failed!"));}
             }
         });
         
@@ -172,7 +171,7 @@ impl RequestClient {
     }
 
     #[allow(dead_code)]
-    pub fn ovs_query_ports(&self) -> (bool,String){
+    pub fn ovs_query_ports(&self) -> (usize,String){
         let token = self.token.clone();
         let (state, ret_str) = self.runtime.block_on(async {
             let response : Result<String, _>= self.client.request("ovs-query-ports", rpc_params![token]).await;
@@ -181,12 +180,12 @@ impl RequestClient {
                     let p:HashWrap<String,String> = serde_json::from_str(result.as_str()).unwrap();
                     if p.is_success() {
                         let ret_str =  p.get(&String::from("ovs_ret")).unwrap();
-                        return (true, ret_str.clone());
+                        return (p.get_code(), ret_str.clone());
                     } else {
-                        return (false, p.get_err());
+                        return (p.get_code(), p.get_err());
                     }
                 },
-                _=>{return (false, String::from("ovs-query-ports Failed!"));}
+                _=>{return (errno::HMIR_ERR_COMM, String::from("ovs-query-ports Failed!"));}
             }
         });
         
@@ -194,7 +193,7 @@ impl RequestClient {
     }
 
     #[allow(dead_code)]
-    pub fn ovs_query_bridges(&self) -> (bool,String){
+    pub fn ovs_query_bridges(&self) -> (usize,String){
         let token = self.token.clone();
         let (state, ret_str) = self.runtime.block_on(async {
             let response : Result<String, _>= self.client.request("ovs-query-bridges", rpc_params![token]).await;
@@ -203,12 +202,12 @@ impl RequestClient {
                     let p:HashWrap<String,String> = serde_json::from_str(result.as_str()).unwrap();
                     if p.is_success() {
                         let ret_str =  p.get(&String::from("ovs_ret")).unwrap();
-                        return (true, ret_str.clone());
+                        return (p.get_code(), ret_str.clone());
                     } else {
-                        return (false, p.get_err());
+                        return (p.get_code(), p.get_err());
                     }
                 },
-                _=>{return (false, String::from("ovs-query-bridges Failed!"));}
+                _=>{return (errno::HMIR_ERR_COMM, String::from("ovs-query-bridges Failed!"));}
             }
         });
         
@@ -216,7 +215,7 @@ impl RequestClient {
     }
 
     #[allow(dead_code)]
-    pub fn ovs_query_interfaces(&self) -> (bool,String){
+    pub fn ovs_query_interfaces(&self) -> (usize,String){
         let token = self.token.clone();
         let (state, ret_str) = self.runtime.block_on(async {
             let response : Result<String, _>= self.client.request("ovs-query-interfaces", rpc_params![token]).await;
@@ -225,12 +224,12 @@ impl RequestClient {
                     let p:HashWrap<String,String> = serde_json::from_str(result.as_str()).unwrap();
                     if p.is_success() {
                         let ret_str =  p.get(&String::from("ovs_ret")).unwrap();
-                        return (true, ret_str.clone());
+                        return (p.get_code(), ret_str.clone());
                     } else {
-                        return (false, p.get_err());
+                        return (p.get_code(), p.get_err());
                     }
                 },
-                _=>{return (false, String::from("ovs-query-interfaces Failed!"));}
+                _=>{return (errno::HMIR_ERR_COMM, String::from("ovs-query-interfaces Failed!"));}
             }
         });
         
@@ -238,7 +237,7 @@ impl RequestClient {
     }
 
     #[allow(dead_code)]
-    pub fn ovs_query_netflow(&self) -> (bool,String) {
+    pub fn ovs_query_netflow(&self) -> (usize,String) {
         let token = self.token.clone();
         let (state, ret_str) = self.runtime.block_on(async {
             let response : Result<String, _>= self.client.request("ovs-query-netflow", rpc_params![token]).await;
@@ -247,12 +246,12 @@ impl RequestClient {
                     let p:HashWrap<String,String> = serde_json::from_str(result.as_str()).unwrap();
                     if p.is_success() {
                         let ret_str =  p.get(&String::from("ovs_ret")).unwrap();
-                        return (true, ret_str.clone());
+                        return (p.get_code(), ret_str.clone());
                     } else {
-                        return (false, p.get_err());
+                        return (p.get_code(), p.get_err());
                     }
                 },
-                _=>{return (false, String::from("ovs-query-netflow Failed!"));}
+                _=>{return (errno::HMIR_ERR_COMM, String::from("ovs-query-netflow Failed!"));}
             }
         });
         
@@ -260,7 +259,7 @@ impl RequestClient {
     }
 
     #[allow(dead_code)]
-    pub fn ovs_query_ipfix(&self) -> (bool,String) {
+    pub fn ovs_query_ipfix(&self) -> (usize,String) {
         let token = self.token.clone();
         let (state, ret_str) = self.runtime.block_on(async {
             let response : Result<String, _>= self.client.request("ovs-query-ipfix", rpc_params![token]).await;
@@ -269,52 +268,100 @@ impl RequestClient {
                     let p:HashWrap<String,String> = serde_json::from_str(result.as_str()).unwrap();
                     if p.is_success() {
                         let ret_str =  p.get(&String::from("ovs_ret")).unwrap();
-                        return (true, ret_str.clone());
+                        return (p.get_code(), ret_str.clone());
                     } else {
-                        return (false, p.get_err());
+                        return (p.get_code(), p.get_err());
                     }
                 },
-                _=>{return (false, String::from("ovs-query-ipfix Failed!"));}
+                _=>{return (errno::HMIR_ERR_COMM, String::from("ovs-query-ipfix Failed!"));}
             }
         });
         
         return (state, ret_str)
     }
 
-    pub fn ovs_vsctl_add_br(&self, br_name:&str) -> bool
+    #[allow(dead_code)]
+    pub fn ovs_vsctl_add_br(&self, br_name:&str) -> (usize, String)
     {
         let token = json!(self.token.clone());
         let mut br_info = BTreeMap::new();
         br_info.insert("br_name", json!(br_name));
         br_info.insert("token", token);
 
-        let state = self.runtime.block_on(async {
-            let response: String = self.client.request("ovs-vsctl-add-br", Some(ParamsSer::Map(br_info))).await.unwrap();
-            let p: HashWrap::<i32,i32> = serde_json::from_str(response.as_str()).unwrap();
-            return p.is_success();
+        let (state, ret_str) = self.runtime.block_on(async {
+            let response : Result<String, _> = self.client.request("ovs-vsctl-add-br", Some(ParamsSer::Map(br_info))).await;
+            match response {
+                Ok(result) =>{
+                    let p:HashWrap<String,String> = serde_json::from_str(result.as_str()).unwrap();
+                    if p.is_success() {
+                        let ret_str =  p.get(&String::from("ovs_ret")).unwrap();
+                        return (p.get_code(), ret_str.clone());
+                    } else {
+                        return (p.get_code(), p.get_err());
+                    }
+                },
+                _=> {return (errno::HMIR_ERR_COMM, String::from("ovs-vsctl-add-br Failed!"));}
+            }
         });
-        return state;
+        return (state, ret_str);
     }
 
-    pub fn service_all(&self) -> (String,usize) {
+    #[allow(dead_code)]
+    pub fn ovs_vsctl_del_br(&self, br_name:&str) -> (usize, String)
+    {
+        let token = json!(self.token.clone());
+        let mut br_info = BTreeMap::new();
+        br_info.insert("br_name", json!(br_name));
+        br_info.insert("token", token);
 
+        let (state, ret_str) = self.runtime.block_on(async {
+            let response : Result<String, _> = self.client.request("ovs-vsctl-del-br", Some(ParamsSer::Map(br_info))).await;
+            match response {
+                Ok(result) =>{
+                    let p:HashWrap<String,String> = serde_json::from_str(result.as_str()).unwrap();
+                    if p.is_success() {
+                        let ret_str =  p.get(&String::from("ovs_ret")).unwrap();
+                        return (p.get_code(), ret_str.clone());
+                    } else {
+                        return (p.get_code(), p.get_err());
+                    }
+                },
+                _=> {return (errno::HMIR_ERR_COMM, String::from("ovs-vsctl-del-br Failed!"));}
+            }
+        });
+        return (state, ret_str);
+    }
+
+    pub fn service_all(&self) -> (usize,String) {
         let token = self.token.clone();
 
-        let (service,state) = self.runtime.block_on(async{
+        let (state,service) = self.runtime.block_on(async{
             let response: Result<String, _> = self.client.request("service-all", rpc_params![token]).await;
             match response {
                 Ok(result) => {
                     let p: HashWrap::<String,Unit> = serde_json::from_str(result.as_str()).unwrap();
-                    return (serde_json::to_string(&p.result).unwrap(),p.code());
+                    return (p.code(),serde_json::to_string(&p.result).unwrap());
                 },
-                _ => { return ("".to_string(),HMIR_ERR_COMM)}
+                _ => { return (errno::HMIR_ERR_COMM,"".to_string())}
             };
         });
-
-        return (service,state);
+        return (state,service);
     }
 
-
+    pub fn service_list_disabled(&self) -> (usize,String) {
+        let token = self.token.clone();
+        let (state,service) = self.runtime.block_on(async{
+            let response: Result<String, _> = self.client.request("service-list-disabled", rpc_params![token]).await;
+            match response {
+                Ok(result) => {
+                    let p: HashWrap::<String,Unit> = serde_json::from_str(result.as_str()).unwrap();
+                    return (p.code(),serde_json::to_string(&p.result).unwrap());
+                },
+                _ => { return (errno::HMIR_ERR_COMM,"".to_string())}
+            };
+        });
+        return (state,service);
+    }
 }
 
 
@@ -391,7 +438,7 @@ mod tests {
         match client {
             Ok(c) => {
                 let (state ,_) = c.ovs_query_connection();
-                assert_eq!(state, true);
+                assert_eq!(state, errno::HMIR_SUCCESS);
             }
             _ => {}
         }
@@ -403,7 +450,7 @@ mod tests {
         match client {
             Ok(c) => {
                 let (state ,_)= c.ovs_query_ports();
-                assert_eq!(state, true);
+                assert_eq!(state, errno::HMIR_SUCCESS);
             }
             _ => {}
         }
@@ -415,7 +462,7 @@ mod tests {
         match client {
             Ok(c) => {
                 let (state,_) = c.ovs_query_bridges();
-                assert_eq!(state, true);
+                assert_eq!(state, errno::HMIR_SUCCESS);
             }
             _ => {}
         }
@@ -427,7 +474,7 @@ mod tests {
         match client {
             Ok(c) => {
                 let (state,_) = c.ovs_query_interfaces();
-                assert_eq!(state, true)
+                assert_eq!(state, errno::HMIR_SUCCESS)
             }
             _ => {}
         }
@@ -439,7 +486,7 @@ mod tests {
         match client {
             Ok(c) => {
                 let (state,_)= c.ovs_query_netflow();
-                assert_eq!(state, true)
+                assert_eq!(state, errno::HMIR_SUCCESS)
             }
             _ => {}
         }
@@ -451,7 +498,7 @@ mod tests {
         match client {
             Ok(c) => {
                 let (state,_) = c.ovs_query_ipfix();
-                assert_eq!(state, true)
+                assert_eq!(state, errno::HMIR_SUCCESS)
             }
             _ => {}
         }
@@ -462,13 +509,27 @@ mod tests {
         let client = RequestClient::new(String::from(URL));
         match client {
             Ok(c) => {
-                let state = c.ovs_vsctl_add_br("br-ckxu");
-                assert_eq!(state, true)
+                let (state ,_) = c.ovs_vsctl_add_br("br-ckxu");
+                assert_eq!(state, errno::HMIR_SUCCESS)
             }
             _ => {}
         }
-    }
+    } 
 
+    #[test]
+    fn ovs_vsctl_del_br_worked(){
+        let client = RequestClient::new(String::from(URL));
+        match client {
+            Ok(c) => {
+                let (state ,_) = c.ovs_vsctl_add_br("br-ckxu");
+                if state == errno::HMIR_SUCCESS {
+                    let (del_state,_) = c.ovs_vsctl_del_br("br-ckxu");
+                    assert_eq!(del_state, errno::HMIR_SUCCESS)
+                }
+            }
+            _ => {}
+        }
+    } 
 
     #[test]
     fn server_all_worked(){
@@ -481,4 +542,16 @@ mod tests {
         }
     }
 
+
+    #[test]
+    fn server_list_disabled_worked(){
+        let client = RequestClient::new(String::from(URL));
+        match client {
+            Ok(c) => {
+                let (result,state) = c.service_list_disabled();
+                println!("{}",result);
+            }
+            _ => {}
+        }
+    }
 }

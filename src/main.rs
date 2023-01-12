@@ -5,6 +5,7 @@ mod wsclient;
 mod ssh;
 mod pam;
 mod clientmgr;
+mod user;
 // mod token;
 
 #[cfg(target_os = "linux")]
@@ -42,6 +43,8 @@ use std::time::Instant;
 
 use std::{net::SocketAddr};
 
+
+// use hmir_dpkg;
 
 #[derive(Clone)]
 struct Timings;

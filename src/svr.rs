@@ -86,7 +86,8 @@ use std::sync::RwLock;
 use hmir_hash::HashWrap;
 use hmir_errno::errno;
 use std::{thread, time};
-
+use std::path::Path;
+use std::ffi::OsStr;
 
 use hmir_systemd::{
     build_blocking_client,
@@ -154,6 +155,41 @@ pub fn service_all() -> String {
     let serialized = serde_json::to_string(&*SERVICE_MAP).unwrap();
     serialized
 }
+
+
+fn basename(filename: &str) -> Option<&str> {
+    Path::new(filename).file_name().and_then(OsStr::to_str)
+}
+
+
+pub fn service_list_disabled() -> String {
+    let client = build_blocking_client(SystemdObjectType::Manager).unwrap();
+    let files = client.list_unit_files().unwrap();
+
+    let vdisable:Vec<String> = files.into_iter()
+        .filter(|n | n.1.eq("disabled") )
+        .map(|n| n.0 )
+        .collect::<_>();
+    let disable_files: Vec<&str> = vdisable.iter().map(|n| basename(n.as_ref()).unwrap()).collect();
+    let mut map  = hmir_hash::HashWrap::new();
+    for x in &disable_files {
+        match client.list_units_by_names(vec![x]) {
+            Ok(units) => {
+                for unit in units {
+                    let unit: Unit = unit.into_model().unwrap().clone();
+                    map.insert(unit.name.clone(),unit.clone());
+                }
+            }
+            _ => {}
+        }
+    }
+    println!("the disabled files : {:?}",disable_files);
+
+    let serialized = serde_json::to_string(&map).unwrap();
+    serialized
+}
+
+
 
 ///
 /// service-status接口实现
@@ -272,6 +308,12 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
         Ok(service_enable(service))
     })?;
 
+    module.register_method("service-list-disabled", |params, _| {
+        //默认没有error就是成功的
+        let service = params.one::<std::string::String>()?;
+        Ok(service_list_disabled())
+    })?;
+
     Ok(())
 }
 
@@ -296,8 +338,6 @@ mod tests {
 
     #[test]
     fn service_all_it_works() {
-
-
         update_all_svr();
         let data = service_all();
         println!("{}",data);
@@ -325,6 +365,12 @@ mod tests {
     #[test]
     fn service_disable_it_works(){
         let s = service_disable(std::string::String::from("docker.service"));
+        println!("{}",s);
+    }
+
+    #[test]
+    fn service_list_disable_it_works(){
+        let s = service_list_disabled();
         println!("{}",s);
     }
 }
