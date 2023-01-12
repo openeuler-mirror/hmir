@@ -6,10 +6,14 @@ use tokio::runtime::Builder;
 use jsonrpsee::rpc_params;
 use hmir_hash::HashWrap;
 // use nix::libc::stat;
+use log4rs;
+use log::{error,info};
 
 use jsonrpsee_types::ParamsSer;
 use serde_json::json;
 use std::collections::BTreeMap;
+use hmir_errno::errno;
+use hmir_errno::errno::HMIR_ERR_COMM;
 
 #[derive(Debug)]
 pub struct RequestClient {
@@ -19,18 +23,29 @@ pub struct RequestClient {
 }
 
 
+use hmir_systemd::{
+    build_blocking_client,
+    manager::blocking::{OrgFreedesktopSystemd1Manager},
+    models::{Unit,IntoModel},
+    SystemdObjectType,
+};
+
+
 impl RequestClient {
     pub fn new(uri : std::string::String) -> Result<Self,bool> {
         let runtime = Builder::new_current_thread().enable_all().build().unwrap();
         let client = runtime.block_on(async {
             let uri: Uri = format!("ws://{}", uri).parse().unwrap();
-            let client_builder = WsTransportClientBuilder::default().build(uri).await;
+            let client_builder = WsTransportClientBuilder::default().build(uri.clone()).await;
             match client_builder {
                 Ok((tx,rx)) => {
                     let client: Client = ClientBuilder::default().build_with_tokio(tx, rx);
                     Ok(client)
                 },
-                Err(_e) => Err(false)
+                Err(_e) => {
+                    error!("Connect the remote {} failed, Reason : {}",uri.clone(),_e.to_string());
+                    Err(false)
+                }
             }
         });
 
@@ -71,7 +86,7 @@ impl RequestClient {
         return state;
     }
 
-    pub fn login(& mut self,username : &str, password : &str ) -> bool {
+    pub fn login(& mut self,username : &str, password : &str ) -> usize {
         let (state,token) = self.runtime.block_on(async {
             let response: Result<String, _> = self.client.request("pam-auth", rpc_params![username,password]).await;
             match response {
@@ -79,24 +94,24 @@ impl RequestClient {
                     let p: HashWrap::<String,String> = serde_json::from_str(result.as_str()).unwrap();
                     if p.is_success() {
                         let token =  p.get(&String::from("token")).unwrap();
-                        return (p.is_success(),token.clone());
+                        return (p.code(),token.clone());
                     }else {
-                        return (false,String::from(""));
+                        return (p.code(),String::from(""));
                     }
                 }
                 _ => {
-                    return (false,String::from(""));
+                    return (errno::HMIR_ERR_COMM,String::from(""));
                 }
             }
         });
 
-        if state {
+        if state == errno::HMIR_SUCCESS {
             self.update_token(&token);
         }
         return state;
     }
 
-    pub fn ssh_login(& mut self,username : &str, password: &str) -> bool {
+    pub fn ssh_login(& mut self,username : &str, password: &str) -> usize {
         let (state,token) = self.runtime.block_on( async  {
             let response: Result<String, _> = self.client.request("ssh-auth", rpc_params![username,password]).await;
             match response {
@@ -104,15 +119,16 @@ impl RequestClient {
                     let p:HashWrap<String,String> = serde_json::from_str(result.as_str()).unwrap();
                     if p.is_success() {
                         let token =  p.get(&String::from("token")).unwrap();
-                        return (p.is_success(),token.clone());
+                        return (p.code(),token.clone());
                     }else {
-                        return (false,String::from(""));
-                    }                }
-                _ => { return (false,String::from("")) ;}
+                        return (p.code(),String::from(""));
+                    }
+                }
+                _ => { return (errno::HMIR_ERR_COMM,String::from("")) ;}
             }
         });
 
-        if state {
+        if state == errno::HMIR_SUCCESS {
             self.update_token(&token);
         }
 
@@ -280,22 +296,22 @@ impl RequestClient {
         return state;
     }
 
-    pub fn service_all(&self) -> String {
+    pub fn service_all(&self) -> (String,usize) {
 
         let token = self.token.clone();
 
         let (service,state) = self.runtime.block_on(async{
-            let response: String = self.client.request("service-all", rpc_params![token]).await.unwrap();
-            let p: HashWrap::<String,String> = serde_json::from_str(response.as_str()).unwrap();
-            if p.is_success() {
-                // return (serde_json::to_string(&p.result).unwrap(),true);
-                return ("".to_string(),false);
-            }else {
-                return ("".to_string(),false);
-            }
+            let response: Result<String, _> = self.client.request("service-all", rpc_params![token]).await;
+            match response {
+                Ok(result) => {
+                    let p: HashWrap::<String,Unit> = serde_json::from_str(result.as_str()).unwrap();
+                    return (serde_json::to_string(&p.result).unwrap(),p.code());
+                },
+                _ => { return ("".to_string(),HMIR_ERR_COMM)}
+            };
         });
 
-        return service;
+        return (service,state);
     }
 
 
@@ -334,7 +350,7 @@ mod tests {
         match client {
             Ok(mut c) => {
                 let login_state = c.login("root", "root");
-                assert_eq!(login_state, false)
+                assert_eq!(login_state, 0)
             }
             _ => {}
         }
@@ -346,7 +362,7 @@ mod tests {
         match client {
             Ok(mut c) => {
                 let login_state = c.ssh_login("duanwujie","linx");
-                assert_eq!(login_state,true);
+                assert_eq!(login_state,errno::HMIR_SUCCESS);
                 let state = c.ttyd_start();
                 assert_eq!(state,true);
                 let state = c.ttyd_stop();
@@ -363,7 +379,7 @@ mod tests {
         match client {
             Ok(mut c) => {
                 let login_state = c.login("root","radlcdss");
-                assert_eq!(login_state,true)
+                assert_eq!(login_state,errno::HMIR_SUCCESS)
             }
             _ => {}
         }
@@ -451,6 +467,18 @@ mod tests {
             }
             _ => {}
         }
-    } 
+    }
+
+
+    #[test]
+    fn server_all_worked(){
+        let client = RequestClient::new(String::from(URL));
+        match client {
+            Ok(c) => {
+                let (result,state) = c.service_all();
+            }
+            _ => {}
+        }
+    }
 
 }
