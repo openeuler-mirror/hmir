@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-table :data="tableList" style="width: 100%;max-height: 40vh;" empty-text="暂无数据">
+    <el-table :data="tableList" style="width: 100%;height: 40vh;" empty-text="暂无数据">
       <el-table-column v-for="item of tableProp" :prop="item.prop" :label="item.label" />
     </el-table>
   </div>
