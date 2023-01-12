@@ -22,11 +22,12 @@ use tokio;
 use tauri::{CustomMenuItem, Menu, MenuItem, Submenu};
 use tauri::Manager;
 use tauri::WindowBuilder;
-
+use tauri_plugin_websocket;
 
 //use log4rs;
-//use log::{error,info};
+use log::{error,info};
 use std::process;
+use hmir_errno::errno;
 
 
 mod wsclient;
@@ -49,16 +50,23 @@ fn greet(name : & str) -> String {
 }
 
 #[tauri::command]
-fn cmd_login(host : & str, port : i32 , username : & str, password : & str) -> bool
+fn cmd_error_description(code : usize) -> String {
+    return String::from(errno::HMIR_MSG[code]);
+}
+
+#[tauri::command]
+fn cmd_login(host : & str, port : i32 , username : & str, password : & str) -> usize
 {
-    const use_ssh_login : bool = true;
+    const use_ssh_login : bool = false;
     if clientmgr::register_client(host,port) {
         if use_ssh_login {
             return clientmgr::ssh_login(host,username,password);
         }
         return clientmgr::login(host,username,password);
+    } else {
+        error!("Can't register clinet : {}:{}",host,port);
+        return errno::HMIR_ERR_CONNECT_SERVER;
     }
-    return false;
 }
 
 ///返回后端进程信息，默认返回json字符串。
@@ -73,6 +81,12 @@ fn cmd_logout(host : &str) -> bool
     return clientmgr::logout(host);
 }
 
+
+#[tauri::command]
+fn cmd_service_all() -> (String,bool)
+{
+    ("".to_string(),false)
+}
 
 #[tauri::command]
 fn cmd_quit() {
@@ -144,6 +158,7 @@ fn main() {
             cmd_ttyd_start,
             cmd_quit])
         // .invoke_handler(tauri::generate_handler![ttyd_start])
+        .plugin(tauri_plugin_websocket::init())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
