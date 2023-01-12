@@ -1,5 +1,24 @@
 use std::process::{Output};
 use std::process::Command;
+use hmir_errno::errno;
+use hmir_hash::HashWrap;
+
+#[macro_export]
+macro_rules! ExecOvsQueryResult {
+    ($i:expr, $j:expr, $k:expr) => {
+        let mut response = HashWrap::<String,String>:: new();
+        if $i == 0 {
+            response.insert(String::from("ovs_ret"), $j);
+        }
+
+        if $i !=0 {
+            response.error($i, $k);
+        } 
+        response.set_code($i);
+        let serialized = serde_json::to_string(&response).unwrap();
+        return serialized;
+    }
+}
 
 pub const BR_FOR_TEST: &str =  "ovs_test_br";
 pub const PORT_FOR_TEST: &str = "ovs_test_port";
@@ -20,9 +39,10 @@ pub fn test_clear_env() {
 pub fn reflect_cmd_result(output : Output) -> String{
 
     if output.status.success(){
-        String::from("Done")
+        ExecOvsQueryResult!(errno::HMIR_SUCCESS, "Done".to_string(), "".to_string());
     } else {
-        String::from_utf8_lossy(&output.stderr).to_string()
+        let err_str = String::from_utf8_lossy(&output.stderr).to_string();
+        ExecOvsQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), err_str);
     }
 }
 
@@ -33,21 +53,4 @@ pub fn exec_rule(rule: String, cmd_name: String) -> Output{
                         output().expect(&format!("failed to excute {}", cmd_name));
 
     output 
-}
-
-#[macro_export]
-macro_rules! ExecOvsQueryResult {
-    ($i:expr, $j:expr, $k:expr) => {
-        let mut response = HashWrap::<String,String>:: new();
-        if $i == 0 {
-            response.insert(String::from("ovs_ret"), $j);
-        }
-
-        if $i !=0 {
-            response.error($i, $k);
-        } 
-        response.set_code($i);
-        let serialized = serde_json::to_string(&response).unwrap();
-        return serialized;
-    }
 }
