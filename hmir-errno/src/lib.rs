@@ -21,8 +21,9 @@ pub mod errno {
     pub static HMIR_ERR_TOKEN : usize = 2;//无效的token
     pub static HMIR_ERR_USERNAME: usize = 3;//错误的用户名
     pub static HMIR_ERR_PASSWORD: usize = 4;//错误的密码
+    pub static HMIR_ERR_CONNECT_SERVER : usize = 5; //无法连接服务器
 
     lazy_static! {
-        pub static ref HMIR_MSG: Vec<&'static str> = vec!["成功", "通用错误", "无效的token", "错误的用户名", "错误的密码"];
+        pub static ref HMIR_MSG: Vec<&'static str> = vec!["成功", "通用错误", "无效的token", "错误的用户名", "错误的密码","无法连接服务器"];
     }
 }
