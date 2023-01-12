@@ -1,9 +1,9 @@
 use crate::{path_to_string, Result};
 use dbus::arg;
-use serde::{Serialize};
+use serde::{Serialize,Deserialize};
 
 // systemctl --state=help
-#[derive(Clone, Debug, PartialEq,Serialize)]
+#[derive(Clone, Debug, PartialEq,Serialize,Deserialize)]
 pub enum UnitLoadStateType {
     Stub,
     Loaded,
@@ -42,7 +42,7 @@ impl ToString for UnitLoadStateType {
     }
 }
 
-#[derive(Clone, Debug, PartialEq,Serialize)]
+#[derive(Clone, Debug, PartialEq,Serialize,Deserialize)]
 pub enum UnitActiveStateType {
     Active,
     Reloading,
@@ -81,7 +81,7 @@ impl ToString for UnitActiveStateType {
     }
 }
 
-#[derive(Clone, Debug, PartialEq,Serialize)]
+#[derive(Clone, Debug, PartialEq,Serialize,Deserialize)]
 pub enum UnitSubStateType {
     Abandon,
     Activating,
@@ -219,7 +219,7 @@ pub trait IntoModel<T> {
     fn into_model(self) -> Result<T>;
 }
 
-#[derive(Clone, Debug,Serialize)]
+#[derive(Clone, Debug,Serialize,Deserialize)]
 pub struct Unit {
     pub name: String,
     pub description: String,
