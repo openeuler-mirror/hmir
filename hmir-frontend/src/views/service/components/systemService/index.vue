@@ -8,18 +8,32 @@
 import serviceCollapse from '@/components/serviceCollapse/index.vue';
 import { ref, onMounted } from 'vue';
 import serviceList from '@/views/service/interface/index';
-import { cmd_process_info } from '@/api/index';
+import { cmd_service_enabled, cmd_service_disabled } from '@/api/index';
+import { useUsersStore } from '@/store/modules/user';
+
+//引入store仓库
+const store = useUsersStore();
 
 const description = ref<serviceList[]>([{ value: '' }])
 
-const cmdProcessInfo = () => {
-  let value = cmd_process_info();
-  let arr = Array.from(Object.values(value), x => x);
-  return arr;
+//启用项接口
+const cmdServiceEnabled = () => {
+  cmd_service_enabled({ host: store.host }).then((res: any) => {
+    let value: any = JSON.parse(res[1]);
+    let arr: any = Array.from(Object.values(value), x => x);
+    description.value[0].tableList = arr;
+  })
 }
 
+//禁用项接口
+const cmdServiceDisabled = () => {
+  cmd_service_disabled({ host: store.host }).then((res: any) => {
+    let value: any = JSON.parse(res[1]);
+    let arr: any = Array.from(Object.values(value), x => x);
+    description.value[1].tableList = arr;
+  })
+}
 onMounted(() => {
-  let tableList = cmdProcessInfo()
   description.value = [{
     value: '启用',
     // tableList: [{
@@ -27,7 +41,7 @@ onMounted(() => {
     //   id: 'accounts-daemon.service',
     //   state: '激活 (running)',
     // }],
-    tableList,
+    tableList: [],
     tableProp: [
       { prop: 'description', label: '描述' },
       { prop: 'name', label: 'ID' },
@@ -35,11 +49,7 @@ onMounted(() => {
   },
   {
     value: '禁用',
-    tableList: [{
-      description: 'Accounts Service',
-      name: 'accounts-daemon.service',
-      state: '激活 (running)',
-    }],
+    tableList: [],
     tableProp: [
       { prop: 'description', label: '描述' },
       { prop: 'name', label: 'ID' },
@@ -58,6 +68,8 @@ onMounted(() => {
       { prop: 'name', label: 'ID' },
     ]
   }]
+  cmdServiceEnabled()
+  cmdServiceDisabled()
 })
 
 </script>
