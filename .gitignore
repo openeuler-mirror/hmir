@@ -1,2 +1,5 @@
 .idea
 target
+Cargo.lock
+hmir-systemd/src/manager/blocking.rs
+hmir-systemd/src/manager/nonblock.rs

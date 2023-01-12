@@ -83,10 +83,17 @@ fn cmd_logout(host : &str) -> bool
 
 
 #[tauri::command]
-fn cmd_service_all() -> (String,bool)
+fn cmd_service_enabled(host : &str) -> (usize,String)
 {
-    ("".to_string(),false)
+    return clientmgr::service_list_enabled(host);
 }
+
+#[tauri::command]
+fn cmd_service_disabled(host : &str) -> (usize,String)
+{
+    return clientmgr::service_list_disabled(host);
+}
+
 
 #[tauri::command]
 fn cmd_quit() {
@@ -156,7 +163,9 @@ fn main() {
             cmd_logout,
             cmd_ttyd_stop,
             cmd_ttyd_start,
-            cmd_quit])
+            cmd_quit,
+            cmd_service_enabled,
+            cmd_service_disabled])
         // .invoke_handler(tauri::generate_handler![ttyd_start])
         .plugin(tauri_plugin_websocket::init())
         .run(tauri::generate_context!())
