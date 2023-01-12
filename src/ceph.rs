@@ -36,46 +36,15 @@ pub fn register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
     
     ceph_mds_register_method(module)?;
 
+    ceph_osd_register_method(module)?;
+    
+    ceph_osd_pool_register_method(module)?;
+    
     ceph_config_key_register_method(module);
     
     module.register_method("ceph-cluster-stat", |_, _| {
         //获取ceph集群状态
         Ok(ceph_cluster_stat())
-    })?;
-    
-    module.register_method("ceph-pool-list", |_, _| {
-        //获取ceph集群存储池列表
-        Ok(ceph_pool_list())
-    })?;
-    
-    module.register_method("ceph-pool-stats", |_, _| {
-        //获取ceph集群存储池状态
-        Ok(ceph_pool_stats())
-    })?;
-    
-    module.register_method("ceph-osd-tree", |_, _| {
-        //获取osd拓扑结构
-        Ok(ceph_osd_tree())
-    })?;
-
-    module.register_method("ceph-osd-versions", |_, _| {
-        //获取osd组件版本信息
-        Ok(ceph_osd_versions())
-    })?;
-
-    module.register_method("ceph-osd-metadata", |_, _| {
-        //获取osd组件元数据信息
-        Ok(ceph_osd_metadata())
-    })?;
-
-    module.register_method("ceph-osd-perf", |_, _| {
-        //osd性能测试
-        Ok(ceph_osd_perf())
-    })?;
-    
-    module.register_method("ceph-osd-crush-rule-dump", |_, _| {
-        //获取osd的crush规则
-        Ok(ceph_osd_crush_rule_dump())
     })?;
     
     Ok(())
@@ -297,6 +266,66 @@ pub fn ceph_mds_register_method(module : & mut RpcModule<()>) -> anyhow::Result<
     module.register_method("ceph-mds-metadata", |_, _| {
         //查询mds组件元数据信息
         Ok(mds::mds_metadata())
+    })?;
+    
+    Ok(())
+}
+
+///osd 相关命令
+pub fn ceph_osd_register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
+    module.register_method("ceph-osd-tree", |_, _| {
+        //获取osd拓扑结构
+        Ok(ceph_osd_tree())
+    })?;
+
+    module.register_method("ceph-osd-versions", |_, _| {
+        //获取osd组件版本信息
+        Ok(ceph_osd_versions())
+    })?;
+
+    module.register_method("ceph-osd-metadata", |_, _| {
+        //获取osd组件元数据信息
+        Ok(ceph_osd_metadata())
+    })?;
+
+    module.register_method("ceph-osd-perf", |_, _| {
+        //osd性能测试
+        Ok(ceph_osd_perf())
+    })?;
+
+    module.register_method("ceph-osd-crush-rule-dump", |_, _| {
+        //获取osd的crush规则
+        Ok(ceph_osd_crush_rule_dump())
+    })?;
+    
+    Ok(())
+}
+
+//osd pool相关命令
+pub fn ceph_osd_pool_register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
+    module.register_method("ceph-pool-list", |_, _| {
+        //获取ceph集群存储池列表
+        Ok(ceph_pool_list())
+    })?;
+
+    module.register_method("ceph-pool-stats", |_, _| {
+        //获取ceph集群存储池状态
+        Ok(ceph_pool_stats())
+    })?;
+
+    module.register_method("ceph-pool-get", |params, _| {
+        //获取ceph集群属性
+        let params_map = params.parse::<HashMap<String, String>>()?;
+        let result = pool::get_param(params_map.get("pool_name").unwrap(),
+                                     params_map.get("option").unwrap());
+        match result {
+            Ok(result) => {
+                Ok(result)
+            },
+            Err(result) => {
+                Ok(format!("Error to get pool option {:?}", result))
+            },
+        }
     })?;
     
     Ok(())
