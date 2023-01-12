@@ -1,7 +1,9 @@
 <template>
   <div>
     <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
-      <el-tab-pane label="目标" name="target">目标</el-tab-pane>
+      <el-tab-pane label="目标" name="target">
+        <serviceTarget></serviceTarget>
+      </el-tab-pane>
       <el-tab-pane label="系统服务" name="systemService">
         <systemService></systemService>
       </el-tab-pane>
@@ -19,7 +21,7 @@ import { ref } from 'vue'
 import type { TabsPaneContext } from 'element-plus'
 import systemService from '@/views/service/components/systemService/index.vue'
 import serviceTimer from '@/views/service/components/serviceTimer/index.vue'
-
+import serviceTarget from '@/views/service/components/serviceTarget/index.vue'
 
 const activeName = ref('systemService')
 
