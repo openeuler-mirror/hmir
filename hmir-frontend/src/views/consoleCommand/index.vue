@@ -60,7 +60,7 @@ function refresh() {
 }
 
 onMounted(() => {
-  getPageUrl.value = `http://${store.host}:5899`
+  getPageUrl.value = `http://${store.host}:3001`
   ttydStart();
 });
 
