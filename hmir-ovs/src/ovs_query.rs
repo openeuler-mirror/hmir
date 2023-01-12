@@ -102,7 +102,6 @@
 //! }
 //! 
 
-
 use jsonrpsee::ws_server::RpcModule;
 use std::collections::HashMap;
 
@@ -344,33 +343,35 @@ fn del_port(info_map : HashMap<String, String>) -> std::string::String {
 }
 
 // 由于测试网桥会在用例中不断被清理，需保证串行执行用例：cargo test  -- --test-threads=1 
+ 
 #[cfg(test)]
 mod query_tests{
     use super::*;
+    use crate::ovs_common::*;
 
     #[test]
     fn test_query(){
         test_setup_env();
 
-        assert_eq!(check_connection(), "Connected!".to_string());
+        assert_eq!(test_ovs_ret(check_connection()), true);
         let mut ret_str = get_bridges();
-        assert!(ret_str.contains(BR_FOR_TEST));
+        assert!(test_get_ret_str(ret_str).contains(BR_FOR_TEST));
 
         ret_str = get_ports();
-        assert!(ret_str.contains(BR_FOR_TEST));
+        assert!(test_get_ret_str(ret_str).contains(BR_FOR_TEST));
 
         ret_str = get_interfaces();
-        assert!(ret_str.contains(BR_FOR_TEST));
+        assert!(test_get_ret_str(ret_str).contains(BR_FOR_TEST));
 
         let rule_netflow = format!("ovs-vsctl set Bridge {} netflow=@nf -- --id=@nf create NetFlow targets=\\\"172.30.21.13:2055\\\" active-timeout=60", BR_FOR_TEST);
         exec_rule(rule_netflow, "test_query rule_netflow".to_string());
         ret_str = get_netflow();
-        assert!(ret_str.contains("172.30.21.13:2055"));
+        assert!(test_get_ret_str(ret_str).contains("172.30.21.13:2055"));
 
         let rule_ipfix = format!("ovs-vsctl set Bridge {} ipfix=@i -- --id=@i create IPFIX targets=\\\"172.30.21.14:2055\\\"", BR_FOR_TEST);
         exec_rule(rule_ipfix, "test_query rule_ipfix".to_string());
         ret_str = get_ipfix();
-        assert!(ret_str.contains("172.30.21.14:2055"));
+        assert!(test_get_ret_str(ret_str).contains("172.30.21.14:2055"));
 
         test_clear_env();
     }

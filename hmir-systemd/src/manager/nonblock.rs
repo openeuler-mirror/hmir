@@ -34,21 +34,21 @@ impl<'a, T: nonblock::NonblockReply, C: ::std::ops::Deref<Target=T>> OrgFreedesk
 }
 
 pub trait OrgFreedesktopDBusProperties {
-    fn get(&self, interface_name: &str, property_name: &str) -> nonblock::MethodReply<arg::Variant<Box<dyn arg::RefArg + 'static>>>;
-    fn get_all(&self, interface_name: &str) -> nonblock::MethodReply<arg::PropMap>;
-    fn set(&self, interface_name: &str, property_name: &str, value: arg::Variant<Box<dyn arg::RefArg>>) -> nonblock::MethodReply<()>;
+    fn get(&self, interface: &str, property: &str) -> nonblock::MethodReply<arg::Variant<Box<dyn arg::RefArg + 'static>>>;
+    fn get_all(&self, interface: &str) -> nonblock::MethodReply<arg::PropMap>;
+    fn set(&self, interface: &str, property: &str, value: arg::Variant<Box<dyn arg::RefArg>>) -> nonblock::MethodReply<()>;
 }
 
 #[derive(Debug)]
 pub struct OrgFreedesktopDBusPropertiesPropertiesChanged {
-    pub interface_name: String,
+    pub interface: String,
     pub changed_properties: arg::PropMap,
     pub invalidated_properties: Vec<String>,
 }
 
 impl arg::AppendAll for OrgFreedesktopDBusPropertiesPropertiesChanged {
     fn append(&self, i: &mut arg::IterAppend) {
-        arg::RefArg::append(&self.interface_name, i);
+        arg::RefArg::append(&self.interface, i);
         arg::RefArg::append(&self.changed_properties, i);
         arg::RefArg::append(&self.invalidated_properties, i);
     }
@@ -57,7 +57,7 @@ impl arg::AppendAll for OrgFreedesktopDBusPropertiesPropertiesChanged {
 impl arg::ReadAll for OrgFreedesktopDBusPropertiesPropertiesChanged {
     fn read(i: &mut arg::Iter) -> Result<Self, arg::TypeMismatchError> {
         Ok(OrgFreedesktopDBusPropertiesPropertiesChanged {
-            interface_name: i.read()?,
+            interface: i.read()?,
             changed_properties: i.read()?,
             invalidated_properties: i.read()?,
         })
@@ -71,62 +71,54 @@ impl dbus::message::SignalArgs for OrgFreedesktopDBusPropertiesPropertiesChanged
 
 impl<'a, T: nonblock::NonblockReply, C: ::std::ops::Deref<Target=T>> OrgFreedesktopDBusProperties for nonblock::Proxy<'a, C> {
 
-    fn get(&self, interface_name: &str, property_name: &str) -> nonblock::MethodReply<arg::Variant<Box<dyn arg::RefArg + 'static>>> {
-        self.method_call("org.freedesktop.DBus.Properties", "Get", (interface_name, property_name, ))
+    fn get(&self, interface: &str, property: &str) -> nonblock::MethodReply<arg::Variant<Box<dyn arg::RefArg + 'static>>> {
+        self.method_call("org.freedesktop.DBus.Properties", "Get", (interface, property, ))
             .and_then(|r: (arg::Variant<Box<dyn arg::RefArg + 'static>>, )| Ok(r.0, ))
     }
 
-    fn get_all(&self, interface_name: &str) -> nonblock::MethodReply<arg::PropMap> {
-        self.method_call("org.freedesktop.DBus.Properties", "GetAll", (interface_name, ))
+    fn get_all(&self, interface: &str) -> nonblock::MethodReply<arg::PropMap> {
+        self.method_call("org.freedesktop.DBus.Properties", "GetAll", (interface, ))
             .and_then(|r: (arg::PropMap, )| Ok(r.0, ))
     }
 
-    fn set(&self, interface_name: &str, property_name: &str, value: arg::Variant<Box<dyn arg::RefArg>>) -> nonblock::MethodReply<()> {
-        self.method_call("org.freedesktop.DBus.Properties", "Set", (interface_name, property_name, value, ))
+    fn set(&self, interface: &str, property: &str, value: arg::Variant<Box<dyn arg::RefArg>>) -> nonblock::MethodReply<()> {
+        self.method_call("org.freedesktop.DBus.Properties", "Set", (interface, property, value, ))
     }
 }
 
 pub trait OrgFreedesktopSystemd1Manager {
-    fn get_unit(&self, name: &str) -> nonblock::MethodReply<dbus::Path<'static>>;
-    fn get_unit_by_pid(&self, pid: u32) -> nonblock::MethodReply<dbus::Path<'static>>;
-    fn get_unit_by_invocation_id(&self, invocation_id: Vec<u8>) -> nonblock::MethodReply<dbus::Path<'static>>;
-    fn get_unit_by_control_group(&self, cgroup: &str) -> nonblock::MethodReply<dbus::Path<'static>>;
-    fn load_unit(&self, name: &str) -> nonblock::MethodReply<dbus::Path<'static>>;
-    fn start_unit(&self, name: &str, mode: &str) -> nonblock::MethodReply<dbus::Path<'static>>;
-    fn start_unit_with_flags(&self, name: &str, mode: &str, flags: u64) -> nonblock::MethodReply<dbus::Path<'static>>;
-    fn start_unit_replace(&self, old_unit: &str, new_unit: &str, mode: &str) -> nonblock::MethodReply<dbus::Path<'static>>;
-    fn stop_unit(&self, name: &str, mode: &str) -> nonblock::MethodReply<dbus::Path<'static>>;
-    fn reload_unit(&self, name: &str, mode: &str) -> nonblock::MethodReply<dbus::Path<'static>>;
-    fn restart_unit(&self, name: &str, mode: &str) -> nonblock::MethodReply<dbus::Path<'static>>;
-    fn try_restart_unit(&self, name: &str, mode: &str) -> nonblock::MethodReply<dbus::Path<'static>>;
-    fn reload_or_restart_unit(&self, name: &str, mode: &str) -> nonblock::MethodReply<dbus::Path<'static>>;
-    fn reload_or_try_restart_unit(&self, name: &str, mode: &str) -> nonblock::MethodReply<dbus::Path<'static>>;
-    fn enqueue_unit_job(&self, name: &str, job_type: &str, job_mode: &str) -> nonblock::MethodReply<(u32, dbus::Path<'static>, String, dbus::Path<'static>, String, Vec<(u32, dbus::Path<'static>, String, dbus::Path<'static>, String)>)>;
-    fn kill_unit(&self, name: &str, whom: &str, signal: i32) -> nonblock::MethodReply<()>;
-    fn clean_unit(&self, name: &str, mask: Vec<&str>) -> nonblock::MethodReply<()>;
-    fn freeze_unit(&self, name: &str) -> nonblock::MethodReply<()>;
-    fn thaw_unit(&self, name: &str) -> nonblock::MethodReply<()>;
-    fn reset_failed_unit(&self, name: &str) -> nonblock::MethodReply<()>;
-    fn set_unit_properties(&self, name: &str, runtime: bool, properties: Vec<(&str, arg::Variant<Box<dyn arg::RefArg>>)>) -> nonblock::MethodReply<()>;
-    fn bind_mount_unit(&self, name: &str, source: &str, destination: &str, read_only: bool, mkdir: bool) -> nonblock::MethodReply<()>;
-    fn mount_image_unit(&self, name: &str, source: &str, destination: &str, read_only: bool, mkdir: bool, options: Vec<(&str, &str)>) -> nonblock::MethodReply<()>;
-    fn ref_unit(&self, name: &str) -> nonblock::MethodReply<()>;
-    fn unref_unit(&self, name: &str) -> nonblock::MethodReply<()>;
-    fn start_transient_unit(&self, name: &str, mode: &str, properties: Vec<(&str, arg::Variant<Box<dyn arg::RefArg>>)>, aux: Vec<(&str, Vec<(&str, arg::Variant<Box<dyn arg::RefArg>>)>)>) -> nonblock::MethodReply<dbus::Path<'static>>;
-    fn get_unit_processes(&self, name: &str) -> nonblock::MethodReply<Vec<(String, u32, String)>>;
-    fn attach_processes_to_unit(&self, unit_name: &str, subcgroup: &str, pids: Vec<u32>) -> nonblock::MethodReply<()>;
-    fn abandon_scope(&self, name: &str) -> nonblock::MethodReply<()>;
-    fn get_job(&self, id: u32) -> nonblock::MethodReply<dbus::Path<'static>>;
-    fn get_job_after(&self, id: u32) -> nonblock::MethodReply<Vec<(u32, String, String, String, dbus::Path<'static>, dbus::Path<'static>)>>;
-    fn get_job_before(&self, id: u32) -> nonblock::MethodReply<Vec<(u32, String, String, String, dbus::Path<'static>, dbus::Path<'static>)>>;
-    fn cancel_job(&self, id: u32) -> nonblock::MethodReply<()>;
+    fn get_unit(&self, arg0: &str) -> nonblock::MethodReply<dbus::Path<'static>>;
+    fn get_unit_by_pid(&self, arg0: u32) -> nonblock::MethodReply<dbus::Path<'static>>;
+    fn get_unit_by_invocation_id(&self, arg0: Vec<u8>) -> nonblock::MethodReply<dbus::Path<'static>>;
+    fn get_unit_by_control_group(&self, arg0: &str) -> nonblock::MethodReply<dbus::Path<'static>>;
+    fn load_unit(&self, arg0: &str) -> nonblock::MethodReply<dbus::Path<'static>>;
+    fn start_unit(&self, arg0: &str, arg1: &str) -> nonblock::MethodReply<dbus::Path<'static>>;
+    fn start_unit_replace(&self, arg0: &str, arg1: &str, arg2: &str) -> nonblock::MethodReply<dbus::Path<'static>>;
+    fn stop_unit(&self, arg0: &str, arg1: &str) -> nonblock::MethodReply<dbus::Path<'static>>;
+    fn reload_unit(&self, arg0: &str, arg1: &str) -> nonblock::MethodReply<dbus::Path<'static>>;
+    fn restart_unit(&self, arg0: &str, arg1: &str) -> nonblock::MethodReply<dbus::Path<'static>>;
+    fn try_restart_unit(&self, arg0: &str, arg1: &str) -> nonblock::MethodReply<dbus::Path<'static>>;
+    fn reload_or_restart_unit(&self, arg0: &str, arg1: &str) -> nonblock::MethodReply<dbus::Path<'static>>;
+    fn reload_or_try_restart_unit(&self, arg0: &str, arg1: &str) -> nonblock::MethodReply<dbus::Path<'static>>;
+    fn kill_unit(&self, arg0: &str, arg1: &str, arg2: i32) -> nonblock::MethodReply<()>;
+    fn reset_failed_unit(&self, arg0: &str) -> nonblock::MethodReply<()>;
+    fn set_unit_properties(&self, arg0: &str, arg1: bool, arg2: Vec<(&str, arg::Variant<Box<dyn arg::RefArg>>)>) -> nonblock::MethodReply<()>;
+    fn ref_unit(&self, arg0: &str) -> nonblock::MethodReply<()>;
+    fn unref_unit(&self, arg0: &str) -> nonblock::MethodReply<()>;
+    fn start_transient_unit(&self, arg0: &str, arg1: &str, arg2: Vec<(&str, arg::Variant<Box<dyn arg::RefArg>>)>, arg3: Vec<(&str, Vec<(&str, arg::Variant<Box<dyn arg::RefArg>>)>)>) -> nonblock::MethodReply<dbus::Path<'static>>;
+    fn get_unit_processes(&self, arg0: &str) -> nonblock::MethodReply<Vec<(String, u32, String)>>;
+    fn attach_processes_to_unit(&self, arg0: &str, arg1: &str, arg2: Vec<u32>) -> nonblock::MethodReply<()>;
+    fn abandon_scope(&self, arg0: &str) -> nonblock::MethodReply<()>;
+    fn get_job(&self, arg0: u32) -> nonblock::MethodReply<dbus::Path<'static>>;
+    fn get_job_after(&self, arg0: u32) -> nonblock::MethodReply<Vec<(u32, String, String, String, dbus::Path<'static>, dbus::Path<'static>)>>;
+    fn get_job_before(&self, arg0: u32) -> nonblock::MethodReply<Vec<(u32, String, String, String, dbus::Path<'static>, dbus::Path<'static>)>>;
+    fn cancel_job(&self, arg0: u32) -> nonblock::MethodReply<()>;
     fn clear_jobs(&self) -> nonblock::MethodReply<()>;
     fn reset_failed(&self) -> nonblock::MethodReply<()>;
-    fn set_show_status_(&self, mode: &str) -> nonblock::MethodReply<()>;
     fn list_units(&self) -> nonblock::MethodReply<Vec<(String, String, String, String, String, String, dbus::Path<'static>, u32, String, dbus::Path<'static>)>>;
-    fn list_units_filtered(&self, states: Vec<&str>) -> nonblock::MethodReply<Vec<(String, String, String, String, String, String, dbus::Path<'static>, u32, String, dbus::Path<'static>)>>;
-    fn list_units_by_patterns(&self, states: Vec<&str>, patterns: Vec<&str>) -> nonblock::MethodReply<Vec<(String, String, String, String, String, String, dbus::Path<'static>, u32, String, dbus::Path<'static>)>>;
-    fn list_units_by_names(&self, names: Vec<&str>) -> nonblock::MethodReply<Vec<(String, String, String, String, String, String, dbus::Path<'static>, u32, String, dbus::Path<'static>)>>;
+    fn list_units_filtered(&self, arg0: Vec<&str>) -> nonblock::MethodReply<Vec<(String, String, String, String, String, String, dbus::Path<'static>, u32, String, dbus::Path<'static>)>>;
+    fn list_units_by_patterns(&self, arg0: Vec<&str>, arg1: Vec<&str>) -> nonblock::MethodReply<Vec<(String, String, String, String, String, String, dbus::Path<'static>, u32, String, dbus::Path<'static>)>>;
+    fn list_units_by_names(&self, arg0: Vec<&str>) -> nonblock::MethodReply<Vec<(String, String, String, String, String, String, dbus::Path<'static>, u32, String, dbus::Path<'static>)>>;
     fn list_jobs(&self) -> nonblock::MethodReply<Vec<(u32, String, String, String, dbus::Path<'static>, dbus::Path<'static>)>>;
     fn subscribe(&self) -> nonblock::MethodReply<()>;
     fn unsubscribe(&self) -> nonblock::MethodReply<()>;
@@ -139,33 +131,30 @@ pub trait OrgFreedesktopSystemd1Manager {
     fn power_off(&self) -> nonblock::MethodReply<()>;
     fn halt(&self) -> nonblock::MethodReply<()>;
     fn kexec(&self) -> nonblock::MethodReply<()>;
-    fn switch_root(&self, new_root: &str, init: &str) -> nonblock::MethodReply<()>;
-    fn set_environment_(&self, assignments: Vec<&str>) -> nonblock::MethodReply<()>;
-    fn unset_environment(&self, names: Vec<&str>) -> nonblock::MethodReply<()>;
-    fn unset_and_set_environment(&self, names: Vec<&str>, assignments: Vec<&str>) -> nonblock::MethodReply<()>;
-    fn enqueue_marked_jobs(&self) -> nonblock::MethodReply<Vec<dbus::Path<'static>>>;
+    fn switch_root(&self, arg0: &str, arg1: &str) -> nonblock::MethodReply<()>;
+    fn set_environment_(&self, arg0: Vec<&str>) -> nonblock::MethodReply<()>;
+    fn unset_environment(&self, arg0: Vec<&str>) -> nonblock::MethodReply<()>;
+    fn unset_and_set_environment(&self, arg0: Vec<&str>, arg1: Vec<&str>) -> nonblock::MethodReply<()>;
     fn list_unit_files(&self) -> nonblock::MethodReply<Vec<(String, String)>>;
-    fn list_unit_files_by_patterns(&self, states: Vec<&str>, patterns: Vec<&str>) -> nonblock::MethodReply<Vec<(String, String)>>;
-    fn get_unit_file_state(&self, file: &str) -> nonblock::MethodReply<String>;
-    fn enable_unit_files(&self, files: Vec<&str>, runtime: bool, force: bool) -> nonblock::MethodReply<(bool, Vec<(String, String, String)>)>;
-    fn disable_unit_files(&self, files: Vec<&str>, runtime: bool) -> nonblock::MethodReply<Vec<(String, String, String)>>;
-    fn enable_unit_files_with_flags(&self, files: Vec<&str>, flags: u64) -> nonblock::MethodReply<(bool, Vec<(String, String, String)>)>;
-    fn disable_unit_files_with_flags(&self, files: Vec<&str>, flags: u64) -> nonblock::MethodReply<Vec<(String, String, String)>>;
-    fn reenable_unit_files(&self, files: Vec<&str>, runtime: bool, force: bool) -> nonblock::MethodReply<(bool, Vec<(String, String, String)>)>;
-    fn link_unit_files(&self, files: Vec<&str>, runtime: bool, force: bool) -> nonblock::MethodReply<Vec<(String, String, String)>>;
-    fn preset_unit_files(&self, files: Vec<&str>, runtime: bool, force: bool) -> nonblock::MethodReply<(bool, Vec<(String, String, String)>)>;
-    fn preset_unit_files_with_mode(&self, files: Vec<&str>, mode: &str, runtime: bool, force: bool) -> nonblock::MethodReply<(bool, Vec<(String, String, String)>)>;
-    fn mask_unit_files(&self, files: Vec<&str>, runtime: bool, force: bool) -> nonblock::MethodReply<Vec<(String, String, String)>>;
-    fn unmask_unit_files(&self, files: Vec<&str>, runtime: bool) -> nonblock::MethodReply<Vec<(String, String, String)>>;
-    fn revert_unit_files(&self, files: Vec<&str>) -> nonblock::MethodReply<Vec<(String, String, String)>>;
-    fn set_default_target(&self, name: &str, force: bool) -> nonblock::MethodReply<Vec<(String, String, String)>>;
+    fn list_unit_files_by_patterns(&self, arg0: Vec<&str>, arg1: Vec<&str>) -> nonblock::MethodReply<Vec<(String, String)>>;
+    fn get_unit_file_state(&self, arg0: &str) -> nonblock::MethodReply<String>;
+    fn enable_unit_files(&self, arg0: Vec<&str>, arg1: bool, arg2: bool) -> nonblock::MethodReply<(bool, Vec<(String, String, String)>)>;
+    fn disable_unit_files(&self, arg0: Vec<&str>, arg1: bool) -> nonblock::MethodReply<Vec<(String, String, String)>>;
+    fn reenable_unit_files(&self, arg0: Vec<&str>, arg1: bool, arg2: bool) -> nonblock::MethodReply<(bool, Vec<(String, String, String)>)>;
+    fn link_unit_files(&self, arg0: Vec<&str>, arg1: bool, arg2: bool) -> nonblock::MethodReply<Vec<(String, String, String)>>;
+    fn preset_unit_files(&self, arg0: Vec<&str>, arg1: bool, arg2: bool) -> nonblock::MethodReply<(bool, Vec<(String, String, String)>)>;
+    fn preset_unit_files_with_mode(&self, arg0: Vec<&str>, arg1: &str, arg2: bool, arg3: bool) -> nonblock::MethodReply<(bool, Vec<(String, String, String)>)>;
+    fn mask_unit_files(&self, arg0: Vec<&str>, arg1: bool, arg2: bool) -> nonblock::MethodReply<Vec<(String, String, String)>>;
+    fn unmask_unit_files(&self, arg0: Vec<&str>, arg1: bool) -> nonblock::MethodReply<Vec<(String, String, String)>>;
+    fn revert_unit_files(&self, arg0: Vec<&str>) -> nonblock::MethodReply<Vec<(String, String, String)>>;
+    fn set_default_target(&self, arg0: &str, arg1: bool) -> nonblock::MethodReply<Vec<(String, String, String)>>;
     fn get_default_target(&self) -> nonblock::MethodReply<String>;
-    fn preset_all_unit_files(&self, mode: &str, runtime: bool, force: bool) -> nonblock::MethodReply<Vec<(String, String, String)>>;
-    fn add_dependency_unit_files(&self, files: Vec<&str>, target: &str, type_: &str, runtime: bool, force: bool) -> nonblock::MethodReply<Vec<(String, String, String)>>;
-    fn get_unit_file_links(&self, name: &str, runtime: bool) -> nonblock::MethodReply<Vec<String>>;
-    fn set_exit_code_(&self, number: u8) -> nonblock::MethodReply<()>;
-    fn lookup_dynamic_user_by_name(&self, name: &str) -> nonblock::MethodReply<u32>;
-    fn lookup_dynamic_user_by_uid(&self, uid: u32) -> nonblock::MethodReply<String>;
+    fn preset_all_unit_files(&self, arg0: &str, arg1: bool, arg2: bool) -> nonblock::MethodReply<Vec<(String, String, String)>>;
+    fn add_dependency_unit_files(&self, arg0: Vec<&str>, arg1: &str, arg2: &str, arg3: bool, arg4: bool) -> nonblock::MethodReply<Vec<(String, String, String)>>;
+    fn get_unit_file_links(&self, arg0: &str, arg1: bool) -> nonblock::MethodReply<Vec<String>>;
+    fn set_exit_code_(&self, arg0: u8) -> nonblock::MethodReply<()>;
+    fn lookup_dynamic_user_by_name(&self, arg0: &str) -> nonblock::MethodReply<u32>;
+    fn lookup_dynamic_user_by_uid(&self, arg0: u32) -> nonblock::MethodReply<String>;
     fn get_dynamic_users(&self) -> nonblock::MethodReply<Vec<(u32, String)>>;
     fn version(&self) -> nonblock::MethodReply<String>;
     fn features(&self) -> nonblock::MethodReply<String>;
@@ -196,8 +185,6 @@ pub trait OrgFreedesktopSystemd1Manager {
     fn units_load_start_timestamp_monotonic(&self) -> nonblock::MethodReply<u64>;
     fn units_load_finish_timestamp(&self) -> nonblock::MethodReply<u64>;
     fn units_load_finish_timestamp_monotonic(&self) -> nonblock::MethodReply<u64>;
-    fn units_load_timestamp(&self) -> nonblock::MethodReply<u64>;
-    fn units_load_timestamp_monotonic(&self) -> nonblock::MethodReply<u64>;
     fn init_rdsecurity_start_timestamp(&self) -> nonblock::MethodReply<u64>;
     fn init_rdsecurity_start_timestamp_monotonic(&self) -> nonblock::MethodReply<u64>;
     fn init_rdsecurity_finish_timestamp(&self) -> nonblock::MethodReply<u64>;
@@ -228,14 +215,8 @@ pub trait OrgFreedesktopSystemd1Manager {
     fn default_standard_error(&self) -> nonblock::MethodReply<String>;
     fn runtime_watchdog_usec(&self) -> nonblock::MethodReply<u64>;
     fn set_runtime_watchdog_usec(&self, value: u64) -> nonblock::MethodReply<()>;
-    fn runtime_watchdog_pre_usec(&self) -> nonblock::MethodReply<u64>;
-    fn set_runtime_watchdog_pre_usec(&self, value: u64) -> nonblock::MethodReply<()>;
-    fn runtime_watchdog_pre_governor(&self) -> nonblock::MethodReply<String>;
-    fn set_runtime_watchdog_pre_governor(&self, value: String) -> nonblock::MethodReply<()>;
-    fn reboot_watchdog_usec(&self) -> nonblock::MethodReply<u64>;
-    fn set_reboot_watchdog_usec(&self, value: u64) -> nonblock::MethodReply<()>;
-    fn kexec_watchdog_usec(&self) -> nonblock::MethodReply<u64>;
-    fn set_kexec_watchdog_usec(&self, value: u64) -> nonblock::MethodReply<()>;
+    fn shutdown_watchdog_usec(&self) -> nonblock::MethodReply<u64>;
+    fn set_shutdown_watchdog_usec(&self, value: u64) -> nonblock::MethodReply<()>;
     fn service_watchdogs(&self) -> nonblock::MethodReply<bool>;
     fn set_service_watchdogs(&self, value: bool) -> nonblock::MethodReply<()>;
     fn control_group(&self) -> nonblock::MethodReply<String>;
@@ -244,7 +225,6 @@ pub trait OrgFreedesktopSystemd1Manager {
     fn default_timer_accuracy_usec(&self) -> nonblock::MethodReply<u64>;
     fn default_timeout_start_usec(&self) -> nonblock::MethodReply<u64>;
     fn default_timeout_stop_usec(&self) -> nonblock::MethodReply<u64>;
-    fn default_timeout_abort_usec(&self) -> nonblock::MethodReply<u64>;
     fn default_restart_usec(&self) -> nonblock::MethodReply<u64>;
     fn default_start_limit_interval_usec(&self) -> nonblock::MethodReply<u64>;
     fn default_start_limit_burst(&self) -> nonblock::MethodReply<u32>;
@@ -286,29 +266,26 @@ pub trait OrgFreedesktopSystemd1Manager {
     fn default_limit_rttimesoft(&self) -> nonblock::MethodReply<u64>;
     fn default_tasks_max(&self) -> nonblock::MethodReply<u64>;
     fn timer_slack_nsec(&self) -> nonblock::MethodReply<u64>;
-    fn default_oompolicy(&self) -> nonblock::MethodReply<String>;
-    fn default_oomscore_adjust(&self) -> nonblock::MethodReply<i32>;
-    fn ctrl_alt_del_burst_action(&self) -> nonblock::MethodReply<String>;
 }
 
 #[derive(Debug)]
 pub struct OrgFreedesktopSystemd1ManagerUnitNew {
-    pub id: String,
-    pub unit: dbus::Path<'static>,
+    pub arg0: String,
+    pub arg1: dbus::Path<'static>,
 }
 
 impl arg::AppendAll for OrgFreedesktopSystemd1ManagerUnitNew {
     fn append(&self, i: &mut arg::IterAppend) {
-        arg::RefArg::append(&self.id, i);
-        arg::RefArg::append(&self.unit, i);
+        arg::RefArg::append(&self.arg0, i);
+        arg::RefArg::append(&self.arg1, i);
     }
 }
 
 impl arg::ReadAll for OrgFreedesktopSystemd1ManagerUnitNew {
     fn read(i: &mut arg::Iter) -> Result<Self, arg::TypeMismatchError> {
         Ok(OrgFreedesktopSystemd1ManagerUnitNew {
-            id: i.read()?,
-            unit: i.read()?,
+            arg0: i.read()?,
+            arg1: i.read()?,
         })
     }
 }
@@ -320,22 +297,22 @@ impl dbus::message::SignalArgs for OrgFreedesktopSystemd1ManagerUnitNew {
 
 #[derive(Debug)]
 pub struct OrgFreedesktopSystemd1ManagerUnitRemoved {
-    pub id: String,
-    pub unit: dbus::Path<'static>,
+    pub arg0: String,
+    pub arg1: dbus::Path<'static>,
 }
 
 impl arg::AppendAll for OrgFreedesktopSystemd1ManagerUnitRemoved {
     fn append(&self, i: &mut arg::IterAppend) {
-        arg::RefArg::append(&self.id, i);
-        arg::RefArg::append(&self.unit, i);
+        arg::RefArg::append(&self.arg0, i);
+        arg::RefArg::append(&self.arg1, i);
     }
 }
 
 impl arg::ReadAll for OrgFreedesktopSystemd1ManagerUnitRemoved {
     fn read(i: &mut arg::Iter) -> Result<Self, arg::TypeMismatchError> {
         Ok(OrgFreedesktopSystemd1ManagerUnitRemoved {
-            id: i.read()?,
-            unit: i.read()?,
+            arg0: i.read()?,
+            arg1: i.read()?,
         })
     }
 }
@@ -347,25 +324,25 @@ impl dbus::message::SignalArgs for OrgFreedesktopSystemd1ManagerUnitRemoved {
 
 #[derive(Debug)]
 pub struct OrgFreedesktopSystemd1ManagerJobNew {
-    pub id: u32,
-    pub job: dbus::Path<'static>,
-    pub unit: String,
+    pub arg0: u32,
+    pub arg1: dbus::Path<'static>,
+    pub arg2: String,
 }
 
 impl arg::AppendAll for OrgFreedesktopSystemd1ManagerJobNew {
     fn append(&self, i: &mut arg::IterAppend) {
-        arg::RefArg::append(&self.id, i);
-        arg::RefArg::append(&self.job, i);
-        arg::RefArg::append(&self.unit, i);
+        arg::RefArg::append(&self.arg0, i);
+        arg::RefArg::append(&self.arg1, i);
+        arg::RefArg::append(&self.arg2, i);
     }
 }
 
 impl arg::ReadAll for OrgFreedesktopSystemd1ManagerJobNew {
     fn read(i: &mut arg::Iter) -> Result<Self, arg::TypeMismatchError> {
         Ok(OrgFreedesktopSystemd1ManagerJobNew {
-            id: i.read()?,
-            job: i.read()?,
-            unit: i.read()?,
+            arg0: i.read()?,
+            arg1: i.read()?,
+            arg2: i.read()?,
         })
     }
 }
@@ -377,28 +354,28 @@ impl dbus::message::SignalArgs for OrgFreedesktopSystemd1ManagerJobNew {
 
 #[derive(Debug)]
 pub struct OrgFreedesktopSystemd1ManagerJobRemoved {
-    pub id: u32,
-    pub job: dbus::Path<'static>,
-    pub unit: String,
-    pub result: String,
+    pub arg0: u32,
+    pub arg1: dbus::Path<'static>,
+    pub arg2: String,
+    pub arg3: String,
 }
 
 impl arg::AppendAll for OrgFreedesktopSystemd1ManagerJobRemoved {
     fn append(&self, i: &mut arg::IterAppend) {
-        arg::RefArg::append(&self.id, i);
-        arg::RefArg::append(&self.job, i);
-        arg::RefArg::append(&self.unit, i);
-        arg::RefArg::append(&self.result, i);
+        arg::RefArg::append(&self.arg0, i);
+        arg::RefArg::append(&self.arg1, i);
+        arg::RefArg::append(&self.arg2, i);
+        arg::RefArg::append(&self.arg3, i);
     }
 }
 
 impl arg::ReadAll for OrgFreedesktopSystemd1ManagerJobRemoved {
     fn read(i: &mut arg::Iter) -> Result<Self, arg::TypeMismatchError> {
         Ok(OrgFreedesktopSystemd1ManagerJobRemoved {
-            id: i.read()?,
-            job: i.read()?,
-            unit: i.read()?,
-            result: i.read()?,
+            arg0: i.read()?,
+            arg1: i.read()?,
+            arg2: i.read()?,
+            arg3: i.read()?,
         })
     }
 }
@@ -410,34 +387,34 @@ impl dbus::message::SignalArgs for OrgFreedesktopSystemd1ManagerJobRemoved {
 
 #[derive(Debug)]
 pub struct OrgFreedesktopSystemd1ManagerStartupFinished {
-    pub firmware: u64,
-    pub loader: u64,
-    pub kernel: u64,
-    pub initrd: u64,
-    pub userspace: u64,
-    pub total: u64,
+    pub arg0: u64,
+    pub arg1: u64,
+    pub arg2: u64,
+    pub arg3: u64,
+    pub arg4: u64,
+    pub arg5: u64,
 }
 
 impl arg::AppendAll for OrgFreedesktopSystemd1ManagerStartupFinished {
     fn append(&self, i: &mut arg::IterAppend) {
-        arg::RefArg::append(&self.firmware, i);
-        arg::RefArg::append(&self.loader, i);
-        arg::RefArg::append(&self.kernel, i);
-        arg::RefArg::append(&self.initrd, i);
-        arg::RefArg::append(&self.userspace, i);
-        arg::RefArg::append(&self.total, i);
+        arg::RefArg::append(&self.arg0, i);
+        arg::RefArg::append(&self.arg1, i);
+        arg::RefArg::append(&self.arg2, i);
+        arg::RefArg::append(&self.arg3, i);
+        arg::RefArg::append(&self.arg4, i);
+        arg::RefArg::append(&self.arg5, i);
     }
 }
 
 impl arg::ReadAll for OrgFreedesktopSystemd1ManagerStartupFinished {
     fn read(i: &mut arg::Iter) -> Result<Self, arg::TypeMismatchError> {
         Ok(OrgFreedesktopSystemd1ManagerStartupFinished {
-            firmware: i.read()?,
-            loader: i.read()?,
-            kernel: i.read()?,
-            initrd: i.read()?,
-            userspace: i.read()?,
-            total: i.read()?,
+            arg0: i.read()?,
+            arg1: i.read()?,
+            arg2: i.read()?,
+            arg3: i.read()?,
+            arg4: i.read()?,
+            arg5: i.read()?,
         })
     }
 }
@@ -470,19 +447,19 @@ impl dbus::message::SignalArgs for OrgFreedesktopSystemd1ManagerUnitFilesChanged
 
 #[derive(Debug)]
 pub struct OrgFreedesktopSystemd1ManagerReloading {
-    pub active: bool,
+    pub arg0: bool,
 }
 
 impl arg::AppendAll for OrgFreedesktopSystemd1ManagerReloading {
     fn append(&self, i: &mut arg::IterAppend) {
-        arg::RefArg::append(&self.active, i);
+        arg::RefArg::append(&self.arg0, i);
     }
 }
 
 impl arg::ReadAll for OrgFreedesktopSystemd1ManagerReloading {
     fn read(i: &mut arg::Iter) -> Result<Self, arg::TypeMismatchError> {
         Ok(OrgFreedesktopSystemd1ManagerReloading {
-            active: i.read()?,
+            arg0: i.read()?,
         })
     }
 }
@@ -494,155 +471,126 @@ impl dbus::message::SignalArgs for OrgFreedesktopSystemd1ManagerReloading {
 
 impl<'a, T: nonblock::NonblockReply, C: ::std::ops::Deref<Target=T>> OrgFreedesktopSystemd1Manager for nonblock::Proxy<'a, C> {
 
-    fn get_unit(&self, name: &str) -> nonblock::MethodReply<dbus::Path<'static>> {
-        self.method_call("org.freedesktop.systemd1.Manager", "GetUnit", (name, ))
+    fn get_unit(&self, arg0: &str) -> nonblock::MethodReply<dbus::Path<'static>> {
+        self.method_call("org.freedesktop.systemd1.Manager", "GetUnit", (arg0, ))
             .and_then(|r: (dbus::Path<'static>, )| Ok(r.0, ))
     }
 
-    fn get_unit_by_pid(&self, pid: u32) -> nonblock::MethodReply<dbus::Path<'static>> {
-        self.method_call("org.freedesktop.systemd1.Manager", "GetUnitByPID", (pid, ))
+    fn get_unit_by_pid(&self, arg0: u32) -> nonblock::MethodReply<dbus::Path<'static>> {
+        self.method_call("org.freedesktop.systemd1.Manager", "GetUnitByPID", (arg0, ))
             .and_then(|r: (dbus::Path<'static>, )| Ok(r.0, ))
     }
 
-    fn get_unit_by_invocation_id(&self, invocation_id: Vec<u8>) -> nonblock::MethodReply<dbus::Path<'static>> {
-        self.method_call("org.freedesktop.systemd1.Manager", "GetUnitByInvocationID", (invocation_id, ))
+    fn get_unit_by_invocation_id(&self, arg0: Vec<u8>) -> nonblock::MethodReply<dbus::Path<'static>> {
+        self.method_call("org.freedesktop.systemd1.Manager", "GetUnitByInvocationID", (arg0, ))
             .and_then(|r: (dbus::Path<'static>, )| Ok(r.0, ))
     }
 
-    fn get_unit_by_control_group(&self, cgroup: &str) -> nonblock::MethodReply<dbus::Path<'static>> {
-        self.method_call("org.freedesktop.systemd1.Manager", "GetUnitByControlGroup", (cgroup, ))
+    fn get_unit_by_control_group(&self, arg0: &str) -> nonblock::MethodReply<dbus::Path<'static>> {
+        self.method_call("org.freedesktop.systemd1.Manager", "GetUnitByControlGroup", (arg0, ))
             .and_then(|r: (dbus::Path<'static>, )| Ok(r.0, ))
     }
 
-    fn load_unit(&self, name: &str) -> nonblock::MethodReply<dbus::Path<'static>> {
-        self.method_call("org.freedesktop.systemd1.Manager", "LoadUnit", (name, ))
+    fn load_unit(&self, arg0: &str) -> nonblock::MethodReply<dbus::Path<'static>> {
+        self.method_call("org.freedesktop.systemd1.Manager", "LoadUnit", (arg0, ))
             .and_then(|r: (dbus::Path<'static>, )| Ok(r.0, ))
     }
 
-    fn start_unit(&self, name: &str, mode: &str) -> nonblock::MethodReply<dbus::Path<'static>> {
-        self.method_call("org.freedesktop.systemd1.Manager", "StartUnit", (name, mode, ))
+    fn start_unit(&self, arg0: &str, arg1: &str) -> nonblock::MethodReply<dbus::Path<'static>> {
+        self.method_call("org.freedesktop.systemd1.Manager", "StartUnit", (arg0, arg1, ))
             .and_then(|r: (dbus::Path<'static>, )| Ok(r.0, ))
     }
 
-    fn start_unit_with_flags(&self, name: &str, mode: &str, flags: u64) -> nonblock::MethodReply<dbus::Path<'static>> {
-        self.method_call("org.freedesktop.systemd1.Manager", "StartUnitWithFlags", (name, mode, flags, ))
+    fn start_unit_replace(&self, arg0: &str, arg1: &str, arg2: &str) -> nonblock::MethodReply<dbus::Path<'static>> {
+        self.method_call("org.freedesktop.systemd1.Manager", "StartUnitReplace", (arg0, arg1, arg2, ))
             .and_then(|r: (dbus::Path<'static>, )| Ok(r.0, ))
     }
 
-    fn start_unit_replace(&self, old_unit: &str, new_unit: &str, mode: &str) -> nonblock::MethodReply<dbus::Path<'static>> {
-        self.method_call("org.freedesktop.systemd1.Manager", "StartUnitReplace", (old_unit, new_unit, mode, ))
+    fn stop_unit(&self, arg0: &str, arg1: &str) -> nonblock::MethodReply<dbus::Path<'static>> {
+        self.method_call("org.freedesktop.systemd1.Manager", "StopUnit", (arg0, arg1, ))
             .and_then(|r: (dbus::Path<'static>, )| Ok(r.0, ))
     }
 
-    fn stop_unit(&self, name: &str, mode: &str) -> nonblock::MethodReply<dbus::Path<'static>> {
-        self.method_call("org.freedesktop.systemd1.Manager", "StopUnit", (name, mode, ))
+    fn reload_unit(&self, arg0: &str, arg1: &str) -> nonblock::MethodReply<dbus::Path<'static>> {
+        self.method_call("org.freedesktop.systemd1.Manager", "ReloadUnit", (arg0, arg1, ))
             .and_then(|r: (dbus::Path<'static>, )| Ok(r.0, ))
     }
 
-    fn reload_unit(&self, name: &str, mode: &str) -> nonblock::MethodReply<dbus::Path<'static>> {
-        self.method_call("org.freedesktop.systemd1.Manager", "ReloadUnit", (name, mode, ))
+    fn restart_unit(&self, arg0: &str, arg1: &str) -> nonblock::MethodReply<dbus::Path<'static>> {
+        self.method_call("org.freedesktop.systemd1.Manager", "RestartUnit", (arg0, arg1, ))
             .and_then(|r: (dbus::Path<'static>, )| Ok(r.0, ))
     }
 
-    fn restart_unit(&self, name: &str, mode: &str) -> nonblock::MethodReply<dbus::Path<'static>> {
-        self.method_call("org.freedesktop.systemd1.Manager", "RestartUnit", (name, mode, ))
+    fn try_restart_unit(&self, arg0: &str, arg1: &str) -> nonblock::MethodReply<dbus::Path<'static>> {
+        self.method_call("org.freedesktop.systemd1.Manager", "TryRestartUnit", (arg0, arg1, ))
             .and_then(|r: (dbus::Path<'static>, )| Ok(r.0, ))
     }
 
-    fn try_restart_unit(&self, name: &str, mode: &str) -> nonblock::MethodReply<dbus::Path<'static>> {
-        self.method_call("org.freedesktop.systemd1.Manager", "TryRestartUnit", (name, mode, ))
+    fn reload_or_restart_unit(&self, arg0: &str, arg1: &str) -> nonblock::MethodReply<dbus::Path<'static>> {
+        self.method_call("org.freedesktop.systemd1.Manager", "ReloadOrRestartUnit", (arg0, arg1, ))
             .and_then(|r: (dbus::Path<'static>, )| Ok(r.0, ))
     }
 
-    fn reload_or_restart_unit(&self, name: &str, mode: &str) -> nonblock::MethodReply<dbus::Path<'static>> {
-        self.method_call("org.freedesktop.systemd1.Manager", "ReloadOrRestartUnit", (name, mode, ))
+    fn reload_or_try_restart_unit(&self, arg0: &str, arg1: &str) -> nonblock::MethodReply<dbus::Path<'static>> {
+        self.method_call("org.freedesktop.systemd1.Manager", "ReloadOrTryRestartUnit", (arg0, arg1, ))
             .and_then(|r: (dbus::Path<'static>, )| Ok(r.0, ))
     }
 
-    fn reload_or_try_restart_unit(&self, name: &str, mode: &str) -> nonblock::MethodReply<dbus::Path<'static>> {
-        self.method_call("org.freedesktop.systemd1.Manager", "ReloadOrTryRestartUnit", (name, mode, ))
+    fn kill_unit(&self, arg0: &str, arg1: &str, arg2: i32) -> nonblock::MethodReply<()> {
+        self.method_call("org.freedesktop.systemd1.Manager", "KillUnit", (arg0, arg1, arg2, ))
+    }
+
+    fn reset_failed_unit(&self, arg0: &str) -> nonblock::MethodReply<()> {
+        self.method_call("org.freedesktop.systemd1.Manager", "ResetFailedUnit", (arg0, ))
+    }
+
+    fn set_unit_properties(&self, arg0: &str, arg1: bool, arg2: Vec<(&str, arg::Variant<Box<dyn arg::RefArg>>)>) -> nonblock::MethodReply<()> {
+        self.method_call("org.freedesktop.systemd1.Manager", "SetUnitProperties", (arg0, arg1, arg2, ))
+    }
+
+    fn ref_unit(&self, arg0: &str) -> nonblock::MethodReply<()> {
+        self.method_call("org.freedesktop.systemd1.Manager", "RefUnit", (arg0, ))
+    }
+
+    fn unref_unit(&self, arg0: &str) -> nonblock::MethodReply<()> {
+        self.method_call("org.freedesktop.systemd1.Manager", "UnrefUnit", (arg0, ))
+    }
+
+    fn start_transient_unit(&self, arg0: &str, arg1: &str, arg2: Vec<(&str, arg::Variant<Box<dyn arg::RefArg>>)>, arg3: Vec<(&str, Vec<(&str, arg::Variant<Box<dyn arg::RefArg>>)>)>) -> nonblock::MethodReply<dbus::Path<'static>> {
+        self.method_call("org.freedesktop.systemd1.Manager", "StartTransientUnit", (arg0, arg1, arg2, arg3, ))
             .and_then(|r: (dbus::Path<'static>, )| Ok(r.0, ))
     }
 
-    fn enqueue_unit_job(&self, name: &str, job_type: &str, job_mode: &str) -> nonblock::MethodReply<(u32, dbus::Path<'static>, String, dbus::Path<'static>, String, Vec<(u32, dbus::Path<'static>, String, dbus::Path<'static>, String)>)> {
-        self.method_call("org.freedesktop.systemd1.Manager", "EnqueueUnitJob", (name, job_type, job_mode, ))
-    }
-
-    fn kill_unit(&self, name: &str, whom: &str, signal: i32) -> nonblock::MethodReply<()> {
-        self.method_call("org.freedesktop.systemd1.Manager", "KillUnit", (name, whom, signal, ))
-    }
-
-    fn clean_unit(&self, name: &str, mask: Vec<&str>) -> nonblock::MethodReply<()> {
-        self.method_call("org.freedesktop.systemd1.Manager", "CleanUnit", (name, mask, ))
-    }
-
-    fn freeze_unit(&self, name: &str) -> nonblock::MethodReply<()> {
-        self.method_call("org.freedesktop.systemd1.Manager", "FreezeUnit", (name, ))
-    }
-
-    fn thaw_unit(&self, name: &str) -> nonblock::MethodReply<()> {
-        self.method_call("org.freedesktop.systemd1.Manager", "ThawUnit", (name, ))
-    }
-
-    fn reset_failed_unit(&self, name: &str) -> nonblock::MethodReply<()> {
-        self.method_call("org.freedesktop.systemd1.Manager", "ResetFailedUnit", (name, ))
-    }
-
-    fn set_unit_properties(&self, name: &str, runtime: bool, properties: Vec<(&str, arg::Variant<Box<dyn arg::RefArg>>)>) -> nonblock::MethodReply<()> {
-        self.method_call("org.freedesktop.systemd1.Manager", "SetUnitProperties", (name, runtime, properties, ))
-    }
-
-    fn bind_mount_unit(&self, name: &str, source: &str, destination: &str, read_only: bool, mkdir: bool) -> nonblock::MethodReply<()> {
-        self.method_call("org.freedesktop.systemd1.Manager", "BindMountUnit", (name, source, destination, read_only, mkdir, ))
-    }
-
-    fn mount_image_unit(&self, name: &str, source: &str, destination: &str, read_only: bool, mkdir: bool, options: Vec<(&str, &str)>) -> nonblock::MethodReply<()> {
-        self.method_call("org.freedesktop.systemd1.Manager", "MountImageUnit", (name, source, destination, read_only, mkdir, options, ))
-    }
-
-    fn ref_unit(&self, name: &str) -> nonblock::MethodReply<()> {
-        self.method_call("org.freedesktop.systemd1.Manager", "RefUnit", (name, ))
-    }
-
-    fn unref_unit(&self, name: &str) -> nonblock::MethodReply<()> {
-        self.method_call("org.freedesktop.systemd1.Manager", "UnrefUnit", (name, ))
-    }
-
-    fn start_transient_unit(&self, name: &str, mode: &str, properties: Vec<(&str, arg::Variant<Box<dyn arg::RefArg>>)>, aux: Vec<(&str, Vec<(&str, arg::Variant<Box<dyn arg::RefArg>>)>)>) -> nonblock::MethodReply<dbus::Path<'static>> {
-        self.method_call("org.freedesktop.systemd1.Manager", "StartTransientUnit", (name, mode, properties, aux, ))
-            .and_then(|r: (dbus::Path<'static>, )| Ok(r.0, ))
-    }
-
-    fn get_unit_processes(&self, name: &str) -> nonblock::MethodReply<Vec<(String, u32, String)>> {
-        self.method_call("org.freedesktop.systemd1.Manager", "GetUnitProcesses", (name, ))
+    fn get_unit_processes(&self, arg0: &str) -> nonblock::MethodReply<Vec<(String, u32, String)>> {
+        self.method_call("org.freedesktop.systemd1.Manager", "GetUnitProcesses", (arg0, ))
             .and_then(|r: (Vec<(String, u32, String)>, )| Ok(r.0, ))
     }
 
-    fn attach_processes_to_unit(&self, unit_name: &str, subcgroup: &str, pids: Vec<u32>) -> nonblock::MethodReply<()> {
-        self.method_call("org.freedesktop.systemd1.Manager", "AttachProcessesToUnit", (unit_name, subcgroup, pids, ))
+    fn attach_processes_to_unit(&self, arg0: &str, arg1: &str, arg2: Vec<u32>) -> nonblock::MethodReply<()> {
+        self.method_call("org.freedesktop.systemd1.Manager", "AttachProcessesToUnit", (arg0, arg1, arg2, ))
     }
 
-    fn abandon_scope(&self, name: &str) -> nonblock::MethodReply<()> {
-        self.method_call("org.freedesktop.systemd1.Manager", "AbandonScope", (name, ))
+    fn abandon_scope(&self, arg0: &str) -> nonblock::MethodReply<()> {
+        self.method_call("org.freedesktop.systemd1.Manager", "AbandonScope", (arg0, ))
     }
 
-    fn get_job(&self, id: u32) -> nonblock::MethodReply<dbus::Path<'static>> {
-        self.method_call("org.freedesktop.systemd1.Manager", "GetJob", (id, ))
+    fn get_job(&self, arg0: u32) -> nonblock::MethodReply<dbus::Path<'static>> {
+        self.method_call("org.freedesktop.systemd1.Manager", "GetJob", (arg0, ))
             .and_then(|r: (dbus::Path<'static>, )| Ok(r.0, ))
     }
 
-    fn get_job_after(&self, id: u32) -> nonblock::MethodReply<Vec<(u32, String, String, String, dbus::Path<'static>, dbus::Path<'static>)>> {
-        self.method_call("org.freedesktop.systemd1.Manager", "GetJobAfter", (id, ))
+    fn get_job_after(&self, arg0: u32) -> nonblock::MethodReply<Vec<(u32, String, String, String, dbus::Path<'static>, dbus::Path<'static>)>> {
+        self.method_call("org.freedesktop.systemd1.Manager", "GetJobAfter", (arg0, ))
             .and_then(|r: (Vec<(u32, String, String, String, dbus::Path<'static>, dbus::Path<'static>)>, )| Ok(r.0, ))
     }
 
-    fn get_job_before(&self, id: u32) -> nonblock::MethodReply<Vec<(u32, String, String, String, dbus::Path<'static>, dbus::Path<'static>)>> {
-        self.method_call("org.freedesktop.systemd1.Manager", "GetJobBefore", (id, ))
+    fn get_job_before(&self, arg0: u32) -> nonblock::MethodReply<Vec<(u32, String, String, String, dbus::Path<'static>, dbus::Path<'static>)>> {
+        self.method_call("org.freedesktop.systemd1.Manager", "GetJobBefore", (arg0, ))
             .and_then(|r: (Vec<(u32, String, String, String, dbus::Path<'static>, dbus::Path<'static>)>, )| Ok(r.0, ))
     }
 
-    fn cancel_job(&self, id: u32) -> nonblock::MethodReply<()> {
-        self.method_call("org.freedesktop.systemd1.Manager", "CancelJob", (id, ))
+    fn cancel_job(&self, arg0: u32) -> nonblock::MethodReply<()> {
+        self.method_call("org.freedesktop.systemd1.Manager", "CancelJob", (arg0, ))
     }
 
     fn clear_jobs(&self) -> nonblock::MethodReply<()> {
@@ -653,27 +601,23 @@ impl<'a, T: nonblock::NonblockReply, C: ::std::ops::Deref<Target=T>> OrgFreedesk
         self.method_call("org.freedesktop.systemd1.Manager", "ResetFailed", ())
     }
 
-    fn set_show_status_(&self, mode: &str) -> nonblock::MethodReply<()> {
-        self.method_call("org.freedesktop.systemd1.Manager", "SetShowStatus", (mode, ))
-    }
-
     fn list_units(&self) -> nonblock::MethodReply<Vec<(String, String, String, String, String, String, dbus::Path<'static>, u32, String, dbus::Path<'static>)>> {
         self.method_call("org.freedesktop.systemd1.Manager", "ListUnits", ())
             .and_then(|r: (Vec<(String, String, String, String, String, String, dbus::Path<'static>, u32, String, dbus::Path<'static>)>, )| Ok(r.0, ))
     }
 
-    fn list_units_filtered(&self, states: Vec<&str>) -> nonblock::MethodReply<Vec<(String, String, String, String, String, String, dbus::Path<'static>, u32, String, dbus::Path<'static>)>> {
-        self.method_call("org.freedesktop.systemd1.Manager", "ListUnitsFiltered", (states, ))
+    fn list_units_filtered(&self, arg0: Vec<&str>) -> nonblock::MethodReply<Vec<(String, String, String, String, String, String, dbus::Path<'static>, u32, String, dbus::Path<'static>)>> {
+        self.method_call("org.freedesktop.systemd1.Manager", "ListUnitsFiltered", (arg0, ))
             .and_then(|r: (Vec<(String, String, String, String, String, String, dbus::Path<'static>, u32, String, dbus::Path<'static>)>, )| Ok(r.0, ))
     }
 
-    fn list_units_by_patterns(&self, states: Vec<&str>, patterns: Vec<&str>) -> nonblock::MethodReply<Vec<(String, String, String, String, String, String, dbus::Path<'static>, u32, String, dbus::Path<'static>)>> {
-        self.method_call("org.freedesktop.systemd1.Manager", "ListUnitsByPatterns", (states, patterns, ))
+    fn list_units_by_patterns(&self, arg0: Vec<&str>, arg1: Vec<&str>) -> nonblock::MethodReply<Vec<(String, String, String, String, String, String, dbus::Path<'static>, u32, String, dbus::Path<'static>)>> {
+        self.method_call("org.freedesktop.systemd1.Manager", "ListUnitsByPatterns", (arg0, arg1, ))
             .and_then(|r: (Vec<(String, String, String, String, String, String, dbus::Path<'static>, u32, String, dbus::Path<'static>)>, )| Ok(r.0, ))
     }
 
-    fn list_units_by_names(&self, names: Vec<&str>) -> nonblock::MethodReply<Vec<(String, String, String, String, String, String, dbus::Path<'static>, u32, String, dbus::Path<'static>)>> {
-        self.method_call("org.freedesktop.systemd1.Manager", "ListUnitsByNames", (names, ))
+    fn list_units_by_names(&self, arg0: Vec<&str>) -> nonblock::MethodReply<Vec<(String, String, String, String, String, String, dbus::Path<'static>, u32, String, dbus::Path<'static>)>> {
+        self.method_call("org.freedesktop.systemd1.Manager", "ListUnitsByNames", (arg0, ))
             .and_then(|r: (Vec<(String, String, String, String, String, String, dbus::Path<'static>, u32, String, dbus::Path<'static>)>, )| Ok(r.0, ))
     }
 
@@ -728,25 +672,20 @@ impl<'a, T: nonblock::NonblockReply, C: ::std::ops::Deref<Target=T>> OrgFreedesk
         self.method_call("org.freedesktop.systemd1.Manager", "KExec", ())
     }
 
-    fn switch_root(&self, new_root: &str, init: &str) -> nonblock::MethodReply<()> {
-        self.method_call("org.freedesktop.systemd1.Manager", "SwitchRoot", (new_root, init, ))
+    fn switch_root(&self, arg0: &str, arg1: &str) -> nonblock::MethodReply<()> {
+        self.method_call("org.freedesktop.systemd1.Manager", "SwitchRoot", (arg0, arg1, ))
     }
 
-    fn set_environment_(&self, assignments: Vec<&str>) -> nonblock::MethodReply<()> {
-        self.method_call("org.freedesktop.systemd1.Manager", "SetEnvironment", (assignments, ))
+    fn set_environment_(&self, arg0: Vec<&str>) -> nonblock::MethodReply<()> {
+        self.method_call("org.freedesktop.systemd1.Manager", "SetEnvironment", (arg0, ))
     }
 
-    fn unset_environment(&self, names: Vec<&str>) -> nonblock::MethodReply<()> {
-        self.method_call("org.freedesktop.systemd1.Manager", "UnsetEnvironment", (names, ))
+    fn unset_environment(&self, arg0: Vec<&str>) -> nonblock::MethodReply<()> {
+        self.method_call("org.freedesktop.systemd1.Manager", "UnsetEnvironment", (arg0, ))
     }
 
-    fn unset_and_set_environment(&self, names: Vec<&str>, assignments: Vec<&str>) -> nonblock::MethodReply<()> {
-        self.method_call("org.freedesktop.systemd1.Manager", "UnsetAndSetEnvironment", (names, assignments, ))
-    }
-
-    fn enqueue_marked_jobs(&self) -> nonblock::MethodReply<Vec<dbus::Path<'static>>> {
-        self.method_call("org.freedesktop.systemd1.Manager", "EnqueueMarkedJobs", ())
-            .and_then(|r: (Vec<dbus::Path<'static>>, )| Ok(r.0, ))
+    fn unset_and_set_environment(&self, arg0: Vec<&str>, arg1: Vec<&str>) -> nonblock::MethodReply<()> {
+        self.method_call("org.freedesktop.systemd1.Manager", "UnsetAndSetEnvironment", (arg0, arg1, ))
     }
 
     fn list_unit_files(&self) -> nonblock::MethodReply<Vec<(String, String)>> {
@@ -754,68 +693,59 @@ impl<'a, T: nonblock::NonblockReply, C: ::std::ops::Deref<Target=T>> OrgFreedesk
             .and_then(|r: (Vec<(String, String)>, )| Ok(r.0, ))
     }
 
-    fn list_unit_files_by_patterns(&self, states: Vec<&str>, patterns: Vec<&str>) -> nonblock::MethodReply<Vec<(String, String)>> {
-        self.method_call("org.freedesktop.systemd1.Manager", "ListUnitFilesByPatterns", (states, patterns, ))
+    fn list_unit_files_by_patterns(&self, arg0: Vec<&str>, arg1: Vec<&str>) -> nonblock::MethodReply<Vec<(String, String)>> {
+        self.method_call("org.freedesktop.systemd1.Manager", "ListUnitFilesByPatterns", (arg0, arg1, ))
             .and_then(|r: (Vec<(String, String)>, )| Ok(r.0, ))
     }
 
-    fn get_unit_file_state(&self, file: &str) -> nonblock::MethodReply<String> {
-        self.method_call("org.freedesktop.systemd1.Manager", "GetUnitFileState", (file, ))
+    fn get_unit_file_state(&self, arg0: &str) -> nonblock::MethodReply<String> {
+        self.method_call("org.freedesktop.systemd1.Manager", "GetUnitFileState", (arg0, ))
             .and_then(|r: (String, )| Ok(r.0, ))
     }
 
-    fn enable_unit_files(&self, files: Vec<&str>, runtime: bool, force: bool) -> nonblock::MethodReply<(bool, Vec<(String, String, String)>)> {
-        self.method_call("org.freedesktop.systemd1.Manager", "EnableUnitFiles", (files, runtime, force, ))
+    fn enable_unit_files(&self, arg0: Vec<&str>, arg1: bool, arg2: bool) -> nonblock::MethodReply<(bool, Vec<(String, String, String)>)> {
+        self.method_call("org.freedesktop.systemd1.Manager", "EnableUnitFiles", (arg0, arg1, arg2, ))
     }
 
-    fn disable_unit_files(&self, files: Vec<&str>, runtime: bool) -> nonblock::MethodReply<Vec<(String, String, String)>> {
-        self.method_call("org.freedesktop.systemd1.Manager", "DisableUnitFiles", (files, runtime, ))
+    fn disable_unit_files(&self, arg0: Vec<&str>, arg1: bool) -> nonblock::MethodReply<Vec<(String, String, String)>> {
+        self.method_call("org.freedesktop.systemd1.Manager", "DisableUnitFiles", (arg0, arg1, ))
             .and_then(|r: (Vec<(String, String, String)>, )| Ok(r.0, ))
     }
 
-    fn enable_unit_files_with_flags(&self, files: Vec<&str>, flags: u64) -> nonblock::MethodReply<(bool, Vec<(String, String, String)>)> {
-        self.method_call("org.freedesktop.systemd1.Manager", "EnableUnitFilesWithFlags", (files, flags, ))
+    fn reenable_unit_files(&self, arg0: Vec<&str>, arg1: bool, arg2: bool) -> nonblock::MethodReply<(bool, Vec<(String, String, String)>)> {
+        self.method_call("org.freedesktop.systemd1.Manager", "ReenableUnitFiles", (arg0, arg1, arg2, ))
     }
 
-    fn disable_unit_files_with_flags(&self, files: Vec<&str>, flags: u64) -> nonblock::MethodReply<Vec<(String, String, String)>> {
-        self.method_call("org.freedesktop.systemd1.Manager", "DisableUnitFilesWithFlags", (files, flags, ))
+    fn link_unit_files(&self, arg0: Vec<&str>, arg1: bool, arg2: bool) -> nonblock::MethodReply<Vec<(String, String, String)>> {
+        self.method_call("org.freedesktop.systemd1.Manager", "LinkUnitFiles", (arg0, arg1, arg2, ))
             .and_then(|r: (Vec<(String, String, String)>, )| Ok(r.0, ))
     }
 
-    fn reenable_unit_files(&self, files: Vec<&str>, runtime: bool, force: bool) -> nonblock::MethodReply<(bool, Vec<(String, String, String)>)> {
-        self.method_call("org.freedesktop.systemd1.Manager", "ReenableUnitFiles", (files, runtime, force, ))
+    fn preset_unit_files(&self, arg0: Vec<&str>, arg1: bool, arg2: bool) -> nonblock::MethodReply<(bool, Vec<(String, String, String)>)> {
+        self.method_call("org.freedesktop.systemd1.Manager", "PresetUnitFiles", (arg0, arg1, arg2, ))
     }
 
-    fn link_unit_files(&self, files: Vec<&str>, runtime: bool, force: bool) -> nonblock::MethodReply<Vec<(String, String, String)>> {
-        self.method_call("org.freedesktop.systemd1.Manager", "LinkUnitFiles", (files, runtime, force, ))
+    fn preset_unit_files_with_mode(&self, arg0: Vec<&str>, arg1: &str, arg2: bool, arg3: bool) -> nonblock::MethodReply<(bool, Vec<(String, String, String)>)> {
+        self.method_call("org.freedesktop.systemd1.Manager", "PresetUnitFilesWithMode", (arg0, arg1, arg2, arg3, ))
+    }
+
+    fn mask_unit_files(&self, arg0: Vec<&str>, arg1: bool, arg2: bool) -> nonblock::MethodReply<Vec<(String, String, String)>> {
+        self.method_call("org.freedesktop.systemd1.Manager", "MaskUnitFiles", (arg0, arg1, arg2, ))
             .and_then(|r: (Vec<(String, String, String)>, )| Ok(r.0, ))
     }
 
-    fn preset_unit_files(&self, files: Vec<&str>, runtime: bool, force: bool) -> nonblock::MethodReply<(bool, Vec<(String, String, String)>)> {
-        self.method_call("org.freedesktop.systemd1.Manager", "PresetUnitFiles", (files, runtime, force, ))
-    }
-
-    fn preset_unit_files_with_mode(&self, files: Vec<&str>, mode: &str, runtime: bool, force: bool) -> nonblock::MethodReply<(bool, Vec<(String, String, String)>)> {
-        self.method_call("org.freedesktop.systemd1.Manager", "PresetUnitFilesWithMode", (files, mode, runtime, force, ))
-    }
-
-    fn mask_unit_files(&self, files: Vec<&str>, runtime: bool, force: bool) -> nonblock::MethodReply<Vec<(String, String, String)>> {
-        self.method_call("org.freedesktop.systemd1.Manager", "MaskUnitFiles", (files, runtime, force, ))
+    fn unmask_unit_files(&self, arg0: Vec<&str>, arg1: bool) -> nonblock::MethodReply<Vec<(String, String, String)>> {
+        self.method_call("org.freedesktop.systemd1.Manager", "UnmaskUnitFiles", (arg0, arg1, ))
             .and_then(|r: (Vec<(String, String, String)>, )| Ok(r.0, ))
     }
 
-    fn unmask_unit_files(&self, files: Vec<&str>, runtime: bool) -> nonblock::MethodReply<Vec<(String, String, String)>> {
-        self.method_call("org.freedesktop.systemd1.Manager", "UnmaskUnitFiles", (files, runtime, ))
+    fn revert_unit_files(&self, arg0: Vec<&str>) -> nonblock::MethodReply<Vec<(String, String, String)>> {
+        self.method_call("org.freedesktop.systemd1.Manager", "RevertUnitFiles", (arg0, ))
             .and_then(|r: (Vec<(String, String, String)>, )| Ok(r.0, ))
     }
 
-    fn revert_unit_files(&self, files: Vec<&str>) -> nonblock::MethodReply<Vec<(String, String, String)>> {
-        self.method_call("org.freedesktop.systemd1.Manager", "RevertUnitFiles", (files, ))
-            .and_then(|r: (Vec<(String, String, String)>, )| Ok(r.0, ))
-    }
-
-    fn set_default_target(&self, name: &str, force: bool) -> nonblock::MethodReply<Vec<(String, String, String)>> {
-        self.method_call("org.freedesktop.systemd1.Manager", "SetDefaultTarget", (name, force, ))
+    fn set_default_target(&self, arg0: &str, arg1: bool) -> nonblock::MethodReply<Vec<(String, String, String)>> {
+        self.method_call("org.freedesktop.systemd1.Manager", "SetDefaultTarget", (arg0, arg1, ))
             .and_then(|r: (Vec<(String, String, String)>, )| Ok(r.0, ))
     }
 
@@ -824,32 +754,32 @@ impl<'a, T: nonblock::NonblockReply, C: ::std::ops::Deref<Target=T>> OrgFreedesk
             .and_then(|r: (String, )| Ok(r.0, ))
     }
 
-    fn preset_all_unit_files(&self, mode: &str, runtime: bool, force: bool) -> nonblock::MethodReply<Vec<(String, String, String)>> {
-        self.method_call("org.freedesktop.systemd1.Manager", "PresetAllUnitFiles", (mode, runtime, force, ))
+    fn preset_all_unit_files(&self, arg0: &str, arg1: bool, arg2: bool) -> nonblock::MethodReply<Vec<(String, String, String)>> {
+        self.method_call("org.freedesktop.systemd1.Manager", "PresetAllUnitFiles", (arg0, arg1, arg2, ))
             .and_then(|r: (Vec<(String, String, String)>, )| Ok(r.0, ))
     }
 
-    fn add_dependency_unit_files(&self, files: Vec<&str>, target: &str, type_: &str, runtime: bool, force: bool) -> nonblock::MethodReply<Vec<(String, String, String)>> {
-        self.method_call("org.freedesktop.systemd1.Manager", "AddDependencyUnitFiles", (files, target, type_, runtime, force, ))
+    fn add_dependency_unit_files(&self, arg0: Vec<&str>, arg1: &str, arg2: &str, arg3: bool, arg4: bool) -> nonblock::MethodReply<Vec<(String, String, String)>> {
+        self.method_call("org.freedesktop.systemd1.Manager", "AddDependencyUnitFiles", (arg0, arg1, arg2, arg3, arg4, ))
             .and_then(|r: (Vec<(String, String, String)>, )| Ok(r.0, ))
     }
 
-    fn get_unit_file_links(&self, name: &str, runtime: bool) -> nonblock::MethodReply<Vec<String>> {
-        self.method_call("org.freedesktop.systemd1.Manager", "GetUnitFileLinks", (name, runtime, ))
+    fn get_unit_file_links(&self, arg0: &str, arg1: bool) -> nonblock::MethodReply<Vec<String>> {
+        self.method_call("org.freedesktop.systemd1.Manager", "GetUnitFileLinks", (arg0, arg1, ))
             .and_then(|r: (Vec<String>, )| Ok(r.0, ))
     }
 
-    fn set_exit_code_(&self, number: u8) -> nonblock::MethodReply<()> {
-        self.method_call("org.freedesktop.systemd1.Manager", "SetExitCode", (number, ))
+    fn set_exit_code_(&self, arg0: u8) -> nonblock::MethodReply<()> {
+        self.method_call("org.freedesktop.systemd1.Manager", "SetExitCode", (arg0, ))
     }
 
-    fn lookup_dynamic_user_by_name(&self, name: &str) -> nonblock::MethodReply<u32> {
-        self.method_call("org.freedesktop.systemd1.Manager", "LookupDynamicUserByName", (name, ))
+    fn lookup_dynamic_user_by_name(&self, arg0: &str) -> nonblock::MethodReply<u32> {
+        self.method_call("org.freedesktop.systemd1.Manager", "LookupDynamicUserByName", (arg0, ))
             .and_then(|r: (u32, )| Ok(r.0, ))
     }
 
-    fn lookup_dynamic_user_by_uid(&self, uid: u32) -> nonblock::MethodReply<String> {
-        self.method_call("org.freedesktop.systemd1.Manager", "LookupDynamicUserByUID", (uid, ))
+    fn lookup_dynamic_user_by_uid(&self, arg0: u32) -> nonblock::MethodReply<String> {
+        self.method_call("org.freedesktop.systemd1.Manager", "LookupDynamicUserByUID", (arg0, ))
             .and_then(|r: (String, )| Ok(r.0, ))
     }
 
@@ -974,14 +904,6 @@ impl<'a, T: nonblock::NonblockReply, C: ::std::ops::Deref<Target=T>> OrgFreedesk
         <Self as nonblock::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.systemd1.Manager", "UnitsLoadFinishTimestampMonotonic")
     }
 
-    fn units_load_timestamp(&self) -> nonblock::MethodReply<u64> {
-        <Self as nonblock::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.systemd1.Manager", "UnitsLoadTimestamp")
-    }
-
-    fn units_load_timestamp_monotonic(&self) -> nonblock::MethodReply<u64> {
-        <Self as nonblock::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.systemd1.Manager", "UnitsLoadTimestampMonotonic")
-    }
-
     fn init_rdsecurity_start_timestamp(&self) -> nonblock::MethodReply<u64> {
         <Self as nonblock::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.systemd1.Manager", "InitRDSecurityStartTimestamp")
     }
@@ -1090,20 +1012,8 @@ impl<'a, T: nonblock::NonblockReply, C: ::std::ops::Deref<Target=T>> OrgFreedesk
         <Self as nonblock::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.systemd1.Manager", "RuntimeWatchdogUSec")
     }
 
-    fn runtime_watchdog_pre_usec(&self) -> nonblock::MethodReply<u64> {
-        <Self as nonblock::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.systemd1.Manager", "RuntimeWatchdogPreUSec")
-    }
-
-    fn runtime_watchdog_pre_governor(&self) -> nonblock::MethodReply<String> {
-        <Self as nonblock::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.systemd1.Manager", "RuntimeWatchdogPreGovernor")
-    }
-
-    fn reboot_watchdog_usec(&self) -> nonblock::MethodReply<u64> {
-        <Self as nonblock::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.systemd1.Manager", "RebootWatchdogUSec")
-    }
-
-    fn kexec_watchdog_usec(&self) -> nonblock::MethodReply<u64> {
-        <Self as nonblock::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.systemd1.Manager", "KExecWatchdogUSec")
+    fn shutdown_watchdog_usec(&self) -> nonblock::MethodReply<u64> {
+        <Self as nonblock::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.systemd1.Manager", "ShutdownWatchdogUSec")
     }
 
     fn service_watchdogs(&self) -> nonblock::MethodReply<bool> {
@@ -1132,10 +1042,6 @@ impl<'a, T: nonblock::NonblockReply, C: ::std::ops::Deref<Target=T>> OrgFreedesk
 
     fn default_timeout_stop_usec(&self) -> nonblock::MethodReply<u64> {
         <Self as nonblock::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.systemd1.Manager", "DefaultTimeoutStopUSec")
-    }
-
-    fn default_timeout_abort_usec(&self) -> nonblock::MethodReply<u64> {
-        <Self as nonblock::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.systemd1.Manager", "DefaultTimeoutAbortUSec")
     }
 
     fn default_restart_usec(&self) -> nonblock::MethodReply<u64> {
@@ -1302,18 +1208,6 @@ impl<'a, T: nonblock::NonblockReply, C: ::std::ops::Deref<Target=T>> OrgFreedesk
         <Self as nonblock::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.systemd1.Manager", "TimerSlackNSec")
     }
 
-    fn default_oompolicy(&self) -> nonblock::MethodReply<String> {
-        <Self as nonblock::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.systemd1.Manager", "DefaultOOMPolicy")
-    }
-
-    fn default_oomscore_adjust(&self) -> nonblock::MethodReply<i32> {
-        <Self as nonblock::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.systemd1.Manager", "DefaultOOMScoreAdjust")
-    }
-
-    fn ctrl_alt_del_burst_action(&self) -> nonblock::MethodReply<String> {
-        <Self as nonblock::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.systemd1.Manager", "CtrlAltDelBurstAction")
-    }
-
     fn set_log_level(&self, value: String) -> nonblock::MethodReply<()> {
         <Self as nonblock::stdintf::org_freedesktop_dbus::Properties>::set(&self, "org.freedesktop.systemd1.Manager", "LogLevel", value)
     }
@@ -1326,20 +1220,8 @@ impl<'a, T: nonblock::NonblockReply, C: ::std::ops::Deref<Target=T>> OrgFreedesk
         <Self as nonblock::stdintf::org_freedesktop_dbus::Properties>::set(&self, "org.freedesktop.systemd1.Manager", "RuntimeWatchdogUSec", value)
     }
 
-    fn set_runtime_watchdog_pre_usec(&self, value: u64) -> nonblock::MethodReply<()> {
-        <Self as nonblock::stdintf::org_freedesktop_dbus::Properties>::set(&self, "org.freedesktop.systemd1.Manager", "RuntimeWatchdogPreUSec", value)
-    }
-
-    fn set_runtime_watchdog_pre_governor(&self, value: String) -> nonblock::MethodReply<()> {
-        <Self as nonblock::stdintf::org_freedesktop_dbus::Properties>::set(&self, "org.freedesktop.systemd1.Manager", "RuntimeWatchdogPreGovernor", value)
-    }
-
-    fn set_reboot_watchdog_usec(&self, value: u64) -> nonblock::MethodReply<()> {
-        <Self as nonblock::stdintf::org_freedesktop_dbus::Properties>::set(&self, "org.freedesktop.systemd1.Manager", "RebootWatchdogUSec", value)
-    }
-
-    fn set_kexec_watchdog_usec(&self, value: u64) -> nonblock::MethodReply<()> {
-        <Self as nonblock::stdintf::org_freedesktop_dbus::Properties>::set(&self, "org.freedesktop.systemd1.Manager", "KExecWatchdogUSec", value)
+    fn set_shutdown_watchdog_usec(&self, value: u64) -> nonblock::MethodReply<()> {
+        <Self as nonblock::stdintf::org_freedesktop_dbus::Properties>::set(&self, "org.freedesktop.systemd1.Manager", "ShutdownWatchdogUSec", value)
     }
 
     fn set_service_watchdogs(&self, value: bool) -> nonblock::MethodReply<()> {

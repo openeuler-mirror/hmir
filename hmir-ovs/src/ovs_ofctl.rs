@@ -73,7 +73,8 @@
 
 use super::ovs_common::*;
 
-use std::collections::HashMap;
+use std::collections::BTreeMap;
+use serde_json::{json, Value};
 use jsonrpsee::ws_server::RpcModule;
 
 const OFCTL_CMD: &str= "ovs-ofctl";
@@ -89,37 +90,37 @@ const OFCTL_PRIO_SINGLE: &str= "20";
 pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
 
     module.register_method("ovs-ofctl-add-default-rule", |params, _| {
-        let br_info = params.parse::<HashMap<String, String>>()?;
+        let br_info = params.parse::<BTreeMap<&str, Value>>()?;
         Ok(ovs_ofctl_add_default_rule(br_info))
     })?;
     
     module.register_method("ovs-ofctl-clear-port-rules", |params, _| {
-        let br_info = params.parse::<HashMap<String, String>>()?;
+        let br_info = params.parse::<BTreeMap<&str, Value>>()?;
         Ok(ovs_ofctl_clear_port_rules(br_info))
     })?;
 
     module.register_method("ovs-ofctl-forbid-dstip", |params, _| {
-        let br_info = params.parse::<HashMap<String, String>>()?;
+        let br_info = params.parse::<BTreeMap<&str, Value>>()?;
         Ok(ovs_ofctl_forbid_dstip(br_info))
     })?;
 
     module.register_method("ovs-ofctl-forbid-dstport", |params, _| {
-        let br_info = params.parse::<HashMap<String, String>>()?;
+        let br_info = params.parse::<BTreeMap<&str, Value>>()?;
         Ok(ovs_ofctl_forbid_dstport(br_info))
     })?;
 
     module.register_method("ovs-ofctl-pass-dstip", |params, _| {
-        let br_info = params.parse::<HashMap<String, String>>()?;
+        let br_info = params.parse::<BTreeMap<&str, Value>>()?;
         Ok(ovs_ofctl_pass_dstip(br_info))
     })?;
 
     module.register_method("ovs-ofctl-pass-dstport", |params, _| {
-        let br_info = params.parse::<HashMap<String, String>>()?;
+        let br_info = params.parse::<BTreeMap<&str, Value>>()?;
         Ok(ovs_ofctl_pass_dstport(br_info))
     })?;
 
     module.register_method("ovs-ofctl-mod-vlan", |params, _| {
-        let br_info = params.parse::<HashMap<String, String>>()?;
+        let br_info = params.parse::<BTreeMap<&str, Value>>()?;
         Ok(ovs_ofctl_mod_vlan(br_info))
     })?;
 
@@ -127,7 +128,7 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
 }
 
 #[allow(dead_code)]
-fn ovs_ofctl_clear_br_rules(info_map : HashMap<String, String>) -> String {
+fn ovs_ofctl_clear_br_rules(info_map : BTreeMap<&str, Value>) -> String {
     let br_name = info_map.get("br_name").unwrap();
     let rule = format!("{} del-flows {}", OFCTL_CMD, br_name);
     
@@ -135,7 +136,7 @@ fn ovs_ofctl_clear_br_rules(info_map : HashMap<String, String>) -> String {
     reflect_cmd_result(output)
 }
 
-fn ovs_ofctl_clear_port_rules(info_map : HashMap<String, String>) -> String {
+fn ovs_ofctl_clear_port_rules(info_map : BTreeMap<&str, Value>) -> String {
     let br_name = info_map.get("br_name").unwrap();
     let in_port = info_map.get("in_port").unwrap();
     let rule = format!("{} del-flows {} in_port={}", OFCTL_CMD, br_name, in_port);
@@ -144,10 +145,10 @@ fn ovs_ofctl_clear_port_rules(info_map : HashMap<String, String>) -> String {
     reflect_cmd_result(output)
 }
 
-fn ovs_ofctl_forbid_dstip(info_map : HashMap<String, String>) -> String {
+fn ovs_ofctl_forbid_dstip(info_map : BTreeMap<&str, Value>) -> String {
     let br_name = info_map.get("br_name").unwrap();
     let dst_ip = info_map.get("dst_ip").unwrap();
-    let in_port = info_map.get("in_port").unwrap();
+    let in_port = info_map.get("in_port").unwrap().to_string();
 
     let rule = match in_port.is_empty() {
         true => {
@@ -162,7 +163,7 @@ fn ovs_ofctl_forbid_dstip(info_map : HashMap<String, String>) -> String {
     reflect_cmd_result(output)
 }
 
-fn ovs_ofctl_add_default_rule(info_map : HashMap<String, String>) -> String {
+fn ovs_ofctl_add_default_rule(info_map : BTreeMap<&str, Value>) -> String {
     let br_name = info_map.get("br_name").unwrap();
     let rule = format!("{} add-flow {} priority=0,action=normal", OFCTL_CMD, br_name);
     
@@ -170,7 +171,7 @@ fn ovs_ofctl_add_default_rule(info_map : HashMap<String, String>) -> String {
     reflect_cmd_result(output)
 }
 
-fn ovs_ofctl_forbid_dstport(info_map : HashMap<String, String>) -> String{
+fn ovs_ofctl_forbid_dstport(info_map : BTreeMap<&str, Value>) -> String{
     let br_name = info_map.get("br_name").unwrap();
     let dst_ip = info_map.get("dst_ip").unwrap();
     let in_port = info_map.get("in_port").unwrap();
@@ -190,13 +191,12 @@ fn ovs_ofctl_forbid_dstport(info_map : HashMap<String, String>) -> String{
 }
 
 // 先禁用端口所有的tcp请求，再放通白名单中的tcp请求
-fn ovs_ofctl_pass_dstip(info_map : HashMap<String, String>) ->String{
+fn ovs_ofctl_pass_dstip(info_map :BTreeMap<&str, Value>) ->String{
     let br_name = info_map.get("br_name").unwrap();
     let dst_ip = info_map.get("dst_ip").unwrap();
     let in_port = info_map.get("in_port").unwrap();
 
     let rule_tcp_forbid= format!("{} add-flow {} dl_type=0x0800,in_port={},priority={},action=drop", 
-
                                             OFCTL_CMD, br_name, in_port, OFCTL_PRIO_BLK);
     let mut output = exec_rule(rule_tcp_forbid, "ovs_ofctl_pass_dstip add rule_tcp_forbid".to_string());
     if !output.status.success() {                                    
@@ -210,7 +210,7 @@ fn ovs_ofctl_pass_dstip(info_map : HashMap<String, String>) ->String{
 
 }
 
-fn ovs_ofctl_pass_dstport(info_map : HashMap<String, String>) -> String{
+fn ovs_ofctl_pass_dstport(info_map : BTreeMap<&str, Value>) -> String{
     let br_name = info_map.get("br_name").unwrap();
     let dst_ip = info_map.get("dst_ip").unwrap();
     let in_port = info_map.get("in_port").unwrap();
@@ -238,7 +238,7 @@ fn ovs_ofctl_pass_dstport(info_map : HashMap<String, String>) -> String{
 
 }
 
-fn ovs_ofctl_mod_vlan(info_map : HashMap<String, String>) -> String{
+fn ovs_ofctl_mod_vlan(info_map : BTreeMap<&str, Value>) -> String{
     let br_name = info_map.get("br_name").unwrap();
     let in_port = info_map.get("in_port").unwrap();
     let dl_vlan = info_map.get("dl_vlan").unwrap();

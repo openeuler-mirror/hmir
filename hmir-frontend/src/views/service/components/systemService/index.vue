@@ -5,37 +5,44 @@
 </template>
 
 <script setup lang="ts">
-import serviceCollapse from '@/components/serviceCollapse/index.vue'
-import { ref, onMounted } from 'vue'
-import serviceList from '@/views/service/interface/index'
+import serviceCollapse from '@/components/serviceCollapse/index.vue';
+import { ref, onMounted } from 'vue';
+import serviceList from '@/views/service/interface/index';
+import { cmd_process_info } from '@/api/index';
 
 const description = ref<serviceList[]>([{ value: '' }])
 
+const cmdProcessInfo = () => {
+  let value = cmd_process_info();
+  let arr = Array.from(Object.values(value), x => x);
+  return arr;
+}
+
 onMounted(() => {
+  let tableList = cmdProcessInfo()
   description.value = [{
     value: '启用',
-    tableList: [{
-      description: 'Accounts Service',
-      id: 'accounts-daemon.service',
-      state: '激活 (running)',
-    }],
+    // tableList: [{
+    //   description: 'Accounts Service',
+    //   id: 'accounts-daemon.service',
+    //   state: '激活 (running)',
+    // }],
+    tableList,
     tableProp: [
       { prop: 'description', label: '描述' },
-      { prop: 'id', label: 'ID' },
-      { prop: 'state', label: '状态' },
+      { prop: 'name', label: 'ID' },
     ]
   },
   {
     value: '禁用',
     tableList: [{
       description: 'Accounts Service',
-      id: 'accounts-daemon.service',
+      name: 'accounts-daemon.service',
       state: '激活 (running)',
     }],
     tableProp: [
       { prop: 'description', label: '描述' },
-      { prop: 'id', label: 'ID' },
-      { prop: 'state', label: '状态' },
+      { prop: 'name', label: 'ID' },
     ]
   },
   {
@@ -48,8 +55,7 @@ onMounted(() => {
     tableList: [],
     tableProp: [
       { prop: 'description', label: '描述' },
-      { prop: 'id', label: 'ID' },
-      { prop: 'state', label: '状态' },
+      { prop: 'name', label: 'ID' },
     ]
   }]
 })

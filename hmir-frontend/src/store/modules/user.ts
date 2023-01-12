@@ -38,7 +38,7 @@ export const useUsersStore = defineStore('user', {
       return new Promise<void>((resolve, reject) => {
         cmd_login({ ...loginData })
           .then(response => {
-            if (response) {
+            if (response === 0) {
               this.host = loginData.host;
               this.port = loginData.port;
               this.username = loginData.username;
@@ -67,6 +67,7 @@ export const useUsersStore = defineStore('user', {
       return new Promise<void>((resolve, reject) => {
         cmd_logout({ ...logoutData })
           .then(response => {
+            console.log(response);
             //判断是否注销成功
             if (response) {
               //重置所有的用户信息

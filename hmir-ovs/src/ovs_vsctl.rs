@@ -126,7 +126,6 @@
 //! }
 
 use super::ovs_common::*;
-use std::{collections::HashMap};
 use jsonrpsee::{ws_server::RpcModule};
 
 use serde_json::{json, Value};
@@ -135,84 +134,87 @@ use std::collections::BTreeMap;
 use hmir_hash::HashWrap;
 use hmir_token::TokenChecker;
 use hmir_errno::errno;
-const VSCTL_CMD: &str = "ovs-vsctl";
 
-#[macro_export]
-macro_rules! VsctlTokenChecker {
-    ($br_info:expr) => {
-        let token_exception = json!(String::from(""));
-        let token = ($br_info).get("token").unwrap_or(&token_exception).to_string();
-        TokenChecker!(token);
-    }
-}
+use crate::OvsTokenChecker;
+
+const VSCTL_CMD: &str = "ovs-vsctl";
 
 pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
     module.register_method("ovs-vsctl-add-br", |params, _| {
         let br_info = params.parse::<BTreeMap<&str, Value>>()?;
-        VsctlTokenChecker!(br_info);
+        OvsTokenChecker!(br_info);
         Ok(ovs_vsctl_add_br(br_info))
     })?;
 
     module.register_method("ovs-vsctl-del-br", |params, _| {
         let br_info = params.parse::<BTreeMap<&str, Value>>()?;
-        VsctlTokenChecker!(br_info);
+        OvsTokenChecker!(br_info);
         Ok(ovs_vsctl_del_br(br_info))
     })?;
 
     module.register_method("ovs-vsctl-add-port", |params, _| {
         let br_info = params.parse::<BTreeMap<&str, Value>>()?;
-        VsctlTokenChecker!(br_info);
+        OvsTokenChecker!(br_info);
         Ok(ovs_vsctl_add_port(br_info))
     })?;
 
     module.register_method("ovs-vsctl-del-port", |params, _| {
         let br_info = params.parse::<BTreeMap<&str, Value>>()?;
-        VsctlTokenChecker!(br_info);
+        OvsTokenChecker!(br_info);
         Ok(ovs_vsctl_del_port(br_info))
     })?;
 
     module.register_method("ovs-vsctl-set-netflow-rule", |params, _| {
-        let br_info = params.parse::<HashMap<String, String>>()?;
+        let br_info = params.parse::<BTreeMap<&str, Value>>()?;
+        OvsTokenChecker!(br_info);
         Ok(ovs_vsctl_set_netflow_rule(br_info))
     })?;
 
     module.register_method("ovs-vsctl-del-netflow-rule", |params, _| {
-        let br_info = params.parse::<HashMap<String, String>>()?;
+        let br_info = params.parse::<BTreeMap<&str, Value>>()?;
+        OvsTokenChecker!(br_info);
         Ok(ovs_vsctl_del_netflow_rule(br_info))
     })?;
 
     module.register_method("ovs-vsctl-set-ipfix-rule", |params, _| {
-        let br_info = params.parse::<HashMap<String, String>>()?;
+        let br_info = params.parse::<BTreeMap<&str, Value>>()?;
+        OvsTokenChecker!(br_info);
         Ok(ovs_vsctl_set_ipfix_rule(br_info))
     })?;
 
     module.register_method("ovs-vsctl-del-ipfix-rule", |params, _| {
-        let br_info = params.parse::<HashMap<String, String>>()?;
+        let br_info = params.parse::<BTreeMap<&str, Value>>()?;
+        OvsTokenChecker!(br_info);
         Ok(ovs_vsctl_del_ipfix_rule(br_info))
     })?;
 
     module.register_method("ovs-vsctl-set-port-vlan", |params, _| {
-        let br_info = params.parse::<HashMap<String, String>>()?;
+        let br_info = params.parse::<BTreeMap<&str, Value>>()?;
+        OvsTokenChecker!(br_info);
         Ok(ovs_vsctl_set_port_vlan(br_info))
     })?;
 
     module.register_method("ovs-vsctl-set-interface-policing", |params, _| {
-        let br_info = params.parse::<HashMap<String, String>>()?;
+        let br_info = params.parse::<BTreeMap<&str, Value>>()?;
+        OvsTokenChecker!(br_info);
         Ok(ovs_vsctl_set_interface_policing(br_info))
     })?;
 
     module.register_method("ovs-vsctl-set-port-qos", |params, _| {
-        let br_info = params.parse::<HashMap<String, String>>()?;
+        let br_info = params.parse::<BTreeMap<&str, Value>>()?;
+        OvsTokenChecker!(br_info);
         Ok(ovs_vsctl_set_port_qos(br_info))
     })?;
 
     module.register_method("ovs-vsctl-set-port-patch", |params, _| {
-        let br_info = params.parse::<HashMap<String, String>>()?;
+        let br_info = params.parse::<BTreeMap<&str, Value>>()?;
+        OvsTokenChecker!(br_info);
         Ok(ovs_vsctl_set_port_patch(br_info))
     })?;
 
     module.register_method("ovs-vsctl-set-port-bond", |params, _| {
-        let br_info = params.parse::<HashMap<String, String>>()?;
+        let br_info = params.parse::<BTreeMap<&str, Value>>()?;
+        OvsTokenChecker!(br_info);
         Ok(ovs_vsctl_set_port_bond(br_info))
     })?;
 
@@ -255,7 +257,7 @@ fn ovs_vsctl_del_port(info_map : BTreeMap<&str, Value>) -> String {
     reflect_cmd_result(output)
 }
 
-fn ovs_vsctl_set_netflow_rule(info_map : HashMap<String, String>) -> std::string::String {
+fn ovs_vsctl_set_netflow_rule(info_map : BTreeMap<&str, Value>) -> std::string::String {
     let br_name = info_map.get("br_name").unwrap();
     let targets =  info_map.get("targets").unwrap();
     let rule = format!("{} set Bridge {} netflow=@nf -- --id=@nf create NetFlow targets=\\\"{}\\\" active-timeout=60", VSCTL_CMD, br_name, targets);
@@ -264,7 +266,7 @@ fn ovs_vsctl_set_netflow_rule(info_map : HashMap<String, String>) -> std::string
     reflect_cmd_result(output)
 }
 
-fn ovs_vsctl_del_netflow_rule(info_map : HashMap<String, String>) -> String {
+fn ovs_vsctl_del_netflow_rule(info_map : BTreeMap<&str, Value>) -> String {
     let br_name = info_map.get("br_name").unwrap();
     let rule = format!("{} clear Bridge {} netflow", VSCTL_CMD, br_name);
     
@@ -272,7 +274,7 @@ fn ovs_vsctl_del_netflow_rule(info_map : HashMap<String, String>) -> String {
     reflect_cmd_result(output)
 }
 
-fn ovs_vsctl_set_ipfix_rule(info_map : HashMap<String, String>) -> String{
+fn ovs_vsctl_set_ipfix_rule(info_map : BTreeMap<&str, Value>) -> String{
 
     let br_name = info_map.get("br_name").unwrap();
     let targets =  info_map.get("targets").unwrap();
@@ -283,7 +285,7 @@ fn ovs_vsctl_set_ipfix_rule(info_map : HashMap<String, String>) -> String{
     reflect_cmd_result(output)
 }
 
-fn ovs_vsctl_del_ipfix_rule(info_map : HashMap<String, String>) -> String{
+fn ovs_vsctl_del_ipfix_rule(info_map : BTreeMap<&str, Value>) -> String{
     let br_name = info_map.get("br_name").unwrap();
     let rule = format!("{} clear Bridge {} ipfix", VSCTL_CMD, br_name);
     
@@ -291,7 +293,7 @@ fn ovs_vsctl_del_ipfix_rule(info_map : HashMap<String, String>) -> String{
     reflect_cmd_result(output)
 }
 
-fn ovs_vsctl_set_port_vlan(info_map : HashMap<String, String>) -> String{
+fn ovs_vsctl_set_port_vlan(info_map : BTreeMap<&str, Value>) -> String{
     let port_name = info_map.get("port_name").unwrap();
     let tag_value =  info_map.get("tag_value").unwrap();
     let rule = format!("{} set Port {} tag={}", VSCTL_CMD, port_name, tag_value);
@@ -300,7 +302,7 @@ fn ovs_vsctl_set_port_vlan(info_map : HashMap<String, String>) -> String{
     reflect_cmd_result(output)
 }
 
-fn ovs_vsctl_set_interface_policing(info_map : HashMap<String, String>) -> String{
+fn ovs_vsctl_set_interface_policing(info_map : BTreeMap<&str, Value>) -> String{
     let interface_name = info_map.get("interface_name").unwrap();
     let rate =  info_map.get("rate").unwrap();
     let burst = info_map.get("burst").unwrap();
@@ -315,7 +317,7 @@ fn ovs_vsctl_set_interface_policing(info_map : HashMap<String, String>) -> Strin
     reflect_cmd_result(output)
 }
 
-fn ovs_vsctl_set_port_qos(info_map : HashMap<String, String>) -> String{
+fn ovs_vsctl_set_port_qos(info_map : BTreeMap<&str, Value>) -> String{
     let port_name = info_map.get("port_name").unwrap();
     let qos_type = info_map.get("qos_type").unwrap();
     let max_rate = info_map.get("max_rate").unwrap();
@@ -328,7 +330,7 @@ fn ovs_vsctl_set_port_qos(info_map : HashMap<String, String>) -> String{
     reflect_cmd_result(output)
 }
 
-fn ovs_vsctl_set_port_patch(info_map : HashMap<String, String>) -> String{
+fn ovs_vsctl_set_port_patch(info_map : BTreeMap<&str, Value>) -> String{
     let br_name = info_map.get("br_name").unwrap();
     let port_name = info_map.get("port_name").unwrap();
     let peer_port = info_map.get("peer_port").unwrap();
@@ -341,10 +343,10 @@ fn ovs_vsctl_set_port_patch(info_map : HashMap<String, String>) -> String{
     reflect_cmd_result(output)
 }
 
-fn ovs_vsctl_set_port_bond(info_map : HashMap<String, String>) -> String{
+fn ovs_vsctl_set_port_bond(info_map : BTreeMap<&str, Value>) -> String{
     let br_name = info_map.get("br_name").unwrap();
     let bond_name = info_map.get("bond_name").unwrap();
-    let nics = info_map.get("nics").unwrap();
+    let nics = info_map.get("nics").unwrap().to_string();
     let nic_vec : Vec<&str> = nics.split(",").collect();
 
     let mut nic_str = String::new();
@@ -367,11 +369,11 @@ mod vsctl_tests{
     fn test_br(){
         test_clear_env();
 
-        let mut br_info = HashMap::new();
-        br_info.insert("br_name".to_string(), BR_FOR_TEST.to_string());
+        let mut br_info = BTreeMap::new();
+        br_info.insert("br_name", json!(BR_FOR_TEST));
         
-        assert_eq!(ovs_vsctl_add_br(br_info.clone()), "Done".to_string());
-        assert_eq!(ovs_vsctl_del_br(br_info.clone()), "Done".to_string());
+        assert_eq!(test_ovs_ret(ovs_vsctl_add_br(br_info.clone())), true);
+        assert_eq!(test_ovs_ret(ovs_vsctl_del_br(br_info.clone())), true);
 
         test_clear_env();
     }
@@ -380,25 +382,25 @@ mod vsctl_tests{
     fn test_port(){
         test_clear_env();
         
-        let mut br_info = HashMap::new();
-        br_info.insert("br_name".to_string(), BR_FOR_TEST.to_string());
+        let mut br_info = BTreeMap::new();
+        br_info.insert("br_name", json!(BR_FOR_TEST));
         
-        assert_eq!(ovs_vsctl_add_br(br_info.clone()), "Done".to_string());
-        br_info.insert("port_name".to_string(), PORT_FOR_TEST.to_string());
-        assert_eq!(ovs_vsctl_add_port(br_info.clone()), "Done".to_string());
+        assert_eq!(test_ovs_ret(ovs_vsctl_add_br(br_info.clone())), true);
+        br_info.insert("port_name", json!(PORT_FOR_TEST));
+        assert_eq!(test_ovs_ret(ovs_vsctl_add_port(br_info.clone())), true);
         
-        br_info.insert("tag_value".to_string(), "100".to_string());
-        assert_eq!(ovs_vsctl_set_port_vlan(br_info.clone()), "Done".to_string()); 
+        br_info.insert("tag_value", json!("100"));
+        assert_eq!(test_ovs_ret(ovs_vsctl_set_port_vlan(br_info.clone())), true); 
 
-        br_info.insert("qos_type".to_string(), "linux-htb".to_string());
-        br_info.insert("max_rate".to_string(), "1000000".to_string());
-        assert_eq!(ovs_vsctl_set_port_qos(br_info.clone()), "Done".to_string());
+        br_info.insert("qos_type", json!("linux-htb"));
+        br_info.insert("max_rate", json!("1000000"));
+        assert_eq!(test_ovs_ret(ovs_vsctl_set_port_qos(br_info.clone())), true);
 
-        br_info.insert("port_name".to_string(), "patch1".to_string());
-        br_info.insert("peer_port".to_string(), "patch2".to_string());
-        assert_eq!(ovs_vsctl_set_port_patch(br_info.clone()), "Done".to_string());
+        br_info.insert("port_name", json!("patch1"));
+        br_info.insert("peer_port", json!("patch2"));
+        assert_eq!(test_ovs_ret(ovs_vsctl_set_port_patch(br_info.clone())), true);
 
-        assert_eq!(ovs_vsctl_del_port(br_info.clone()), "Done".to_string());
+        assert_eq!(test_ovs_ret(ovs_vsctl_del_port(br_info.clone())), true);
         
         test_clear_env();
     }
@@ -407,12 +409,12 @@ mod vsctl_tests{
     fn test_netflow(){
         test_setup_env();
 
-        let mut br_info = HashMap::new();
-        br_info.insert("br_name".to_string(), BR_FOR_TEST.to_string());
-        br_info.insert("targets".to_string(), "172.30.24.122:2055".to_string());
+        let mut br_info = BTreeMap::new();
+        br_info.insert("br_name", json!(BR_FOR_TEST));
+        br_info.insert("targets", json!("172.30.24.122:2055"));
 
-        assert_eq!(ovs_vsctl_set_netflow_rule(br_info.clone()), "Done".to_string());
-        assert_eq!(ovs_vsctl_del_netflow_rule(br_info.clone()), "Done".to_string());
+        assert_eq!(test_ovs_ret(ovs_vsctl_set_netflow_rule(br_info.clone())), true);
+        assert_eq!(test_ovs_ret(ovs_vsctl_del_netflow_rule(br_info.clone())), true);
 
         test_clear_env();
     }
@@ -421,12 +423,12 @@ mod vsctl_tests{
     fn test_ipfix(){
         test_setup_env();
 
-        let mut br_info = HashMap::new();
-        br_info.insert("br_name".to_string(), BR_FOR_TEST.to_string());
-        br_info.insert("targets".to_string(), "172.30.24.122:2055".to_string());
+        let mut br_info = BTreeMap::new();
+        br_info.insert("br_name", json!(BR_FOR_TEST));
+        br_info.insert("targets", json!("172.30.24.122:2055"));
 
-        assert_eq!(ovs_vsctl_set_ipfix_rule(br_info.clone()), "Done".to_string());
-        assert_eq!(ovs_vsctl_del_ipfix_rule(br_info.clone()), "Done".to_string());
+        assert_eq!(test_ovs_ret(ovs_vsctl_set_ipfix_rule(br_info.clone())), true);
+        assert_eq!(test_ovs_ret(ovs_vsctl_del_ipfix_rule(br_info.clone())), true);
 
         test_clear_env();
     }
@@ -435,12 +437,12 @@ mod vsctl_tests{
     fn test_interface(){
         test_setup_env();
 
-        let mut br_info = HashMap::new();
-        br_info.insert("interface_name".to_string(), BR_FOR_TEST.to_string());
-        br_info.insert("rate".to_string(), "1000".to_string());
-        br_info.insert("burst".to_string(), "100".to_string());
+        let mut br_info = BTreeMap::new();
+        br_info.insert("interface_name", json!(BR_FOR_TEST));
+        br_info.insert("rate", json!("1000"));
+        br_info.insert("burst", json!("100"));
 
-        assert_eq!(ovs_vsctl_set_interface_policing(br_info.clone()), "Done".to_string());
+        assert_eq!(test_ovs_ret(ovs_vsctl_set_interface_policing(br_info.clone())), true);
         test_clear_env();
     }
 }
