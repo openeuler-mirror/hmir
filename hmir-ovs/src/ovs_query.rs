@@ -102,7 +102,6 @@
 //! }
 //! 
 
-use super::ovs_common::*;
 use jsonrpsee::ws_server::RpcModule;
 use std::collections::HashMap;
 
@@ -348,6 +347,7 @@ fn del_port(info_map : HashMap<String, String>) -> std::string::String {
 #[cfg(test)]
 mod query_tests{
     use super::*;
+    use crate::ovs_common::*;
 
     #[test]
     fn test_query(){
