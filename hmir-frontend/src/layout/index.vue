@@ -8,7 +8,7 @@
         <el-aside width="200px">
           <Aside></Aside>
         </el-aside>
-        <el-container>
+        <el-container class="layoutMain">
           <el-main>
             <router-view />
           </el-main>
@@ -35,5 +35,9 @@ $headerHeight: 50px;
 
 .layoutBody {
   height: calc(100vh - 80px);
+}
+
+.layoutMain {
+  background-color: #fff;
 }
 </style>

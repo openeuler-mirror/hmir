@@ -2,7 +2,6 @@ import { localStorage } from '@/utils/localStorage'
 
 export const userInformationList = function (user: any) {
   let history: any = localStorage.get('userInformation') !== 'userInformation' ? localStorage.get('userInformation') : [];
-  console.log(history);
   if (history.length === 0) {
     history.push(user)
   } else {
