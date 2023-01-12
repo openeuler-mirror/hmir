@@ -1,9 +1,11 @@
 <template>
   <div>
+    <serviceCollapse :description="description"></serviceCollapse>
   </div>
 </template>
 
 <script setup lang="ts">
+import serviceCollapse from '@/components/serviceCollapse/index.vue'
 import { ref, onMounted } from 'vue'
 import serviceList from '@/views/service/interface/index'
 
