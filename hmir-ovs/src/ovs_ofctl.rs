@@ -77,6 +77,11 @@ use std::collections::BTreeMap;
 use serde_json::{json, Value};
 use jsonrpsee::ws_server::RpcModule;
 
+use hmir_errno::errno;
+use hmir_hash::HashWrap;
+use hmir_token::TokenChecker;
+use crate::OvsTokenChecker;
+
 const OFCTL_CMD: &str= "ovs-ofctl";
 const OFCTL_PRIO_BLK: &str= "1";
 const OFCTL_PRIO_WHI: &str= "2";
@@ -91,36 +96,43 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
 
     module.register_method("ovs-ofctl-add-default-rule", |params, _| {
         let br_info = params.parse::<BTreeMap<&str, Value>>()?;
+        OvsTokenChecker!(br_info);
         Ok(ovs_ofctl_add_default_rule(br_info))
     })?;
     
     module.register_method("ovs-ofctl-clear-port-rules", |params, _| {
         let br_info = params.parse::<BTreeMap<&str, Value>>()?;
+        OvsTokenChecker!(br_info);
         Ok(ovs_ofctl_clear_port_rules(br_info))
     })?;
 
     module.register_method("ovs-ofctl-forbid-dstip", |params, _| {
         let br_info = params.parse::<BTreeMap<&str, Value>>()?;
+        OvsTokenChecker!(br_info);
         Ok(ovs_ofctl_forbid_dstip(br_info))
     })?;
 
     module.register_method("ovs-ofctl-forbid-dstport", |params, _| {
         let br_info = params.parse::<BTreeMap<&str, Value>>()?;
+        OvsTokenChecker!(br_info);
         Ok(ovs_ofctl_forbid_dstport(br_info))
     })?;
 
     module.register_method("ovs-ofctl-pass-dstip", |params, _| {
         let br_info = params.parse::<BTreeMap<&str, Value>>()?;
+        OvsTokenChecker!(br_info);
         Ok(ovs_ofctl_pass_dstip(br_info))
     })?;
 
     module.register_method("ovs-ofctl-pass-dstport", |params, _| {
         let br_info = params.parse::<BTreeMap<&str, Value>>()?;
+        OvsTokenChecker!(br_info);
         Ok(ovs_ofctl_pass_dstport(br_info))
     })?;
 
     module.register_method("ovs-ofctl-mod-vlan", |params, _| {
         let br_info = params.parse::<BTreeMap<&str, Value>>()?;
+        OvsTokenChecker!(br_info);
         Ok(ovs_ofctl_mod_vlan(br_info))
     })?;
 
