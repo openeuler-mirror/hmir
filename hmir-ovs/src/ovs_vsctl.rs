@@ -372,8 +372,8 @@ mod vsctl_tests{
         let mut br_info = BTreeMap::new();
         br_info.insert("br_name", json!(BR_FOR_TEST));
         
-        assert_eq!(ovs_vsctl_add_br(br_info.clone()), "Done".to_string());
-        assert_eq!(ovs_vsctl_del_br(br_info.clone()), "Done".to_string());
+        assert_eq!(test_ovs_ret(ovs_vsctl_add_br(br_info.clone())), true);
+        assert_eq!(test_ovs_ret(ovs_vsctl_del_br(br_info.clone())), true);
 
         test_clear_env();
     }
@@ -385,22 +385,22 @@ mod vsctl_tests{
         let mut br_info = BTreeMap::new();
         br_info.insert("br_name", json!(BR_FOR_TEST));
         
-        assert_eq!(ovs_vsctl_add_br(br_info.clone()), "Done".to_string());
+        assert_eq!(test_ovs_ret(ovs_vsctl_add_br(br_info.clone())), true);
         br_info.insert("port_name", json!(PORT_FOR_TEST));
-        assert_eq!(ovs_vsctl_add_port(br_info.clone()), "Done".to_string());
+        assert_eq!(test_ovs_ret(ovs_vsctl_add_port(br_info.clone())), true);
         
         br_info.insert("tag_value", json!("100"));
-        assert_eq!(ovs_vsctl_set_port_vlan(br_info.clone()), "Done".to_string()); 
+        assert_eq!(test_ovs_ret(ovs_vsctl_set_port_vlan(br_info.clone())), true); 
 
         br_info.insert("qos_type", json!("linux-htb"));
         br_info.insert("max_rate", json!("1000000"));
-        assert_eq!(ovs_vsctl_set_port_qos(br_info.clone()), "Done".to_string());
+        assert_eq!(test_ovs_ret(ovs_vsctl_set_port_qos(br_info.clone())), true);
 
         br_info.insert("port_name", json!("patch1"));
         br_info.insert("peer_port", json!("patch2"));
-        assert_eq!(ovs_vsctl_set_port_patch(br_info.clone()), "Done".to_string());
+        assert_eq!(test_ovs_ret(ovs_vsctl_set_port_patch(br_info.clone())), true);
 
-        assert_eq!(ovs_vsctl_del_port(br_info.clone()), "Done".to_string());
+        assert_eq!(test_ovs_ret(ovs_vsctl_del_port(br_info.clone())), true);
         
         test_clear_env();
     }
@@ -409,12 +409,12 @@ mod vsctl_tests{
     fn test_netflow(){
         test_setup_env();
 
-        let mut br_info = HashMap::new();
-        br_info.insert("br_name".to_string(), BR_FOR_TEST.to_string());
-        br_info.insert("targets".to_string(), "172.30.24.122:2055".to_string());
+        let mut br_info = BTreeMap::new();
+        br_info.insert("br_name", json!(BR_FOR_TEST));
+        br_info.insert("targets", json!("172.30.24.122:2055"));
 
-        assert_eq!(ovs_vsctl_set_netflow_rule(br_info.clone()), "Done".to_string());
-        assert_eq!(ovs_vsctl_del_netflow_rule(br_info.clone()), "Done".to_string());
+        assert_eq!(test_ovs_ret(ovs_vsctl_set_netflow_rule(br_info.clone())), true);
+        assert_eq!(test_ovs_ret(ovs_vsctl_del_netflow_rule(br_info.clone())), true);
 
         test_clear_env();
     }
@@ -423,12 +423,12 @@ mod vsctl_tests{
     fn test_ipfix(){
         test_setup_env();
 
-        let mut br_info = HashMap::new();
-        br_info.insert("br_name".to_string(), BR_FOR_TEST.to_string());
-        br_info.insert("targets".to_string(), "172.30.24.122:2055".to_string());
+        let mut br_info = BTreeMap::new();
+        br_info.insert("br_name", json!(BR_FOR_TEST));
+        br_info.insert("targets", json!("172.30.24.122:2055"));
 
-        assert_eq!(ovs_vsctl_set_ipfix_rule(br_info.clone()), "Done".to_string());
-        assert_eq!(ovs_vsctl_del_ipfix_rule(br_info.clone()), "Done".to_string());
+        assert_eq!(test_ovs_ret(ovs_vsctl_set_ipfix_rule(br_info.clone())), true);
+        assert_eq!(test_ovs_ret(ovs_vsctl_del_ipfix_rule(br_info.clone())), true);
 
         test_clear_env();
     }
@@ -437,12 +437,12 @@ mod vsctl_tests{
     fn test_interface(){
         test_setup_env();
 
-        let mut br_info = HashMap::new();
-        br_info.insert("interface_name".to_string(), BR_FOR_TEST.to_string());
-        br_info.insert("rate".to_string(), "1000".to_string());
-        br_info.insert("burst".to_string(), "100".to_string());
+        let mut br_info = BTreeMap::new();
+        br_info.insert("interface_name", json!(BR_FOR_TEST));
+        br_info.insert("rate", json!("1000"));
+        br_info.insert("burst", json!("100"));
 
-        assert_eq!(ovs_vsctl_set_interface_policing(br_info.clone()), "Done".to_string());
+        assert_eq!(test_ovs_ret(ovs_vsctl_set_interface_policing(br_info.clone())), true);
         test_clear_env();
     }
 }

@@ -45,6 +45,11 @@ pub fn test_clear_env() {
     exec_rule(rule, "test_clear_env".to_string());
 }
 
+pub fn test_ovs_ret(str_in_json: String) -> bool{
+    let p:HashWrap<String,String> = serde_json::from_str(str_in_json.as_str()).unwrap();
+    p.is_success()
+}
+
 pub fn reflect_cmd_result(output : Output) -> String{
 
     if output.status.success(){
