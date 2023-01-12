@@ -295,25 +295,36 @@ impl RequestClient {
         return state;
     }
 
-    pub fn service_all(&self) -> (String,usize) {
-
+    pub fn service_all(&self) -> (usize,String) {
         let token = self.token.clone();
 
-        let (service,state) = self.runtime.block_on(async{
+        let (state,service) = self.runtime.block_on(async{
             let response: Result<String, _> = self.client.request("service-all", rpc_params![token]).await;
             match response {
                 Ok(result) => {
                     let p: HashWrap::<String,Unit> = serde_json::from_str(result.as_str()).unwrap();
-                    return (serde_json::to_string(&p.result).unwrap(),p.code());
+                    return (p.code(),serde_json::to_string(&p.result).unwrap());
                 },
-                _ => { return ("".to_string(),errno::HMIR_ERR_COMM)}
+                _ => { return (errno::HMIR_ERR_COMM,"".to_string())}
             };
         });
-
-        return (service,state);
+        return (state,service);
     }
 
-
+    pub fn service_list_disabled(&self) -> (usize,String) {
+        let token = self.token.clone();
+        let (state,service) = self.runtime.block_on(async{
+            let response: Result<String, _> = self.client.request("service-list-disabled", rpc_params![token]).await;
+            match response {
+                Ok(result) => {
+                    let p: HashWrap::<String,Unit> = serde_json::from_str(result.as_str()).unwrap();
+                    return (p.code(),serde_json::to_string(&p.result).unwrap());
+                },
+                _ => { return (errno::HMIR_ERR_COMM,"".to_string())}
+            };
+        });
+        return (state,service);
+    }
 }
 
 
@@ -480,4 +491,16 @@ mod tests {
         }
     }
 
+
+    #[test]
+    fn server_list_disabled_worked(){
+        let client = RequestClient::new(String::from(URL));
+        match client {
+            Ok(c) => {
+                let (result,state) = c.service_list_disabled();
+                println!("{}",result);
+            }
+            _ => {}
+        }
+    }
 }
