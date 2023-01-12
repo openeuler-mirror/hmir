@@ -13,7 +13,9 @@
       <el-tab-pane label="计时器" name="timer">
         <serviceTimer></serviceTimer>
       </el-tab-pane>
-      <el-tab-pane label="路径" name="path">路径</el-tab-pane>
+      <el-tab-pane label="路径" name="path">
+        <servicePath></servicePath>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -25,6 +27,7 @@ import systemService from '@/views/service/components/systemService/index.vue'
 import serviceTimer from '@/views/service/components/serviceTimer/index.vue'
 import serviceTarget from '@/views/service/components/serviceTarget/index.vue'
 import serviceSocket from '@/views/service/components/serviceSocket/index.vue'
+import servicePath from '@/views/service/components/serviceSocket/index.vue'
 
 const activeName = ref('systemService')
 
