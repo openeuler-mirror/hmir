@@ -16,12 +16,12 @@ onMounted(() => {
     value: '启用',
     tableList: [{
       description: 'Accounts Service',
-      id: 'accounts-daemon.service',
+      name: 'accounts-daemon.service',
       state: '激活 (running)',
     }],
     tableProp: [
       { prop: 'description', label: '描述' },
-      { prop: 'id', label: 'ID' },
+      { prop: 'name', label: 'ID' },
       { prop: 'state', label: '状态' },
     ]
   },
@@ -29,12 +29,12 @@ onMounted(() => {
     value: '禁用',
     tableList: [{
       description: 'Accounts Service',
-      id: 'accounts-daemon.service',
+      name: 'accounts-daemon.service',
       state: '激活 (running)',
     }],
     tableProp: [
       { prop: 'description', label: '描述' },
-      { prop: 'id', label: 'ID' },
+      { prop: 'name', label: 'ID' },
       { prop: 'state', label: '状态' },
     ]
   },
@@ -42,13 +42,13 @@ onMounted(() => {
     value: '静态',
     // tableList: [{
     //   description: '',
-    //   id: '',
+    //   name: '',
     //   state: ''
     // }],
     tableList: [],
     tableProp: [
       { prop: 'description', label: '描述' },
-      { prop: 'id', label: 'ID' },
+      { prop: 'name', label: 'ID' },
       { prop: 'state', label: '状态' },
     ]
   }]
