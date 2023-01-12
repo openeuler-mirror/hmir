@@ -5,8 +5,9 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import serviceList from '@/views/service/interface/index'
 
-const description = ref<any>([])
+const description = ref<serviceList[]>([{ value: '' }])
 
 onMounted(() => {
   description.value = [{
