@@ -20,7 +20,7 @@ onMounted(() => {
       state: '激活 (running)1',
     }],
     tableProp: [
-      { prop: 'description', label: '属性' },
+      { prop: 'description', label: '描述' },
       { prop: 'id', label: 'ID' },
       { prop: 'state', label: '状态' },
     ]
@@ -33,7 +33,7 @@ onMounted(() => {
       state: '激活 (running)',
     }],
     tableProp: [
-      { prop: 'description', label: '属性' },
+      { prop: 'description', label: '描述' },
       { prop: 'id', label: 'ID' },
       { prop: 'state', label: '状态' },
     ]
@@ -47,7 +47,7 @@ onMounted(() => {
     // }],
     tableList: [],
     tableProp: [
-      { prop: 'description', label: '属性' },
+      { prop: 'description', label: '描述' },
       { prop: 'id', label: 'ID' },
       { prop: 'state', label: '状态' },
     ]

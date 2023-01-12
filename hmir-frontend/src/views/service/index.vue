@@ -7,7 +7,9 @@
       <el-tab-pane label="系统服务" name="systemService">
         <systemService></systemService>
       </el-tab-pane>
-      <el-tab-pane label="套接字" name="socket">套接字</el-tab-pane>
+      <el-tab-pane label="套接字" name="socket">
+        <serviceSocket></serviceSocket>
+      </el-tab-pane>
       <el-tab-pane label="计时器" name="timer">
         <serviceTimer></serviceTimer>
       </el-tab-pane>
@@ -22,6 +24,7 @@ import type { TabsPaneContext } from 'element-plus'
 import systemService from '@/views/service/components/systemService/index.vue'
 import serviceTimer from '@/views/service/components/serviceTimer/index.vue'
 import serviceTarget from '@/views/service/components/serviceTarget/index.vue'
+import serviceSocket from '@/views/service/components/serviceSocket/index.vue'
 
 const activeName = ref('systemService')
 

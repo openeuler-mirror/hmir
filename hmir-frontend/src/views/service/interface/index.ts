@@ -7,6 +7,8 @@ interface serviceTableList {
   description?: any;
   id?: any;
   state?: any;
+  nextRun?: any;
+  nearestTrigger?: any;
 }
 
 export default interface serviceList {
