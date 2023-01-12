@@ -1,7 +1,7 @@
 <template>
   <div class="card">
     <span>HMIR控制台</span>
-    <button type="button" @click="refresh()" v-loading="loading">刷新</button>
+    <el-button @click="refresh()" :loading="loading">刷新</el-button>
   </div>
   <div class="iframe" v-loading="loading">
     <iframe name="iframeMap" id="iframeMapViewComponent" :src="getPageUrl" width="100%" height="100%" frameborder="0"
@@ -37,7 +37,6 @@ async function ttydStart() {
       customClass: 'login-message-error',
     });
   }
-  console.log(ttydtMsg.value);
 }
 
 //断开终端
@@ -47,7 +46,6 @@ async function ttydStop() {
   if (value) {
     ttydtMsg.value = false
   }
-  console.log(ttydtMsg.value);
 }
 
 //刷新终端

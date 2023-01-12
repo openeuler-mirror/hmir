@@ -11,6 +11,7 @@ export const useRouterStore = defineStore('router', {
     return {
       router: [{
         path: '/',
+        name: 'Layout',
         component: Layout,
         redirect: '/system',
         children: [

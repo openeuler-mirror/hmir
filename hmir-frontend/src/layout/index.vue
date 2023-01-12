@@ -8,11 +8,11 @@
         <el-aside width="200px">
           <Aside></Aside>
         </el-aside>
-        <el-container>
+        <el-container class="layoutMain">
           <el-main>
             <router-view />
           </el-main>
-          <el-footer>Footer</el-footer>
+          <el-footer></el-footer>
         </el-container>
       </el-container>
     </el-container>
@@ -25,7 +25,8 @@ import Header from './header/index.vue';
 </script>
 
 <style lang="scss" scoped>
-$headerHeight:50px;
+$headerHeight: 50px;
+
 .layoutHeader {
   background-color: #1d1d1d;
   color: #fff;
@@ -34,5 +35,9 @@ $headerHeight:50px;
 
 .layoutBody {
   height: calc(100vh - 80px);
+}
+
+.layoutMain {
+  background-color: #fff;
 }
 </style>

@@ -9,6 +9,7 @@ pub mod auth;
 pub mod fs;
 pub mod mgr;
 pub mod mds;
+pub mod config_key;
 pub mod command;
 pub fn add(left: usize, right: usize) -> usize {
     left + right

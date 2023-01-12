@@ -13,7 +13,10 @@ use hmir_ceph::auth;
 use hmir_ceph::fs;
 use hmir_ceph::mgr;
 use hmir_ceph::mds;
-
+use hmir_ceph::config_key;
+use std::collections::HashMap;
+use serde_json::json;
+use log::{error,info};
 
 #[doc(hidden)]
 pub fn register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
@@ -32,6 +35,8 @@ pub fn register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
     ceph_mgr_register_method(module)?;
     
     ceph_mds_register_method(module)?;
+
+    ceph_config_key_register_method(module);
     
     module.register_method("ceph-cluster-stat", |_, _| {
         //获取ceph集群状态
@@ -161,6 +166,59 @@ pub fn ceph_auth_register_method(module : & mut RpcModule<()>) -> anyhow::Result
         Ok(auth::auth_list())
     })?;
 
+    module.register_method("ceph-auth-get-key", |params, _| {
+        //list authentication state
+        let params_map = params.parse::<HashMap<String, String>>()?;
+        Ok(auth::get_key(params_map.get("client_type").unwrap(),
+                         params_map.get("id").unwrap()).unwrap())
+    })?;
+
+    module.register_method("ceph-auth-get", |params, _| {
+        //write keyring file with requested key
+        let params_map = params.parse::<HashMap<String, String>>()?;
+        let result = auth::auth_get(params_map.get("client_type").unwrap(),
+                                    params_map.get("id").unwrap());
+        match result {
+            Ok(result) => {
+                let result = json!(&result).to_string();
+                Ok(result)
+            },
+            Err(result) => {
+                Ok("Error to get auth".to_string())
+            },
+        }
+    })?;
+
+    module.register_method("ceph-auth-add-mgr", |params, _| {
+        //创建用户，生成密钥并添加任何指定的功能
+        let mgr_id = params.one::<String>()?;
+        let result = auth::add_mgr(&mgr_id);
+        match result {
+            Ok(_) => {
+                Ok(true)
+            },
+            Err(result) => {
+                error!("Add mgr auth failed. Err: {}", result);
+                Ok(false)
+            }
+        }
+    })?;
+
+    module.register_method("ceph-auth-add-osd", |params, _| {
+        //创建用户，生成密钥并添加任何指定的功能
+        let osd_id = params.one::<u64>()?;
+        let result = auth::add_osd(osd_id);
+        match result {
+            Ok(_) => {
+                Ok(true)
+            },
+            Err(result) => {
+                error!("Add osd auth failed. Err: {}", result);
+                Ok(false)
+            }
+        }
+    })?;
+    
     Ok(())
 }
 
@@ -241,6 +299,18 @@ pub fn ceph_mds_register_method(module : & mut RpcModule<()>) -> anyhow::Result<
         Ok(mds::mds_metadata())
     })?;
     
+    Ok(())
+}
+
+///config key method register
+pub fn ceph_config_key_register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
+
+    //config key
+    module.register_method("ceph-config-key-exists", |params, _| {
+        //exist
+        Ok(config_key::exists(&params.one::<String>()?).unwrap())
+    })?;
+
     Ok(())
 }
 
