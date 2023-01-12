@@ -50,6 +50,15 @@ pub fn test_ovs_ret(str_in_json: String) -> bool{
     p.is_success()
 }
 
+pub fn test_get_ret_str(str_in_json: String) -> String{
+    let p:HashWrap<String,String> = serde_json::from_str(str_in_json.as_str()).unwrap();
+    if p.is_success() {
+        return p.get(&String::from("ovs_ret")).unwrap().clone();
+    } else {
+        String::from("")
+    }
+}
+
 pub fn reflect_cmd_result(output : Output) -> String{
 
     if output.status.success(){
