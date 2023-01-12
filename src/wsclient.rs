@@ -505,6 +505,20 @@ mod tests {
         }
     } 
 
+    #[test]
+    fn ovs_vsctl_del_br_worked(){
+        let client = RequestClient::new(String::from(URL));
+        match client {
+            Ok(c) => {
+                let (state ,_) = c.ovs_vsctl_add_br("br-ckxu");
+                if state == errno::HMIR_SUCCESS {
+                    let (del_state,_) = c.ovs_vsctl_del_br("br-ckxu");
+                    assert_eq!(del_state, errno::HMIR_SUCCESS)
+                }
+            }
+            _ => {}
+        }
+    } 
 
     #[test]
     fn server_all_worked(){
