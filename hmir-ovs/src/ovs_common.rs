@@ -34,3 +34,20 @@ pub fn exec_rule(rule: String, cmd_name: String) -> Output{
 
     output 
 }
+
+#[macro_export]
+macro_rules! ExecOvsQueryResult {
+    ($i:expr, $j:expr, $k:expr) => {
+        let mut response = HashWrap::<String,String>:: new();
+        if $i == 0 {
+            response.insert(String::from("ovs_ret"), $j);
+        }
+
+        if $i !=0 {
+            response.error($i, $k);
+        } 
+        response.set_code($i);
+        let serialized = serde_json::to_string(&response).unwrap();
+        return serialized;
+    }
+}
