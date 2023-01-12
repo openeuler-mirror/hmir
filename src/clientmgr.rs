@@ -79,14 +79,14 @@ pub fn client_ok(host : &str) -> bool
 }
 
 #[allow(dead_code)]
-pub fn login(host : & str, username : &str, password : &str ) -> bool {
+pub fn login(host : & str, username : &str, password : &str ) -> usize {
     let h = host.to_string();
     return client_instance!(&h).login(username, password);
 }
 
 
 #[allow(dead_code)]
-pub fn ssh_login(host : & str, username : &str,password : &str) -> bool {
+pub fn ssh_login(host : & str, username : &str,password : &str) -> usize {
     let h = host.to_string();
     return client_instance!(&h).ssh_login(username, password);
 }
@@ -121,6 +121,8 @@ pub fn ttyd_stop(host : & str) -> bool {
 
 #[cfg(test)]
 mod tests {
+    use hmir_errno::errno;
+    use hmir_errno::errno::HMIR_SUCCESS;
     use super::*;
 
     const HOST : &str = "127.0.0.1";
@@ -144,7 +146,7 @@ mod tests {
     fn host_login_worked(){
         register_client(HOST,PORT);
         let login_state  = client_instance!(&String::from(HOST)).login(USERNAME,R_PASSWORD);
-        assert_eq!(login_state,true)
+        assert_eq!(login_state,errno::HMIR_SUCCESS)
     }
 
 
@@ -152,7 +154,7 @@ mod tests {
     fn host_login_failed_worked(){
         register_client(HOST,PORT);
         let login_state  = client_instance!(&String::from(HOST)).login(USERNAME,W_PASSWORD);
-        assert_eq!(login_state,false)
+        assert_eq!(login_state,HMIR_SUCCESS)
     }
 
 
@@ -160,7 +162,7 @@ mod tests {
     fn ssh_login_worked(){
         register_client(HOST,PORT);
         let login_state  = client_instance!(&String::from(HOST)).ssh_login(USERNAME,R_PASSWORD);
-        assert_eq!(login_state,true);
+        assert_eq!(login_state,HMIR_SUCCESS);
     }
 
 
