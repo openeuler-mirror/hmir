@@ -20,6 +20,15 @@ macro_rules! ExecOvsQueryResult {
     }
 }
 
+#[macro_export]
+macro_rules! OvsTokenChecker {
+    ($br_info:expr) => {
+        let token_exception = json!(String::from(""));
+        let token = ($br_info).get("token").unwrap_or(&token_exception).to_string();
+        TokenChecker!(token);
+    }
+}
+
 pub const BR_FOR_TEST: &str =  "ovs_test_br";
 pub const PORT_FOR_TEST: &str = "ovs_test_port";
 
