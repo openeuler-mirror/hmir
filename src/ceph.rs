@@ -16,6 +16,7 @@ use hmir_ceph::mds;
 use hmir_ceph::config_key;
 use std::collections::HashMap;
 use serde_json::json;
+use log::{error,info};
 
 #[doc(hidden)]
 pub fn register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
@@ -188,6 +189,21 @@ pub fn ceph_auth_register_method(module : & mut RpcModule<()>) -> anyhow::Result
         }
     })?;
 
+    module.register_method("ceph-auth-add-mgr", |params, _| {
+        //创建用户，生成密钥并添加任何指定的功能
+        let mgr_id = params.one::<String>()?;
+        let result = auth::add_mgr(&mgr_id);
+        match result {
+            Ok(_) => {
+                Ok(true)
+            },
+            Err(result) => {
+                error!("Add mgr auth failed. Err: {}", result);
+                Ok(false)
+            }
+        }
+    })?;
+    
     Ok(())
 }
 
