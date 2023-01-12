@@ -77,8 +77,12 @@ impl <K,V> HashWrap<K,V> where K: Eq + Hash {
     pub fn is_empty(&self) -> bool {
         self.result.is_empty()
     }
-    pub fn get_err(&self) ->String {
+    pub fn get_err(&self) -> String {
         self.errmsg.clone()
+    }
+
+    pub fn get_code(&self) -> usize {
+        self.code
     }
 }
 

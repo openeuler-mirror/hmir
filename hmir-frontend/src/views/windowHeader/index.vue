@@ -14,11 +14,19 @@
       <div class="flex-grow" />
     </el-menu>
   </div>
+  <s3-layer v-model="visible" title="HMIR运维管理系统">
+    <about :minimizable="true" :maximizable="true" :closable="true"></about>
+  </s3-layer>
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'
 import { invoke } from "@tauri-apps/api/tauri";
 import { useRouter } from 'vue-router';
+import about from '@/views/windowHeader/about/index.vue';
+
+//about页面
+const visible = ref(false);
+
 //引入路由
 const router = useRouter()
 
@@ -58,12 +66,11 @@ async function processQuit() {
 }
 
 //关于窗口
-function openAboutWindow(){
-  router.push({ path: '/about' })
+function openAboutWindow() {
+  visible.value = true;
 }
 
 </script>
-
 
 <style lang="scss" scoped>
 .header {

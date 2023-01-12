@@ -40,7 +40,6 @@ const router = useRouter()
 //进入后的初始页
 const handleValue = computed<string>(() => {
   const { meta, path } = router.currentRoute.value;
-  console.log(meta, path);
   if (meta?.handleValue) {
     return meta.handleValue as string;
   }

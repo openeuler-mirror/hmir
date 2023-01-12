@@ -114,23 +114,7 @@ use hmir_token::TokenChecker;
 use hmir_errno::errno;
 
 use serde_json::json;
-
-#[macro_export]
-macro_rules! ExecOvsQueryResult {
-    ($i:expr, $j:expr, $k:expr) => {
-        let mut response = HashWrap::<String,String>:: new();
-        if $i == 0 {
-            response.insert(String::from("ovs_ret"), $j);
-        }
-
-        if $i !=0 {
-            response.error($i, $k);
-        } 
-        response.set_code($i);
-        let serialized = serde_json::to_string(&response).unwrap();
-        return serialized;
-    }
-}
+use crate::ExecOvsQueryResult;
 
 pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
         
@@ -193,7 +177,7 @@ fn check_connection() -> std::string::String{
         Ok(mut c) => {
             let is_connected = c.check_connection();
             if is_connected {
-                ExecOvsQueryResult!(0, "Connected!".to_string(), "".to_string());
+                ExecOvsQueryResult!(errno::HMIR_SUCCESS, "Connected!".to_string(), "".to_string());
             } else {
                 ExecOvsQueryResult!(errno::HMIR_ERR_COMM, "Failed to connect".to_string(), "".to_string());
             }
@@ -213,7 +197,7 @@ fn get_ports() -> std::string::String{
                 Ok(ports) =>{
                     println!("number of port : {0}", ports.len());
                     let ret_message = serde_json::to_string(&ports).unwrap();
-                    ExecOvsQueryResult!(0, ret_message, "".to_string());
+                    ExecOvsQueryResult!(errno::HMIR_SUCCESS, ret_message, "".to_string());
                 },
                 Err(e) => {
                     ExecOvsQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), e.error_detail.clone());
@@ -235,7 +219,7 @@ fn get_bridges() -> std::string::String {
                 Ok(bridges) =>{
                     println!("number of bridge: {0}", bridges.len());
                     let ret_message = serde_json::to_string(&bridges).unwrap();
-                    ExecOvsQueryResult!(0, ret_message, "".to_string());   
+                    ExecOvsQueryResult!(errno::HMIR_SUCCESS, ret_message, "".to_string());   
                 },
                 Err(e) => {
                     ExecOvsQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), e.error_detail.clone());
@@ -257,7 +241,7 @@ fn get_interfaces() -> std::string::String{
                 Ok(interfaces) =>{
                     println!("number of interfaces : {0}", interfaces.len());
                     let ret_message = serde_json::to_string(&interfaces).unwrap();
-                    ExecOvsQueryResult!(0, ret_message, "".to_string()); 
+                    ExecOvsQueryResult!(errno::HMIR_SUCCESS, ret_message, "".to_string()); 
                 },
                 Err(e) => {
                     ExecOvsQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), e.error_detail.clone());
@@ -278,7 +262,7 @@ fn get_netflow() -> std::string::String{
             match netflow{
                 Ok(netflow) =>{
                     let ret_message = serde_json::to_string(&netflow).unwrap();
-                    ExecOvsQueryResult!(0, ret_message, "".to_string()); 
+                    ExecOvsQueryResult!(errno::HMIR_SUCCESS, ret_message, "".to_string()); 
                 },
                 Err(e) => {
                     ExecOvsQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), e.error_detail.clone());
@@ -299,7 +283,7 @@ fn get_ipfix() -> std::string::String{
             match ipfix{
                 Ok(ipfix) =>{
                     let ret_message = serde_json::to_string(&ipfix).unwrap();
-                    ExecOvsQueryResult!(0, ret_message, "".to_string());
+                    ExecOvsQueryResult!(errno::HMIR_SUCCESS, ret_message, "".to_string());
                 },
                 Err(e) => {
                     ExecOvsQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), e.error_detail.clone());
