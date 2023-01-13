@@ -12,14 +12,18 @@
     </el-table> -->
     <el-auto-resizer>
       <template #default="{ height, width }">
-        <el-table-v2 :columns="columns" :data="data" :width="width" :height="height" fixed />
+        <el-table-v2 :columns="columns" :data="data" :width="width" :height="height" fixed :v-scrollbar-size="13">
+          <template #row="props">
+            <Row v-bind="props" />
+          </template>
+        </el-table-v2>
       </template>
     </el-auto-resizer>
   </div>
 </template>
 
 <script setup lang="tsx">
-import { ref, onMounted, computed, nextTick } from 'vue';
+import { ref, onMounted, computed, nextTick, watch } from 'vue';
 import type { Column } from 'element-plus'
 const props = defineProps({
   tableList: {
@@ -32,24 +36,54 @@ const props = defineProps({
   }
 });
 
-const columns: Column<any>[] = [
-  {
-    key: 'description',
-    title: '描述',
-    dataKey: 'description',
-    width: 300,
-  },
-  {
-    key: 'name',
-    title: 'ID',
-    dataKey: 'name',
-    width: 300,
-  },
-  {
+const columns = ref<Column<any>[]>([])
+
+const data = ref<any>([])
+
+const handleCurrentChange = (val: any | undefined) => {
+  return (val: any | undefined) => {
+    console.log(val);
+  };
+}
+
+//监听tableList的变化，实时刷新表格
+watch(() => props.tableList, value => {
+  data.value = value;
+}, {
+  //初始化立即执行
+  immediate: true
+});
+
+const Row = ({ rowData, rowIndex, cells, columns }) => {
+  return cells
+}
+
+
+onMounted(() => {
+  data.value = props.tableList;
+  columns.value = props.tableProp
+  columns.value.forEach((item) => {
+    item.cellRenderer = ({ rowData }) => {
+      const handleCurrentChange = (val: any | undefined) => {
+        return (event: Event) => {
+          console.log(val);
+        };
+      }
+      return (
+        <div onClick={handleCurrentChange(rowData)} style={{ width: '100%', height: '100%' }}>{rowData[item.key]} </div>
+      )
+    }
+  })
+  columns.value.push({
     key: 'active_state',
     title: '状态',
     width: 300,
     cellRenderer: ({ rowData }) => {
+      const handleCurrentChange = (val: any | undefined) => {
+        return (event: Event) => {
+          console.log(val);
+        };
+      }
       //过滤转化为中文
       const stateFilter = (value: any) => {
         let state = value
@@ -60,27 +94,11 @@ const columns: Column<any>[] = [
         }
         return state
       }
-      return <div value={rowData.checked} >
+      return <div value={rowData.checked} onClick={handleCurrentChange(rowData)} style={{ width: '100%', height: '100%' }}>
         {stateFilter(rowData.active_state)}{rowData.sub_state ? `(${rowData.sub_state})` : ''}
       </div>
     },
-  }
-]
-
-const data = ref<any>([])
-
-
-
-
-// const handleCurrentChange = (val: any | undefined) => {
-//   console.log(val);
-// }
-
-onMounted(() => {
-  setTimeout(() => {
-    console.log(props.tableList);
-    data.value = props.tableList
-  }, 700);
+  })
 })
 </script>
 
