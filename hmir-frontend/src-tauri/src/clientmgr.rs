@@ -119,17 +119,43 @@ pub fn ttyd_stop(host : & str) -> bool {
 }
 
 
-pub fn service_list_disabled(host : & str) -> (usize,String)
+pub fn svr_list_disabled_service(host : & str) -> (usize,String)
 {
     let h = host.to_string();
-    return client_instance!(&h).service_list_disabled();
+    return client_instance!(&h).svr_list_disabled_service();
 }
 
-pub fn service_list_enabled(host : & str) -> (usize,String)
+pub fn svr_list_enabled_service(host : & str) -> (usize,String)
 {
     let h = host.to_string();
-    return client_instance!(&h).service_all();
+    return client_instance!(&h).svr_list_enabled_service();
 }
+
+pub fn svr_list_static_service(host : & str) -> (usize,String)
+{
+    let h = host.to_string();
+    return client_instance!(&h).svr_list_static_service();
+}
+
+
+pub fn svr_list_disabled_timer(host : & str) -> (usize,String)
+{
+    let h = host.to_string();
+    return client_instance!(&h).svr_list_disabled_timer();
+}
+
+pub fn svr_list_enabled_timer(host : & str) -> (usize,String)
+{
+    let h = host.to_string();
+    return client_instance!(&h).svr_list_enabled_timer();
+}
+
+pub fn svr_list_static_timer(host : & str) -> (usize,String)
+{
+    let h = host.to_string();
+    return client_instance!(&h).svr_list_static_timer();
+}
+
 
 pub fn ovs_query_connection(host: &str) -> (usize,String)
 {
