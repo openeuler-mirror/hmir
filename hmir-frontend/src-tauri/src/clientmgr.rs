@@ -119,16 +119,78 @@ pub fn ttyd_stop(host : & str) -> bool {
 }
 
 
-pub fn service_list_disabled(host : & str) -> (usize,String)
+pub fn svr_list_disabled_service(host : & str) -> (usize,String)
 {
     let h = host.to_string();
-    return client_instance!(&h).service_list_disabled();
+    return client_instance!(&h).svr_list_disabled_service();
 }
 
-pub fn service_list_enabled(host : & str) -> (usize,String)
+pub fn svr_list_enabled_service(host : & str) -> (usize,String)
 {
     let h = host.to_string();
-    return client_instance!(&h).service_all();
+    return client_instance!(&h).svr_list_enabled_service();
+}
+
+pub fn svr_list_static_service(host : & str) -> (usize,String)
+{
+    let h = host.to_string();
+    return client_instance!(&h).svr_list_static_service();
+}
+
+
+pub fn svr_list_disabled_timer(host : & str) -> (usize,String)
+{
+    let h = host.to_string();
+    return client_instance!(&h).svr_list_disabled_timer();
+}
+
+pub fn svr_list_enabled_timer(host : & str) -> (usize,String)
+{
+    let h = host.to_string();
+    return client_instance!(&h).svr_list_enabled_timer();
+}
+
+pub fn svr_list_static_timer(host : & str) -> (usize,String)
+{
+    let h = host.to_string();
+    return client_instance!(&h).svr_list_static_timer();
+}
+
+
+pub fn ovs_query_connection(host: &str) -> (usize,String)
+{
+    let h = host.to_string();
+    return client_instance!(&h).ovs_query_connection();
+}
+
+pub fn ovs_query_bridges(host: &str) -> (usize, String)
+{
+    let h = host.to_string();
+    return client_instance!(&h).ovs_query_bridges();
+}
+
+pub fn ovs_query_ports(host: &str) -> (usize, String)
+{
+    let h = host.to_string();
+    return client_instance!(&h).ovs_query_ports();
+}
+
+pub fn ovs_vsctl_add_br(host: &str, br_name: &str) -> (usize, String)
+{
+    let h = host.to_string();
+    return client_instance!(&h).ovs_vsctl_add_br(br_name);
+}
+
+pub fn ovs_vsctl_del_br(host: &str, br_name: &str) -> (usize, String)
+{
+    let h = host.to_string();
+    return client_instance!(&h).ovs_vsctl_del_br(br_name);
+}
+
+pub fn ovs_ofctl_forbid_dstip(host: &str, br_name: &str, dst_ip: &str, in_port:&str) -> (usize, String)
+{
+    let h = host.to_string();
+    return client_instance!(&h).ovs_ofctl_forbid_dstip(br_name, dst_ip, in_port);
 }
 
 #[cfg(test)]

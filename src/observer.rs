@@ -33,7 +33,7 @@ use hmir_hash::HashWrap;
 use serde::{Deserialize};
 
 #[cfg(target_os = "linux")]
-use crate::svr::service_all;
+use crate::svr::svr_list_enabled_service;
 use tokio::time;
 
 const SERVICE_STATUS : u32 = 0;
@@ -95,7 +95,7 @@ type Callback = fn() -> std::string::String;
 fn get_observer_callback(obs_cmd : u32) -> Callback {
     match obs_cmd {
         #[cfg(target_os = "linux")]
-        SERVICE_STATUS => service_all,
+        SERVICE_STATUS => svr_list_enabled_service,
         _ => do_nothing
     }
 }

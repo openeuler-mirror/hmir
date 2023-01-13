@@ -7,6 +7,12 @@
 //! - cmd_login         : 登录HMIR后端
 //! - cmd_logout        : 注销
 //! - cmd_quit          : 退出系统
+//! - cmd_ovs_query_connection : 查询是否与ovs数据库建立链接
+//! - cmd_ovs_query_bridges:  查询系统ovs网桥相关信息
+//! - cmd_ovs_query_ports: 查询系统ovs ports相关信息
+//! - cmd_ovs_vsctl_add_br : 创建ovs网桥
+//! - cmd_ovs_vsctl_del_br : 删除ovs网桥
+//! - cmd_ovs_ofctl_forbid_dstip : 禁止虚拟机访问外部IP地址
 //! ```
 #![cfg_attr(
     all(not(debug_assertions), target_os = "windows"),
@@ -22,7 +28,6 @@ use tokio;
 use tauri::{CustomMenuItem, Menu, MenuItem, Submenu};
 use tauri::Manager;
 use tauri::WindowBuilder;
-use tauri_plugin_websocket;
 
 //use log4rs;
 use log::{error,info};
@@ -85,13 +90,73 @@ fn cmd_logout(host : &str) -> bool
 #[tauri::command]
 fn cmd_service_enabled(host : &str) -> (usize,String)
 {
-    return clientmgr::service_list_enabled(host);
+    return clientmgr::svr_list_enabled_service(host);
 }
 
 #[tauri::command]
-fn cmd_service_disabled(host : &str) -> (usize,String)
+fn cmd_service_disabled(host : &str) -> (usize,String) {
+    return clientmgr::svr_list_disabled_service(host);
+}
+
+#[tauri::command]
+fn cmd_service_static(host : &str) -> (usize,String)
 {
-    return clientmgr::service_list_disabled(host);
+    return clientmgr::svr_list_static_service(host);
+}
+
+
+#[tauri::command]
+fn cmd_timer_enabled(host : &str) -> (usize,String)
+{
+    return clientmgr::svr_list_enabled_timer(host);
+}
+
+#[tauri::command]
+fn cmd_timer_disabled(host : &str) -> (usize,String)
+{
+    return clientmgr::svr_list_disabled_timer(host);
+}
+
+#[tauri::command]
+fn cmd_timer_static(host : &str) -> (usize,String)
+{
+    return clientmgr::svr_list_static_timer(host);
+}
+
+#[tauri::command]
+fn cmd_ovs_query_connection(host : &str) -> (usize,String)
+{
+    return clientmgr::ovs_query_connection(host);
+}
+
+#[tauri::command]
+fn cmd_ovs_query_bridges(host : &str) -> (usize,String)
+{
+    return clientmgr::ovs_query_bridges(host);
+}
+
+#[tauri::command]
+fn cmd_ovs_query_ports(host: &str) -> (usize, String)
+{
+    return clientmgr::ovs_query_ports(host);
+}
+
+#[tauri::command]
+fn cmd_ovs_vsctl_add_br(host: &str, br_name: &str) ->(usize, String)
+{
+    return clientmgr::ovs_vsctl_add_br(host, br_name);
+}
+
+#[tauri::command]
+fn cmd_ovs_vsctl_del_br(host: &str, br_name: &str) ->(usize, String)
+{
+    return clientmgr::ovs_vsctl_del_br(host, br_name);
+}
+
+#[tauri::command]
+fn cmd_ovs_ofctl_forbid_dstip(host: &str, br_name:&str, dst_ip:&str, in_port:&str) -> (usize, String) 
+{
+    return clientmgr::ovs_ofctl_forbid_dstip(host, br_name, dst_ip, in_port);
 }
 
 
@@ -165,9 +230,15 @@ fn main() {
             cmd_ttyd_start,
             cmd_quit,
             cmd_service_enabled,
-            cmd_service_disabled])
+            cmd_service_disabled,
+            cmd_service_static,
+            cmd_ovs_query_connection,
+            cmd_ovs_query_bridges,
+            cmd_ovs_query_ports,
+            cmd_ovs_vsctl_add_br,
+            cmd_ovs_vsctl_del_br,
+            cmd_ovs_ofctl_forbid_dstip])
         // .invoke_handler(tauri::generate_handler![ttyd_start])
-        .plugin(tauri_plugin_websocket::init())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
