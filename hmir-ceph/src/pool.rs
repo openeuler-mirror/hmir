@@ -8,6 +8,28 @@ use serde_json::json;
 use serde_json::*;
 use serde::*;
 
+
+///set object or byte limit on pool
+pub fn set_quota(pool: &str, field: &str, val: &str) -> RadosResult<String> {
+    let cmd = json!({
+        "prefix": "osd pool set-quota",
+        "pool": pool,
+        "field": field,
+        "val": val,
+        "format": "json",
+    });
+    println!("cmd {}", cmd);
+    let client = ceph_client::get_ceph_client()?;
+    let result = client.ceph_mon_command_without_data(&cmd)?;
+    println!("result {:?}", result);
+    match result.1 {
+        Some(res) => Ok(res),
+        None => Err(RadosError::Error(format!(
+            "Unable to parse osd pool set-quota output"
+        ))),
+    }
+}
+
 ///obtain object or byte limits for pool
 pub fn get_quota(pool: &str) -> RadosResult<String> {
     let cmd = json!({
@@ -15,7 +37,6 @@ pub fn get_quota(pool: &str) -> RadosResult<String> {
         "pool": pool,
         "format": "json",
     });
-    println!("{}", cmd);
     let client = ceph_client::get_ceph_client()?;
     let result = client.ceph_mon_command_without_data(&cmd)?;
     match result.1 {
