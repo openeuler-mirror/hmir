@@ -47,15 +47,13 @@ onMounted(() => {
         key: 'description',
         title: '描述',
         dataKey: 'description',
-        width: 320,
-        maxWidth: 500,
-        minWidth: 300,
+        width: 310,
       },
       {
         key: 'name',
         title: 'ID',
         dataKey: 'name',
-        width: 320,
+        width: 310,
       }
     ]
   },
@@ -67,15 +65,13 @@ onMounted(() => {
         key: 'description',
         title: '描述',
         dataKey: 'description',
-        width: 320,
-        maxWidth: 500,
-        minWidth: 300,
+        width: 310,
       },
       {
         key: 'name',
         title: 'ID',
         dataKey: 'name',
-        width: 320,
+        width: 310,
       }
     ]
   },
@@ -102,10 +98,8 @@ onMounted(() => {
       }
     ]
   }]
-  setTimeout(() => {
-    cmdServiceEnabled()
-    cmdServiceDisabled()
-  }, 200)
+  cmdServiceEnabled()
+  cmdServiceDisabled()
 })
 
 </script>

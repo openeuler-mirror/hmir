@@ -29,7 +29,7 @@ import serviceTarget from '@/views/service/components/serviceTarget/index.vue'
 import serviceSocket from '@/views/service/components/serviceSocket/index.vue'
 import servicePath from '@/views/service/components/serviceSocket/index.vue'
 
-const activeName = ref('target')
+const activeName = ref('systemService')
 
 const handleClick = (tab: TabsPaneContext, event: Event) => {
   // console.log(tab, event)
