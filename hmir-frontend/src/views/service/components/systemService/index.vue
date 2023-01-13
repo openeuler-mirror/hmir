@@ -77,5 +77,8 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-
+:deep(.el-table-v2__row-cell),
+:deep(.el-table-v2__header-cell) {
+  width: 33% !important;
+}
 </style>
