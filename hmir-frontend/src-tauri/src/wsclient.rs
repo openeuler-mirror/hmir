@@ -192,7 +192,6 @@ impl RequestClient {
         return (state, ret_str)
     }
 
-    #[allow(dead_code)]
     pub fn ovs_query_bridges(&self) -> (usize,String){
         let token = self.token.clone();
         let (state, ret_str) = self.runtime.block_on(async {
