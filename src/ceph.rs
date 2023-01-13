@@ -369,7 +369,7 @@ pub fn ceph_osd_pool_register_method(module : & mut RpcModule<()>) -> anyhow::Re
     })?;
 
     module.register_method("ceph-pool-rename", |params, _| {
-        //创建存储池
+        //存储池修改名称
         let params_map = params.parse::<HashMap<String, String>>()?;
         let src_pool = params_map.get("src_pool").unwrap();
         let desc_pool = params_map.get("dest_pool").unwrap();
@@ -380,6 +380,20 @@ pub fn ceph_osd_pool_register_method(module : & mut RpcModule<()>) -> anyhow::Re
             },
             Err(result) => {
                 Ok(format!("Error to rename pool"))
+            },
+        }
+    })?;
+
+    module.register_method("ceph-pool-get-quota", |params, _| {
+        //创建存储池
+        let pool = params.one::<String>()?;
+        let result = pool::get_quota(&pool);
+        match result {
+            Ok(result) => {
+                Ok(result)
+            },
+            Err(result) => {
+                Ok(format!("Error to get pool quota"))
             },
         }
     })?;
