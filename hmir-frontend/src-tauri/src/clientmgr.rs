@@ -149,6 +149,12 @@ pub fn ovs_query_ports(host: &str) -> (usize, String)
     return client_instance!(&h).ovs_query_ports();
 }
 
+pub fn ovs_vsctl_add_br(host: &str, br_name: &str) -> (usize, String)
+{
+    let h = host.to_string();
+    return client_instance!(&h).ovs_vsctl_add_br(br_name);
+}
+
 #[cfg(test)]
 mod tests {
     use hmir_errno::errno;
