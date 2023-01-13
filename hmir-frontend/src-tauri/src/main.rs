@@ -7,6 +7,7 @@
 //! - cmd_login         : 登录HMIR后端
 //! - cmd_logout        : 注销
 //! - cmd_quit          : 退出系统
+//! - cmd_ovs_query_connection : 查询是否与ovs数据库建立链接
 //! ```
 #![cfg_attr(
     all(not(debug_assertions), target_os = "windows"),
@@ -94,6 +95,11 @@ fn cmd_service_disabled(host : &str) -> (usize,String)
     return clientmgr::service_list_disabled(host);
 }
 
+#[tauri::command]
+fn cmd_ovs_query_connection(host : &str) -> (usize,String)
+{
+    return clientmgr::ovs_query_connection(host);
+}
 
 #[tauri::command]
 fn cmd_quit() {
@@ -165,7 +171,8 @@ fn main() {
             cmd_ttyd_start,
             cmd_quit,
             cmd_service_enabled,
-            cmd_service_disabled])
+            cmd_service_disabled,
+            cmd_ovs_query_connection])
         // .invoke_handler(tauri::generate_handler![ttyd_start])
         .plugin(tauri_plugin_websocket::init())
         .run(tauri::generate_context!())
