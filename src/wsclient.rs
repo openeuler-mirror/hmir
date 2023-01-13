@@ -590,8 +590,30 @@ mod tests {
         let client = RequestClient::new(String::from(URL));
         match client {
             Ok(c) => {
-                let (state ,_) = c.ovs_vsctl_add_port("br-ckxu", "port_test");
-                assert_eq!(state, errno::HMIR_SUCCESS)
+                let (state ,_) = c.ovs_vsctl_add_br("br-ckxu");
+                if state == errno::HMIR_SUCCESS {
+                    let (port_state,_) = c.ovs_vsctl_add_port("br-ckxu", "pt-test");
+                    assert_eq!(port_state, errno::HMIR_SUCCESS);
+                }
+            }
+            _ => {}
+        }
+    } 
+
+    #[test]
+    fn ovs_vsctl_del_port_worked(){
+        let client = RequestClient::new(String::from(URL));
+        match client {
+            Ok(c) => {
+                let (state ,_) = c.ovs_vsctl_add_br("br-ckxu");
+                if state == errno::HMIR_SUCCESS {
+                    let (port_state,_) = c.ovs_vsctl_add_port("br-ckxu", "pt-test");
+                    assert_eq!(port_state, errno::HMIR_SUCCESS);
+                    if port_state == errno::HMIR_SUCCESS {
+                        let (del_br_state,_) =  c.ovs_vsctl_del_port("br-ckxu", "pt-test");
+                        assert_eq!(del_br_state, errno::HMIR_SUCCESS);
+                    }
+                }
             }
             _ => {}
         }
