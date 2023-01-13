@@ -14,6 +14,30 @@ use jsonrpsee_types::ParamsSer;
 use serde_json::json;
 use std::collections::BTreeMap;
 
+macro_rules! ExecOvsQuery {
+    ($instance:expr, $cmd:expr, $token:expr) => {
+        let (state, ret_str) = ($instance).runtime.block_on(async {
+            let response : Result<String, _>= ($instance).client.request($cmd, rpc_params![$token]).await;
+            match response {
+                Ok(result) => {
+                    let p:HashWrap<String,String> = serde_json::from_str(result.as_str()).unwrap();
+                    if p.is_success() {
+                        let ret_str =  p.get(&String::from("ovs_ret")).unwrap();
+                        return (p.get_code(), ret_str.clone());
+                    } else {
+                        return (p.get_code(), p.get_err());
+                    }
+                },
+                _=>{
+                    let err_msg = format!("{} Failed!", $cmd);
+                    return (errno::HMIR_ERR_COMM, err_msg);
+                }
+            }
+        });
+        return (state, ret_str)
+    }
+}
+
 #[derive(Debug)]
 pub struct RequestClient {
     pub client  : Client,
@@ -47,7 +71,6 @@ impl RequestClient {
                 }
             }
         });
-
         match client {
             Ok(c) => {
                 Ok(RequestClient{ client: c, token: "".to_string(), runtime: runtime })
@@ -149,135 +172,40 @@ impl RequestClient {
         self.token = token.clone();
     }
 
+    #[allow(dead_code)]
     pub fn ovs_query_connection(&self) -> (usize, String) {
         let token = self.token.clone();
-        let (state, ret_str) = self.runtime.block_on(async {
-            let response : Result<String, _>= self.client.request("ovs-query-connection", rpc_params![token]).await;
-            match response {
-                Ok(result) => {
-                    let p:HashWrap<String,String> = serde_json::from_str(result.as_str()).unwrap();
-                    if p.is_success() {
-                        let ret_str =  p.get(&String::from("ovs_ret")).unwrap();
-                        return (p.get_code(), ret_str.clone());
-                    } else {
-                        return (p.get_code(), p.get_err());
-                    }
-                },
-                _=>{return (errno::HMIR_ERR_COMM, String::from("ovs-query-connection Failed!"));}
-            }
-        });
-        
-        return (state, ret_str)
+        ExecOvsQuery!(self, "ovs-query-connection", token);
     }
 
     #[allow(dead_code)]
     pub fn ovs_query_ports(&self) -> (usize,String){
         let token = self.token.clone();
-        let (state, ret_str) = self.runtime.block_on(async {
-            let response : Result<String, _>= self.client.request("ovs-query-ports", rpc_params![token]).await;
-            match response {
-                Ok(result) => {
-                    let p:HashWrap<String,String> = serde_json::from_str(result.as_str()).unwrap();
-                    if p.is_success() {
-                        let ret_str =  p.get(&String::from("ovs_ret")).unwrap();
-                        return (p.get_code(), ret_str.clone());
-                    } else {
-                        return (p.get_code(), p.get_err());
-                    }
-                },
-                _=>{return (errno::HMIR_ERR_COMM, String::from("ovs-query-ports Failed!"));}
-            }
-        });
-        
-        return (state, ret_str)
+        ExecOvsQuery!(self, "ovs-query-ports", token);
     }
 
     #[allow(dead_code)]
     pub fn ovs_query_bridges(&self) -> (usize,String){
         let token = self.token.clone();
-        let (state, ret_str) = self.runtime.block_on(async {
-            let response : Result<String, _>= self.client.request("ovs-query-bridges", rpc_params![token]).await;
-            match response {
-                Ok(result) => {
-                    let p:HashWrap<String,String> = serde_json::from_str(result.as_str()).unwrap();
-                    if p.is_success() {
-                        let ret_str =  p.get(&String::from("ovs_ret")).unwrap();
-                        return (p.get_code(), ret_str.clone());
-                    } else {
-                        return (p.get_code(), p.get_err());
-                    }
-                },
-                _=>{return (errno::HMIR_ERR_COMM, String::from("ovs-query-bridges Failed!"));}
-            }
-        });
-        
-        return (state, ret_str)
+        ExecOvsQuery!(self, "ovs-query-bridges", token);
     }
 
     #[allow(dead_code)]
     pub fn ovs_query_interfaces(&self) -> (usize,String){
         let token = self.token.clone();
-        let (state, ret_str) = self.runtime.block_on(async {
-            let response : Result<String, _>= self.client.request("ovs-query-interfaces", rpc_params![token]).await;
-            match response {
-                Ok(result) => {
-                    let p:HashWrap<String,String> = serde_json::from_str(result.as_str()).unwrap();
-                    if p.is_success() {
-                        let ret_str =  p.get(&String::from("ovs_ret")).unwrap();
-                        return (p.get_code(), ret_str.clone());
-                    } else {
-                        return (p.get_code(), p.get_err());
-                    }
-                },
-                _=>{return (errno::HMIR_ERR_COMM, String::from("ovs-query-interfaces Failed!"));}
-            }
-        });
-        
-        return (state, ret_str)
+        ExecOvsQuery!(self, "ovs-query-interfaces", token);
     }
 
     #[allow(dead_code)]
     pub fn ovs_query_netflow(&self) -> (usize,String) {
         let token = self.token.clone();
-        let (state, ret_str) = self.runtime.block_on(async {
-            let response : Result<String, _>= self.client.request("ovs-query-netflow", rpc_params![token]).await;
-            match response {
-                Ok(result) => {
-                    let p:HashWrap<String,String> = serde_json::from_str(result.as_str()).unwrap();
-                    if p.is_success() {
-                        let ret_str =  p.get(&String::from("ovs_ret")).unwrap();
-                        return (p.get_code(), ret_str.clone());
-                    } else {
-                        return (p.get_code(), p.get_err());
-                    }
-                },
-                _=>{return (errno::HMIR_ERR_COMM, String::from("ovs-query-netflow Failed!"));}
-            }
-        });
-        
-        return (state, ret_str)
+        ExecOvsQuery!(self, "ovs-query-netflows", token);
     }
 
     #[allow(dead_code)]
     pub fn ovs_query_ipfix(&self) -> (usize,String) {
         let token = self.token.clone();
-        let (state, ret_str) = self.runtime.block_on(async {
-            let response : Result<String, _>= self.client.request("ovs-query-ipfix", rpc_params![token]).await;
-            match response {
-                Ok(result) => {
-                    let p:HashWrap<String,String> = serde_json::from_str(result.as_str()).unwrap();
-                    if p.is_success() {
-                        let ret_str =  p.get(&String::from("ovs_ret")).unwrap();
-                        return (p.get_code(), ret_str.clone());
-                    } else {
-                        return (p.get_code(), p.get_err());
-                    }
-                },
-                _=>{return (errno::HMIR_ERR_COMM, String::from("ovs-query-ipfix Failed!"));}
-            }
-        });
-        
-        return (state, ret_str)
+        ExecOvsQuery!(self, "ovs-query-ipfix", token);
     }
 
     #[allow(dead_code)]
