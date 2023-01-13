@@ -303,7 +303,6 @@ impl RequestClient {
         return (state, ret_str);
     }
 
-    #[allow(dead_code)]
     pub fn ovs_vsctl_del_br(&self, br_name:&str) -> (usize, String)
     {
         let token = json!(self.token.clone());
