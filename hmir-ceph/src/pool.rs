@@ -8,6 +8,67 @@ use serde_json::json;
 use serde_json::*;
 use serde::*;
 
+
+///set object or byte limit on pool
+pub fn set_quota(pool: &str, field: &str, val: &str) -> RadosResult<String> {
+    let cmd = json!({
+        "prefix": "osd pool set-quota",
+        "pool": pool,
+        "field": field,
+        "val": val,
+        "format": "json",
+    });
+    println!("cmd {}", cmd);
+    let client = ceph_client::get_ceph_client()?;
+    let result = client.ceph_mon_command_without_data(&cmd)?;
+    println!("result {:?}", result);
+    match result.1 {
+        Some(res) => Ok(res),
+        None => Err(RadosError::Error(format!(
+            "Unable to parse osd pool set-quota output"
+        ))),
+    }
+}
+
+///obtain object or byte limits for pool
+pub fn get_quota(pool: &str) -> RadosResult<String> {
+    let cmd = json!({
+        "prefix": "osd pool get-quota",
+        "pool": pool,
+        "format": "json",
+    });
+    let client = ceph_client::get_ceph_client()?;
+    let result = client.ceph_mon_command_without_data(&cmd)?;
+    let return_data = String::from_utf8(result.0)?;
+    let mut l = return_data.lines();
+    match l.next() {
+        Some(res) => Ok(res.into()),
+        None => Err(RadosError::Error(format!(
+            "Unable to parse osd pool quota-get output: {:?}",
+            return_data,
+        ))),
+    }
+}
+
+///存储池修改名称
+pub fn rename(src_pool: &str, dest_pool: &str) -> RadosResult<String> {
+    let cmd = json!({
+        "prefix": "osd pool rename",
+        "srcpool": src_pool,
+        "destpool": dest_pool,
+        "format": "json",
+    });
+    let client = ceph_client::get_ceph_client()?;
+    let result = client.ceph_mon_command_without_data(&cmd)?;
+    match result.1 {
+        Some(res) => Ok(res),
+        None => Err(RadosError::Error(format!(
+            "Unable to parse osd pool rename output"
+        ))),
+    }
+}
+
+
 #[derive(Deserialize, Serialize, Debug)]
 pub struct CreatePoolDto {
     pub pool: String,
@@ -34,6 +95,25 @@ pub fn create(pool_name: &str, pg: u64, pgp: u64) -> RadosResult<String> {
     }
 }
 
+///删除存储池
+pub fn delete(pool_name: &str) -> RadosResult<String> {
+    let cmd = json!({
+        "prefix": "osd pool delete",
+        "pool": pool_name,
+        "pool2": pool_name,
+        "sure": "--yes-i-really-really-mean-it",
+        // "sure": "--yes-i-really-mean-it",
+        "format": "json",
+    });
+    let client = ceph_client::get_ceph_client()?;
+    let result = client.ceph_mon_command_without_data(&cmd)?;
+    match result.1 {
+        Some(res) => Ok(res),
+        None => Err(RadosError::Error(format!(
+            "Unable to parse osd pool delete output"
+        ))),
+    }
+}
 
 ///存储池列表
 pub fn pool_list() -> String {

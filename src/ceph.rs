@@ -340,7 +340,7 @@ pub fn ceph_osd_pool_register_method(module : & mut RpcModule<()>) -> anyhow::Re
     module.register_method("ceph-pool-create", |params, _| {
         //创建存储池
         let create_pool_dto = params.parse::<pool::CreatePoolDto>()?;
-        let result = pool::create(create_pool_dto.pool,
+        let result = pool::create(&create_pool_dto.pool,
                                   create_pool_dto.pg_num,
                                   create_pool_dto.pgp_num);
         match result {
@@ -349,6 +349,68 @@ pub fn ceph_osd_pool_register_method(module : & mut RpcModule<()>) -> anyhow::Re
             },
             Err(result) => {
                 Ok(format!("Error to create pool {:?}", result))
+            },
+        }
+    })?;
+
+
+    module.register_method("ceph-pool-delete", |params, _| {
+        //创建存储池
+        let pool = params.one::<String>()?;
+        let result = pool::delete(&pool);
+        match result {
+            Ok(result) => {
+                Ok(result)
+            },
+            Err(result) => {
+                Ok(format!("Error to delete pool {:?}", result))
+            },
+        }
+    })?;
+
+    module.register_method("ceph-pool-rename", |params, _| {
+        //存储池修改名称
+        let params_map = params.parse::<HashMap<String, String>>()?;
+        let src_pool = params_map.get("src_pool").unwrap();
+        let desc_pool = params_map.get("dest_pool").unwrap();
+        let result = pool::rename(src_pool, desc_pool);
+        match result {
+            Ok(result) => {
+                Ok(result)
+            },
+            Err(result) => {
+                Ok(format!("Error to rename pool"))
+            },
+        }
+    })?;
+
+    module.register_method("ceph-pool-get-quota", |params, _| {
+        //创建存储池
+        let pool = params.one::<String>()?;
+        let result = pool::get_quota(&pool);
+        match result {
+            Ok(result) => {
+                Ok(result)
+            },
+            Err(result) => {
+                Ok(format!("Error to get pool quota"))
+            },
+        }
+    })?;
+
+    module.register_method("ceph-pool-set-quota", |params, _| {
+        //设置存储池max_objects | max_bytes
+        let params_map = params.parse::<HashMap<String, String>>()?;
+        let pool = params_map.get("pool").unwrap();
+        let field = params_map.get("field").unwrap();
+        let val = params_map.get("val").unwrap();
+        let result = pool::set_quota(pool, field, val);
+        match result {
+            Ok(ret) => {
+                Ok(ret)
+            },
+            Err(e) => {
+                Ok(format!("Error to set pool quota max objects: {}", e.to_string()))
             },
         }
     })?;
