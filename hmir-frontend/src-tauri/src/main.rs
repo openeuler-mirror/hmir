@@ -8,6 +8,7 @@
 //! - cmd_logout        : 注销
 //! - cmd_quit          : 退出系统
 //! - cmd_ovs_query_connection : 查询是否与ovs数据库建立链接
+//! - cmd_ovs_query_bridges:  查询系统ovs网桥相关信息
 //! ```
 #![cfg_attr(
     all(not(debug_assertions), target_os = "windows"),
@@ -102,6 +103,12 @@ fn cmd_ovs_query_connection(host : &str) -> (usize,String)
 }
 
 #[tauri::command]
+fn cmd_ovs_query_bridges(host : &str) -> (usize,String)
+{
+    return clientmgr::ovs_query_bridges(host);
+}
+
+#[tauri::command]
 fn cmd_quit() {
     std::process::exit(0);
 }
@@ -172,7 +179,8 @@ fn main() {
             cmd_quit,
             cmd_service_enabled,
             cmd_service_disabled,
-            cmd_ovs_query_connection])
+            cmd_ovs_query_connection,
+            cmd_ovs_query_bridges])
         // .invoke_handler(tauri::generate_handler![ttyd_start])
         .plugin(tauri_plugin_websocket::init())
         .run(tauri::generate_context!())
