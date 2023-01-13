@@ -688,6 +688,21 @@ mod tests {
             }
             _ => {}
         }
+    }
+
+    #[test]
+    fn ovs_ofctl_forbid_dstip_worked(){
+        let client = RequestClient::new(String::from(URL));
+        match client {
+            Ok(c) => {
+                let (state ,_) = c.ovs_vsctl_add_br("br-ckxu");
+                if state == errno::HMIR_SUCCESS {
+                    let (port_state,_) = c.ovs_ofctl_forbid_dstip("br-ckxu", "172.30.24.92", "br-ckxu");
+                    assert_eq!(port_state, errno::HMIR_SUCCESS);
+                }
+            }
+            _ => {}
+        }
     } 
 
     #[test]
