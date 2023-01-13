@@ -36,13 +36,16 @@ const props = defineProps({
   }
 });
 
+//表头数据
 const columns = ref<Column<any>[]>([])
 
+//每一列数据（总）
 const data = ref<any>([])
 
+//获取对应的点击项数据
 const handleCurrentChange = (val: any | undefined) => {
-  return (val: any | undefined) => {
-    console.log(val);
+  return (event: Event) => {
+    console.log(val, props.tableList);
   };
 }
 
@@ -58,17 +61,11 @@ const Row = ({ rowData, rowIndex, cells, columns }) => {
   return cells
 }
 
-
 onMounted(() => {
   data.value = props.tableList;
   columns.value = props.tableProp
   columns.value.forEach((item) => {
     item.cellRenderer = ({ rowData }) => {
-      const handleCurrentChange = (val: any | undefined) => {
-        return (event: Event) => {
-          console.log(val);
-        };
-      }
       return (
         <div onClick={handleCurrentChange(rowData)} style={{ width: '100%', height: '100%' }}>{rowData[item.key]} </div>
       )
@@ -79,11 +76,6 @@ onMounted(() => {
     title: '状态',
     width: 300,
     cellRenderer: ({ rowData }) => {
-      const handleCurrentChange = (val: any | undefined) => {
-        return (event: Event) => {
-          console.log(val);
-        };
-      }
       //过滤转化为中文
       const stateFilter = (value: any) => {
         let state = value
