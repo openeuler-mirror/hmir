@@ -441,11 +441,11 @@ impl RequestClient {
         return (state, ret_str);
     }
 
-    pub fn service_all(&self) -> (usize,String) {
+    fn _svr_get_unit(&self,cmd: &str) -> (usize,String)
+    {
         let token = self.token.clone();
-
         let (state,service) = self.runtime.block_on(async{
-            let response: Result<String, _> = self.client.request("service-all", rpc_params![token]).await;
+            let response: Result<String, _> = self.client.request(cmd, rpc_params![token]).await;
             match response {
                 Ok(result) => {
                     let p: HashWrap::<String,Unit> = serde_json::from_str(result.as_str()).unwrap();
@@ -457,20 +457,34 @@ impl RequestClient {
         return (state,service);
     }
 
-    pub fn service_list_disabled(&self) -> (usize,String) {
-        let token = self.token.clone();
-        let (state,service) = self.runtime.block_on(async{
-            let response: Result<String, _> = self.client.request("service-list-disabled", rpc_params![token]).await;
-            match response {
-                Ok(result) => {
-                    let p: HashWrap::<String,Unit> = serde_json::from_str(result.as_str()).unwrap();
-                    return (p.code(),serde_json::to_string(&p.result).unwrap());
-                },
-                _ => { return (errno::HMIR_ERR_COMM,"".to_string())}
-            };
-        });
-        return (state,service);
+    pub fn svr_list_enabled_service(&self) -> (usize,String) {
+        self._svr_get_unit("svr-list-enabled-service")
     }
+
+    pub fn svr_list_disabled_service(&self) -> (usize,String) {
+        self._svr_get_unit("svr-list-disabled-service")
+    }
+
+    pub fn svr_list_static_service(&self) -> (usize,String) {
+        self._svr_get_unit("svr-list-static-service")
+    }
+
+
+    pub fn svr_list_enabled_timer(&self) -> (usize,String)
+    {
+        self._svr_get_unit("svr-list-enabled-timer")
+    }
+
+    pub fn svr_list_disabled_timer(&self) -> (usize,String)
+    {
+        self._svr_get_unit("svr-list-disabled-timer")
+    }
+
+    pub fn svr_list_static_timer(&self) -> (usize,String) {
+        self._svr_get_unit("svr-list-static-timer")
+    }
+
+
 }
 
 
@@ -706,11 +720,11 @@ mod tests {
     } 
 
     #[test]
-    fn server_all_worked(){
+    fn svr_list_enable_service_worked(){
         let client = RequestClient::new(String::from(URL));
         match client {
             Ok(c) => {
-                let (result,state) = c.service_all();
+                let (result,state) = c.svr_list_enabled_service();
             }
             _ => {}
         }
@@ -722,7 +736,20 @@ mod tests {
         let client = RequestClient::new(String::from(URL));
         match client {
             Ok(c) => {
-                let (result,state) = c.service_list_disabled();
+                let (result,state) = c.svr_list_disabled_service();
+                println!("{}",result);
+            }
+            _ => {}
+        }
+    }
+
+
+    #[test]
+    fn svr_list_enabled_timer_worked(){
+        let client = RequestClient::new(String::from(URL));
+        match client {
+            Ok(c) => {
+                let (result,state) = c.svr_list_enabled_timer();
                 println!("{}",result);
             }
             _ => {}

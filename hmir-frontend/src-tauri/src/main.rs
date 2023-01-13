@@ -22,7 +22,6 @@ use tokio;
 use tauri::{CustomMenuItem, Menu, MenuItem, Submenu};
 use tauri::Manager;
 use tauri::WindowBuilder;
-use tauri_plugin_websocket;
 
 //use log4rs;
 use log::{error,info};
@@ -85,15 +84,38 @@ fn cmd_logout(host : &str) -> bool
 #[tauri::command]
 fn cmd_service_enabled(host : &str) -> (usize,String)
 {
-    return clientmgr::service_list_enabled(host);
+    return clientmgr::svr_list_enabled_service(host);
 }
 
 #[tauri::command]
-fn cmd_service_disabled(host : &str) -> (usize,String)
-{
-    return clientmgr::service_list_disabled(host);
+fn cmd_service_disabled(host : &str) -> (usize,String) {
+    return clientmgr::svr_list_disabled_service(host);
 }
 
+#[tauri::command]
+fn cmd_service_static(host : &str) -> (usize,String)
+{
+    return clientmgr::svr_list_static_service(host);
+}
+
+
+#[tauri::command]
+fn cmd_timer_enabled(host : &str) -> (usize,String)
+{
+    return clientmgr::svr_list_enabled_timer(host);
+}
+
+#[tauri::command]
+fn cmd_timer_disabled(host : &str) -> (usize,String)
+{
+    return clientmgr::svr_list_disabled_timer(host);
+}
+
+#[tauri::command]
+fn cmd_timer_static(host : &str) -> (usize,String)
+{
+    return clientmgr::svr_list_static_timer(host);
+}
 
 #[tauri::command]
 fn cmd_quit() {
@@ -165,9 +187,9 @@ fn main() {
             cmd_ttyd_start,
             cmd_quit,
             cmd_service_enabled,
-            cmd_service_disabled])
+            cmd_service_disabled,
+            cmd_service_static])
         // .invoke_handler(tauri::generate_handler![ttyd_start])
-        .plugin(tauri_plugin_websocket::init())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

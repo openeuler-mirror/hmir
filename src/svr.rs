@@ -89,22 +89,27 @@ use std::{thread, time};
 use std::path::Path;
 use std::ffi::OsStr;
 
-use hmir_systemd::{
-    build_blocking_client,
-    manager::blocking::{OrgFreedesktopSystemd1Manager},
-    models::{Unit,IntoModel},
-    SystemdObjectType,
-};
+use hmir_systemd::{build_blocking_client, DerefContainer, manager::blocking::{OrgFreedesktopSystemd1Manager}, models::{Unit, IntoModel}, SystemdObjectType};
 
 
 lazy_static! {
-    static ref SERVICE_MAP : RwLock<HashWrap<String,Unit>> = {
-        let m  = HashWrap::<String,Unit>:: new();
-        RwLock::new(m)
-    };
+    // static ref SERVICE_MAP : RwLock<HashWrap<String,Unit>> = {
+    //     let m  = HashWrap::<String,Unit>:: new();
+    //     RwLock::new(m)
+    // };
 
     static ref SERVICE_ENABLE_CACHE: Mutex<String> = Mutex::new(String::new());
     static ref SERVICE_DISABLE_CACHE : Mutex<String> = Mutex::new(String::new());
+    static ref SERVICE_STATIC_CACHE : Mutex<String> = Mutex::new(String::new());
+
+    static ref TIMER_ENABLE_CACHE: Mutex<String> = Mutex::new(String::new());
+    static ref TIMER_DISABLE_CACHE : Mutex<String> = Mutex::new(String::new());
+    static ref TIMER_STATIC_CACHE : Mutex<String> = Mutex::new(String::new());
+
+
+    static ref SOCKET_ENABLE_CACHE: Mutex<String> = Mutex::new(String::new());
+    static ref SOCKET_DISABLE_CACHE : Mutex<String> = Mutex::new(String::new());
+    static ref SOCKET_STATIC_CACHE : Mutex<String> = Mutex::new(String::new());
 }
 
 macro_rules! svr_default_result {
@@ -119,19 +124,47 @@ macro_rules! svr_default_result {
     }
 }
 
+
 #[doc(hidden)]
 fn update_all_svr()
 {
+    *SERVICE_ENABLE_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["enabled"],vec!["*.service"]);
+    *SERVICE_DISABLE_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["disabled"],vec!["*.service"]);
+    *SERVICE_STATIC_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["static"],vec!["*.service"]);
+
+
+    *SOCKET_ENABLE_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["enabled"],vec!["*.socket"]);
+    *SOCKET_DISABLE_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["disabled"],vec!["*.socket"]);
+    *SOCKET_STATIC_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["static"],vec!["*.socket"]);
+
+
+    *TIMER_ENABLE_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["enabled"],vec!["*.timer"]);
+    *TIMER_DISABLE_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["disabled"],vec!["*.timer"]);
+    *TIMER_STATIC_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["static"],vec!["*.timer"]);
+
+}
+
+fn get_unit_list_by_pattern(states: Vec<&str>, patterns: Vec<&str>) -> String {
     let client = build_blocking_client(SystemdObjectType::Manager).unwrap();
-    let units = client.list_units().unwrap();
-    for unit in units {
-        let unit: Unit = unit.into_model().unwrap().clone();
-        SERVICE_MAP.write().unwrap().insert(unit.name.clone(),unit.clone());
+    let files = client.list_unit_files_by_patterns(states,patterns).unwrap();
+    // println!("{:?}",files);
+    let vec_files:Vec<String> = files.into_iter().map(|n| n.0 ).collect::<_>();
+
+    let vec_filenames: Vec<&str> = vec_files.iter().map(|n| basename(n.as_ref()).unwrap()).collect();
+    let mut map  = hmir_hash::HashWrap::new();
+    for x in &vec_filenames {
+        match client.list_units_by_names(vec![x]) {
+            Ok(units) => {
+                for unit in units {
+                    let unit: Unit = unit.into_model().unwrap().clone();
+                    map.insert(unit.name.clone(),unit.clone());
+                }
+            }
+            _ => {}
+        }
     }
-
-    *SERVICE_ENABLE_CACHE.lock().unwrap() = String::from(serde_json::to_string(&*SERVICE_MAP).unwrap());
-
-    *SERVICE_DISABLE_CACHE.lock().unwrap() = update_service_list_disabled();
+    let serialized = serde_json::to_string(&map).unwrap();
+    serialized
 }
 
 #[doc(hidden)]
@@ -153,67 +186,60 @@ pub fn init_services_mg()  {
     create_svrmg_thread();
 }
 
-
-///
-/// service-all接口实现
-///
-/// 获取所有服务信息
-pub fn service_all() -> String {
-    let result = (*SERVICE_ENABLE_CACHE.lock().unwrap()).clone();
-    result
-}
-
-
 fn basename(filename: &str) -> Option<&str> {
     Path::new(filename).file_name().and_then(OsStr::to_str)
 }
 
 
-pub fn update_service_list_disabled() -> String {
-    let client = build_blocking_client(SystemdObjectType::Manager).unwrap();
-    let files = client.list_unit_files().unwrap();
-
-    let vdisable:Vec<String> = files.into_iter()
-        .filter(|n | n.1.eq("disabled") )
-        .map(|n| n.0 )
-        .collect::<_>();
-    let disable_files: Vec<&str> = vdisable.iter().map(|n| basename(n.as_ref()).unwrap()).collect();
-    let mut map  = hmir_hash::HashWrap::new();
-    for x in &disable_files {
-        match client.list_units_by_names(vec![x]) {
-            Ok(units) => {
-                for unit in units {
-                    let unit: Unit = unit.into_model().unwrap().clone();
-                    map.insert(unit.name.clone(),unit.clone());
-                }
-            }
-            _ => {}
-        }
-    }
-    let serialized = serde_json::to_string(&map).unwrap();
-    serialized
+///
+/// service-all接口实现
+///
+/// 获取所有服务信息
+pub fn svr_list_enabled_service() -> String {
+    let result = (*SERVICE_ENABLE_CACHE.lock().unwrap()).clone();
+    result
 }
 
-pub fn service_list_disabled() -> String {
+pub fn svr_list_disabled_service() -> String {
     let result = (*SERVICE_DISABLE_CACHE.lock().unwrap()).clone();
     result
 }
 
-///
-/// service-status接口实现
-///
-/// 获取指定服务信息
-pub fn service_status(service: std::string::String) -> String
-{
-    let mut  result = HashWrap::new();
-    if SERVICE_MAP.read().unwrap().contains_key(&service) {
-        let value = SERVICE_MAP.read().unwrap().get(&service).unwrap().clone();
-        result.insert(service,value);
-    }
-    let serialized = serde_json::to_string(&result).unwrap();
-    serialized
-
+pub fn svr_list_static_service() -> String {
+    let result = (*SERVICE_STATIC_CACHE.lock().unwrap()).clone();
+    result
 }
+
+pub fn svr_list_enabled_timer() -> String {
+    let result = (*TIMER_ENABLE_CACHE.lock().unwrap()).clone();
+    result
+}
+
+pub fn svr_list_disabled_timer() -> String {
+    let result = (*TIMER_DISABLE_CACHE.lock().unwrap()).clone();
+    result
+}
+
+pub fn svr_list_static_timer() -> String {
+    let result = (*TIMER_STATIC_CACHE.lock().unwrap()).clone();
+    result
+}
+
+pub fn svr_list_enabled_socket() -> String {
+    let result = (*SOCKET_DISABLE_CACHE.lock().unwrap()).clone();
+    result
+}
+
+pub fn svr_list_disabled_socket() -> String {
+    let result = (*TIMER_DISABLE_CACHE.lock().unwrap()).clone();
+    result}
+
+pub fn svr_list_static_socket() -> String {
+    let result = (*TIMER_DISABLE_CACHE.lock().unwrap()).clone();
+    result
+}
+
+
 
 ///
 /// service-stop接口实现
@@ -270,21 +296,65 @@ pub fn service_enable(service: std::string::String) -> String {
 }
 
 
+
+
 pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
 
     //The svr module
-
-    module.register_method("service-all", |_, _| {
+    module.register_method("svr-list-enable-service", |_, _| {
         //默认没有error就是成功的
-        Ok(service_all())
+        Ok(svr_list_enabled_service())
+    })?;
+
+    module.register_method("svr-list-disable-service", |_, _| {
+        //默认没有error就是成功的
+        Ok(svr_list_disabled_service())
+    })?;
+
+    module.register_method("svr-list-static-service", |_, _| {
+        //默认没有error就是成功的
+        Ok(svr_list_static_service())
     })?;
 
 
-    module.register_method("service-status", |params, _| {
+    //The time api
+    module.register_method("svr-list-enabled-timer", |params, _| {
+        //默认没有error就是成功的
         let service = params.one::<std::string::String>()?;
-        Ok(service_status(service))
+        Ok(svr_list_enabled_timer())
     })?;
 
+    module.register_method("svr-list-disabled-timer", |params, _| {
+        //默认没有error就是成功的
+        let service = params.one::<std::string::String>()?;
+        Ok(svr_list_disabled_timer())
+    })?;
+
+    module.register_method("svr-list-static-timer", |params, _| {
+        //默认没有error就是成功的
+        let service = params.one::<std::string::String>()?;
+        Ok(svr_list_static_timer())
+    })?;
+
+
+    //The time api
+    module.register_method("svr-list-enable-socket", |params, _| {
+        //默认没有error就是成功的
+        let service = params.one::<std::string::String>()?;
+        Ok(svr_list_enabled_socket())
+    })?;
+
+    module.register_method("svr-list-disabled-socket", |params, _| {
+        //默认没有error就是成功的
+        let service = params.one::<std::string::String>()?;
+        Ok(svr_list_disabled_socket())
+    })?;
+
+    module.register_method("svr-list-static-socket", |params, _| {
+        //默认没有error就是成功的
+        let service = params.one::<std::string::String>()?;
+        Ok(svr_list_static_socket())
+    })?;
 
     module.register_method("service-start", |params, _| {
         //默认没有error就是成功的
@@ -316,11 +386,7 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
         Ok(service_enable(service))
     })?;
 
-    module.register_method("service-list-disabled", |params, _| {
-        //默认没有error就是成功的
-        let service = params.one::<std::string::String>()?;
-        Ok(service_list_disabled())
-    })?;
+
 
     Ok(())
 }
@@ -345,9 +411,9 @@ mod tests {
     }
 
     #[test]
-    fn service_all_it_works() {
+    fn svr_list_enabled_service_worked() {
         update_all_svr();
-        let data = service_all();
+        let data = svr_list_enabled_service();
         println!("{}",data);
     }
 
@@ -378,7 +444,7 @@ mod tests {
 
     #[test]
     fn service_list_disable_it_works(){
-        let s = service_list_disabled();
+        let s = svr_list_disabled_service();
         println!("{}",s);
     }
 }
