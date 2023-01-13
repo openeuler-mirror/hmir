@@ -39,10 +39,13 @@ pub fn get_quota(pool: &str) -> RadosResult<String> {
     });
     let client = ceph_client::get_ceph_client()?;
     let result = client.ceph_mon_command_without_data(&cmd)?;
-    match result.1 {
-        Some(res) => Ok(res),
+    let return_data = String::from_utf8(result.0)?;
+    let mut l = return_data.lines();
+    match l.next() {
+        Some(res) => Ok(res.into()),
         None => Err(RadosError::Error(format!(
-            "Unable to parse osd pool get-quota output"
+            "Unable to parse osd pool quota-get output: {:?}",
+            return_data,
         ))),
     }
 }
