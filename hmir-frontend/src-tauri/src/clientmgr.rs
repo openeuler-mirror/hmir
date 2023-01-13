@@ -143,6 +143,12 @@ pub fn ovs_query_bridges(host: &str) -> (usize, String)
     return client_instance!(&h).ovs_query_bridges();
 }
 
+pub fn ovs_query_ports(host: &str) -> (usize, String)
+{
+    let h = host.to_string();
+    return client_instance!(&h).ovs_query_ports();
+}
+
 #[cfg(test)]
 mod tests {
     use hmir_errno::errno;
