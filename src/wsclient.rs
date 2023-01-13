@@ -332,6 +332,87 @@ impl RequestClient {
         return (state, ret_str);
     }
 
+    #[allow(dead_code)]
+    pub fn ovs_vsctl_add_port(&self, br_name:&str, port_name:&str) -> (usize, String)
+    {
+        let token = json!(self.token.clone());
+        let mut br_info = BTreeMap::new();
+        br_info.insert("br_name", json!(br_name));
+        br_info.insert("port_name", json!(port_name));
+        br_info.insert("token", token);
+
+        let (state, ret_str) = self.runtime.block_on(async {
+            let response : Result<String, _> = self.client.request("ovs-vsctl-add-port", Some(ParamsSer::Map(br_info))).await;
+            match response {
+                Ok(result) =>{
+                    let p:HashWrap<String,String> = serde_json::from_str(result.as_str()).unwrap();
+                    if p.is_success() {
+                        let ret_str =  p.get(&String::from("ovs_ret")).unwrap();
+                        return (p.get_code(), ret_str.clone());
+                    } else {
+                        return (p.get_code(), p.get_err());
+                    }
+                },
+                _=> {return (errno::HMIR_ERR_COMM, String::from("ovs-vsctl-add-port Failed!"));}
+            }
+        });
+        return (state, ret_str);
+    }
+
+    #[allow(dead_code)]
+    pub fn ovs_vsctl_del_port(&self, br_name:&str, port_name:&str) -> (usize, String)
+    {
+        let token = json!(self.token.clone());
+        let mut br_info = BTreeMap::new();
+        br_info.insert("br_name", json!(br_name));
+        br_info.insert("port_name", json!(port_name));
+        br_info.insert("token", token);
+
+        let (state, ret_str) = self.runtime.block_on(async {
+            let response : Result<String, _> = self.client.request("ovs-vsctl-del-port", Some(ParamsSer::Map(br_info))).await;
+            match response {
+                Ok(result) =>{
+                    let p:HashWrap<String,String> = serde_json::from_str(result.as_str()).unwrap();
+                    if p.is_success() {
+                        let ret_str =  p.get(&String::from("ovs_ret")).unwrap();
+                        return (p.get_code(), ret_str.clone());
+                    } else {
+                        return (p.get_code(), p.get_err());
+                    }
+                },
+                _=> {return (errno::HMIR_ERR_COMM, String::from("ovs-vsctl-del-port Failed!"));}
+            }
+        });
+        return (state, ret_str);
+    }
+
+    #[allow(dead_code)]
+    pub fn ovs_vsctl_set_netflow_rule(&self, br_name:&str, targets:&str) -> (usize, String)
+    {
+        let token = json!(self.token.clone());
+        let mut br_info = BTreeMap::new();
+        br_info.insert("br_name", json!(br_name));
+        br_info.insert("targets", json!(targets));
+        br_info.insert("token", token);
+
+        let (state, ret_str) = self.runtime.block_on(async {
+            let response : Result<String, _> = self.client.request("ovs-vsctl-set-netflow-rule", Some(ParamsSer::Map(br_info))).await;
+            match response {
+                Ok(result) =>{
+                    let p:HashWrap<String,String> = serde_json::from_str(result.as_str()).unwrap();
+                    if p.is_success() {
+                        let ret_str =  p.get(&String::from("ovs_ret")).unwrap();
+                        return (p.get_code(), ret_str.clone());
+                    } else {
+                        return (p.get_code(), p.get_err());
+                    }
+                },
+                _=> {return (errno::HMIR_ERR_COMM, String::from("ovs-vsctl-set-netflow-rule Failed!"));}
+            }
+        });
+        return (state, ret_str);
+    }
+
     pub fn service_all(&self) -> (usize,String) {
         let token = self.token.clone();
 
@@ -525,6 +606,40 @@ mod tests {
                 if state == errno::HMIR_SUCCESS {
                     let (del_state,_) = c.ovs_vsctl_del_br("br-ckxu");
                     assert_eq!(del_state, errno::HMIR_SUCCESS)
+                }
+            }
+            _ => {}
+        }
+    } 
+
+    #[test]
+    fn ovs_vsctl_add_port_worked(){
+        let client = RequestClient::new(String::from(URL));
+        match client {
+            Ok(c) => {
+                let (state ,_) = c.ovs_vsctl_add_br("br-ckxu");
+                if state == errno::HMIR_SUCCESS {
+                    let (port_state,_) = c.ovs_vsctl_add_port("br-ckxu", "pt-test");
+                    assert_eq!(port_state, errno::HMIR_SUCCESS);
+                }
+            }
+            _ => {}
+        }
+    } 
+
+    #[test]
+    fn ovs_vsctl_del_port_worked(){
+        let client = RequestClient::new(String::from(URL));
+        match client {
+            Ok(c) => {
+                let (state ,_) = c.ovs_vsctl_add_br("br-ckxu");
+                if state == errno::HMIR_SUCCESS {
+                    let (port_state,_) = c.ovs_vsctl_add_port("br-ckxu", "pt-test");
+                    assert_eq!(port_state, errno::HMIR_SUCCESS);
+                    if port_state == errno::HMIR_SUCCESS {
+                        let (del_br_state,_) =  c.ovs_vsctl_del_port("br-ckxu", "pt-test");
+                        assert_eq!(del_br_state, errno::HMIR_SUCCESS);
+                    }
                 }
             }
             _ => {}

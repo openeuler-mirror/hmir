@@ -25,7 +25,7 @@ import windowHeader from "@/views/windowHeader/index.vue";
   filter: drop-shadow(0 0 2em #249b73);
 }
 
-.windowBody{
+.windowBody {
   margin-top: 30px;
 }
 </style>

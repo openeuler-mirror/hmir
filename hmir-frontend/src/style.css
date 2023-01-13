@@ -112,3 +112,7 @@ button {
 .login-message-success {
   width: 160px;
 }
+
+.el-virtual-scrollbar {
+  width: 13px !important;
+}

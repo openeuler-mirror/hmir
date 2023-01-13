@@ -1,7 +1,4 @@
-interface serviceProp {
-  prop?: string;
-  label?: string;
-}
+import type { Column } from 'element-plus'
 
 interface serviceTableList {
   description?: any;
@@ -22,6 +19,6 @@ interface serviceTableList {
 export default interface serviceList {
   value: string;
   tableList?: Array<serviceTableList>;
-  tableProp?: Array<serviceProp>
+  tableProp?: Column<any>[]
 }
 
