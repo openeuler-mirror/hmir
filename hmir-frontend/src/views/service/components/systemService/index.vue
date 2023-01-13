@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 import serviceCollapse from '@/components/serviceCollapse/index.vue';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, nextTick } from 'vue';
 import serviceList from '@/views/service/interface/index';
 import { cmd_service_enabled, cmd_service_disabled } from '@/api/index';
 import { useUsersStore } from '@/store/modules/user';
@@ -43,16 +43,40 @@ onMounted(() => {
     // }],
     tableList: [],
     tableProp: [
-      { prop: 'description', label: '描述' },
-      { prop: 'name', label: 'ID' },
+      {
+        key: 'description',
+        title: '描述',
+        dataKey: 'description',
+        width: 320,
+        maxWidth: 500,
+        minWidth: 300,
+      },
+      {
+        key: 'name',
+        title: 'ID',
+        dataKey: 'name',
+        width: 320,
+      }
     ]
   },
   {
     value: '禁用',
     tableList: [],
     tableProp: [
-      { prop: 'description', label: '描述' },
-      { prop: 'name', label: 'ID' },
+      {
+        key: 'description',
+        title: '描述',
+        dataKey: 'description',
+        width: 320,
+        maxWidth: 500,
+        minWidth: 300,
+      },
+      {
+        key: 'name',
+        title: 'ID',
+        dataKey: 'name',
+        width: 320,
+      }
     ]
   },
   {
@@ -64,8 +88,18 @@ onMounted(() => {
     // }],
     tableList: [],
     tableProp: [
-      { prop: 'description', label: '描述' },
-      { prop: 'name', label: 'ID' },
+      {
+        key: 'description',
+        title: '描述',
+        dataKey: 'description',
+        width: 310,
+      },
+      {
+        key: 'name',
+        title: 'ID',
+        dataKey: 'name',
+        width: 310,
+      }
     ]
   }]
   setTimeout(() => {
