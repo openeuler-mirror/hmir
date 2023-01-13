@@ -68,8 +68,10 @@ onMounted(() => {
       { prop: 'name', label: 'ID' },
     ]
   }]
-  cmdServiceEnabled()
-  cmdServiceDisabled()
+  setTimeout(() => {
+    cmdServiceEnabled()
+    cmdServiceDisabled()
+  }, 200)
 })
 
 </script>
