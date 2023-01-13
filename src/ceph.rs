@@ -308,6 +308,15 @@ pub fn ceph_osd_pool_register_method(module : & mut RpcModule<()>) -> anyhow::Re
         Ok(ceph_pool_list())
     })?;
 
+    module.register_method("ceph-pool-list-detail", |_, _| {
+        //获取ceph集群存储池列表
+        let ret = pool::pool_list_detail();
+        match ret {
+            Ok(ret) => Ok(ret),
+            Err(e) => Ok(format!("Err: {:?}", e)),
+        }
+    })?;
+
     module.register_method("ceph-pool-stats", |_, _| {
         //获取ceph集群存储池状态
         Ok(ceph_pool_stats())
