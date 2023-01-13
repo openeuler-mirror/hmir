@@ -367,6 +367,22 @@ pub fn ceph_osd_pool_register_method(module : & mut RpcModule<()>) -> anyhow::Re
             },
         }
     })?;
+
+    module.register_method("ceph-pool-rename", |params, _| {
+        //创建存储池
+        let params_map = params.parse::<HashMap<String, String>>()?;
+        let src_pool = params_map.get("src_pool").unwrap();
+        let desc_pool = params_map.get("dest_pool").unwrap();
+        let result = pool::rename(src_pool, desc_pool);
+        match result {
+            Ok(result) => {
+                Ok(result)
+            },
+            Err(result) => {
+                Ok(format!("Error to rename pool"))
+            },
+        }
+    })?;
     
     Ok(())
 }
