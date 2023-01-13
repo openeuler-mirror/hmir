@@ -1,13 +1,40 @@
 use std::borrow::Borrow;
 use crate::command;
 use crate::ceph_client;
-use ceph::{cmd, PoolOption, error::RadosResult};
+use ceph::{cmd, PoolOption, error::RadosResult, error::RadosError};
 // use serde_json::Value::String;
 use std::string::String;
+use serde_json::json;
 
 ///存储池列表
 pub fn pool_list() -> String {
     command::mon_exec("osd pool ls")
+}
+
+#[test]
+pub fn test_pool_list_detail() {
+    let result = pool_list_detail();
+    println!("result : {:?}", result);
+}
+
+///存储池详细信息列表
+pub fn pool_list_detail() -> RadosResult<String> {
+    let cmd = json!({
+        "prefix": "osd pool ls",
+        "detail": "detail",
+        "format": "json",
+    });
+    let client = ceph_client::get_ceph_client()?;
+    let result = client.ceph_mon_command_without_data(&cmd)?;
+    let return_data = String::from_utf8(result.0)?; 
+    let mut l = return_data.lines();
+    match l.next() {
+        Some(res) => Ok(res.into()),
+        None => Err(RadosError::Error(format!(
+            "Unable to parse osd pool ls detail output: {:?}",
+            return_data,
+        ))),
+    }
 }
 
 ///存储池状态
