@@ -559,6 +559,18 @@ mod tests {
     } 
 
     #[test]
+    fn ovs_vsctl_add_port_worked(){
+        let client = RequestClient::new(String::from(URL));
+        match client {
+            Ok(c) => {
+                let (state ,_) = c.ovs_vsctl_add_port("br-ckxu", "port_test");
+                assert_eq!(state, errno::HMIR_SUCCESS)
+            }
+            _ => {}
+        }
+    } 
+
+    #[test]
     fn server_all_worked(){
         let client = RequestClient::new(String::from(URL));
         match client {
