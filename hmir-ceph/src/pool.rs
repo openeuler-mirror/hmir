@@ -34,6 +34,25 @@ pub fn create(pool_name: &str, pg: u64, pgp: u64) -> RadosResult<String> {
     }
 }
 
+///删除存储池
+pub fn delete(pool_name: &str) -> RadosResult<String> {
+    let cmd = json!({
+        "prefix": "osd pool delete",
+        "pool": pool_name,
+        "pool2": pool_name,
+        "sure": "--yes-i-really-really-mean-it",
+        // "sure": "--yes-i-really-mean-it",
+        "format": "json",
+    });
+    let client = ceph_client::get_ceph_client()?;
+    let result = client.ceph_mon_command_without_data(&cmd)?;
+    match result.1 {
+        Some(res) => Ok(res),
+        None => Err(RadosError::Error(format!(
+            "Unable to parse osd pool delete output"
+        ))),
+    }
+}
 
 ///存储池列表
 pub fn pool_list() -> String {
