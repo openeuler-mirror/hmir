@@ -131,6 +131,12 @@ pub fn service_list_enabled(host : & str) -> (usize,String)
     return client_instance!(&h).service_all();
 }
 
+pub fn ovs_query_connection(host: &str) -> (usize,String)
+{
+    let h = host.to_string();
+    return client_instance!(&h).ovs_query_connection();
+}
+
 #[cfg(test)]
 mod tests {
     use hmir_errno::errno;
