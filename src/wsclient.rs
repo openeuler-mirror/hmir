@@ -413,6 +413,34 @@ impl RequestClient {
         return (state, ret_str);
     }
 
+    #[allow(dead_code)]
+    pub fn ovs_ofctl_forbid_dstip(&self, br_name:&str, dst_ip:&str, in_port:&str) -> (usize, String)
+    {
+        let token = json!(self.token.clone());
+        let mut br_info = BTreeMap::new();
+        br_info.insert("br_name", json!(br_name));
+        br_info.insert("dst_ip", json!(dst_ip));
+        br_info.insert("in_port", json!(in_port));
+        br_info.insert("token", token);
+
+        let (state, ret_str) = self.runtime.block_on(async {
+            let response : Result<String, _> = self.client.request("ovs-ofctl-forbid-dstip", Some(ParamsSer::Map(br_info))).await;
+            match response {
+                Ok(result) =>{
+                    let p:HashWrap<String,String> = serde_json::from_str(result.as_str()).unwrap();
+                    if p.is_success() {
+                        let ret_str =  p.get(&String::from("ovs_ret")).unwrap();
+                        return (p.get_code(), ret_str.clone());
+                    } else {
+                        return (p.get_code(), p.get_err());
+                    }
+                },
+                _=> {return (errno::HMIR_ERR_COMM, String::from("ovs-ofctl-forbid-dstip Failed!"));}
+            }
+        });
+        return (state, ret_str);
+    }
+
     pub fn service_all(&self) -> (usize,String) {
         let token = self.token.clone();
 
@@ -572,6 +600,7 @@ mod tests {
             _ => {}
         }
     } 
+
 
     #[test]
     fn ovs_query_ipfix_worked(){
