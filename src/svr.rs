@@ -82,7 +82,7 @@
 //! ```
 
 use jsonrpsee::ws_server::{RpcModule};
-use std::sync::RwLock;
+use std::sync::{RwLock,Mutex};
 use hmir_hash::HashWrap;
 use hmir_errno::errno;
 use std::{thread, time};
@@ -102,6 +102,9 @@ lazy_static! {
         let m  = HashWrap::<String,Unit>:: new();
         RwLock::new(m)
     };
+
+    static ref SERVICE_ENABLE_CACHE: Mutex<String> = Mutex::new(String::new());
+    static ref SERVICE_DISABLE_CACHE : Mutex<String> = Mutex::new(String::new());
 }
 
 macro_rules! svr_default_result {
@@ -125,6 +128,10 @@ fn update_all_svr()
         let unit: Unit = unit.into_model().unwrap().clone();
         SERVICE_MAP.write().unwrap().insert(unit.name.clone(),unit.clone());
     }
+
+    *SERVICE_ENABLE_CACHE.lock().unwrap() = String::from(serde_json::to_string(&*SERVICE_MAP).unwrap());
+
+    *SERVICE_DISABLE_CACHE.lock().unwrap() = update_service_list_disabled();
 }
 
 #[doc(hidden)]
@@ -152,8 +159,8 @@ pub fn init_services_mg()  {
 ///
 /// 获取所有服务信息
 pub fn service_all() -> String {
-    let serialized = serde_json::to_string(&*SERVICE_MAP).unwrap();
-    serialized
+    let result = (*SERVICE_ENABLE_CACHE.lock().unwrap()).clone();
+    result
 }
 
 
@@ -162,7 +169,7 @@ fn basename(filename: &str) -> Option<&str> {
 }
 
 
-pub fn service_list_disabled() -> String {
+pub fn update_service_list_disabled() -> String {
     let client = build_blocking_client(SystemdObjectType::Manager).unwrap();
     let files = client.list_unit_files().unwrap();
 
@@ -183,13 +190,14 @@ pub fn service_list_disabled() -> String {
             _ => {}
         }
     }
-    println!("the disabled files : {:?}",disable_files);
-
     let serialized = serde_json::to_string(&map).unwrap();
     serialized
 }
 
-
+pub fn service_list_disabled() -> String {
+    let result = (*SERVICE_DISABLE_CACHE.lock().unwrap()).clone();
+    result
+}
 
 ///
 /// service-status接口实现
