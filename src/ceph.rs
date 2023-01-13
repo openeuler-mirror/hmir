@@ -340,7 +340,7 @@ pub fn ceph_osd_pool_register_method(module : & mut RpcModule<()>) -> anyhow::Re
     module.register_method("ceph-pool-create", |params, _| {
         //创建存储池
         let create_pool_dto = params.parse::<pool::CreatePoolDto>()?;
-        let result = pool::create(create_pool_dto.pool,
+        let result = pool::create(&create_pool_dto.pool,
                                   create_pool_dto.pg_num,
                                   create_pool_dto.pgp_num);
         match result {
@@ -349,6 +349,21 @@ pub fn ceph_osd_pool_register_method(module : & mut RpcModule<()>) -> anyhow::Re
             },
             Err(result) => {
                 Ok(format!("Error to create pool {:?}", result))
+            },
+        }
+    })?;
+
+
+    module.register_method("ceph-pool-delete", |params, _| {
+        //创建存储池
+        let pool = params.one::<String>()?;
+        let result = pool::delete(&pool);
+        match result {
+            Ok(result) => {
+                Ok(result)
+            },
+            Err(result) => {
+                Ok(format!("Error to delete pool {:?}", result))
             },
         }
     })?;
