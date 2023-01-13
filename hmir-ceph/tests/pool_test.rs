@@ -7,6 +7,15 @@ use std::result;
 use std::collections::HashMap;
 
 #[test]
+pub fn test_pool_get_quota() {
+    let result = pool::get_quota("test2");
+    match result {
+        Ok(result) => println!("result : {:?}", result),
+        Err(err) => println!("result : {:?}", err),
+    }
+}
+
+#[test]
 pub fn test_pool_list_detail() {
     let result = pool::pool_list_detail();
     println!("result : {:?}", result);
