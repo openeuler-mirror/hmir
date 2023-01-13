@@ -8,6 +8,26 @@ use serde_json::json;
 use serde_json::*;
 use serde::*;
 
+
+///存储池修改名称
+pub fn rename(src_pool: &str, dest_pool: &str) -> RadosResult<String> {
+    let cmd = json!({
+        "prefix": "osd pool rename",
+        "srcpool": src_pool,
+        "destpool": dest_pool,
+        "format": "json",
+    });
+    let client = ceph_client::get_ceph_client()?;
+    let result = client.ceph_mon_command_without_data(&cmd)?;
+    match result.1 {
+        Some(res) => Ok(res),
+        None => Err(RadosError::Error(format!(
+            "Unable to parse osd pool rename output"
+        ))),
+    }
+}
+
+
 #[derive(Deserialize, Serialize, Debug)]
 pub struct CreatePoolDto {
     pub pool: String,

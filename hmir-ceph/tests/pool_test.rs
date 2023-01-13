@@ -4,6 +4,7 @@ use hmir_ceph::pool;
 use jsonrpsee::core::middleware::{self, Headers, MethodKind, Params};
 use jsonrpsee::types::error::CallError;
 use std::result;
+use std::collections::HashMap;
 
 #[test]
 pub fn test_pool_list_detail() {
@@ -30,11 +31,47 @@ pub fn test_pool_delete() {
 }
 
 #[test]
+pub fn test_pool_rename() {
+    let result = pool::rename("test1", "test2");
+    match result {
+        Ok(result) => println!("result : {:?}", result),
+        Err(err) => println!("result : {:?}", err),
+    }
+}
+
+#[test]
+pub fn test_pool_rename2() -> Result<(), CallError> {
+    let src_json = "{\"src_pool\":\"pool-test2\",\"dest_pool\":\"pool-test1\"}";
+    let params = Params::new(Option::Some(src_json));
+    let c = params.parse::<HashMap<String, String>>()?;
+    println!("{:?}", c);
+    println!("{:?}", c.get("src_pool").unwrap());
+    println!("{:?}", c.get("dest_pool").unwrap());
+    let result = pool::rename(c.get("src_pool").unwrap(), c.get("dest_pool").unwrap());
+    match result {
+        Ok(result) => println!("result : {:?}", result),
+        Err(err) => println!("result : {:?}", err),
+    }
+    Ok(())
+}
+
+#[test]
 pub fn test_json_parse() -> result::Result<(), CallError> {
     let src_json = "{\"pool\":\"pool-test1\",\"pg_num\":16, \"pgp_num\":16}";
     let params = Params::new(Option::Some(src_json));
     let c = params.parse::<pool::CreatePoolDto>()?;
     println!("{:?}", c);
     println!("{:?}", c.pgp_num);
+    Ok(())
+}
+
+#[test]
+pub fn test_json_parse_map() -> result::Result<(), CallError> {
+    let src_json = "{\"src_pool\":\"pool-test2\",\"dest_pool\":\"pool-test1\"}";
+    let params = Params::new(Option::Some(src_json));
+    let c = params.parse::<HashMap<String, String>>()?;
+    println!("{:?}", c);
+    println!("{:?}", c.get("src_pool").unwrap());
+    println!("{:?}", c.get("dest_pool").unwrap());
     Ok(())
 }
