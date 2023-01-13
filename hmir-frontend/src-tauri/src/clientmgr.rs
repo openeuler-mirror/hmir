@@ -161,6 +161,12 @@ pub fn ovs_vsctl_del_br(host: &str, br_name: &str) -> (usize, String)
     return client_instance!(&h).ovs_vsctl_del_br(br_name);
 }
 
+pub fn ovs_ofctl_forbid_dstip(host: &str, br_name: &str, dst_ip: &str, in_port:&str) -> (usize, String)
+{
+    let h = host.to_string();
+    return client_instance!(&h).ovs_ofctl_forbid_dstip(br_name, dst_ip, in_port);
+}
+
 #[cfg(test)]
 mod tests {
     use hmir_errno::errno;

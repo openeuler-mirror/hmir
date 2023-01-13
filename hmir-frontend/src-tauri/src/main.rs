@@ -12,6 +12,7 @@
 //! - cmd_ovs_query_ports: 查询系统ovs ports相关信息
 //! - cmd_ovs_vsctl_add_br : 创建ovs网桥
 //! - cmd_ovs_vsctl_del_br : 删除ovs网桥
+//! - cmd_ovs_ofctl_forbid_dstip : 禁止虚拟机访问外部IP地址
 //! ```
 #![cfg_attr(
     all(not(debug_assertions), target_os = "windows"),
@@ -130,6 +131,13 @@ fn cmd_ovs_vsctl_del_br(host: &str, br_name: &str) ->(usize, String)
 }
 
 #[tauri::command]
+fn cmd_ovs_ofctl_forbid_dstip(host: &str, br_name:&str, dst_ip:&str, in_port:&str) -> (usize, String) 
+{
+    return clientmgr::ovs_ofctl_forbid_dstip(host, br_name, dst_ip, in_port);
+}
+
+
+#[tauri::command]
 fn cmd_quit() {
     std::process::exit(0);
 }
@@ -204,7 +212,8 @@ fn main() {
             cmd_ovs_query_bridges,
             cmd_ovs_query_ports,
             cmd_ovs_vsctl_add_br,
-            cmd_ovs_vsctl_del_br])
+            cmd_ovs_vsctl_del_br,
+            cmd_ovs_ofctl_forbid_dstip])
         // .invoke_handler(tauri::generate_handler![ttyd_start])
         .plugin(tauri_plugin_websocket::init())
         .run(tauri::generate_context!())
