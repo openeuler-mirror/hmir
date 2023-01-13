@@ -7,6 +7,21 @@ use std::result;
 use std::collections::HashMap;
 
 #[test]
+pub fn test_pool_set_quota() {
+    let mut result = pool::set_quota("test2", "max_objects","1001");
+    match result {
+        Ok(result) => println!("result : {:?}", result),
+        Err(err) => println!("result : {:?}", err),
+    }
+
+    result = pool::set_quota("test2", "max_bytes","1001");
+    match result {
+        Ok(result) => println!("result : {:?}", result),
+        Err(err) => println!("result : {:?}", err),
+    }
+}
+
+#[test]
 pub fn test_pool_get_quota() {
     let result = pool::get_quota("test2");
     match result {

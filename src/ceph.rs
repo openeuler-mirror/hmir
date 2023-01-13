@@ -397,6 +397,23 @@ pub fn ceph_osd_pool_register_method(module : & mut RpcModule<()>) -> anyhow::Re
             },
         }
     })?;
+
+    module.register_method("ceph-pool-set-quota", |params, _| {
+        //设置存储池max_objects | max_bytes
+        let params_map = params.parse::<HashMap<String, String>>()?;
+        let pool = params_map.get("pool").unwrap();
+        let field = params_map.get("field").unwrap();
+        let val = params_map.get("val").unwrap();
+        let result = pool::set_quota(pool, field, val);
+        match result {
+            Ok(ret) => {
+                Ok(ret)
+            },
+            Err(e) => {
+                Ok(format!("Error to set pool quota max objects: {}", e.to_string()))
+            },
+        }
+    })?;
     
     Ok(())
 }
