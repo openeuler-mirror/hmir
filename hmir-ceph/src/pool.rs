@@ -5,6 +5,35 @@ use ceph::{cmd, PoolOption, error::RadosResult, error::RadosError};
 // use serde_json::Value::String;
 use std::string::String;
 use serde_json::json;
+use serde_json::*;
+use serde::*;
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct CreatePoolDto {
+    pub pool: String,
+    pub pg_num: u64,
+    pub pgp_num: u64
+}
+
+///创建存储池
+pub fn create(pool_name: &str, pg: u64, pgp: u64) -> RadosResult<String> {
+    let cmd = json!({
+        "prefix": "osd pool create",
+        "pool": pool_name,
+        "pg_num": pg,
+        "pgp_num": pgp,
+        "format": "json",
+    });
+    let client = ceph_client::get_ceph_client()?;
+    let result = client.ceph_mon_command_without_data(&cmd)?;
+    match result.1 {
+        Some(res) => Ok(res),
+        None => Err(RadosError::Error(format!(
+            "Unable to parse osd pool create output"
+        ))),
+    }
+}
+
 
 ///存储池列表
 pub fn pool_list() -> String {
