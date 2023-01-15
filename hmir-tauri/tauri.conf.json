@@ -3,7 +3,7 @@
     "beforeDevCommand": "npm run dev",
     "beforeBuildCommand": "npm run build",
     "devPath": "http://localhost:1421",
-    "distDir": "../dist",
+    "distDir": "../hmir-frontend/dist",
     "withGlobalTauri": true
   },
   "package": {

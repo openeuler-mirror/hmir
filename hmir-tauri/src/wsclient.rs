@@ -549,7 +549,7 @@ mod tests {
         match client {
             Ok(c) => {
                 let (result,state) = c.service_list_disabled();
-                println!("{}",result);
+                println!("result code is: {} \n result content is: {}", result, state);
             }
             _ => {}
         }

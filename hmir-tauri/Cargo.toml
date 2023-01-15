@@ -1,5 +1,5 @@
 [package]
-name = "hmir-frontend"
+name = "hmir-tauri"
 version = "0.0.0"
 description = "A Tauri App"
 authors = ["you"]
@@ -30,9 +30,9 @@ lazy_static = "1.4.0"
 log4rs = "1.2.0"
 log = "0.4.17"
 
-hmir-hash = { path = "../../hmir-hash" }
-hmir-errno = { path ="../../hmir-errno" }
-hmir-systemd = { path ="../../hmir-systemd"}
+hmir-hash = { path = "../hmir-hash" }
+hmir-errno = { path = "../hmir-errno" }
+hmir-systemd = { path = "../hmir-systemd" }
 
 [features]
 # by default Tauri runs in production mode
