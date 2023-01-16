@@ -14,9 +14,11 @@ hmir是C/S架构，可以集成部署，也可以单机部署，整个架构由h
 
 HMIR主要分为4层: vue前端、tauri后端、hmir客户端以及hmir服务端,其中:
 
-- vue前端：主要使用vue+ts+tauri框架实现C端图形界面的开发，由于tauri框架是跨平台的，因此C端
+- **vue前端**：主要使用vue+ts+tauri框架实现C端图形界面的开发，由于tauri框架是跨平台的，因此C端
  可同时运行在Linux、MacOS以及Windows系统上。
-- 
+- **tauri后端**:通过tauri command的方式对hmir客户端提供的API进行封装，提供给vue前端调用。
+- **hmir客户端**:封装了对RPC请求进行封装，同时实现了客户端管理以及基于token的认证管理。
+- **hmir后端** : 实现了生产环境下的主机管理的RPC接口。
 
 ## HMIR后端
 
