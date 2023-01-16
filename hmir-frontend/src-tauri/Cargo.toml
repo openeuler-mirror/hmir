@@ -33,6 +33,8 @@ log = "0.4.17"
 hmir-hash = { path = "../../hmir-hash" }
 hmir-errno = { path ="../../hmir-errno" }
 hmir-systemd = { path ="../../hmir-systemd"}
+hmir-ws-client = { path ="../../hmir-ws-client"}
+hmir-ws-client-mgr = { path ="../../hmir-ws-client-mgr"}
 
 [features]
 # by default Tauri runs in production mode

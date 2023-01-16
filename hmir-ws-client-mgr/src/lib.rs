@@ -1,3 +1,3 @@
 pub mod ws_client_mgr;
-mod login;
+pub mod login;
 mod tests;
