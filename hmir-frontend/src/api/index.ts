@@ -71,8 +71,44 @@ export function cmd_service_static(data: any) {
   })
 }
 
+//计时器的启动
+export function cmd_timer_enabled(data: any) {
+  return new Promise<void>((resolve, reject) => {
+    setTimeout(() => {
+      invoke('cmd_timer_enabled', data).then(
+        (res: any) => {
+          resolve(res)
+        }
+      )
+    }, timeout)
+  })
+}
 
+//计时器的禁用
+export function cmd_timer_disabled(data: any) {
+  return new Promise<void>((resolve, reject) => {
+    setTimeout(() => {
+      invoke('cmd_timer_disabled', data).then(
+        (res: any) => {
+          resolve(res)
+        }
+      )
+    }, timeout)
+  })
+}
 
+//计时器的静态
+export function cmd_timer_static(data: any) {
+  return new Promise<void>((resolve, reject) => {
+    setTimeout(() => {
+      invoke('cmd_timer_static', data).then(
+        (res: any) => {
+          resolve(res)
+        }
+      )
+    }, timeout)
+  })
+}
 
 
 
