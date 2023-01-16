@@ -1,6 +1,9 @@
 import { defineStore } from 'pinia';
 import ElMessage from '@/utils/message';
-import { cmd_service_enabled, cmd_service_disabled, cmd_service_static } from '@/api/index';
+import {
+  cmd_service_enabled, cmd_service_disabled, cmd_service_static,
+  cmd_timer_enabled, cmd_timer_disabled, cmd_timer_static
+} from '@/api/index';
 import { store } from '../index';
 import useUsersStore from '@/store/modules/user';
 
@@ -11,10 +14,19 @@ export const cmdServiceStore = defineStore('servive', {
   //存储servive数据
   state: () => {
     return {
-      cmdServiceClickDetail: {},
+      cmdServiceClickDetail: {
+        serviceActive: 'systemService',
+        serviceCollapse: '',
+        serviceTable: '',
+      },
+      //系统服务
       cmdServiceEnabled: [],
       cmdServiceDisabled: [],
       cmdServiceStatic: [],
+      //计时器
+      cmdTimerEnabled: [],
+      cmdTimerDisabled: [],
+      cmdTimerStatic: [],
     };
   },
   //计算属性
@@ -26,8 +38,6 @@ export const cmdServiceStore = defineStore('servive', {
     cmd_service_enabled() {
       return new Promise<void>((resolve, reject) => {
         cmd_service_enabled({ host: userStore.host }).then((res: any) => {
-          console.log(res);
-          console.log(res[0]);
           if (res[0] === 0) {
             let value: any = JSON.parse(res[1]);
             let arr: any = Array.from(Object.values(value), x => x);
@@ -44,8 +54,6 @@ export const cmdServiceStore = defineStore('servive', {
     cmd_service_disabled() {
       return new Promise<void>((resolve, reject) => {
         cmd_service_disabled({ host: userStore.host }).then((res: any) => {
-          console.log(res);
-          console.log(res[0]);
           if (res[0] === 0) {
             let value: any = JSON.parse(res[1]);
             let arr: any = Array.from(Object.values(value), x => x);
@@ -62,8 +70,6 @@ export const cmdServiceStore = defineStore('servive', {
     cmd_service_static() {
       return new Promise<void>((resolve, reject) => {
         cmd_service_static({ host: userStore.host }).then((res: any) => {
-          console.log(res);
-          console.log(res[0]);
           if (res[0] === 0) {
             let value: any = JSON.parse(res[1]);
             let arr: any = Array.from(Object.values(value), x => x);
@@ -71,6 +77,54 @@ export const cmdServiceStore = defineStore('servive', {
             resolve()
           } else {
             reject('获取系统服务静态信息失败');
+          }
+        })
+      })
+    },
+
+    //计时器的启动
+    cmd_timer_enabled() {
+      return new Promise<void>((resolve, reject) => {
+        cmd_timer_enabled({ host: userStore.host }).then((res: any) => {
+          if (res[0] === 0) {
+            let value: any = JSON.parse(res[1]);
+            let arr: any = Array.from(Object.values(value), x => x);
+            this.cmdTimerEnabled = arr;
+            resolve()
+          } else {
+            reject('获取计时器启用信息失败');
+          }
+        })
+      })
+    },
+
+    //计时器禁用
+    cmd_timer_disabled() {
+      return new Promise<void>((resolve, reject) => {
+        cmd_timer_disabled({ host: userStore.host }).then((res: any) => {
+          if (res[0] === 0) {
+            let value: any = JSON.parse(res[1]);
+            let arr: any = Array.from(Object.values(value), x => x);
+            this.cmdTimerDisabled = arr;
+            resolve()
+          } else {
+            reject('获取计时器禁用信息失败');
+          }
+        })
+      })
+    },
+
+    //计时器静态
+    cmd_timer_static() {
+      return new Promise<void>((resolve, reject) => {
+        cmd_timer_static({ host: userStore.host }).then((res: any) => {
+          if (res[0] === 0) {
+            let value: any = JSON.parse(res[1]);
+            let arr: any = Array.from(Object.values(value), x => x);
+            this.cmdTimerStatic = arr;
+            resolve()
+          } else {
+            reject('获取计时器静态信息失败');
           }
         })
       })
