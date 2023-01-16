@@ -43,7 +43,7 @@
         <el-autocomplete v-model.trim="loginData.username" :fetch-suggestions="userQuery" clearable class=""
           placeholder="用户名" highlight-first-item @select="handleSelect">
           <template #default="{ item }">
-            <div v-if="!loginData.ipAddress">
+            <div v-if="!loginData.username">
               <div>{{ item.host }}:{{ item.port }}</div>
               <div>{{ item.username }}</div>
             </div>
