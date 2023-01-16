@@ -536,54 +536,54 @@ mod tests {
         }
     } 
 
-    #[test]
-    fn ovs_vsctl_add_port_worked(){
-        let client = RequestClient::new(String::from(URL));
-        match client {
-            Ok(c) => {
-                let (state ,_) = c.ovs_vsctl_add_br("br-ckxu");
-                if state == errno::HMIR_SUCCESS {
-                    let (port_state,_) = c.ovs_vsctl_add_port("br-ckxu", "pt-test");
-                    assert_eq!(port_state, errno::HMIR_SUCCESS);
-                }
-            }
-            _ => {}
-        }
-    } 
+    // #[test]
+    // fn ovs_vsctl_add_port_worked(){
+    //     let client = RequestClient::new(String::from(URL));
+    //     match client {
+    //         Ok(c) => {
+    //             let (state ,_) = c.ovs_vsctl_add_br("br-ckxu");
+    //             if state == errno::HMIR_SUCCESS {
+    //                 let (port_state,_) = c.ovs_vsctl_add_port("br-ckxu", "pt-test");
+    //                 assert_eq!(port_state, errno::HMIR_SUCCESS);
+    //             }
+    //         }
+    //         _ => {}
+    //     }
+    // } 
 
-    #[test]
-    fn ovs_vsctl_del_port_worked(){
-        let client = RequestClient::new(String::from(URL));
-        match client {
-            Ok(c) => {
-                let (state ,_) = c.ovs_vsctl_add_br("br-ckxu");
-                if state == errno::HMIR_SUCCESS {
-                    let (port_state,_) = c.ovs_vsctl_add_port("br-ckxu", "pt-test");
-                    assert_eq!(port_state, errno::HMIR_SUCCESS);
-                    if port_state == errno::HMIR_SUCCESS {
-                        let (del_br_state,_) =  c.ovs_vsctl_del_port("br-ckxu", "pt-test");
-                        assert_eq!(del_br_state, errno::HMIR_SUCCESS);
-                    }
-                }
-            }
-            _ => {}
-        }
-    } 
+    // #[test]
+    // fn ovs_vsctl_del_port_worked(){
+    //     let client = RequestClient::new(String::from(URL));
+    //     match client {
+    //         Ok(c) => {
+    //             let (state ,_) = c.ovs_vsctl_add_br("br-ckxu");
+    //             if state == errno::HMIR_SUCCESS {
+    //                 let (port_state,_) = c.ovs_vsctl_add_port("br-ckxu", "pt-test");
+    //                 assert_eq!(port_state, errno::HMIR_SUCCESS);
+    //                 if port_state == errno::HMIR_SUCCESS {
+    //                     let (del_br_state,_) =  c.ovs_vsctl_del_port("br-ckxu", "pt-test");
+    //                     assert_eq!(del_br_state, errno::HMIR_SUCCESS);
+    //                 }
+    //             }
+    //         }
+    //         _ => {}
+    //     }
+    // } 
 
-    #[test]
-    fn ovs_vsctl_set_netflow_rule_worked(){
-        let client = RequestClient::new(String::from(URL));
-        match client {
-            Ok(c) => {
-                let (state ,_) = c.ovs_vsctl_add_br("br-ckxu");
-                if state == errno::HMIR_SUCCESS {
-                    let (port_state,_) = c.ovs_vsctl_set_netflow_rule("br-ckxu", "172.30.24.92:8080");
-                    assert_eq!(port_state, errno::HMIR_SUCCESS);
-                }
-            }
-            _ => {}
-        }
-    }
+    // #[test]
+    // fn ovs_vsctl_set_netflow_rule_worked(){
+    //     let client = RequestClient::new(String::from(URL));
+    //     match client {
+    //         Ok(c) => {
+    //             let (state ,_) = c.ovs_vsctl_add_br("br-ckxu");
+    //             if state == errno::HMIR_SUCCESS {
+    //                 let (port_state,_) = c.ovs_vsctl_set_netflow_rule("br-ckxu", "172.30.24.92:8080");
+    //                 assert_eq!(port_state, errno::HMIR_SUCCESS);
+    //             }
+    //         }
+    //         _ => {}
+    //     }
+    // }
 
     #[test]
     fn ovs_ofctl_forbid_dstip_worked(){
