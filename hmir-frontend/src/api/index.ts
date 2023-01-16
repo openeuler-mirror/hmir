@@ -1,7 +1,7 @@
 import { invoke } from "@tauri-apps/api/tauri";
 
 //调用函数前的时间限制
-const timeout = 0
+const timeout = 150
 //登录
 export function cmd_login(data: any) {
   return invoke('cmd_login', data)
@@ -37,8 +37,8 @@ export function cmd_service_enabled(data: any) {
   return new Promise<void>((resolve, reject) => {
     setTimeout(() => {
       invoke('cmd_service_enabled', data).then(
-        res => {
-          resolve(res as any)
+        (res: any) => {
+          resolve(res)
         }
       )
     }, timeout)
@@ -50,13 +50,36 @@ export function cmd_service_disabled(data: any) {
   return new Promise<void>((resolve, reject) => {
     setTimeout(() => {
       invoke('cmd_service_disabled', data).then(
-        res => {
-          resolve(res as any)
+        (res: any) => {
+          resolve(res)
         }
       )
     }, timeout)
   })
 }
+
+//系统服务的静态
+export function cmd_service_static(data: any) {
+  return new Promise<void>((resolve, reject) => {
+    setTimeout(() => {
+      invoke('cmd_service_static', data).then(
+        (res: any) => {
+          resolve(res)
+        }
+      )
+    }, timeout)
+  })
+}
+
+
+
+
+
+
+
+
+
+
 
 //返回后端进程信息，默认返回json字符串。
 export function cmd_process_info() {
