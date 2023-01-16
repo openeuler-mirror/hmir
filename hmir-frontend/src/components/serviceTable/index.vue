@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 40vh;width: 100%;">
+  <div style="height: 45vh;width: 100%;">
     <!-- <el-table :data="tableList" style="width: 100%;height: 40vh;" empty-text="暂无数据" highlight-current-row
       @current-change="handleCurrentChange">
       <el-table-column v-for="item of tableProp" :prop="item.prop" :label="item.label" />
@@ -24,7 +24,14 @@
 
 <script setup lang="tsx">
 import { ref, onMounted, computed, nextTick, watch } from 'vue';
-import type { Column } from 'element-plus'
+import type { Column } from 'element-plus';
+import router from '@/router';
+import cmdServiceStore from '@/store/modules/service';
+
+//仓库
+const store = cmdServiceStore();
+
+//父组件传过来的数据
 const props = defineProps({
   tableList: {
     type: Array,
@@ -45,7 +52,16 @@ const data = ref<any>([])
 //获取对应的点击项数据
 const handleCurrentChange = (val: any | undefined) => {
   return (event: Event) => {
-    console.log(val, props.tableList);
+    //将点击的信息保存到仓库中
+    console.log(JSON.stringify(val), props.tableList);
+    //跳转到服务详情页
+    router.push({
+      name: 'serviceDetail',
+      params: {
+        serviceName: val.name,
+      },
+      query: val
+    })
   };
 }
 
