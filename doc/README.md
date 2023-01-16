@@ -14,10 +14,10 @@ hmir是C/S架构，可以集成部署，也可以单机部署，整个架构由h
 
 HMIR主要分为3层: hmir前端、hmir-ws客户端以及hmir服务端,其中:
 
-- **hmir前端**: 使用vue+ts+tauri框架实现客户端图形界面，由于tauri框架是跨平台的，因此C客户端图形
+- **HMIR前端**: 使用vue+ts+tauri框架实现客户端图形界面，由于tauri框架是跨平台的，因此C客户端图形
   可同时运行在Linux、MacOS以及Windows系统上。
-- **hmir客户端**:封装了对RPC请求进行封装，同时实现了客户端管理以及基于token的认证管理,客户端作为Crate lib提供给hmir前端使用。
-- **hmir服务后端** : 实现了生产环境下的主机管理的RPC接口。
+- **HMIR客户端库**:封装了对RPC请求进行封装，同时实现了客户端管理以及基于token的认证管理,客户端作为Crate lib提供给hmir前端使用。
+- **HMIR服务后端** : 实现了生产环境下的主机管理的RPC接口。
 
 ## HMIR服务后端
 
@@ -53,7 +53,7 @@ FFI接口层,由于Rust语言比较年轻，在实现功能的时候，难以避
 - hmir-systemd  : 该FFI Crate对[systemd](https://systemd.io/)继续进行了封装，用于和systemd进行交互，完成服务管理。 
 - hmir-ceph     : 该FFI Crate对[ceph](https://ceph.org/)进行了封装，用于和ceph分布式文件系统交互，完成ceph分布式文件系统管理。
 
-## hmir前端
+## HMIR前端
 
 - **vue前端**：主要使用vue+ts+tauri框架实现C端图形界面的开发，由于tauri框架是跨平台的，因此C端
   可同时运行在Linux、MacOS以及Windows系统上。
@@ -63,7 +63,7 @@ FFI接口层,由于Rust语言比较年轻，在实现功能的时候，难以避
 
 ### tauri后端
 
-## hmir客户端
+## HMIR客户端库
 
 # HMIR项目路线图
 
