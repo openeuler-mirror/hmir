@@ -28,6 +28,12 @@ export const useRouterStore = defineStore('router', {
             meta: { title: '服务', icon: 'Menu', disabled: false },
           },
           {
+            path: '/process',
+            name: 'process',
+            component: () => import('@/views/process/index.vue'),
+            meta: { title: '进程', icon: 'Menu', disabled: false },
+          },
+          {
             path: '/serviceDetail/:serviceName(.*)',
             name: 'serviceDetail',
             component: () => import('@/views/service/components/serviceDetail/index.vue'),
@@ -39,13 +45,12 @@ export const useRouterStore = defineStore('router', {
             component: () => import('@/views/consoleCommand/index.vue'),
             meta: { title: '控制台', icon: 'Setting', disabled: false }
           },
-
         ]
       }],
       //判断是否添加了路由信息
       addRouter: false,
       //所有的路由信息
-      allRouter: ['/login', '/about', '/system', '/service', '/console']
+      allRouter: ['/login', '/about', '/system', '/service', '/console', '/process']
     };
   },
   //计算属性
