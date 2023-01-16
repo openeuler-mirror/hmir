@@ -301,12 +301,12 @@ pub fn service_enable(service: std::string::String) -> String {
 pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
 
     //The svr module
-    module.register_method("svr-list-enable-service", |_, _| {
+    module.register_method("svr-list-enabled-service", |_, _| {
         //默认没有error就是成功的
         Ok(svr_list_enabled_service())
     })?;
 
-    module.register_method("svr-list-disable-service", |_, _| {
+    module.register_method("svr-list-disabled-service", |_, _| {
         //默认没有error就是成功的
         Ok(svr_list_disabled_service())
     })?;

@@ -9,7 +9,7 @@ import useRouterStoreHook from '@/store/modules/router';
 NProgress.configure({ showSpinner: false });
 
 // 白名单路由
-const whiteList = ['/login', '/about'];
+const whiteList = ['/login', '/about', '/404'];
 
 const useRouterStore = useRouterStoreHook()
 
@@ -25,7 +25,15 @@ router.beforeEach((to, from, next) => {
       });
       useRouterStore.addRouter = true;
       next({ ...to, replace: true });
+      //当跳转路由包含在layout时，跳转
     } else if (useRouterStore.allRouter.includes(to.path)) {
+      next();
+      //如果是白名单页面直接跳转
+    } else if (whiteList.includes(to.path)) {
+      next();
+      //只有当服务页跳转到服务详情页才有效
+    } else if ((to.path.includes('serviceDetail') && from.path === '/service')
+      || (from.path.includes('/') && !!to.query)) {
       next();
     } else {
       next('/404');
