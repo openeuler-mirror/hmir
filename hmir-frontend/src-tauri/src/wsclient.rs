@@ -377,7 +377,6 @@ mod tests {
 
     const URL : &str = "127.0.0.1:5899";
 
-
     #[test]
     fn ttyd_start_workd() {
         let client = RequestClient::new(String::from(URL));
