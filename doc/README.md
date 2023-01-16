@@ -16,10 +16,10 @@ HMIR主要分为3层: hmir前端、hmir-ws客户端以及hmir服务端,其中:
 
 - **hmir前端**: 使用vue+ts+tauri框架实现客户端图形界面，由于tauri框架是跨平台的，因此C客户端图形
   可同时运行在Linux、MacOS以及Windows系统上。
-- **hmir客户端**:封装了对RPC请求进行封装，同时实现了客户端管理以及基于token的认证管理。
+- **hmir客户端**:封装了对RPC请求进行封装，同时实现了客户端管理以及基于token的认证管理,客户端作为Crate lib提供给hmir前端使用。
 - **hmir服务后端** : 实现了生产环境下的主机管理的RPC接口。
 
-## HMIR后端
+## HMIR服务后端
 
 其中hmir软件主要分成三层,RPC框架层、远程接口层和FFI接口层；RPC框架层提供RPC调用注册接口
 完成接口注册，RPC框架层以json-rpc的格式接收远程调用请求，将调用请求分发给远程接口层。
