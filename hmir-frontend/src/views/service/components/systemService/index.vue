@@ -8,32 +8,22 @@
 import serviceCollapse from '@/components/serviceCollapse/index.vue';
 import { ref, onMounted, nextTick } from 'vue';
 import serviceList from '@/views/service/interface/index';
-import { cmd_service_enabled, cmd_service_disabled } from '@/api/index';
-import { useUsersStore } from '@/store/modules/user';
+import { cmdServiceStore } from '@/store/modules/service';
+import { storeToRefs } from 'pinia';
+
 
 //引入store仓库
-const store = useUsersStore();
+const store = cmdServiceStore();
 
+//所有数据
 const description = ref<serviceList[]>([{ value: '' }])
 
-//启用项接口
-const cmdServiceEnabled = () => {
-  cmd_service_enabled({ host: store.host }).then((res: any) => {
-    let value: any = JSON.parse(res[1]);
-    let arr: any = Array.from(Object.values(value), x => x);
-    description.value[0].tableList = arr;
-  })
-}
+const { cmdServiceEnabled, cmdServiceDisabled, cmdServiceStatic } = storeToRefs(store)
 
-//禁用项接口
-const cmdServiceDisabled = () => {
-  cmd_service_disabled({ host: store.host }).then((res: any) => {
-    let value: any = JSON.parse(res[1]);
-    let arr: any = Array.from(Object.values(value), x => x);
-    description.value[1].tableList = arr;
-  })
-}
 onMounted(() => {
+  store.cmd_service_enabled()
+  store.cmd_service_disabled()
+  store.cmd_service_static()
   description.value = [{
     value: '启用',
     // tableList: [{
@@ -98,8 +88,9 @@ onMounted(() => {
       }
     ]
   }]
-  cmdServiceEnabled()
-  cmdServiceDisabled()
+  description.value[0].tableList = cmdServiceEnabled as any
+  description.value[1].tableList = cmdServiceDisabled as any
+  description.value[2].tableList = cmdServiceStatic as any
 })
 
 </script>
