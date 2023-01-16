@@ -29,6 +29,11 @@ hmir是C/S架构，可以集成部署，也可以单机部署，整个架构由h
 
 FFI接口层,由于Rust语言比较年轻，在实现功能的时候，难以避免的需要通过FFI来调用系统已有的C库，
 为此HMIR提供FFI接口层来适配系统、应用的C库，以便和系统以及其他服务通信。
+当前实现了以下FFI接口Crate
+
+- hmir-ipmitool : 该FFI Crate对[ipmitool](https://github.com/ipmitool/ipmitool)进行了封装。
+- 
+
 
 
 
