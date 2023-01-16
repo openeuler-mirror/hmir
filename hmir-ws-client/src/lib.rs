@@ -1,3 +1,3 @@
-mod ws_client;
+pub mod ws_client;
 mod login;
 mod tests;
