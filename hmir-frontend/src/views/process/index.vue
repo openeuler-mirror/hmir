@@ -1,6 +1,6 @@
 <template>
   <div>
-    about
+    进程
   </div>
 </template>
 
