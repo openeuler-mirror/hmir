@@ -5,69 +5,126 @@
 </template>
 
 <script setup lang="ts">
-import serviceCollapse from '@/components/serviceCollapse/index.vue'
-import { ref, onMounted } from 'vue'
-import serviceList from '@/views/service/interface/index'
+import serviceCollapse from '@/components/serviceCollapse/index.vue';
+import { ref, onMounted, nextTick } from 'vue';
+import serviceList from '@/views/service/interface/index';
+import { cmdServiceStore } from '@/store/modules/service';
+import { storeToRefs } from 'pinia';
 
+
+//引入store仓库
+const store = cmdServiceStore();
+
+//所有数据
 const description = ref<serviceList[]>([{ value: '' }])
 
+const { cmdTimerEnabled, cmdTimerDisabled, cmdTimerStatic } = storeToRefs(store)
+
 onMounted(() => {
+  store.cmd_timer_enabled()
+  store.cmd_timer_disabled()
+  store.cmd_timer_static()
   description.value = [{
     value: '启用',
-    tableList: [{
-      description: 'Trigger anacron every hour',
-      id: 'accounts-daemon.service',
-      nextRun: '今天10:31',
-      nearestTrigger: '今天10:31',
-      state: '激活 (running)',
-    }],
+
+    tableList: [],
     tableProp: [
-      { prop: 'description', label: '描述' },
-      { prop: 'id', label: 'ID' },
-      { prop: 'nextRun', label: '下次运行' },
-      { prop: 'nearestTrigger', label: '最近的触发器' },
-      { prop: 'state', label: '状态' },
+      {
+        key: 'description',
+        title: '描述',
+        dataKey: 'description',
+        width: 186,
+      },
+      {
+        key: 'name',
+        title: 'ID',
+        dataKey: 'name',
+        width: 186,
+      },
+      {
+        key: 'description',
+        title: '下次运行',
+        dataKey: 'description',
+        width: 186,
+      },
+      {
+        key: 'name',
+        title: '最近的触发器',
+        dataKey: 'name',
+        width: 186,
+      }
     ]
   },
   {
     value: '禁用',
-    tableList: [{
-      description: 'Trigger anacron every hour',
-      id: 'accounts-daemon.service',
-      nextRun: '今天10:31',
-      nearestTrigger: '今天10:31',
-      state: '激活 (running)',
-    }],
+    tableList: [],
     tableProp: [
-      { prop: 'description', label: '描述' },
-      { prop: 'id', label: 'ID' },
-      { prop: 'nextRun', label: '下次运行' },
-      { prop: 'nearestTrigger', label: '最近的触发器' },
-      { prop: 'state', label: '状态' },
+      {
+        key: 'description',
+        title: '描述',
+        dataKey: 'description',
+        width: 186,
+      },
+      {
+        key: 'name',
+        title: 'ID',
+        dataKey: 'name',
+        width: 186,
+      },
+      {
+        key: 'description',
+        title: '下次运行',
+        dataKey: 'description',
+        width: 186,
+      },
+      {
+        key: 'name',
+        title: '最近的触发器',
+        dataKey: 'name',
+        width: 186,
+      }
     ]
   },
   {
     value: '静态',
-    // tableList: [{
-    // description: 'Trigger anacron every hour',
-    // id: 'accounts-daemon.service',
-    // nextRun: '今天10:31',
-    // nearestTrigger: '今天10:31',
-    // state: '激活 (running)',
-    // }],
     tableList: [],
     tableProp: [
-      { prop: 'description', label: '描述' },
-      { prop: 'id', label: 'ID' },
-      { prop: 'nextRun', label: '下次运行' },
-      { prop: 'nearestTrigger', label: '最近的触发器' },
-      { prop: 'state', label: '状态' },
+      {
+        key: 'description',
+        title: '描述',
+        dataKey: 'description',
+        width: 186,
+      },
+      {
+        key: 'name',
+        title: 'ID',
+        dataKey: 'name',
+        width: 186,
+      },
+      {
+        key: 'description',
+        title: '下次运行',
+        dataKey: 'description',
+        width: 186,
+      },
+      {
+        key: 'name',
+        title: '最近的触发器',
+        dataKey: 'name',
+        width: 186,
+      }
     ]
   }]
+  description.value[0].tableList = cmdTimerEnabled as any
+  description.value[1].tableList = cmdTimerDisabled as any
+  description.value[2].tableList = cmdTimerStatic as any
 })
 
 </script>
 
 <style lang="scss" scoped>
-
+:deep(.el-table-v2__row-cell),
+:deep(.el-table-v2__header-cell) {
+  width: 20% !important;
+}
 </style>
