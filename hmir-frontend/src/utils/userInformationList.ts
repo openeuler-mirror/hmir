@@ -10,15 +10,15 @@ export const userInformationList = function (user: any) {
       if (JSON.stringify(history[i]) === JSON.stringify(user)) {
         break
       }
-      //当所有的数据都没有时，则直接保存
+      //当所有的数据都没有时，则直接保存在第一项
       if (history.length === +i + 1) {
-        history.push(user)
+        history.unshift(user)
       }
     }
     //限制保存的最长用户信息条数，暂定为10
     if (history.length > 10) {
-      //当长度为10时，删除数组的第一项
-      history.shift()
+      //当长度为10时，删除数组的最后一项
+      history.pop()
     }
   }
   localStorage.set('userInformation', history)
