@@ -18,6 +18,7 @@ router.beforeEach((to, from, next) => {
   let value = sessionStorage.get('user')
   //判断用户是否登录
   if (value !== 'user') {
+    //动态添加路由
     if (!useRouterStore.addRouter) {
       const accessRoutes: RouteRecordRaw[] = useRouterStore.router;
       accessRoutes.forEach((route: any) => {

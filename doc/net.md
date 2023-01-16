@@ -1,18 +1,21 @@
 ### **功能概述**
 
+net模块目前集成如下功能：
 
+- Open vSwitch管理
+- Linux Briget
 
+#### Open vSwitch管理 (ovs)
 
+集成虚拟机交换机功能，可在系统上搭建ovs网络环境，并对其功能进行相关定制．
 
-#### OVS管理
+目前支持ovs-vsctl，ovs-query，ovs-ofctl能力．
 
-集成openvswitch 虚拟机交换机功能，可在系统上搭建ovs网络环境，并对其功能进行相关定制．具体功能如下所示：
+<img src="./image/hmir-ovs-1.png" style="zoom:120%;" />	
+
+openvswitch官网：https://www.openvswitch.org/
 
 ##### ovs-vsctl（ovs网络设置）
-
-网桥设置，通过调用 ovs-vsctl 命令执行
-
-接口列表：
 
 | 接口                             | 接口说明                   |
 | -------------------------------- | -------------------------- |
@@ -34,7 +37,7 @@
 
 ##### ovs-query（ovs网络设备查询）
 
-网桥信息查询接口，通过unix套接字调用ovsdb Json RPC接口管理ovs网桥，ovsdb Json RPC文档 RFC7047
+网桥信息查询接口，通过unix套接字调用ovsdb Json RPC接口管理ovs网桥. ovsdb Json RPC文档参考 RFC7047
 
 接口列表：
 
@@ -69,7 +72,14 @@ ovs-ofctl：流控能力，调用 ovs-ofctl 命令执行
 
 #### Linux Bridge管理
 
+传统linux网桥管理，通过brctl命令实现对其常规功能的管理能力．相关功能接口如下：
 
-
-
+| 接口                | 接口说明                |
+| ------------------- | ----------------------- |
+| brctl-add-br        | 添加linux网桥           |
+| brctl-del-br        | 删除linux网桥           |
+| brctl-add-interface | linux网桥中增加网络接口 |
+| brctl-del-interface | linux网桥中删除网络接口 |
+| brctl-stp-on        | 开启stp                 |
+| brctl-stp-off       | 关闭stp                 |
 

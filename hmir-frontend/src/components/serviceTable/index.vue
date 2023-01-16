@@ -52,8 +52,6 @@ const data = ref<any>([])
 //获取对应的点击项数据
 const handleCurrentChange = (val: any | undefined) => {
   return (event: Event) => {
-    //将点击的信息保存到仓库中
-    console.log(JSON.stringify(val), props.tableList);
     //跳转到服务详情页
     router.push({
       name: 'serviceDetail',
@@ -90,7 +88,7 @@ onMounted(() => {
   columns.value.push({
     key: 'active_state',
     title: '状态',
-    width: 300,
+    width: 200,
     cellRenderer: ({ rowData }) => {
       //过滤转化为中文
       const stateFilter = (value: any) => {
