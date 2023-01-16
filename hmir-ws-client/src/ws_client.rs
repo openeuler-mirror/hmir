@@ -1,0 +1,52 @@
+use jsonrpsee::client_transport::ws::{Uri, WsTransportClientBuilder};
+use jsonrpsee::core::client::{Client, ClientBuilder, ClientT};
+use tokio::runtime::Builder;
+use jsonrpsee::rpc_params;
+use hmir_hash::HashWrap;
+
+use log4rs;
+use log::{error,info};
+use hmir_errno::errno;
+
+use jsonrpsee_types::ParamsSer;
+use serde_json::json;
+use std::collections::BTreeMap;
+
+#[derive(Debug)]
+pub struct RequestClient {
+    pub client  : Client,
+    pub token   : String,
+    pub runtime : tokio::runtime::Runtime,
+}
+
+impl RequestClient {
+    //根据uri返回一个wc client
+    pub fn new(uri : String) -> Result<Self,bool> {
+        let runtime = Builder::new_current_thread().enable_all().build().unwrap();
+        let client = runtime.block_on(async {
+            let uri: Uri = format!("ws://{}", uri).parse().unwrap();
+            let client_builder = WsTransportClientBuilder::default().build(uri.clone()).await;
+            match client_builder {
+                Ok((tx,rx)) => {
+                    let client: Client = ClientBuilder::default().build_with_tokio(tx, rx);
+                    Ok(client)
+                },
+                Err(_e) => {
+                    error!("Connect the remote {} failed, Reason : {}",uri.clone(),_e.to_string());
+                    Err(false)
+                }
+            }
+        });
+
+        match client {
+            Ok(c) => {
+                Ok(RequestClient{ client: c, token: "".to_string(), runtime: runtime })
+            },
+            Err(_e) => Err(false)
+        }
+    }
+}
+
+
+
+
