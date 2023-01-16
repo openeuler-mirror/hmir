@@ -12,12 +12,22 @@ hmir是C/S架构，可以集成部署，也可以单机部署，整个架构由h
 
 ![](./image/arch.png)
 
+HMIR主要分为4层: vue前端、tauri后端、hmir客户端以及hmir服务端,其中:
+
+- vue前端：主要使用vue+ts+tauri框架实现C端图形界面的开发，由于tauri框架是跨平台的，因此C端
+ 可同时运行在Linux、MacOS以及Windows系统上。
+- 
+
+## HMIR后端
+
 其中hmir软件主要分成三层,RPC框架层、远程接口层和FFI接口层；RPC框架层提供RPC调用注册接口
 完成接口注册，RPC框架层以json-rpc的格式接收远程调用请求，将调用请求分发给远程接口层。
 
-## RPC框架层
 
-## 远程接口层
+
+### RPC框架层
+
+### 远程接口层
 
 远程接口层包含了 ceph、 ipmi、net、svr、pkg、  ttyd、user等组件:
 
@@ -31,7 +41,7 @@ hmir是C/S架构，可以集成部署，也可以单机部署，整个架构由h
 
 远程接口层的可扩展性，
 
-## FFI接口层
+### FFI接口层
 
 FFI接口层,由于Rust语言比较年轻，在实现功能的时候，难以避免的需要通过FFI来调用系统已有的C库，
 为此HMIR提供FFI接口层来适配系统、应用的C库，以便和系统以及其他服务通信。
@@ -43,7 +53,13 @@ FFI接口层,由于Rust语言比较年轻，在实现功能的时候，难以避
 - hmir-systemd  : 该FFI Crate对[systemd](https://systemd.io/)继续进行了封装，用于和systemd进行交互，完成服务管理。 
 - hmir-ceph     : 该FFI Crate对[ceph](https://ceph.org/)进行了封装，用于和ceph分布式文件系统交互，完成ceph分布式文件系统管理。
 
+## hmir前端
 
+### vue前端
+
+### tauri后端
+
+## hmir客户端
 
 # HMIR项目路线图
 
