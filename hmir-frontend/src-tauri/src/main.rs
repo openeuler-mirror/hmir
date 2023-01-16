@@ -37,6 +37,9 @@ use hmir_errno::errno;
 
 mod wsclient;
 mod clientmgr;
+mod login;
+
+use crate::login::login_cmd::*;
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
@@ -59,33 +62,11 @@ fn cmd_error_description(code : usize) -> String {
     return String::from(errno::HMIR_MSG[code]);
 }
 
-#[tauri::command]
-fn cmd_login(host : & str, port : i32 , username : & str, password : & str) -> usize
-{
-    const use_ssh_login : bool = false;
-    if clientmgr::register_client(host,port) {
-        if use_ssh_login {
-            return clientmgr::ssh_login(host,username,password);
-        }
-        return clientmgr::login(host,username,password);
-    } else {
-        error!("Can't register clinet : {}:{}",host,port);
-        return errno::HMIR_ERR_CONNECT_SERVER;
-    }
-}
-
 ///返回后端进程信息，默认返回json字符串。
 #[tauri::command]
 fn cmd_process_info(host : & str) -> String {
     todo!();
 }
-
-#[tauri::command]
-fn cmd_logout(host : &str) -> bool
-{
-    return clientmgr::logout(host);
-}
-
 
 #[tauri::command]
 fn cmd_service_enabled(host : &str) -> (usize,String)
