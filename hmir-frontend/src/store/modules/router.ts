@@ -25,7 +25,13 @@ export const useRouterStore = defineStore('router', {
             path: '/service',
             name: 'service',
             component: () => import('@/views/service/index.vue'),
-            meta: { title: '服务', icon: 'Menu', disabled: false }
+            meta: { title: '服务', icon: 'Menu', disabled: false },
+          },
+          {
+            path: '/serviceDetail/:serviceName(.*)',
+            name: 'serviceDetail',
+            component: () => import('@/views/service/components/serviceDetail/index.vue'),
+            meta: { title: '服务详情', icon: 'Menu', disabled: false },
           },
           {
             path: '/console',
@@ -33,6 +39,7 @@ export const useRouterStore = defineStore('router', {
             component: () => import('@/views/consoleCommand/index.vue'),
             meta: { title: '控制台', icon: 'Setting', disabled: false }
           },
+
         ]
       }],
       //判断是否添加了路由信息
@@ -44,7 +51,7 @@ export const useRouterStore = defineStore('router', {
   //计算属性
   getters: {
     userouter: state => {
-      return state.router?.[0].children.filter(item => item.name !== 'console')
+      return state.router?.[0].children.filter(item => item.name !== 'console' && item.name !== 'serviceDetail')
     }
   },
   //异步同步函数
