@@ -233,6 +233,27 @@ pub struct Unit {
     pub job_object_path: String,
 }
 
+#[derive(Clone, Debug,Serialize,Deserialize)]
+pub struct HmirUnit {
+    pub name: String,
+    pub description: String,
+    pub load_state: UnitLoadStateType,
+    pub active_state: UnitActiveStateType,
+    pub sub_state: UnitSubStateType,
+    pub follow_unit: Option<String>,
+    pub object_path: String,
+    pub job_id: u32,
+    pub job_ty: String,
+    pub job_object_path: String,
+    pub requires : Vec<String>,
+    pub wants : Vec<String>,
+    pub wantedby : Vec<String>,
+    pub conflicts : Vec<String>,
+    pub before : Vec<String>,
+    pub after  : Vec<String>
+    //Wants
+}
+
 impl<'a> IntoModel<Unit>
     for (
         String,
@@ -312,6 +333,12 @@ pub struct UnitProps {
     pub load_state: UnitLoadStateType,
     pub active_state: UnitActiveStateType,
     pub sub_state: UnitSubStateType,
+    pub requires : Vec<String>,
+    pub wants    : Vec<String>,
+    pub wantedby : Vec<String>,
+    pub conflicts : Vec<String>,
+    pub before : Vec<String>,
+    pub after  : Vec<String>
 }
 
 impl IntoModel<UnitProps> for arg::PropMap {
@@ -332,12 +359,43 @@ impl IntoModel<UnitProps> for arg::PropMap {
         let sub_state = arg::prop_cast::<String>(&self, "SubState")
             .expect("sub state undefined")
             .to_owned();
+
+        let requires = arg::prop_cast::<Vec<String>>(&self, "Requires")
+            .expect("sub state undefined")
+            .to_owned();
+
+        let wantedby = arg::prop_cast::<Vec<String>>(&self, "WantedBy")
+            .expect("sub state undefined")
+            .to_owned();
+
+        let conflicts = arg::prop_cast::<Vec<String>>(&self, "Conflicts")
+            .expect("sub state undefined")
+            .to_owned();
+
+        let before = arg::prop_cast::<Vec<String>>(&self, "Before")
+            .expect("sub state undefined")
+            .to_owned();
+
+        let after = arg::prop_cast::<Vec<String>>(&self, "After")
+            .expect("sub state undefined")
+            .to_owned();
+
+        let wants = arg::prop_cast::<Vec<String>>(&self, "Wants")
+            .expect("sub state undefined")
+            .to_owned();
+
         Ok(UnitProps {
             id,
             description,
             load_state: load_state.into(),
             active_state: active_state.into(),
             sub_state: sub_state.into(),
+            requires: requires.into(),
+            wants : wants.into(),
+            wantedby : wantedby.into(),
+            conflicts: conflicts.into(),
+            before : before.into(),
+            after : after.into()
         })
     }
 }
