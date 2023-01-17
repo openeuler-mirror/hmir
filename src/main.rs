@@ -55,7 +55,6 @@ impl middleware::WsMiddleware for Timings {
     }
 
     fn on_request(&self) -> Self::Instant {
-
         Instant::now()
     }
 
