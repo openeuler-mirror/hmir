@@ -25,3 +25,4 @@ log = "0.4.17"
 hmir-hash = { path = "../hmir-hash" }
 hmir-errno = { path ="../hmir-errno" }
 hmir-systemd = { path ="../hmir-systemd"}
+hmir-ceph = { path ="../hmir-ceph"}

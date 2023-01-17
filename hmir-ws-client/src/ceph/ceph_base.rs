@@ -5,30 +5,34 @@ use jsonrpsee_core::rpc_params;
 use ws_client::RequestClient;
 use crate::ws_client;
 
+use hmir_hash::hmir_result::HmirResult;
+
 impl RequestClient {
 
-    pub fn ceph_status(& mut self) -> String {
-        let (state,content) = self.runtime.block_on(async {
-            let response: Result<String, _> = self.client.request("ceph-status", rpc_params![]).await;
-            // println!("response: {:?}", response);
+    pub fn ceph_status(& mut self) -> HmirResult<String> {
+        // let (state, content) = self.runtime.block_on(async {
+        let ret = self.runtime.block_on(async {
+            let response: Result<HmirResult<String>, _> = self.client.request("ceph-status", rpc_params![]).await;
             match response {
                 Ok(result) => {
-                    // let p: HashWrap::<String,String> = serde_json::from_str(result.as_str()).unwrap();
-                    (0, result)
-                    // if p.is_success() {
-                    //     let token =  p.get(&String::from("token")).unwrap();
-                    //     return (p.code(),token.clone());
-                    // }else {
-                    //     return (p.code(),String::from(""));
+                    result
+                    // if result.is_success() {
+                    //     (result.code(), result.result)
+                    // } else {
+                    //     (result.code(), result.errmsg)
                     // }
                 }
-                _ => {
-                    return (errno::HMIR_ERR_COMM,String::from(""));
+                Err(e) => {
+                    HmirResult::new(errno::HMIR_ERR_COMM, 
+                                    String::from(format!("Err: {}", e.to_string())), 
+                                    String::from(""))
+                    // return (errno::HMIR_ERR_COMM, String::from(format!("Err: {}", e.to_string())));
                 }
             }
         });
-        
-        return content;
+
+        // (state,content)
+        ret
     }
 
 }
