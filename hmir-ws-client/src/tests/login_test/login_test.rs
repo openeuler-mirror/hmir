@@ -1,7 +1,7 @@
 use ws_client::RequestClient;
 use crate::ws_client;
+use crate::tests::test_default_args::URL;
 
-const URL : &str = "127.0.0.1:5899";
 
 #[test]
 fn login_worked() {
