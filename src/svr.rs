@@ -114,6 +114,13 @@ lazy_static! {
     static ref SOCKET_ENABLE_CACHE: Mutex<String> = Mutex::new(String::new());
     static ref SOCKET_DISABLE_CACHE : Mutex<String> = Mutex::new(String::new());
     static ref SOCKET_STATIC_CACHE : Mutex<String> = Mutex::new(String::new());
+
+
+
+    static ref TARGET_ENABLE_CACHE: Mutex<String> = Mutex::new(String::new());
+    static ref TARGET_DISABLE_CACHE : Mutex<String> = Mutex::new(String::new());
+    static ref TARGET_STATIC_CACHE : Mutex<String> = Mutex::new(String::new());
+
 }
 
 macro_rules! svr_default_result {
@@ -145,6 +152,11 @@ fn update_all_svr()
     *TIMER_ENABLE_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["enabled"],vec!["*.timer"]);
     *TIMER_DISABLE_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["disabled"],vec!["*.timer"]);
     *TIMER_STATIC_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["static"],vec!["*.timer"]);
+
+
+    *TARGET_ENABLE_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["enabled"],vec!["*.target"]);
+    *TARGET_DISABLE_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["disabled"],vec!["*.target"]);
+    *TARGET_STATIC_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["static"],vec!["*.target"]);
 
 }
 
@@ -261,11 +273,25 @@ pub fn svr_list_enabled_socket() -> String {
 }
 
 pub fn svr_list_disabled_socket() -> String {
-    let result = (*TIMER_DISABLE_CACHE.lock().unwrap()).clone();
+    let result = (*SOCKET_DISABLE_CACHE.lock().unwrap()).clone();
     result}
 
 pub fn svr_list_static_socket() -> String {
-    let result = (*TIMER_DISABLE_CACHE.lock().unwrap()).clone();
+    let result = (*SOCKET_STATIC_CACHE.lock().unwrap()).clone();
+    result
+}
+
+pub fn svr_list_enabled_target() -> String {
+    let result = (*TARGET_DISABLE_CACHE.lock().unwrap()).clone();
+    result
+}
+
+pub fn svr_list_disabled_target() -> String {
+    let result = (*TARGET_DISABLE_CACHE.lock().unwrap()).clone();
+    result}
+
+pub fn svr_list_static_target() -> String {
+    let result = (*TARGET_DISABLE_CACHE.lock().unwrap()).clone();
     result
 }
 
@@ -384,7 +410,7 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
 
 
     //The time api
-    module.register_method("svr-list-enable-socket", |params, _| {
+    module.register_method("svr-list-enabled-socket", |params, _| {
         //默认没有error就是成功的
 
         let token = params.one::<std::string::String>()?;
@@ -410,6 +436,36 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
 
         //默认没有error就是成功的
         Ok(svr_list_static_socket())
+    })?;
+
+
+    //The time api
+    module.register_method("svr-list-enabled-target", |params, _| {
+        //默认没有error就是成功的
+
+        let token = params.one::<std::string::String>()?;
+        TokenChecker!(token);
+
+        Ok(svr_list_enabled_target())
+    })?;
+
+    module.register_method("svr-list-disabled-target", |params, _| {
+        //默认没有error就是成功的
+
+        let token = params.one::<std::string::String>()?;
+        TokenChecker!(token);
+
+        let service = params.one::<std::string::String>()?;
+        Ok(svr_list_disabled_target())
+    })?;
+
+    module.register_method("svr-list-static-target", |params, _| {
+
+        let token = params.one::<std::string::String>()?;
+        TokenChecker!(token);
+
+        //默认没有error就是成功的
+        Ok(svr_list_static_target())
     })?;
 
     module.register_method("service-start", |params, _| {
