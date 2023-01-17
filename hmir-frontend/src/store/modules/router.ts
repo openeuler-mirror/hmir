@@ -24,8 +24,41 @@ export const useRouterStore = defineStore('router', {
           {
             path: '/service',
             name: 'service',
+            redirect: '/service/systemService',
             component: () => import('@/views/service/index.vue'),
             meta: { title: '服务', icon: 'Menu', disabled: false },
+            children: [
+              {
+                path: '/service/serviceTarget',
+                name: 'serviceTarget',
+                component: () => import('@/views/service/components/serviceTarget/index.vue'),
+                meta: { title: '目标', icon: 'Menu', disabled: false },
+              },
+              {
+                path: '/service/systemService',
+                name: 'systemService',
+                component: () => import('@/views/service/components/systemService/index.vue'),
+                meta: { title: '系统服务', icon: 'Menu', disabled: false },
+              },
+              {
+                path: '/service/serviceSocket',
+                name: 'serviceSocket',
+                component: () => import('@/views/service/components/serviceSocket/index.vue'),
+                meta: { title: '套接字', icon: 'Menu', disabled: false },
+              },
+              {
+                path: '/service/serviceTimer',
+                name: 'serviceTimer',
+                component: () => import('@/views/service/components/serviceTimer/index.vue'),
+                meta: { title: '计时器', icon: 'Menu', disabled: false },
+              },
+              {
+                path: '/service/servicePath',
+                name: 'servicePath',
+                component: () => import('@/views/service/components/servicePath/index.vue'),
+                meta: { title: '路径', icon: 'Menu', disabled: false },
+              }
+            ]
           },
           {
             path: '/process',
