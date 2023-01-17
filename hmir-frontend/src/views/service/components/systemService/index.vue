@@ -11,7 +11,6 @@ import serviceList from '@/views/service/interface/index';
 import { cmdServiceStore } from '@/store/modules/service';
 import { storeToRefs } from 'pinia';
 
-
 //引入store仓库
 const store = cmdServiceStore();
 
@@ -21,9 +20,6 @@ const description = ref<serviceList[]>([{ value: '' }])
 const { cmdServiceEnabled, cmdServiceDisabled, cmdServiceStatic } = storeToRefs(store)
 
 onMounted(() => {
-  store.cmd_service_enabled()
-  store.cmd_service_disabled()
-  store.cmd_service_static()
   description.value = [{
     value: '启用',
     // tableList: [{
@@ -87,12 +83,11 @@ onMounted(() => {
         width: 310,
       }
     ]
-  }]
-  description.value[0].tableList = cmdServiceEnabled as any
-  description.value[1].tableList = cmdServiceDisabled as any
-  description.value[2].tableList = cmdServiceStatic as any
+  }];
+  description.value[0].tableList = cmdServiceEnabled as any;
+  description.value[1].tableList = cmdServiceDisabled as any;
+  description.value[2].tableList = cmdServiceStatic as any;
 })
-
 </script>
 
 <style lang="scss" scoped>
