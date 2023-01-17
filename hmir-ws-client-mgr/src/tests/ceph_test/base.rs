@@ -11,5 +11,5 @@ use crate::ceph::base::get_ceph_status;
 fn host_login_worked(){
     register_client(HOST,PORT);
     let ret  = get_ceph_status(HOST);
-    println!("ret: {}", ret);
+    println!("ret: {:?}", ret);
 }

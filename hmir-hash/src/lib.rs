@@ -8,6 +8,8 @@
 //!
 
 
+pub mod hmir_result;
+
 use std::collections::{HashMap};
 use std::hash::Hash;
 use serde::{Deserialize, Serialize};
