@@ -34,6 +34,14 @@ export const cmdServiceStore = defineStore('servive', {
   },
   //异步同步函数
   actions: {
+    cmd_service_all() {
+      this.cmd_service_enabled();
+      this.cmd_service_disabled();
+      this.cmd_service_static();
+      this.cmd_timer_enabled();
+      this.cmd_timer_disabled();
+      this.cmd_timer_static();
+    },
     //系统服务启用
     cmd_service_enabled() {
       return new Promise<void>((resolve, reject) => {
