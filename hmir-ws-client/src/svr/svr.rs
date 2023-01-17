@@ -10,7 +10,6 @@ use log4rs;
 use log::{error,info};
 use hmir_errno::errno;
 
-use jsonrpsee_types::ParamsSer;
 use serde_json::json;
 use std::collections::BTreeMap;
 use crate::ws_client::RequestClient;
@@ -18,7 +17,7 @@ use crate::ws_client::RequestClient;
 use hmir_systemd::{
     build_blocking_client,
     manager::blocking::{OrgFreedesktopSystemd1Manager},
-    models::{Unit,IntoModel},
+    models::{HmirUnit,Unit,IntoModel},
     SystemdObjectType,
 };
 
@@ -32,7 +31,7 @@ impl RequestClient {
             let response: Result<String, _> = self.client.request(cmd, rpc_params![token]).await;
             match response {
                 Ok(result) => {
-                    let p: HashWrap::<String,Unit> = serde_json::from_str(result.as_str()).unwrap();
+                    let p: HashWrap::<String,HmirUnit> = serde_json::from_str(result.as_str()).unwrap();
                     return (p.code(),serde_json::to_string(&p.result).unwrap());
                 },
                 _ => { return (errno::HMIR_ERR_COMM,"".to_string())}
@@ -52,7 +51,6 @@ impl RequestClient {
     pub fn svr_list_static_service(&self) -> (usize,String) {
         self._svr_get_unit("svr-list-static-service")
     }
-
 
     pub fn svr_list_enabled_timer(&self) -> (usize,String)
     {
@@ -109,8 +107,11 @@ mod tests {
     #[test]
     fn svr_list_enabled_timer_worked(){
         let client = RequestClient::new(String::from(URL));
+
+
         match client {
-            Ok(c) => {
+            Ok(mut c) => {
+                c.login("root","root");
                 let (result,state) = c.svr_list_enabled_timer();
                 println!("{}",result);
             }
