@@ -43,7 +43,7 @@ const handleValue = computed<string>(() => {
   if (meta?.handleValue) {
     return meta.handleValue as string;
   }
-  return path;
+  return path.includes('/service') ? '/service' : path;
 });
 
 

@@ -27,7 +27,8 @@ router.beforeEach((to, from, next) => {
       useRouterStore.addRouter = true;
       next({ ...to, replace: true });
       //当跳转路由包含在layout时，跳转
-    } else if (useRouterStore.allRouter.includes(to.path)) {
+    } else if (useRouterStore.allRouter.includes(to.path)
+      || to.path.includes('/service')) {
       next();
       //如果是白名单页面直接跳转
     } else if (whiteList.includes(to.path)) {
