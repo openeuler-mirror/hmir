@@ -3,3 +3,6 @@ mod login;
 mod tests;
 mod net;
 mod ceph;
+mod ttyd;
+mod svr;
+
