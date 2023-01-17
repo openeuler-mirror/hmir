@@ -89,7 +89,10 @@ use std::{thread, time};
 use std::path::Path;
 use std::ffi::OsStr;
 
-use hmir_systemd::{build_blocking_client, DerefContainer, manager::blocking::{OrgFreedesktopSystemd1Manager}, models::{Unit, IntoModel}, SystemdObjectType};
+use hmir_systemd::{build_blocking_client, DerefContainer,
+                   unit::blocking::UnitProperties,manager::blocking::{OrgFreedesktopSystemd1Manager},
+                   models::{Unit,HmirUnit, UnitProps,IntoModel}, SystemdObjectType};
+
 
 
 lazy_static! {
@@ -152,12 +155,38 @@ fn get_unit_list_by_pattern(states: Vec<&str>, patterns: Vec<&str>) -> String {
 
     let vec_filenames: Vec<&str> = vec_files.iter().map(|n| basename(n.as_ref()).unwrap()).collect();
     let mut map  = hmir_hash::HashWrap::new();
+
+
     for x in &vec_filenames {
         match client.list_units_by_names(vec![x]) {
             Ok(units) => {
-                for unit in units {
-                    let unit: Unit = unit.into_model().unwrap().clone();
-                    map.insert(unit.name.clone(),unit.clone());
+                for u in units {
+
+                    let client = build_blocking_client(SystemdObjectType::Unit(u.6.clone())).unwrap();
+                    let props_map = client.get_unit_properties().unwrap();
+                    let unit_props: UnitProps = props_map.into_model().unwrap();
+                    let unit: Unit = u.into_model().unwrap().clone();
+                    let mut hmir_unit = HmirUnit {
+                        name: unit.name.clone(),
+                        description: unit.description.clone(),
+                        load_state: unit.load_state.clone(),
+                        active_state: unit.active_state.clone(),
+                        sub_state: unit.sub_state.clone(),
+                        follow_unit: unit.follow_unit.clone(),
+                        object_path: unit.object_path.clone(),
+                        job_id: unit.job_id,
+                        job_ty: unit.job_ty,
+                        job_object_path: unit.job_object_path,
+                        requires: unit_props.requires.into(),
+                        wants : unit_props.wants.into(),
+                        wantedby: unit_props.wantedby.into(),
+                        conflicts: unit_props.conflicts.into(),
+                        before: unit_props.before.into(),
+                        after: unit_props.after.into(),
+                    };
+
+                    println!("{:?}",hmir_unit);
+                    map.insert(unit.name.clone(),hmir_unit.clone());
                 }
             }
             _ => {}
