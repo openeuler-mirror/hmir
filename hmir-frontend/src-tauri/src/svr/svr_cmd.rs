@@ -45,3 +45,43 @@ pub fn cmd_timer_static(host : &str) -> (usize,String)
 {
     return clientmgr::svr_list_static_timer(host);
 }
+
+
+
+#[tauri::command]
+pub fn cmd_socket_enabled(host : &str) -> (usize,String)
+{
+    return clientmgr::svr_list_enabled_socket(host);
+}
+
+#[tauri::command]
+pub fn cmd_socket_disabled(host : &str) -> (usize,String)
+{
+    return clientmgr::svr_list_disabled_socket(host);
+}
+
+#[tauri::command]
+pub fn cmd_socket_static(host : &str) -> (usize,String)
+{
+    return clientmgr::svr_list_static_socket(host);
+}
+
+
+
+#[tauri::command]
+pub fn cmd_target_enabled(host : &str) -> (usize,String)
+{
+    return clientmgr::svr_list_enabled_target(host);
+}
+
+#[tauri::command]
+pub fn cmd_target_disabled(host : &str) -> (usize,String)
+{
+    return clientmgr::svr_list_disabled_target(host);
+}
+
+#[tauri::command]
+pub fn cmd_target_static(host : &str) -> (usize,String)
+{
+    return clientmgr::svr_list_static_target(host);
+}
