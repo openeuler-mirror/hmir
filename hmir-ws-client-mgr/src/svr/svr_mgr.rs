@@ -47,3 +47,42 @@ pub fn svr_list_static_timer(host : & str) -> (usize,String)
     let h = host.to_string();
     return client_instance!(&h).svr_list_static_timer();
 }
+
+
+
+pub fn svr_list_disabled_socket(host : & str) -> (usize,String)
+{
+    let h = host.to_string();
+    return client_instance!(&h).svr_list_disabled_socket();
+}
+
+pub fn svr_list_enabled_socket(host : & str) -> (usize,String)
+{
+    let h = host.to_string();
+    return client_instance!(&h).svr_list_enabled_socket();
+}
+
+pub fn svr_list_static_socket(host : & str) -> (usize,String)
+{
+    let h = host.to_string();
+    return client_instance!(&h).svr_list_static_socket();
+}
+
+
+pub fn svr_list_disabled_target(host : & str) -> (usize,String)
+{
+    let h = host.to_string();
+    return client_instance!(&h).svr_list_disabled_target();
+}
+
+pub fn svr_list_enabled_target(host : & str) -> (usize,String)
+{
+    let h = host.to_string();
+    return client_instance!(&h).svr_list_enabled_target();
+}
+
+pub fn svr_list_static_target(host : & str) -> (usize,String)
+{
+    let h = host.to_string();
+    return client_instance!(&h).svr_list_static_target();
+}
