@@ -16,7 +16,7 @@ macro_rules! ExecVirtQuery {
                 Ok(result) =>{
                     let p:HashWrap<String,String> = serde_json::from_str(result.as_str()).unwrap();
                     if p.is_success() {
-                        let ret_str =  p.get(&String::from("ovs_ret")).unwrap();
+                        let ret_str =  p.get(&String::from("virt_ret")).unwrap();
                         return (p.get_code(), ret_str.clone());
                     } else {
                         return (p.get_code(), p.get_err());
