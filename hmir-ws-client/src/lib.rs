@@ -5,4 +5,5 @@ mod net;
 mod ceph;
 mod ttyd;
 mod svr;
+mod virt;
 
