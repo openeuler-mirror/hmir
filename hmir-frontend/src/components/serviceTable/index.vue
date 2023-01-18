@@ -108,5 +108,7 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-
+:deep(.el-table-v2__row) {
+  cursor: pointer;
+}
 </style>
