@@ -11,3 +11,7 @@ anyhow = "1.0.66"
 jsonrpsee = { version = "0.15.1", features = ["full"] }
 serde = "1.0"
 serde_json = "1.0"
+
+hmir-token = {path = "../hmir-token"}
+hmir-hash = {path = "../hmir-hash" }
+hmir-errno = {path = "../hmir-errno" }
