@@ -13,6 +13,7 @@
 //! - cmd_ovs_vsctl_add_br : 创建ovs网桥
 //! - cmd_ovs_vsctl_del_br : 删除ovs网桥
 //! - cmd_ovs_ofctl_forbid_dstip : 禁止虚拟机访问外部IP地址
+//! - cmd_virt_check_connection : 检查与本地hypervisor连接是否正常
 //! ```
 #![cfg_attr(
     all(not(debug_assertions), target_os = "windows"),
@@ -39,12 +40,13 @@ mod login;
 mod ttyd;
 mod svr;
 mod ovs;
+mod virt;
 
 use crate::login::login_cmd::*;
 use crate::ttyd::ttyd_cmd::*;
 use crate::svr::svr_cmd::*;
 use crate::ovs::ovs_cmd::*;
-
+use crate::virt::virt_cmd::*;
 
 
 
@@ -141,7 +143,8 @@ fn main() {
             cmd_ovs_query_ports,
             cmd_ovs_vsctl_add_br,
             cmd_ovs_vsctl_del_br,
-            cmd_ovs_ofctl_forbid_dstip])
+            cmd_ovs_ofctl_forbid_dstip,
+            cmd_virt_check_connection])
         // .invoke_handler(tauri::generate_handler![ttyd_start])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
