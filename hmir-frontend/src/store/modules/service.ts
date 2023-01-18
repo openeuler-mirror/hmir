@@ -53,6 +53,31 @@ export const cmdServiceStore = defineStore('servive', {
         }, timeout);
       })
     },
+    //获取其中一条数据
+    service_detail(name: string | string[]) {
+      let item: any, value: any
+      for (item in this.serviceAll) {
+        for (value of this.serviceAll[item]) {
+          if (value.name === name) {
+            this.serviceDetail = value;
+            break;
+          }
+        }
+      }
+    },
+    //判断当前数据是否在所有数据里面拥有，有则可以点击
+    is_service_disabled(name: string | string[]) {
+      let isDisabled = true, item: any, value: any
+      for (item in this.serviceAll) {
+        for (value of this.serviceAll[item]) {
+          if (value.name === name) {
+            isDisabled = false;
+            break;
+          }
+        }
+      }
+      return isDisabled;
+    },
     //系统服务启用
     cmd_service_enabled() {
       return new Promise<void>((resolve, reject) => {
@@ -148,7 +173,6 @@ export const cmdServiceStore = defineStore('servive', {
         })
       })
     },
-
   }
 });
 
