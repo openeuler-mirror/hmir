@@ -106,64 +106,104 @@
 
 
 use  virt::connect::Connect;
-use std::collections::HashMap;
+//use std::collections::HashMap;
 use super::virt_type::*;
 
+use std::collections::BTreeMap;
+use serde_json::{json, Value};
 use jsonrpsee::ws_server::RpcModule;
 
 const QEMU_URI: &str= "qemu:///system";
 
+use hmir_errno::errno;
+use hmir_hash::HashWrap;
+use hmir_token::TokenChecker;
+
+
+macro_rules! VirtTokenChecker {
+    ($info:expr) => {
+        let token_exception = json!(String::from(""));
+        let token = ($info).get("token").unwrap_or(&token_exception).to_string();
+        TokenChecker!(token);
+    }
+}
+
 pub fn register_virt_query(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
-    module.register_method("virt-check-connection", |_, _| {
+    module.register_method("virt-check-connection", |params, _| {
+        let info = params.parse::<BTreeMap<&str, Value>>()?;
+        VirtTokenChecker!(info);
         Ok(virt_check_connection())
     })?;
 
-    module.register_method("virt-show-hypervisor", |_, _| {
+    module.register_method("virt-show-hypervisor", |params, _| {
+        let info = params.parse::<BTreeMap<&str, Value>>()?;
+        VirtTokenChecker!(info);
         Ok(virt_show_hypervisor())
     })?;
 
-    module.register_method("virt-show-domains", |_, _| {
+    module.register_method("virt-show-domains", |params, _| {
+        let info = params.parse::<BTreeMap<&str, Value>>()?;
+        VirtTokenChecker!(info);
         Ok(virt_show_domains())
     })?;
 
-    module.register_method("virt-show-uri", |_, _| {
+    module.register_method("virt-show-uri", |params, _| {
+        let info = params.parse::<BTreeMap<&str, Value>>()?;
+        VirtTokenChecker!(info);
         Ok(virt_show_uri())
     })?;
 
-    module.register_method("virt-show-nwfilters", |_, _| {
+    module.register_method("virt-show-nwfilters", |params, _| {
+        let info = params.parse::<BTreeMap<&str, Value>>()?;
+        VirtTokenChecker!(info);
         Ok(virt_show_nwfilters())
     })?;
 
-    module.register_method("virt-show-libvirt-version", |_, _| {
+    module.register_method("virt-show-libvirt-version", |params, _| {
+        let info = params.parse::<BTreeMap<&str, Value>>()?;
+        VirtTokenChecker!(info);
         Ok(virt_show_libvirt_version())
     })?;
 
     module.register_method("virt-show-arch-models", |params, _| {
-        let info = params.parse::<HashMap<String, String>>()?;
+        let info = params.parse::<BTreeMap<&str, Value>>()?;
+        VirtTokenChecker!(info);
         Ok(virt_show_arch_models(info))
     })?;
 
-    module.register_method("virt-show-networks", |_, _| {
+    module.register_method("virt-show-networks", |params, _| {
+        let info = params.parse::<BTreeMap<&str, Value>>()?;
+        VirtTokenChecker!(info);
         Ok(virt_show_networks())
     })?;
 
-    module.register_method("virt-show-interfaces", |_, _| {
+    module.register_method("virt-show-interfaces", |params, _| {
+        let info = params.parse::<BTreeMap<&str, Value>>()?;
+        VirtTokenChecker!(info);
         Ok(virt_show_interfaces())
     })?;
 
-    module.register_method("virt-show-secrets", |_, _| {
+    module.register_method("virt-show-secrets", |params, _| {
+        let info = params.parse::<BTreeMap<&str, Value>>()?;
+        VirtTokenChecker!(info);
         Ok(virt_show_secrets())
     })?;
 
-    module.register_method("virt-show-storagepools", |_, _| {
+    module.register_method("virt-show-storagepools", |params, _| {
+        let info = params.parse::<BTreeMap<&str, Value>>()?;
+        VirtTokenChecker!(info);
         Ok(virt_show_storagepools())
     })?;
 
-    module.register_method("virt-show-nodedevs", |_, _| {
+    module.register_method("virt-show-nodedevs", |params, _| {
+        let info = params.parse::<BTreeMap<&str, Value>>()?;
+        VirtTokenChecker!(info);
         Ok(virt_show_nodedevs())
     })?;
 
-    module.register_method("virt-show-sys-info", |_, _| {
+    module.register_method("virt-show-sys-info", |params, _| {
+        let info = params.parse::<BTreeMap<&str, Value>>()?;
+        VirtTokenChecker!(info);
         Ok(virt_show_sys_info())
     })?;
 
@@ -318,7 +358,7 @@ fn translate_version(mut ver: u32) -> String{
     format!("{}.{}.{}", major, minor, release)
 }
 
-fn virt_show_arch_models(info: HashMap<String, String>) -> String{
+fn virt_show_arch_models(info: BTreeMap<&str, Value>) -> String{
     let mut conn = match Connect::open(QEMU_URI) {
         Ok(c) => {
             c
@@ -326,7 +366,7 @@ fn virt_show_arch_models(info: HashMap<String, String>) -> String{
         Err(e) => return format!("Not connected, code: {}, message: {}", e.code, e.message), 
     };
 
-    let arch_name = info.get("arch").unwrap();
+    let arch_name = info.get("arch").unwrap().to_string();
     let models = conn.get_cpu_models_names(&arch_name, 0).unwrap();
 
     match conn.close() {
