@@ -2,7 +2,10 @@ import { defineStore } from 'pinia';
 import ElMessage from '@/utils/message';
 import {
   cmd_service_enabled, cmd_service_disabled, cmd_service_static,
-  cmd_timer_enabled, cmd_timer_disabled, cmd_timer_static
+  cmd_timer_enabled, cmd_timer_disabled, cmd_timer_static,
+  cmd_socket_enabled, cmd_socket_disabled, cmd_socket_static,
+  cmd_target_enabled, cmd_target_disabled, cmd_target_static,
+  cmd_all_slice,
 } from '@/api/index';
 import { store } from '../index';
 import useUsersStore from '@/store/modules/user';
@@ -19,8 +22,11 @@ export const cmdServiceStore = defineStore('servive', {
         serviceCollapse: '',
         serviceTable: '',
       },
+      //保存详情页的数据
       serviceDetail: {} as any,
+      //用来保存所有处理后的数据
       serviceAll: {
+        cmdAllSlice: [],
         //系统服务
         cmdServiceEnabled: [],
         cmdServiceDisabled: [],
@@ -29,6 +35,58 @@ export const cmdServiceStore = defineStore('servive', {
         cmdTimerEnabled: [],
         cmdTimerDisabled: [],
         cmdTimerStatic: [],
+        //套接字
+        cmdSocketEnabled: [],
+        cmdSocketDisabled: [],
+        cmdSocketStatic: [],
+        //目标
+        cmdTargetEnabled: [],
+        cmdTargetDisabled: [],
+        cmdTargetStatic: [],
+      },
+      //用来保存所有请求来的JSON格式化后的原始数据，通过对象保存方便进行索引
+      serviceAllData: {},
+      //用来保存所有的api接口
+      serviceAllApi: {
+        'cmdAllSlice': {
+          apiFunction: cmd_all_slice
+        },
+        'cmdServiceEnabled': {
+          apiFunction: cmd_service_enabled
+        },
+        'cmdServiceDisabled': {
+          apiFunction: cmd_service_disabled
+        },
+        'cmdServiceStatic': {
+          apiFunction: cmd_service_static
+        },
+        'cmdTimerEnabled': {
+          apiFunction: cmd_timer_enabled
+        },
+        'cmdTimerDisabled': {
+          apiFunction: cmd_timer_disabled
+        },
+        'cmdTimerStatic': {
+          apiFunction: cmd_timer_static
+        },
+        'cmdSocketEnabled': {
+          apiFunction: cmd_socket_enabled
+        },
+        'cmdSocketDisabled': {
+          apiFunction: cmd_socket_disabled
+        },
+        'cmdSocketStatic': {
+          apiFunction: cmd_socket_static
+        },
+        'cmdTargetEnabled': {
+          apiFunction: cmd_target_enabled
+        },
+        'cmdTargetDisabled': {
+          apiFunction: cmd_target_disabled
+        },
+        'cmdTargetStatic': {
+          apiFunction: cmd_target_static
+        },
       }
     };
   },
@@ -40,135 +98,74 @@ export const cmdServiceStore = defineStore('servive', {
     //请求所有数据
     cmd_service_all() {
       return new Promise<void>((resolve, reject) => {
-        let timeout = 200
+        //清空之前保存的数据
+        this.serviceAllData = {};
+        let timeout = 200;
+        //判断之前本地是否拥有数据，
         if (this.serviceAll.cmdServiceEnabled.length !== 0) { timeout = 300 }
         setTimeout(() => {
-          this.cmd_service_enabled();
-          this.cmd_service_disabled();
-          this.cmd_service_static();
-          this.cmd_timer_enabled();
-          this.cmd_timer_disabled();
-          this.cmd_timer_static();
+          // this.cmd_service_enabled();
+          // this.cmd_service_disabled();
+          // this.cmd_service_static();
+          // this.cmd_timer_enabled();
+          // this.cmd_timer_disabled();
+          // this.cmd_timer_static();
+          this.cmd_service_request('cmdAllSlice');
+          this.cmd_service_request('cmdServiceEnabled');
+          this.cmd_service_request('cmdServiceDisabled');
+          this.cmd_service_request('cmdServiceStatic');
+          this.cmd_service_request('cmdTimerEnabled');
+          this.cmd_service_request('cmdTimerDisabled');
+          this.cmd_service_request('cmdTimerStatic');
+          this.cmd_service_request('cmdSocketEnabled');
+          this.cmd_service_request('cmdSocketDisabled');
+          this.cmd_service_request('cmdSocketStatic');
+          this.cmd_service_request('cmdTargetEnabled');
+          this.cmd_service_request('cmdTargetDisabled');
+          this.cmd_service_request('cmdTargetStatic');
           resolve()
         }, timeout);
       })
     },
     //获取其中一条数据
     service_detail(name: string | string[]) {
-      let item: any, value: any
-      for (item in this.serviceAll) {
-        for (value of this.serviceAll[item]) {
-          if (value.name === name) {
-            this.serviceDetail = value;
-            break;
-          }
-        }
-      }
+      this.serviceDetail = this.serviceAllData[name.toString()] || {}
+      // let item: any, value: any
+      // for (item in this.serviceAll) {
+      //   for (value of this.serviceAll[item]) {
+      //     if (value.name === name) {
+      //       this.serviceDetail = value;
+      //       break;
+      //     }
+      //   }
+      // }
     },
     //判断当前数据是否在所有数据里面拥有，有则可以点击
     is_service_disabled(name: string | string[]) {
-      let isDisabled = true, item: any, value: any
-      for (item in this.serviceAll) {
-        for (value of this.serviceAll[item]) {
-          if (value.name === name) {
-            isDisabled = false;
-            break;
-          }
-        }
-      }
-      return isDisabled;
+      return !this.serviceAllData[name.toString()];
+      // let isDisabled = true, item: any, value: any
+      // for (item in this.serviceAll) {
+      //   for (value of this.serviceAll[item]) {
+      //     if (value.name === name) {
+      //       isDisabled = false;
+      //       break;
+      //     }
+      //   }
+      // }
+      // return isDisabled;
     },
-    //系统服务启用
-    cmd_service_enabled() {
+    cmd_service_request(api: string) {
       return new Promise<void>((resolve, reject) => {
-        cmd_service_enabled({ host: userStore.host }).then((res: any) => {
+        this.serviceAllApi[api].apiFunction({ host: userStore.host }).then((res: any) => {
           if (res[0] === 0) {
             let value: any = JSON.parse(res[1]);
+            Object.assign(this.serviceAllData, value)
             let arr: any = Array.from(Object.values(value), x => x);
-            this.serviceAll.cmdServiceEnabled = arr;
+            this.serviceAll[api] = arr;
+            console.log(this.serviceAll);
             resolve()
           } else {
-            reject('获取系统服务启用信息失败');
-          }
-        })
-      })
-    },
-
-    //系统服务禁用
-    cmd_service_disabled() {
-      return new Promise<void>((resolve, reject) => {
-        cmd_service_disabled({ host: userStore.host }).then((res: any) => {
-          if (res[0] === 0) {
-            let value: any = JSON.parse(res[1]);
-            let arr: any = Array.from(Object.values(value), x => x);
-            this.serviceAll.cmdServiceDisabled = arr;
-            resolve()
-          } else {
-            reject('获取系统服务禁用信息失败');
-          }
-        })
-      })
-    },
-
-    //系统服务静态
-    cmd_service_static() {
-      return new Promise<void>((resolve, reject) => {
-        cmd_service_static({ host: userStore.host }).then((res: any) => {
-          if (res[0] === 0) {
-            let value: any = JSON.parse(res[1]);
-            let arr: any = Array.from(Object.values(value), x => x);
-            this.serviceAll.cmdServiceStatic = arr;
-            resolve()
-          } else {
-            reject('获取系统服务静态信息失败');
-          }
-        })
-      })
-    },
-
-    //计时器的启动
-    cmd_timer_enabled() {
-      return new Promise<void>((resolve, reject) => {
-        cmd_timer_enabled({ host: userStore.host }).then((res: any) => {
-          if (res[0] === 0) {
-            let value: any = JSON.parse(res[1]);
-            let arr: any = Array.from(Object.values(value), x => x);
-            this.serviceAll.cmdTimerEnabled = arr;
-            resolve()
-          } else {
-            reject('获取计时器启用信息失败');
-          }
-        })
-      })
-    },
-
-    //计时器禁用
-    cmd_timer_disabled() {
-      return new Promise<void>((resolve, reject) => {
-        cmd_timer_disabled({ host: userStore.host }).then((res: any) => {
-          if (res[0] === 0) {
-            let value: any = JSON.parse(res[1]);
-            let arr: any = Array.from(Object.values(value), x => x);
-            this.serviceAll.cmdTimerDisabled = arr;
-            resolve()
-          } else {
-            reject('获取计时器禁用信息失败');
-          }
-        })
-      })
-    },
-
-    //计时器静态
-    cmd_timer_static() {
-      return new Promise<void>((resolve, reject) => {
-        cmd_timer_static({ host: userStore.host }).then((res: any) => {
-          if (res[0] === 0) {
-            let value: any = JSON.parse(res[1]);
-            let arr: any = Array.from(Object.values(value), x => x);
-            this.serviceAll.cmdTimerStatic = arr;
-            resolve()
-          } else {
-            reject('获取计时器静态信息失败');
+            reject(`获取${api}信息失败`);
           }
         })
       })
