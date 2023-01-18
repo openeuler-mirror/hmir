@@ -110,9 +110,9 @@ const { serviceAll } = storeToRefs(store)
 
 //监听tableList的变化，实时刷新表格
 watch(serviceAll, value => {
-  description.value[0].tableList = value.cmdServiceEnabled as any;
-  description.value[1].tableList = value.cmdServiceDisabled as any;
-  description.value[2].tableList = value.cmdServiceStatic as any;
+  description.value[0].tableList = value.cmdTimerEnabled as any;
+  description.value[1].tableList = value.cmdTimerDisabled as any;
+  description.value[2].tableList = value.cmdTimerStatic as any;
 }, {
   //初始化立即执行
   immediate: true,
