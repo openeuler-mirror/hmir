@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 import serviceCollapse from '@/components/serviceCollapse/index.vue';
-import { ref, onMounted, nextTick } from 'vue';
+import { ref, watch } from 'vue';
 import serviceList from '@/views/service/interface/index';
 import { cmdServiceStore } from '@/store/modules/service';
 import { storeToRefs } from 'pinia';
@@ -15,80 +15,73 @@ import { storeToRefs } from 'pinia';
 const store = cmdServiceStore();
 
 //所有数据
-const description = ref<serviceList[]>([{ value: '' }])
+const description = ref<serviceList[]>([{
+  value: '启用',
+  tableList: [],
+  tableProp: [
+    {
+      key: 'description',
+      title: '描述',
+      dataKey: 'description',
+      width: 310,
+    },
+    {
+      key: 'name',
+      title: 'ID',
+      dataKey: 'name',
+      width: 310,
+    }
+  ]
+},
+{
+  value: '禁用',
+  tableList: [],
+  tableProp: [
+    {
+      key: 'description',
+      title: '描述',
+      dataKey: 'description',
+      width: 310,
+    },
+    {
+      key: 'name',
+      title: 'ID',
+      dataKey: 'name',
+      width: 310,
+    }
+  ]
+},
+{
+  value: '静态',
+  tableList: [],
+  tableProp: [
+    {
+      key: 'description',
+      title: '描述',
+      dataKey: 'description',
+      width: 310,
+    },
+    {
+      key: 'name',
+      title: 'ID',
+      dataKey: 'name',
+      width: 310,
+    }
+  ]
+}]);
 
-const { cmdServiceEnabled, cmdServiceDisabled, cmdServiceStatic } = storeToRefs(store)
+const { serviceAll } = storeToRefs(store);
 
-onMounted(() => {
-  description.value = [{
-    value: '启用',
-    // tableList: [{
-    //   description: 'Accounts Service',
-    //   id: 'accounts-daemon.service',
-    //   state: '激活 (running)',
-    // }],
-    tableList: [],
-    tableProp: [
-      {
-        key: 'description',
-        title: '描述',
-        dataKey: 'description',
-        width: 310,
-      },
-      {
-        key: 'name',
-        title: 'ID',
-        dataKey: 'name',
-        width: 310,
-      }
-    ]
-  },
-  {
-    value: '禁用',
-    tableList: [],
-    tableProp: [
-      {
-        key: 'description',
-        title: '描述',
-        dataKey: 'description',
-        width: 310,
-      },
-      {
-        key: 'name',
-        title: 'ID',
-        dataKey: 'name',
-        width: 310,
-      }
-    ]
-  },
-  {
-    value: '静态',
-    // tableList: [{
-    //   description: '',
-    //   id: '',
-    //   state: ''
-    // }],
-    tableList: [],
-    tableProp: [
-      {
-        key: 'description',
-        title: '描述',
-        dataKey: 'description',
-        width: 310,
-      },
-      {
-        key: 'name',
-        title: 'ID',
-        dataKey: 'name',
-        width: 310,
-      }
-    ]
-  }];
-  description.value[0].tableList = cmdServiceEnabled as any;
-  description.value[1].tableList = cmdServiceDisabled as any;
-  description.value[2].tableList = cmdServiceStatic as any;
-})
-
+//监听serviceAll的变化，实时刷新表格
+watch(serviceAll, value => {
+  description.value[0].tableList = value.cmdSocketEnabled as any;
+  description.value[1].tableList = value.cmdSocketDisabled as any;
+  description.value[2].tableList = value.cmdSocketStatic as any;
+}, {
+  //初始化立即执行
+  immediate: true,
+  deep: true,
+});
 </script>
 
 <style lang="scss" scoped>
