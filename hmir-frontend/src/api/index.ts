@@ -110,6 +110,96 @@ export function cmd_timer_static(data: any) {
   })
 }
 
+//套接字的启动
+export function cmd_socket_enabled(data: any) {
+  return new Promise<void>((resolve, reject) => {
+    setTimeout(() => {
+      invoke('cmd_socket_enabled', data).then(
+        (res: any) => {
+          resolve(res)
+        }
+      )
+    }, timeout)
+  })
+}
+
+//套接字的禁用
+export function cmd_socket_disabled(data: any) {
+  return new Promise<void>((resolve, reject) => {
+    setTimeout(() => {
+      invoke('cmd_socket_disabled', data).then(
+        (res: any) => {
+          resolve(res)
+        }
+      )
+    }, timeout)
+  })
+}
+
+//套接字的静态
+export function cmd_socket_static(data: any) {
+  return new Promise<void>((resolve, reject) => {
+    setTimeout(() => {
+      invoke('cmd_socket_static', data).then(
+        (res: any) => {
+          resolve(res)
+        }
+      )
+    }, timeout)
+  })
+}
+
+//目标的启动
+export function cmd_target_enabled(data: any) {
+  return new Promise<void>((resolve, reject) => {
+    setTimeout(() => {
+      invoke('cmd_target_enabled', data).then(
+        (res: any) => {
+          resolve(res)
+        }
+      )
+    }, timeout)
+  })
+}
+
+//目标的禁用
+export function cmd_target_disabled(data: any) {
+  return new Promise<void>((resolve, reject) => {
+    setTimeout(() => {
+      invoke('cmd_target_disabled', data).then(
+        (res: any) => {
+          resolve(res)
+        }
+      )
+    }, timeout)
+  })
+}
+
+//目标的静态
+export function cmd_target_static(data: any) {
+  return new Promise<void>((resolve, reject) => {
+    setTimeout(() => {
+      invoke('cmd_target_static', data).then(
+        (res: any) => {
+          resolve(res)
+        }
+      )
+    }, timeout)
+  })
+}
+
+//cmd_all_slice
+export function cmd_all_slice(data: any) {
+  return new Promise<void>((resolve, reject) => {
+    setTimeout(() => {
+      invoke('cmd_all_slice', data).then(
+        (res: any) => {
+          resolve(res)
+        }
+      )
+    }, timeout)
+  })
+}
 
 
 
