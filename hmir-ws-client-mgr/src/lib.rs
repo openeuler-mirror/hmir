@@ -5,3 +5,4 @@ mod tests;
 pub mod net;
 pub mod ttyd;
 pub mod svr;
+pub mod virt;
