@@ -147,7 +147,7 @@ fn main() {
             cmd_ovs_vsctl_add_br,
             cmd_ovs_vsctl_del_br,
             cmd_ovs_ofctl_forbid_dstip,
-            cmd_virt_check_connection])
+            cmd_virt_check_connection,
             cmd_get_ceph_status])
         // .invoke_handler(tauri::generate_handler![ttyd_start])
         .run(tauri::generate_context!())
