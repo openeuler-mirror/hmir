@@ -9,7 +9,7 @@ fn get_ceph_status() {
         Ok(mut c) => {
             let state = c.ceph_status();
             // assert_eq!(state, 0)
-            println!("Result : {}", state)
+            println!("Result : {:?}", state)
         }
         _ => {
             println!("Get client [{}] error.", URL)

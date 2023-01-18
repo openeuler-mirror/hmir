@@ -41,12 +41,15 @@ mod ttyd;
 mod svr;
 mod ovs;
 mod virt;
+mod ceph;
 
 use crate::login::login_cmd::*;
 use crate::ttyd::ttyd_cmd::*;
 use crate::svr::svr_cmd::*;
 use crate::ovs::ovs_cmd::*;
 use crate::virt::virt_cmd::*;
+use crate::ceph::base::*;
+
 
 
 
@@ -145,6 +148,7 @@ fn main() {
             cmd_ovs_vsctl_del_br,
             cmd_ovs_ofctl_forbid_dstip,
             cmd_virt_check_connection])
+            cmd_get_ceph_status])
         // .invoke_handler(tauri::generate_handler![ttyd_start])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
