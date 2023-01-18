@@ -89,6 +89,10 @@ impl RequestClient {
         self._svr_get_unit("svr-list-static-target")
     }
 
+
+    pub fn svr_list_all_slice(&self) -> (usize,String) {
+        self._svr_get_unit("svr-list-all-slice")
+    }
 }
 
 
@@ -190,6 +194,21 @@ mod tests {
             Ok(mut c) => {
                 c.login("root","root");
                 let (state,result) = c.svr_list_static_socket();
+                println!("{}",result);
+            }
+            _ => {}
+        }
+    }
+
+    #[test]
+    fn svr_list_all_slice_worked(){
+        let client = RequestClient::new(String::from(URL));
+
+
+        match client {
+            Ok(mut c) => {
+                c.login("root","root");
+                let (state,result) = c.svr_list_all_slice();
                 println!("{}",result);
             }
             _ => {}

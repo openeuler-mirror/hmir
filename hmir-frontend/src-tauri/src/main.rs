@@ -135,6 +135,7 @@ fn main() {
             cmd_target_enabled,
             cmd_target_disabled,
             cmd_target_static,
+            cmd_all_slice,
             cmd_ovs_query_connection,
             cmd_ovs_query_bridges,
             cmd_ovs_query_ports,

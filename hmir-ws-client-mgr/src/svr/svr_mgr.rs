@@ -86,3 +86,9 @@ pub fn svr_list_static_target(host : & str) -> (usize,String)
     let h = host.to_string();
     return client_instance!(&h).svr_list_static_target();
 }
+
+pub fn svr_list_all_slice(host : & str) -> (usize,String)
+{
+    let h = host.to_string();
+    return client_instance!(&h).svr_list_all_slice();
+}

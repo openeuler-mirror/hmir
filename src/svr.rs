@@ -121,6 +121,7 @@ lazy_static! {
     static ref TARGET_DISABLE_CACHE : Mutex<String> = Mutex::new(String::new());
     static ref TARGET_STATIC_CACHE : Mutex<String> = Mutex::new(String::new());
 
+    static ref SLICE_ALL_CACHE  : Mutex<String> = Mutex::new(String::new());
 }
 
 macro_rules! svr_default_result {
@@ -157,6 +158,8 @@ fn update_all_svr()
     *TARGET_ENABLE_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["enabled"],vec!["*.target"]);
     *TARGET_DISABLE_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["disabled"],vec!["*.target"]);
     *TARGET_STATIC_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["static"],vec!["*.target"]);
+
+    *SLICE_ALL_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["static","disabled","enabled"],vec!["*.slice"]);
 
 }
 
@@ -295,7 +298,10 @@ pub fn svr_list_static_target() -> String {
     result
 }
 
-
+pub fn svr_list_all_slice() -> String {
+    let result = (*SLICE_ALL_CACHE.lock().unwrap()).clone();
+    result
+}
 
 ///
 /// service-stop接口实现
@@ -498,6 +504,14 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
         Ok(service_enable(service))
     })?;
 
+
+    module.register_method("svr-list-all-slice", |params, _| {
+        let token = params.one::<std::string::String>()?;
+        TokenChecker!(token);
+
+        //默认没有error就是成功的
+        Ok(svr_list_all_slice())
+    })?;
 
 
     Ok(())

@@ -85,3 +85,11 @@ pub fn cmd_target_static(host : &str) -> (usize,String)
 {
     return clientmgr::svr_list_static_target(host);
 }
+
+
+
+#[tauri::command]
+pub fn cmd_all_slice(host : &str) -> (usize,String)
+{
+    return clientmgr::svr_list_all_slice(host);
+}
