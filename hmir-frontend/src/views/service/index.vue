@@ -17,11 +17,13 @@
         <servicePath></servicePath>
       </el-tab-pane> -->
       <el-tab-pane v-for="item of serviceAll" :key="item.name" :label="item.lable" :name="item.name">
-        <router-view v-slot="{ Component, route }">
-          <keep-alive>
-            <component :is="Component" :key="route.fullPath" />
-          </keep-alive>
-        </router-view>
+        <div>
+          <router-view v-slot="{ Component, route }">
+            <keep-alive>
+              <component :is="Component" :key="route.fullPath" />
+            </keep-alive>
+          </router-view>
+        </div>
       </el-tab-pane>
       <el-tab-pane name="" disabled v-if="(serviceActive === 'serviceTimer')">
         <template #label>

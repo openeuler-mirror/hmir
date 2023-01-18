@@ -114,7 +114,7 @@
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
-import { onMounted, ref, watch } from 'vue';
+import { onBeforeUnmount, ref, watch } from 'vue';
 import router from '@/router';
 import { cmdServiceStore } from '@/store/modules/service';
 import { storeToRefs } from 'pinia';
@@ -140,8 +140,9 @@ watch(serviceAll, value => {
   deep: true,
 });
 
+//监听跳转的路由并更新数据
 watch(() => route.params.serviceName, value => {
-  store.service_detail(value);
+  value && store.service_detail(value);
 }, {
   deep: true,
 });
@@ -170,6 +171,11 @@ const toServiceDetail = (value: string) => {
     },
   });
 }
+
+onBeforeUnmount(() => {
+  serviceDetail.value = {}
+})
+
 </script>
 
 
