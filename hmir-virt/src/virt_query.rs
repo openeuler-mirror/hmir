@@ -128,6 +128,22 @@ macro_rules! VirtTokenChecker {
     }
 }
 
+macro_rules! ExecVirtQueryResult {
+    ($i:expr, $j:expr, $k:expr) => {
+        let mut response = HashWrap::<String,String>:: new();
+        if $i == 0 {
+            response.insert(String::from("virt_ret"), $j);
+        }
+
+        if $i !=0 {
+            response.error($i, $k);
+        } 
+        response.set_code($i);
+        let serialized = serde_json::to_string(&response).unwrap();
+        return serialized;
+    }
+}
+
 pub fn register_virt_query(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
     module.register_method("virt-check-connection", |params, _| {
         let info = params.parse::<BTreeMap<&str, Value>>()?;
@@ -215,14 +231,18 @@ fn virt_check_connection() -> String{
         Ok(c) => {
             c
         },
-        Err(e) => return format!("Not connected, code: {}, message: {}", e.code, e.message), 
+        Err(e) =>{
+            ExecVirtQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), format!("code: {}, error: {}", e.code, e.message));
+        } 
     };
     
     match conn.close() {
-        Ok(_) => { "Connection Finished Normally".to_string() },
-        Err(e) => format!("Failed to disconnect from hypervisor: code {}, message: {}",
-        e.code,
-        e.message),
+        Ok(_) => {
+            ExecVirtQueryResult!(errno::HMIR_SUCCESS, "Connected!".to_string(), "".to_string());
+        },
+        Err(e) => {
+            ExecVirtQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), format!("code: {}, error: {}", e.code, e.message));
+        }
     }
 }
 
@@ -231,7 +251,9 @@ fn virt_show_hypervisor() -> String{
         Ok(c) => {
             c
         },
-        Err(e) => return format!("Not connected, code: {}, message: {}", e.code, e.message), 
+        Err(e) =>{
+            ExecVirtQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), format!("code: {}, error: {}", e.code, e.message));
+        } 
     };
 
     let mut hv_info = HmirHvisor::default();
@@ -247,10 +269,13 @@ fn virt_show_hypervisor() -> String{
     }
 
     match conn.close() {
-        Ok(_) => { serde_json::to_string(&hv_info).unwrap_or_default() },
-        Err(e) => format!("Failed to disconnect from hypervisor: code {}, message: {}",
-        e.code,
-        e.message),
+        Ok(_) => { 
+            let ret_info = serde_json::to_string(&hv_info).unwrap_or_default(); 
+            ExecVirtQueryResult!(errno::HMIR_SUCCESS, ret_info, "".to_string());
+        },
+        Err(e) =>{
+            ExecVirtQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), format!("code: {}, error: {}", e.code, e.message));
+        } 
     }
 }
 
@@ -259,7 +284,9 @@ fn virt_show_domains() -> String{
         Ok(c) => {
             c
         },
-        Err(e) => return format!("Not connected, code: {}, message: {}", e.code, e.message),
+        Err(e) =>{
+            ExecVirtQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), format!("code: {}, error: {}", e.code, e.message));
+        } 
     };
     let mut hmir_domains:Vec<HmirDomain> = Vec::new();
     let flags = virt::connect::VIR_CONNECT_LIST_DOMAINS_ACTIVE |
@@ -275,10 +302,13 @@ fn virt_show_domains() -> String{
     }
 
     match conn.close() {
-        Ok(_) => { serde_json::to_string(&hmir_domains).unwrap_or_default()},
-        Err(e) => format!("Failed to disconnect from hypervisor: code {}, message: {}",
-        e.code,
-        e.message),
+        Ok(_) => { 
+            let ret_info = serde_json::to_string(&hmir_domains).unwrap_or_default(); 
+            ExecVirtQueryResult!(errno::HMIR_SUCCESS, ret_info, "".to_string());
+        },
+        Err(e) =>{
+            ExecVirtQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), format!("code: {}, error: {}", e.code, e.message));
+        } 
     }
 }
 
@@ -287,19 +317,23 @@ fn virt_show_uri() -> String{
         Ok(c) => {
             c
         },
-        Err(e) => return format!("Not connected, code: {}, message: {}", e.code, e.message),
+        Err(e) =>{
+            ExecVirtQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), format!("code: {}, error: {}", e.code, e.message));
+        } 
     };
 
     let uri = match conn.get_uri(){
         Ok(s) => s,
-        Err(e) => format!("Error, code:{}, message:{}", e.code, e.message),
+        Err(e) =>  format!("Failed to get uri, code: {}, message: {}", e.code, e.message),
     };
 
     match conn.close() {
-        Ok(_) => { uri },
-        Err(e) => format!("Failed to disconnect from hypervisor: code {}, message: {}",
-        e.code,
-        e.message),
+        Ok(_) => { 
+            ExecVirtQueryResult!(errno::HMIR_SUCCESS, uri, "".to_string());
+        },
+        Err(e) =>{
+            ExecVirtQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), format!("code: {}, error: {}", e.code, e.message));
+        } 
     }
 }
 
@@ -308,7 +342,9 @@ fn virt_show_nwfilters() -> String{
         Ok(c) => {
             c
         },
-        Err(e) => return format!("Not connected, code: {}, message: {}", e.code, e.message),
+        Err(e) =>{
+            ExecVirtQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), format!("code: {}, error: {}", e.code, e.message));
+        } 
     };
 
     let mut hmir_nwfilters:Vec<HmirNwfilter> = Vec::new();
@@ -322,10 +358,13 @@ fn virt_show_nwfilters() -> String{
     }
 
     match conn.close() {
-        Ok(_) => { serde_json::to_string(&hmir_nwfilters).unwrap_or_default() },
-        Err(e) => format!("Failed to disconnect from hypervisor: code {}, message: {}",
-        e.code,
-        e.message),
+        Ok(_) => { 
+            let ret_info = serde_json::to_string(&hmir_nwfilters).unwrap_or_default(); 
+            ExecVirtQueryResult!(errno::HMIR_SUCCESS, ret_info, "".to_string());
+        },
+        Err(e) =>{
+            ExecVirtQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), format!("code: {}, error: {}", e.code, e.message));
+        } 
     }
 }
 
@@ -334,19 +373,23 @@ fn virt_show_libvirt_version() -> String{
         Ok(c) => {
             c
         },
-        Err(e) => return format!("Not connected, code: {}, message: {}", e.code, e.message),
+        Err(e) =>{
+            ExecVirtQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), format!("code: {}, error: {}", e.code, e.message));
+        } 
     };
 
     let lib_ver = match conn.get_lib_version(){
         Ok(ver) => translate_version(ver),
-        Err(e) =>  format!("Not connected, code: {}, message: {}", e.code, e.message),
+        Err(e) =>  format!("Failed to get lib version, code: {}, message: {}", e.code, e.message),
     };
 
     match conn.close() {
-        Ok(_) => { lib_ver },
-        Err(e) => format!("Failed to disconnect from hypervisor: code {}, message: {}",
-        e.code,
-        e.message),
+        Ok(_) => { 
+            ExecVirtQueryResult!(errno::HMIR_SUCCESS, lib_ver, "".to_string());
+        },
+        Err(e) =>{
+            ExecVirtQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), format!("code: {}, error: {}", e.code, e.message));
+        } 
     }
 }
 
@@ -363,17 +406,22 @@ fn virt_show_arch_models(info: BTreeMap<&str, Value>) -> String{
         Ok(c) => {
             c
         },
-        Err(e) => return format!("Not connected, code: {}, message: {}", e.code, e.message), 
+        Err(e) =>{
+            ExecVirtQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), format!("code: {}, error: {}", e.code, e.message));
+        } 
     };
 
     let arch_name = info.get("arch").unwrap().to_string();
     let models = conn.get_cpu_models_names(&arch_name, 0).unwrap();
 
     match conn.close() {
-        Ok(_) => { serde_json::to_string(&models).unwrap_or_default() },
-        Err(e) => format!("Failed to disconnect from hypervisor: code {}, message: {}",
-        e.code,
-        e.message),
+        Ok(_) => { 
+            let ret_info = serde_json::to_string(&models).unwrap_or_default(); 
+            ExecVirtQueryResult!(errno::HMIR_SUCCESS, ret_info, "".to_string());
+        },
+        Err(e) =>{
+            ExecVirtQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), format!("code: {}, error: {}", e.code, e.message));
+        } 
     }
 }
 
@@ -382,7 +430,9 @@ fn virt_show_networks() -> String{
         Ok(c) => {
             c
         },
-        Err(e) => return format!("Not connected, code: {}, message: {}", e.code, e.message), 
+        Err(e) =>{
+            ExecVirtQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), format!("code: {}, error: {}", e.code, e.message));
+        } 
     };
 
     let mut vec_net: Vec<HmirNetwork> = Vec::new();
@@ -398,10 +448,13 @@ fn virt_show_networks() -> String{
     }
 
     match conn.close() {
-        Ok(_) => { serde_json::to_string(&vec_net).unwrap_or_default() },
-        Err(e) => format!("Failed to disconnect from hypervisor: code {}, message: {}",
-        e.code,
-        e.message),
+        Ok(_) => { 
+            let ret_info = serde_json::to_string(&vec_net).unwrap_or_default(); 
+            ExecVirtQueryResult!(errno::HMIR_SUCCESS, ret_info, "".to_string());
+        },
+        Err(e) =>{
+            ExecVirtQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), format!("code: {}, error: {}", e.code, e.message));
+        } 
     }
 
 }
@@ -411,7 +464,9 @@ fn virt_show_interfaces() ->String{
         Ok(c) => {
             c
         },
-        Err(e) => return format!("Not connected, code: {}, message: {}", e.code, e.message), 
+        Err(e) =>{
+            ExecVirtQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), format!("code: {}, error: {}", e.code, e.message));
+        } 
     };
 
     let mut vec_if: Vec<HmirInterface> = Vec::new();
@@ -425,10 +480,13 @@ fn virt_show_interfaces() ->String{
     }
     
     match conn.close() {
-        Ok(_) => { serde_json::to_string(&vec_if).unwrap_or_default() },
-        Err(e) => format!("Failed to disconnect from hypervisor: code {}, message: {}",
-        e.code,
-        e.message),
+        Ok(_) => { 
+            let ret_info = serde_json::to_string(&vec_if).unwrap_or_default(); 
+            ExecVirtQueryResult!(errno::HMIR_SUCCESS, ret_info, "".to_string());
+        },
+        Err(e) =>{
+            ExecVirtQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), format!("code: {}, error: {}", e.code, e.message));
+        } 
     }
 }
 
@@ -437,7 +495,9 @@ fn virt_show_secrets() -> String {
         Ok(c) => {
             c
         },
-        Err(e) => return format!("Not connected, code: {}, message: {}", e.code, e.message), 
+        Err(e) =>{
+            ExecVirtQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), format!("code: {}, error: {}", e.code, e.message));
+        } 
     };
 
     let mut vec_secs: Vec<HmirSecret> = Vec::new();
@@ -451,10 +511,13 @@ fn virt_show_secrets() -> String {
     }
 
     match conn.close() {
-        Ok(_) => { serde_json::to_string(&vec_secs).unwrap_or_default() },
-        Err(e) => format!("Failed to disconnect from hypervisor: code {}, message: {}",
-        e.code,
-        e.message),
+        Ok(_) => { 
+            let ret_info = serde_json::to_string(&vec_secs).unwrap_or_default(); 
+            ExecVirtQueryResult!(errno::HMIR_SUCCESS, ret_info, "".to_string());
+        },
+        Err(e) =>{
+            ExecVirtQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), format!("code: {}, error: {}", e.code, e.message));
+        } 
     }
 }
 
@@ -463,7 +526,9 @@ fn virt_show_storagepools() -> String{
         Ok(c) => {
             c
         },
-        Err(e) => return format!("Not connected, code: {}, message: {}", e.code, e.message), 
+        Err(e) =>{
+            ExecVirtQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), format!("code: {}, error: {}", e.code, e.message));
+        } 
     };
 
     let mut vec_sps:Vec<HmirStoragePool> = Vec::new();
@@ -479,10 +544,13 @@ fn virt_show_storagepools() -> String{
     }
 
     match conn.close() {
-        Ok(_) => { serde_json::to_string(&vec_sps).unwrap_or_default() },
-        Err(e) => format!("Failed to disconnect from hypervisor: code {}, message: {}",
-        e.code,
-        e.message),
+        Ok(_) => { 
+            let ret_info = serde_json::to_string(&vec_sps).unwrap_or_default(); 
+            ExecVirtQueryResult!(errno::HMIR_SUCCESS, ret_info, "".to_string());
+        },
+        Err(e) =>{
+            ExecVirtQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), format!("code: {}, error: {}", e.code, e.message));
+        } 
     }
 }
 
@@ -491,7 +559,9 @@ fn virt_show_nodedevs() -> String{
         Ok(c) => {
             c
         },
-        Err(e) => return format!("Not connected, code: {}, message: {}", e.code, e.message), 
+        Err(e) =>{
+            ExecVirtQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), format!("code: {}, error: {}", e.code, e.message));
+        } 
     };
 
     let mut vec_caps : Vec<String> = Vec::new();
@@ -506,10 +576,13 @@ fn virt_show_nodedevs() -> String{
     }
 
     match conn.close() {
-        Ok(_) => { serde_json::to_string(&vec_caps).unwrap_or_default() },
-        Err(e) => format!("Failed to disconnect from hypervisor: code {}, message: {}",
-        e.code,
-        e.message),
+        Ok(_) => { 
+            let ret_info = serde_json::to_string(&vec_caps).unwrap_or_default(); 
+            ExecVirtQueryResult!(errno::HMIR_SUCCESS, ret_info, "".to_string());
+        },
+        Err(e) =>{
+            ExecVirtQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), format!("code: {}, error: {}", e.code, e.message));
+        } 
     }
 
 }
@@ -519,16 +592,19 @@ fn virt_show_sys_info() -> String{
         Ok(c) => {
             c
         },
-        Err(e) => return format!("Not connected, code: {}, message: {}", e.code, e.message), 
+        Err(e) =>{
+            ExecVirtQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), format!("code: {}, error: {}", e.code, e.message));
+        } 
     };
 
     let sys_info = conn.get_sys_info(0).unwrap_or_default();
 
     match conn.close() {
-        Ok(_) => { sys_info },
-        Err(e) => format!("Failed to disconnect from hypervisor: code {}, message: {}",
-        e.code,
-        e.message),
+        Ok(_) => { 
+            ExecVirtQueryResult!(errno::HMIR_SUCCESS, sys_info, "".to_string());
+        },
+        Err(e) =>{
+            ExecVirtQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), format!("code: {}, error: {}", e.code, e.message));
+        } 
     }
-
 }
