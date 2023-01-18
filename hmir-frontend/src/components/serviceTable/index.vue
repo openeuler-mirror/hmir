@@ -58,7 +58,6 @@ const handleCurrentChange = (val: any | undefined) => {
       params: {
         serviceName: val.name,
       },
-      query: val
     })
   };
 }

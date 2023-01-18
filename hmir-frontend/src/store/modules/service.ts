@@ -19,14 +19,17 @@ export const cmdServiceStore = defineStore('servive', {
         serviceCollapse: '',
         serviceTable: '',
       },
-      //系统服务
-      cmdServiceEnabled: [],
-      cmdServiceDisabled: [],
-      cmdServiceStatic: [],
-      //计时器
-      cmdTimerEnabled: [],
-      cmdTimerDisabled: [],
-      cmdTimerStatic: [],
+      serviceDetail: {} as any,
+      serviceAll: {
+        //系统服务
+        cmdServiceEnabled: [],
+        cmdServiceDisabled: [],
+        cmdServiceStatic: [],
+        //计时器
+        cmdTimerEnabled: [],
+        cmdTimerDisabled: [],
+        cmdTimerStatic: [],
+      }
     };
   },
   //计算属性
@@ -34,13 +37,46 @@ export const cmdServiceStore = defineStore('servive', {
   },
   //异步同步函数
   actions: {
+    //请求所有数据
     cmd_service_all() {
-      this.cmd_service_enabled();
-      this.cmd_service_disabled();
-      this.cmd_service_static();
-      this.cmd_timer_enabled();
-      this.cmd_timer_disabled();
-      this.cmd_timer_static();
+      return new Promise<void>((resolve, reject) => {
+        let timeout = 200
+        if (this.serviceAll.cmdServiceEnabled.length !== 0) { timeout = 300 }
+        setTimeout(() => {
+          this.cmd_service_enabled();
+          this.cmd_service_disabled();
+          this.cmd_service_static();
+          this.cmd_timer_enabled();
+          this.cmd_timer_disabled();
+          this.cmd_timer_static();
+          resolve()
+        }, timeout);
+      })
+    },
+    //获取其中一条数据
+    service_detail(name: string | string[]) {
+      let item: any, value: any
+      for (item in this.serviceAll) {
+        for (value of this.serviceAll[item]) {
+          if (value.name === name) {
+            this.serviceDetail = value;
+            break;
+          }
+        }
+      }
+    },
+    //判断当前数据是否在所有数据里面拥有，有则可以点击
+    is_service_disabled(name: string | string[]) {
+      let isDisabled = true, item: any, value: any
+      for (item in this.serviceAll) {
+        for (value of this.serviceAll[item]) {
+          if (value.name === name) {
+            isDisabled = false;
+            break;
+          }
+        }
+      }
+      return isDisabled;
     },
     //系统服务启用
     cmd_service_enabled() {
@@ -49,7 +85,7 @@ export const cmdServiceStore = defineStore('servive', {
           if (res[0] === 0) {
             let value: any = JSON.parse(res[1]);
             let arr: any = Array.from(Object.values(value), x => x);
-            this.cmdServiceEnabled = arr;
+            this.serviceAll.cmdServiceEnabled = arr;
             resolve()
           } else {
             reject('获取系统服务启用信息失败');
@@ -65,7 +101,7 @@ export const cmdServiceStore = defineStore('servive', {
           if (res[0] === 0) {
             let value: any = JSON.parse(res[1]);
             let arr: any = Array.from(Object.values(value), x => x);
-            this.cmdServiceDisabled = arr;
+            this.serviceAll.cmdServiceDisabled = arr;
             resolve()
           } else {
             reject('获取系统服务禁用信息失败');
@@ -81,7 +117,7 @@ export const cmdServiceStore = defineStore('servive', {
           if (res[0] === 0) {
             let value: any = JSON.parse(res[1]);
             let arr: any = Array.from(Object.values(value), x => x);
-            this.cmdServiceStatic = arr;
+            this.serviceAll.cmdServiceStatic = arr;
             resolve()
           } else {
             reject('获取系统服务静态信息失败');
@@ -97,7 +133,7 @@ export const cmdServiceStore = defineStore('servive', {
           if (res[0] === 0) {
             let value: any = JSON.parse(res[1]);
             let arr: any = Array.from(Object.values(value), x => x);
-            this.cmdTimerEnabled = arr;
+            this.serviceAll.cmdTimerEnabled = arr;
             resolve()
           } else {
             reject('获取计时器启用信息失败');
@@ -113,7 +149,7 @@ export const cmdServiceStore = defineStore('servive', {
           if (res[0] === 0) {
             let value: any = JSON.parse(res[1]);
             let arr: any = Array.from(Object.values(value), x => x);
-            this.cmdTimerDisabled = arr;
+            this.serviceAll.cmdTimerDisabled = arr;
             resolve()
           } else {
             reject('获取计时器禁用信息失败');
@@ -129,14 +165,14 @@ export const cmdServiceStore = defineStore('servive', {
           if (res[0] === 0) {
             let value: any = JSON.parse(res[1]);
             let arr: any = Array.from(Object.values(value), x => x);
-            this.cmdTimerStatic = arr;
+            this.serviceAll.cmdTimerStatic = arr;
             resolve()
           } else {
             reject('获取计时器静态信息失败');
           }
         })
       })
-    }
+    },
   }
 });
 
