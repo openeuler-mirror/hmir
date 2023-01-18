@@ -1,7 +1,7 @@
 import { invoke } from "@tauri-apps/api/tauri";
 
 //调用函数前的时间限制
-const timeout = 150
+const timeout = 0
 //登录
 export function cmd_login(data: any) {
   return invoke('cmd_login', data)
