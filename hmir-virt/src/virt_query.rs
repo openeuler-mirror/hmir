@@ -106,10 +106,9 @@
 
 
 use  virt::connect::Connect;
-//use std::collections::HashMap;
 use super::virt_type::*;
 
-use std::collections::BTreeMap;
+use std::{collections::BTreeMap, borrow::{BorrowMut, Borrow}}; 
 use serde_json::{json, Value};
 use jsonrpsee::ws_server::RpcModule;
 
@@ -118,6 +117,27 @@ const QEMU_URI: &str= "qemu:///system";
 use hmir_errno::errno;
 use hmir_hash::HashWrap;
 use hmir_token::TokenChecker;
+
+use std::sync::{Arc,Mutex};
+use lazy_static::{lazy_static};
+
+struct WrapperCoon(Connect);
+unsafe impl Send for WrapperCoon{}
+unsafe impl Sync for WrapperCoon{}
+
+type HyperStaticConn = Arc<Mutex<Option<WrapperCoon>>>;
+
+lazy_static!{
+    static ref QEMU_CONN: HyperStaticConn = {
+        match Connect::open(QEMU_URI){
+            Ok(c) => {
+                let p = Some(WrapperCoon(c));
+                return Arc::new(Mutex::new(p));
+            },
+            Err(_) => return Arc::new(Mutex::new(None))
+        }
+    };
+}
 
 
 macro_rules! VirtTokenChecker {
@@ -146,8 +166,8 @@ macro_rules! ExecVirtQueryResult {
 
 pub fn register_virt_query(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
     module.register_method("virt-check-connection", |params, _| {
-        let info = params.parse::<BTreeMap<&str, Value>>()?;
-        VirtTokenChecker!(info);
+        //let info = params.parse::<BTreeMap<&str, Value>>()?;
+        //VirtTokenChecker!(info);
         Ok(virt_check_connection())
     })?;
 
@@ -247,17 +267,16 @@ fn virt_check_connection() -> String{
 }
 
 fn virt_show_hypervisor() -> String{
-    let mut conn = match Connect::open(QEMU_URI) {
-        Ok(c) => {
-            c
+
+    let conn_ref = QEMU_CONN.lock().unwrap();
+    let conn = match conn_ref.as_ref(){
+        Some(c) => &c.0,
+        None =>{
+            ExecVirtQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), "Not Connected!".to_string());
         },
-        Err(e) =>{
-            ExecVirtQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), format!("code: {}, error: {}", e.code, e.message));
-        } 
     };
 
     let mut hv_info = HmirHvisor::default();
-
     if let Ok(hv_type) = conn.get_type() {
         if let Ok(hv_ver) = conn.get_hyp_version() {
             let hv_ver_str = translate_version(hv_ver);
@@ -265,29 +284,21 @@ fn virt_show_hypervisor() -> String{
             let is_enc = conn.is_encrypted().unwrap_or_default();
             let is_sec= conn.is_secure().unwrap_or_default();
             hv_info = HmirHvisor::new(hv_type, hv_ver_str, is_alive, is_enc, is_sec);
+            
+            let ret_info = serde_json::to_string(&hv_info).unwrap_or_default();
+            ExecVirtQueryResult!(errno::HMIR_SUCCESS, ret_info, "".to_string());
         }
     }
-
-    match conn.close() {
-        Ok(_) => { 
-            let ret_info = serde_json::to_string(&hv_info).unwrap_or_default(); 
-            ExecVirtQueryResult!(errno::HMIR_SUCCESS, ret_info, "".to_string());
-        },
-        Err(e) =>{
-            ExecVirtQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), format!("code: {}, error: {}", e.code, e.message));
-        } 
-    }
+    
+    ExecVirtQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), "Failed to show hypervisor".to_string());
 }
 
 fn virt_show_domains() -> String{
-    let mut conn = match Connect::open(QEMU_URI) {
-        Ok(c) => {
-            c
-        },
-        Err(e) =>{
-            ExecVirtQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), format!("code: {}, error: {}", e.code, e.message));
-        } 
-    };
+    if QEMU_CONN.lock().unwrap().is_none() {
+        ExecVirtQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), "Not Connected!".to_string());
+    }
+    
+    let conn = QEMU_CONN.lock().unwrap().take().unwrap().0;
     let mut hmir_domains:Vec<HmirDomain> = Vec::new();
     let flags = virt::connect::VIR_CONNECT_LIST_DOMAINS_ACTIVE |
                 virt::connect::VIR_CONNECT_LIST_DOMAINS_INACTIVE;
@@ -299,17 +310,11 @@ fn virt_show_domains() -> String{
             let uuid = dom.get_uuid_string().unwrap_or_default();
             hmir_domains.push(HmirDomain::new(id, name, uuid));
         }
+        let ret_info = serde_json::to_string(&hmir_domains).unwrap_or_default();
+        ExecVirtQueryResult!(errno::HMIR_SUCCESS, ret_info, "".to_string());
     }
 
-    match conn.close() {
-        Ok(_) => { 
-            let ret_info = serde_json::to_string(&hmir_domains).unwrap_or_default(); 
-            ExecVirtQueryResult!(errno::HMIR_SUCCESS, ret_info, "".to_string());
-        },
-        Err(e) =>{
-            ExecVirtQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), format!("code: {}, error: {}", e.code, e.message));
-        } 
-    }
+    ExecVirtQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), "Failed to show domains".to_string());
 }
 
 fn virt_show_uri() -> String{
