@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia';
-import ElMessage from '@/utils/message';
 import {
   cmd_service_enabled, cmd_service_disabled, cmd_service_static,
   cmd_timer_enabled, cmd_timer_disabled, cmd_timer_static,
@@ -104,70 +103,42 @@ export const cmdServiceStore = defineStore('servive', {
         //判断之前本地是否拥有数据，
         if (this.serviceAll.cmdServiceEnabled.length !== 0) { timeout = 300 }
         setTimeout(() => {
-          // this.cmd_service_enabled();
-          // this.cmd_service_disabled();
-          // this.cmd_service_static();
-          // this.cmd_timer_enabled();
-          // this.cmd_timer_disabled();
-          // this.cmd_timer_static();
-          this.cmd_service_request('cmdAllSlice');
-          this.cmd_service_request('cmdServiceEnabled');
-          this.cmd_service_request('cmdServiceDisabled');
-          this.cmd_service_request('cmdServiceStatic');
-          this.cmd_service_request('cmdTimerEnabled');
-          this.cmd_service_request('cmdTimerDisabled');
-          this.cmd_service_request('cmdTimerStatic');
-          this.cmd_service_request('cmdSocketEnabled');
-          this.cmd_service_request('cmdSocketDisabled');
-          this.cmd_service_request('cmdSocketStatic');
-          this.cmd_service_request('cmdTargetEnabled');
-          this.cmd_service_request('cmdTargetDisabled');
-          this.cmd_service_request('cmdTargetStatic');
+          for (let item in this.serviceAllApi) {
+            this.cmd_service_request(item)
+          }
           resolve()
         }, timeout);
       })
     },
+
     //获取其中一条数据
     service_detail(name: string | string[]) {
       this.serviceDetail = this.serviceAllData[name.toString()] || {}
-      // let item: any, value: any
-      // for (item in this.serviceAll) {
-      //   for (value of this.serviceAll[item]) {
-      //     if (value.name === name) {
-      //       this.serviceDetail = value;
-      //       break;
-      //     }
-      //   }
-      // }
     },
+
     //判断当前数据是否在所有数据里面拥有，有则可以点击
     is_service_disabled(name: string | string[]) {
       return !this.serviceAllData[name.toString()];
-      // let isDisabled = true, item: any, value: any
-      // for (item in this.serviceAll) {
-      //   for (value of this.serviceAll[item]) {
-      //     if (value.name === name) {
-      //       isDisabled = false;
-      //       break;
-      //     }
-      //   }
-      // }
-      // return isDisabled;
     },
+
+    //请求接口函数
     cmd_service_request(api: string) {
       return new Promise<void>((resolve, reject) => {
-        this.serviceAllApi[api].apiFunction({ host: userStore.host }).then((res: any) => {
-          if (res[0] === 0) {
-            let value: any = JSON.parse(res[1]);
-            Object.assign(this.serviceAllData, value)
-            let arr: any = Array.from(Object.values(value), x => x);
-            this.serviceAll[api] = arr;
-            console.log(this.serviceAll);
-            resolve()
-          } else {
-            reject(`获取${api}信息失败`);
-          }
-        })
+        this.serviceAllApi[api].apiFunction({ host: userStore.host })
+          .then((res: any) => {
+            if (res[0] === 0) {
+              let value: any = JSON.parse(res[1]);
+              Object.assign(this.serviceAllData, value)
+              let arr: any = Array.from(Object.values(value), x => x);
+              this.serviceAll[api] = arr;
+              resolve()
+            } else {
+              reject(`获取${api}信息失败`);
+            }
+          })
+          .catch(error => {
+            reject(error);
+          });
       })
     },
   }
@@ -175,5 +146,5 @@ export const cmdServiceStore = defineStore('servive', {
 
 //在 非setup 中进行引入
 export default function cmdServiceStoreHook() {
-  return cmdServiceStore(store)
+  return cmdServiceStore(store);
 };
