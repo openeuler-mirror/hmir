@@ -146,5 +146,5 @@ export const cmdServiceStore = defineStore('servive', {
 
 //在 非setup 中进行引入
 export default function cmdServiceStoreHook() {
-  return cmdServiceStore(store)
+  return cmdServiceStore(store);
 };

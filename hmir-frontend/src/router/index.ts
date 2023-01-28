@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-import useRouterStoreHook from '@/store/modules/router'
+import useRouterStoreHook from '@/store/modules/router';
+import cmdServiceStoreHook from '@/store/modules/service';
 
 // 静态路由
 export const constantRoutes = [
@@ -30,8 +31,11 @@ const router = createRouter({
 
 // 重置路由
 export function resetRouter() {
+  //重置pinia所有信息
   const permissionStore = useRouterStoreHook();
-  permissionStore.addRouter = false;
+  const cmdServiceStore = cmdServiceStoreHook();
+  cmdServiceStore.$reset();
+  permissionStore.$reset();
   permissionStore.router.forEach(route => {
     const name = route.name;
     if (name && router.hasRoute(name)) {

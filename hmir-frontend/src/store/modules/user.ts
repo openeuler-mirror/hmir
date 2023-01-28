@@ -4,7 +4,8 @@ import { sessionStorage } from '@/utils/sessionStorage';
 import { userInformationList } from '@/utils/userInformationList';
 import { cmd_login, cmd_logout } from '@/api/index';
 import { store } from '../index';
-import { resetRouter } from '@/router'
+import { resetRouter } from '@/router';
+
 interface loginData {
   host: string;
   port: number;
@@ -71,7 +72,7 @@ export const useUsersStore = defineStore('user', {
             //判断是否注销成功
             if (response) {
               //重置所有的用户信息
-              this.$reset()
+              this.$reset();
               sessionStorage.remove('user');
               //注销成功后重置路由
               resetRouter()
@@ -95,5 +96,5 @@ export const useUsersStore = defineStore('user', {
 
 //在 非setup 中进行引入
 export default function useUsersStoreHook() {
-  return useUsersStore(store)
+  return useUsersStore(store);
 };
