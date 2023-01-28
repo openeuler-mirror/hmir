@@ -14,13 +14,7 @@ use serde_json::json;
 use std::collections::BTreeMap;
 use crate::ws_client::RequestClient;
 
-use hmir_systemd::{
-    build_blocking_client,
-    manager::blocking::{OrgFreedesktopSystemd1Manager},
-    models::{HmirUnit,Unit,IntoModel},
-    SystemdObjectType,
-};
-
+use hmir_protocol::systemd;
 
 impl RequestClient {
 
@@ -30,7 +24,7 @@ impl RequestClient {
             let response: Result<String, _> = self.client.request(cmd, rpc_params![token]).await;
             match response {
                 Ok(result) => {
-                    let p: HashWrap::<String,HmirUnit> = serde_json::from_str(result.as_str()).unwrap();
+                    let p: HashWrap::<String,systemd::HmirUnit> = serde_json::from_str(result.as_str()).unwrap();
                     return (p.code(),serde_json::to_string(&p.result).unwrap());
                 },
                 _ => { return (errno::HMIR_ERR_COMM,"".to_string())}
