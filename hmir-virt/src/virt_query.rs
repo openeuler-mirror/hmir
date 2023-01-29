@@ -294,11 +294,14 @@ fn virt_show_hypervisor() -> String{
 }
 
 fn virt_show_domains() -> String{
-    if QEMU_CONN.lock().unwrap().is_none() {
-        ExecVirtQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), "Not Connected!".to_string());
-    }
-    
-    let conn = QEMU_CONN.lock().unwrap().take().unwrap().0;
+    let conn_ref = QEMU_CONN.lock().unwrap();
+    let conn = match conn_ref.as_ref(){
+        Some(c) => &c.0,
+        None =>{
+            ExecVirtQueryResult!(errno::HMIR_ERR_COMM, "".to_string(), "Not Connected!".to_string());
+        },
+    };
+
     let mut hmir_domains:Vec<HmirDomain> = Vec::new();
     let flags = virt::connect::VIR_CONNECT_LIST_DOMAINS_ACTIVE |
                 virt::connect::VIR_CONNECT_LIST_DOMAINS_INACTIVE;
