@@ -978,7 +978,11 @@ name = "hmir-virt"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "hmir-errno",
+ "hmir-hash",
+ "hmir-token",
  "jsonrpsee",
+ "lazy_static",
  "serde",
  "serde_json",
  "virt",
