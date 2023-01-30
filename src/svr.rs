@@ -102,23 +102,23 @@ lazy_static! {
     //     RwLock::new(m)
     // };
 
-    static ref SERVICE_ENABLE_CACHE: Mutex<String> = Mutex::new(String::new());
-    static ref SERVICE_DISABLE_CACHE : Mutex<String> = Mutex::new(String::new());
+    static ref SERVICE_ENABLED_CACHE: Mutex<String> = Mutex::new(String::new());
+    static ref SERVICE_DISABLED_CACHE : Mutex<String> = Mutex::new(String::new());
     static ref SERVICE_STATIC_CACHE : Mutex<String> = Mutex::new(String::new());
 
-    static ref TIMER_ENABLE_CACHE: Mutex<String> = Mutex::new(String::new());
-    static ref TIMER_DISABLE_CACHE : Mutex<String> = Mutex::new(String::new());
+    static ref TIMER_ENABLED_CACHE: Mutex<String> = Mutex::new(String::new());
+    static ref TIMER_DISABLED_CACHE : Mutex<String> = Mutex::new(String::new());
     static ref TIMER_STATIC_CACHE : Mutex<String> = Mutex::new(String::new());
 
 
-    static ref SOCKET_ENABLE_CACHE: Mutex<String> = Mutex::new(String::new());
-    static ref SOCKET_DISABLE_CACHE : Mutex<String> = Mutex::new(String::new());
+    static ref SOCKET_ENABLED_CACHE: Mutex<String> = Mutex::new(String::new());
+    static ref SOCKET_DISABLED_CACHE : Mutex<String> = Mutex::new(String::new());
     static ref SOCKET_STATIC_CACHE : Mutex<String> = Mutex::new(String::new());
 
 
 
-    static ref TARGET_ENABLE_CACHE: Mutex<String> = Mutex::new(String::new());
-    static ref TARGET_DISABLE_CACHE : Mutex<String> = Mutex::new(String::new());
+    static ref TARGET_ENABLED_CACHE: Mutex<String> = Mutex::new(String::new());
+    static ref TARGET_DISABLED_CACHE : Mutex<String> = Mutex::new(String::new());
     static ref TARGET_STATIC_CACHE : Mutex<String> = Mutex::new(String::new());
 
     static ref SLICE_ALL_CACHE  : Mutex<String> = Mutex::new(String::new());
@@ -140,23 +140,23 @@ macro_rules! svr_default_result {
 #[doc(hidden)]
 fn update_all_svr()
 {
-    *SERVICE_ENABLE_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["enabled"],vec!["*.service"]);
-    *SERVICE_DISABLE_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["disabled"],vec!["*.service"]);
+    *SERVICE_ENABLED_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["enabled"],vec!["*.service"]);
+    *SERVICE_DISABLED_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["disabled"],vec!["*.service"]);
     *SERVICE_STATIC_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["static"],vec!["*.service"]);
 
 
-    *SOCKET_ENABLE_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["enabled"],vec!["*.socket"]);
-    *SOCKET_DISABLE_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["disabled"],vec!["*.socket"]);
+    *SOCKET_ENABLED_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["enabled"],vec!["*.socket"]);
+    *SOCKET_DISABLED_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["disabled"],vec!["*.socket"]);
     *SOCKET_STATIC_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["static"],vec!["*.socket"]);
 
 
-    *TIMER_ENABLE_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["enabled"],vec!["*.timer"]);
-    *TIMER_DISABLE_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["disabled"],vec!["*.timer"]);
+    *TIMER_ENABLED_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["enabled"],vec!["*.timer"]);
+    *TIMER_DISABLED_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["disabled"],vec!["*.timer"]);
     *TIMER_STATIC_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["static"],vec!["*.timer"]);
 
 
-    *TARGET_ENABLE_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["enabled"],vec!["*.target"]);
-    *TARGET_DISABLE_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["disabled"],vec!["*.target"]);
+    *TARGET_ENABLED_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["enabled"],vec!["*.target"]);
+    *TARGET_DISABLED_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["disabled"],vec!["*.target"]);
     *TARGET_STATIC_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["static"],vec!["*.target"]);
 
     *SLICE_ALL_CACHE.lock().unwrap() = get_unit_list_by_pattern(vec!["static","disabled","enabled"],vec!["*.slice"]);
@@ -232,7 +232,10 @@ pub fn init_services_mg()  {
 }
 
 fn basename(filename: &str) -> Option<&str> {
-    Path::new(filename).file_name().and_then(OsStr::to_str)
+    let name = Path::new(filename).file_name().and_then(OsStr::to_str);
+
+    // println!("{:?}",name);
+    name
 }
 
 
@@ -241,12 +244,12 @@ fn basename(filename: &str) -> Option<&str> {
 ///
 /// 获取所有服务信息
 pub fn svr_list_enabled_service() -> String {
-    let result = (*SERVICE_ENABLE_CACHE.lock().unwrap()).clone();
+    let result = (*SERVICE_ENABLED_CACHE.lock().unwrap()).clone();
     result
 }
 
 pub fn svr_list_disabled_service() -> String {
-    let result = (*SERVICE_DISABLE_CACHE.lock().unwrap()).clone();
+    let result = (*SERVICE_DISABLED_CACHE.lock().unwrap()).clone();
     result
 }
 
@@ -256,12 +259,12 @@ pub fn svr_list_static_service() -> String {
 }
 
 pub fn svr_list_enabled_timer() -> String {
-    let result = (*TIMER_ENABLE_CACHE.lock().unwrap()).clone();
+    let result = (*TIMER_ENABLED_CACHE.lock().unwrap()).clone();
     result
 }
 
 pub fn svr_list_disabled_timer() -> String {
-    let result = (*TIMER_DISABLE_CACHE.lock().unwrap()).clone();
+    let result = (*TIMER_DISABLED_CACHE.lock().unwrap()).clone();
     result
 }
 
@@ -271,12 +274,12 @@ pub fn svr_list_static_timer() -> String {
 }
 
 pub fn svr_list_enabled_socket() -> String {
-    let result = (*SOCKET_DISABLE_CACHE.lock().unwrap()).clone();
+    let result = (*SOCKET_ENABLED_CACHE.lock().unwrap()).clone();
     result
 }
 
 pub fn svr_list_disabled_socket() -> String {
-    let result = (*SOCKET_DISABLE_CACHE.lock().unwrap()).clone();
+    let result = (*SOCKET_DISABLED_CACHE.lock().unwrap()).clone();
     result}
 
 pub fn svr_list_static_socket() -> String {
@@ -285,16 +288,16 @@ pub fn svr_list_static_socket() -> String {
 }
 
 pub fn svr_list_enabled_target() -> String {
-    let result = (*TARGET_DISABLE_CACHE.lock().unwrap()).clone();
+    let result = (*TARGET_ENABLED_CACHE.lock().unwrap()).clone();
     result
 }
 
 pub fn svr_list_disabled_target() -> String {
-    let result = (*TARGET_DISABLE_CACHE.lock().unwrap()).clone();
+    let result = (*TARGET_DISABLED_CACHE.lock().unwrap()).clone();
     result}
 
 pub fn svr_list_static_target() -> String {
-    let result = (*TARGET_DISABLE_CACHE.lock().unwrap()).clone();
+    let result = (*TARGET_STATIC_CACHE.lock().unwrap()).clone();
     result
 }
 
@@ -572,5 +575,10 @@ mod tests {
     fn service_list_disable_it_works(){
         let s = svr_list_disabled_service();
         println!("{}",s);
+    }
+
+    #[test]
+    fn basename_test(){
+        basename("/lib/systemd/system/drbd@.target");
     }
 }
