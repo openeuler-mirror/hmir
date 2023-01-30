@@ -13,6 +13,7 @@ use log4rs;
 use log::{error, info, warn};
 use crate::arg;
 use crate::command;
+use hmir_hash::hmir_result::HmirResult;
 
 #[cfg(unix)]
 ///获取ceph集群的基本状态信息
@@ -28,6 +29,19 @@ pub fn get_ceph_client() -> Result<Rados, RadosError> {
         Err(e) => {
             error!("{}", format!("Failed to connect ceph, err: {:?}", e));
             Err(e)
+        }
+    }
+}
+
+#[macro_export]
+macro_rules! ceph_client {
+    ( $x:expr ) => {
+        $x = ceph_client::get_ceph_client();
+        match $x {
+            Ok(_) => {},
+            Err(e) => return HmirResult::new(1,
+                            format!("Failed to connect ceph, {}", e.to_string()),
+                            String::from(""))
         }
     }
 }

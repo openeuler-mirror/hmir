@@ -8,7 +8,7 @@ use crate::tests::test_default_args::{HOST, PORT};
 use crate::ceph::base::get_ceph_status;
 
 #[test]
-fn host_login_worked(){
+fn get_ceph_status_test(){
     register_client(HOST,PORT);
     let ret  = get_ceph_status(HOST);
     println!("ret: {:?}", ret);
