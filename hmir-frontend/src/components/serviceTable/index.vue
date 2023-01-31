@@ -16,6 +16,13 @@
           <template #row="props">
             <Row v-bind="props" />
           </template>
+          <template #overlay v-if="false">
+            <div class="el-loading-mask" style="display: flex; align-items: center; justify-content: center">
+              <el-icon class="is-loading" color="var(--el-color-primary)" :size="26">
+                <loading-icon />
+              </el-icon>
+            </div>
+          </template>
         </el-table-v2>
       </template>
     </el-auto-resizer>
@@ -25,6 +32,7 @@
 <script setup lang="tsx">
 import { ref, onMounted, computed, nextTick, watch } from 'vue';
 import type { Column } from 'element-plus';
+import { Loading as LoadingIcon } from '@element-plus/icons-vue';
 import router from '@/router';
 import cmdServiceStore from '@/store/modules/service';
 
