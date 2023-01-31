@@ -1,7 +1,7 @@
 <template>
   <div>
-    <el-table :data="tableData" style="width: 100%" table-layout="auto" :fit="false">
-      <el-table-column prop="pid" label="进程号" />
+    <el-table :data="tableData" style="width: 100%" table-layout="auto" :fit="true" >
+      <el-table-column prop="pid" label="进程号" sortable/>
       <el-table-column prop="user" label="用户名" />
       <el-table-column prop="priority" label="优先级" />
       <el-table-column prop="nice" label="nice值" />
@@ -34,7 +34,7 @@ const tableData = [
     command: 20,
   },
   {
-    pid: 779,
+    pid: 7729,
     user: 'Tom',
     priority: 20,
     nice: 779,
@@ -48,7 +48,7 @@ const tableData = [
     command: 20,
   },
   {
-    pid: 779,
+    pid: 7791,
     user: 'Tom',
     priority: 20,
     nice: 779,
@@ -62,7 +62,7 @@ const tableData = [
     command: 20,
   },
   {
-    pid: 779,
+    pid: 7729,
     user: 'Tom',
     priority: 20,
     nice: 779,
