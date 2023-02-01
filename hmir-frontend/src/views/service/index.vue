@@ -35,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue';
+import { ref, nextTick, onMounted } from 'vue';
 import type { TabsPaneContext } from 'element-plus';
 import router from '@/router';
 import { cmdServiceStore } from '@/store/modules/service';
@@ -72,7 +72,9 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
 }
 
 onMounted(() => {
-  store.cmd_service_all()
+  nextTick(() => {
+    store.cmd_service_all()
+  })
 })
 </script>
 
