@@ -31,7 +31,8 @@
     // "typeRoots": [],                                  /* Specify multiple folders that act like './node_modules/@types'. */
     //Element Plus全局组件类型声明
     "types": [
-      "element-plus/global"
+      "element-plus/global",
+      "vite-plugin-svg-icons/client"
     ], /* Specify type package names to be included without being referenced in a source file. */
     // "allowUmdGlobalAccess": true,                     /* Allow accessing UMD globals from modules. */
     // "moduleSuffixes": [],                             /* List of file name suffixes to search when resolving a module. */
