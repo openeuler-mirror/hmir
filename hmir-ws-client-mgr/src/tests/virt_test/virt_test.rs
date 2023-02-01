@@ -18,3 +18,10 @@ fn virt_show_hypervisor(){
     let (state,_)  = virt_mgr::virt_show_hypervisor(HOST);
     assert_eq!(state, errno::HMIR_SUCCESS)
 }
+
+#[test]
+fn virt_show_domains(){
+    register_client(HOST,PORT);
+    let (state,_)  = virt_mgr::virt_show_domains(HOST);
+    assert_eq!(state, errno::HMIR_SUCCESS)
+}
