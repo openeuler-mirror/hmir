@@ -12,13 +12,17 @@ import 'normalize.css/normalize.css';
 import 'element-plus/dist/index.css';
 import "./style.css";
 import 'animate.css';
+import { setupI18n } from "./lang";
 
 const app = createApp(App)
-app.component('s3-layer', s3Layer);
 app.directive('deBounce', deBounce);
 //全局挂载
 setupStore(app)
 app.use(ElementPlus).use(router)
+setupI18n(app)
+app.component('s3-layer', s3Layer);
+
+
 app.mount('#app')
 
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
