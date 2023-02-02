@@ -28,11 +28,10 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'
-import { invoke } from "@tauri-apps/api/tauri";
 import { useRouter } from 'vue-router';
 import about from '@/views/windowHeader/about/index.vue';
 import langselect from '@/views/windowHeader/langselect/index.vue'
-
+import api from '@/api';
 //about页面
 const visible = ref(false);
 const setting_visible = ref(false)
@@ -75,7 +74,7 @@ const handleClose = (key: string, keyPath: string[]) => {
 //退出
 async function processQuit() {
   //点击退出后关闭窗口
-  await invoke("cmd_quit", {});
+  api.cmd_quit()
 }
 
 //关于窗口

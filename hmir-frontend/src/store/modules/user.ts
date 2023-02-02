@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import ElMessage from '@/utils/message';
 import { sessionStorage } from '@/utils/sessionStorage';
 import { userInformationList } from '@/utils/userInformationList';
-import { cmd_login, cmd_logout } from '@/api/index';
+import api from '@/api';
 import { store } from '../index';
 import { resetRouter } from '@/router';
 
@@ -37,7 +37,7 @@ export const useUsersStore = defineStore('user', {
     //登录
     cmdLogin(loginData: loginData) {
       return new Promise<void>((resolve, reject) => {
-        cmd_login({ ...loginData })
+        api.cmd_login({ ...loginData })
           .then(response => {
             if (response === 0) {
               this.host = loginData.host;
@@ -66,7 +66,7 @@ export const useUsersStore = defineStore('user', {
     //注销
     cmdlogout(logoutData: logoutData) {
       return new Promise<void>((resolve, reject) => {
-        cmd_logout({ ...logoutData })
+        api.cmd_logout({ ...logoutData })
           .then(response => {
             console.log(response);
             //判断是否注销成功
