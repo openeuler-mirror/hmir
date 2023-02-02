@@ -6,4 +6,5 @@ mod ceph;
 mod ttyd;
 mod svr;
 mod virt;
+mod proc;
 
