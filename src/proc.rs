@@ -21,16 +21,25 @@ use hmir_hash::HashWrap;
 use hmir_errno::errno;
 use nix::sys::signal;
 use nix::unistd;
+use nix::libc;
+use std::ffi::CStr;
+
 extern crate core_affinity;
 
 
 #[derive(Clone, Debug,Serialize)]
 struct ProcInfo {
     pub pid: i32,
-    pub comm: String,
-    pub ppid: i32,
-    pub vsize: u64,
-    pub num_threads: i64
+    pub user: String,
+    pub priority: i64,
+    pub nice : i64,
+    pub virt : u64,//KB,
+    pub res  : u64,//KB,
+    pub sha  : u64,//KB
+    pub state : String,
+    pub command: String,
+    pub cmdline: String,
+
 }
 
 macro_rules! proc_default_result {
@@ -42,21 +51,63 @@ macro_rules! proc_default_result {
     }
 }
 
+fn proc_get_username(uid : libc::uid_t) -> String
+{
+    unsafe {
+        let passwd = nix::libc::getpwuid(uid);
+        let username = CStr::from_ptr((*passwd).pw_name);
+        String::from(username.to_str().unwrap())
+    }
+}
+
+fn proc_get_pagesize() -> i64 {
+    unsafe {
+        libc::sysconf(libc::_SC_PAGESIZE)
+    }
+}
+
 pub fn process_all() -> std::string::String
 {
     let mut map = HashWrap::<i32,ProcInfo>:: new();
+    let page_sizeKB = proc_get_pagesize() as u64 >> 10;
     for prc in procfs::process::all_processes().unwrap() {
         // println!("{:?}",prc);
-        if let Ok(stat) = prc.unwrap().stat() {
-            // total_time is in seconds
-            let p  = ProcInfo {
-                pid: stat.pid,
-                comm: stat.comm,
-                ppid: stat.ppid,
-                vsize: stat.vsize,
-                num_threads: stat.num_threads
-            };
-            map.insert(stat.pid,p);
+        let mut ruid: u32 = 0;
+        let mut virt : u64 = 0;
+        let mut res : u64 = 0;
+        let mut sha : u64 = 0;
+
+        if let p = prc.unwrap() {
+
+            if let Ok(status ) = p.status() {
+                ruid = status.ruid;
+            }
+
+            if let Ok(statm) = p.statm() {
+                virt = statm.size * page_sizeKB;
+                res = statm.resident * page_sizeKB;
+                sha = statm.shared * page_sizeKB ;
+            }
+
+            println!("{:?}",p.cmdline());
+
+            let username = proc_get_username(ruid);
+            if let Ok(stat) = p.stat() {
+                // total_time is in seconds
+                let data  = ProcInfo {
+                    user: username,
+                    pid: stat.pid,
+                    command: stat.comm,
+                    nice : stat.nice,
+                    priority : stat.priority,
+                    virt : virt,
+                    res: res,
+                    sha : sha,
+                    state : String::from(stat.state),
+                    cmdline : p.cmdline().unwrap().iter().map(|x| x.to_string() + " ").collect::<String>()
+                };
+                map.insert(stat.pid,data);
+            }
         }
     }
 
@@ -65,42 +116,7 @@ pub fn process_all() -> std::string::String
 }
 
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-    #[test]
-    fn process_all_it_works() {
-        let s = process_all();
-        println!("{}",s);
-    }
 
-    #[test]
-    fn process_status_it_works(){
-        let s = process_status(0);
-        println!("{}",s);
-    }
-}
-
-pub fn process_status(pid : i32) -> std::string::String {
-    if is_valid_process(pid) {
-
-        let process = procfs::process::Process::new(pid);
-        let stat = process.unwrap().stat().unwrap();
-        let p  = ProcInfo {
-            pid: stat.pid,
-            comm: stat.comm,
-            ppid: stat.ppid,
-            vsize: stat.vsize,
-            num_threads: stat.num_threads
-        };
-        let mut map = HashWrap::<i32,ProcInfo>:: new();
-        map.insert(stat.pid,p);
-        let serialized = serde_json::to_string(&map).unwrap();
-        return serialized;
-    }
-
-    proc_default_result!(errno::HMIR_ERR_COMM);
-}
 
 
 fn is_valid_process(pid : i32) -> bool {
@@ -144,12 +160,6 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
         Ok(process_all())
     })?;
 
-    module.register_method("process-status", |params, _| {
-        //默认没有error就是成功的
-        let pid = params.one::<i32>()?;
-        Ok(process_status(pid))
-    })?;
-
     module.register_method("process-kill", |params, _| {
         //默认没有error就是成功的
         let pid = params.one::<i32>()?;
@@ -164,4 +174,19 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
 
 
     Ok(())
+}
+
+
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn process_all_it_works() {
+        let s = process_all();
+        println!("{}",s);
+    }
+
+
 }
