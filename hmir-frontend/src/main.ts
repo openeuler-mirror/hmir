@@ -1,11 +1,12 @@
 import { createApp } from "vue";
-import ElementPlus from 'element-plus'
-import router from "./router"
+import ElementPlus from 'element-plus';
+import router from "./router";
 import App from "./App.vue";
-import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+import * as ElementPlusIconsVue from '@element-plus/icons-vue';
 import { deBounce } from './directive/index';
 import { setupStore } from '@/store';
 import { s3Layer } from 'vue3-layer';
+import 'virtual:svg-icons-register';
 import '@/permission';
 import 'vue3-layer/dist/s3Layer.css';
 import 'normalize.css/normalize.css';

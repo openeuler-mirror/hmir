@@ -40,4 +40,20 @@ impl RequestClient {
         br_info.insert("token", token);
         ExecVirtQuery!(self, "virt-check-connection", br_info);
     }
+
+    #[allow(dead_code)]
+    pub fn virt_show_hypervisor(&self) -> (usize, String) {
+        let token = json!(self.token.clone());
+        let mut br_info = BTreeMap::new();
+        br_info.insert("token", token);
+        ExecVirtQuery!(self, "virt-show-hypervisor", br_info);
+    }
+
+    #[allow(dead_code)]
+    pub fn virt_show_domains(&self) -> (usize, String) {
+        let token = json!(self.token.clone());
+        let mut br_info = BTreeMap::new();
+        br_info.insert("token", token);
+        ExecVirtQuery!(self, "virt-show-domains", br_info);
+    }
 }
