@@ -1,11 +1,5 @@
 import { defineStore } from 'pinia';
-import {
-  cmd_service_enabled, cmd_service_disabled, cmd_service_static,
-  cmd_timer_enabled, cmd_timer_disabled, cmd_timer_static,
-  cmd_socket_enabled, cmd_socket_disabled, cmd_socket_static,
-  cmd_target_enabled, cmd_target_disabled, cmd_target_static,
-  cmd_all_slice,
-} from '@/api/index';
+import api from '@/api/index';
 import { store } from '../index';
 import useUsersStore from '@/store/modules/user';
 
@@ -48,43 +42,43 @@ export const cmdServiceStore = defineStore('servive', {
       //用来保存所有的api接口
       serviceAllApi: {
         'cmdAllSlice': {
-          apiFunction: cmd_all_slice
+          apiFunction: api.cmd_all_slice
         },
         'cmdServiceEnabled': {
-          apiFunction: cmd_service_enabled
+          apiFunction: api.cmd_service_enabled
         },
         'cmdServiceDisabled': {
-          apiFunction: cmd_service_disabled
+          apiFunction: api.cmd_service_disabled
         },
         'cmdServiceStatic': {
-          apiFunction: cmd_service_static
+          apiFunction: api.cmd_service_static
         },
         'cmdTimerEnabled': {
-          apiFunction: cmd_timer_enabled
+          apiFunction: api.cmd_timer_enabled
         },
         'cmdTimerDisabled': {
-          apiFunction: cmd_timer_disabled
+          apiFunction: api.cmd_timer_disabled
         },
         'cmdTimerStatic': {
-          apiFunction: cmd_timer_static
+          apiFunction: api.cmd_timer_static
         },
         'cmdSocketEnabled': {
-          apiFunction: cmd_socket_enabled
+          apiFunction: api.cmd_socket_enabled
         },
         'cmdSocketDisabled': {
-          apiFunction: cmd_socket_disabled
+          apiFunction: api.cmd_socket_disabled
         },
         'cmdSocketStatic': {
-          apiFunction: cmd_socket_static
+          apiFunction: api.cmd_socket_static
         },
         'cmdTargetEnabled': {
-          apiFunction: cmd_target_enabled
+          apiFunction: api.cmd_target_enabled
         },
         'cmdTargetDisabled': {
-          apiFunction: cmd_target_disabled
+          apiFunction: api.cmd_target_disabled
         },
         'cmdTargetStatic': {
-          apiFunction: cmd_target_static
+          apiFunction: api.cmd_target_static
         },
       }
     };
