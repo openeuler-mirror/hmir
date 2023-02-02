@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-table :data="tableData" style="width: 100%" table-layout="auto" :fit="true" >
+    <el-table :data="processAllData" style="width: 100%" table-layout="auto" :fit="true" >
       <el-table-column prop="pid" label="进程号" sortable/>
       <el-table-column prop="user" label="用户名" sortable/>
       <el-table-column prop="priority" label="优先级" sortable/>
@@ -19,65 +19,17 @@
 
 <script setup lang="ts">
 
+import { storeToRefs } from 'pinia';
+import { useProcStore } from '@/store/modules/proc';
+import { onMounted } from 'vue-demi';
 
-const tableData = [
-  {
-    pid: 779,
-    user: 'Tom',
-    priority: 20,
-    nice: 779,
-    virt: 'Tom',
-    res: 20,
-    shr: 779,
-    s: 'Tom',
-    cpu: 20,
-    mem: 779,
-    time: 'Tom',
-    command: 20,
-  },
-  {
-    pid: 7729,
-    user: 'Tom',
-    priority: 20,
-    nice: 779,
-    virt: 'Tom',
-    res: 20,
-    shr: 779,
-    s: 'Tom',
-    cpu: 20,
-    mem: 779,
-    time: 'Tom',
-    command: 20,
-  },
-  {
-    pid: 7791,
-    user: 'Tom',
-    priority: 20,
-    nice: 779,
-    virt: 'Tom',
-    res: 20,
-    shr: 779,
-    s: 'Tom',
-    cpu: 20,
-    mem: 779,
-    time: 'Tom',
-    command: 20,
-  },
-  {
-    pid: 7729,
-    user: 'Tom',
-    priority: 20,
-    nice: 779,
-    virt: 'Tom',
-    res: 20,
-    shr: 779,
-    s: 'Tom',
-    cpu: 20,
-    mem: 779,
-    time: 'Tom',
-    command: 20,
-  },
-]
+//引入store仓库
+const store = useProcStore();
+const { processAllData } = storeToRefs(store);
+onMounted(() => {
+  store.cmd_process_info();
+})
+
 </script>
 
 <style lang="scss" scoped>
