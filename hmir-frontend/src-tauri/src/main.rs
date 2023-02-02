@@ -42,6 +42,7 @@ mod svr;
 mod ovs;
 mod virt;
 mod ceph;
+mod proc;
 
 use crate::login::login_cmd::*;
 use crate::ttyd::ttyd_cmd::*;
