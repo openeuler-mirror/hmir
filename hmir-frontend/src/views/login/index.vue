@@ -82,6 +82,10 @@ import { useRouterStore } from '@/store/modules/router';
 import { useUsersStore } from '@/store/modules/user';
 import { localStorage } from '@/utils/localStorage';
 
+import {i18n} from '@/lang'
+
+const { t } = i18n.global
+
 //限制用户信息类型
 interface userList {
   host: string;
@@ -126,7 +130,7 @@ const loginData = reactive({
 //IP地址校验规则
 const checkipAddress = (rule: any, value: any, callback: any) => {
   if (!/([1-9]?\d|1\d{2}|2[0-4]\d|25[0-5])(\.([1-9]?\d|1\d{2}|2[0-4]\d|25[0-5])){3}$/.test(value)) {
-    callback(new Error('请输入合法的IP地址'))
+    callback(new Error(t('legalIP')))
   } else {
     callback()
   }

@@ -11,21 +11,31 @@
         <template #title>帮助</template>
         <el-menu-item index="about" class="el-menu-item-height">关于</el-menu-item>
       </el-sub-menu>
+      <el-sub-menu index="2" :popper-offset="0">
+        <template #title>设置</template>
+        <el-menu-item index="setting" class="el-menu-item-height"> 切换语言</el-menu-item>
+      </el-sub-menu>
       <div class="flex-grow" />
     </el-menu>
   </div>
   <s3-layer v-model="visible" title="HMIR运维管理系统">
     <about :minimizable="true" :maximizable="true" :closable="true"></about>
   </s3-layer>
+  <s3-layer v-model="setting_visible" title="HMIR运维管理系统">
+    <langselect> </langselect>
+  </s3-layer>
+
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'
 import { invoke } from "@tauri-apps/api/tauri";
 import { useRouter } from 'vue-router';
 import about from '@/views/windowHeader/about/index.vue';
+import langselect from '@/views/windowHeader/langselect/index.vue'
 
 //about页面
 const visible = ref(false);
+const setting_visible = ref(false)
 
 //引入路由
 const router = useRouter()
@@ -38,8 +48,11 @@ const handleSelect = (key: string, keyPath: string[]) => {
   if (key === 'processQuit') {
     processQuit()
   }
-  if (key === 'about') {
+  else if (key === 'about') {
     openAboutWindow()
+  }
+  else if (key === 'setting') {
+    openSettingWindow()
   }
   console.log(key, keyPath)
 }
@@ -68,6 +81,10 @@ async function processQuit() {
 //关于窗口
 function openAboutWindow() {
   visible.value = true;
+}
+
+function openSettingWindow() {
+  setting_visible.value = true;
 }
 
 </script>

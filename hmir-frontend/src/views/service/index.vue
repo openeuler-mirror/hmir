@@ -30,12 +30,22 @@
           <el-button type="primary" size="small">创建定时器</el-button>
         </template>
       </el-tab-pane>
+
+      <el-tab-pane name="" disabled v-if="(serviceActive === 'serviceTimer')">
+        <template #label>
+          <el-button type="primary" size="small">$t(hello)</el-button>
+        </template>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, nextTick, onMounted } from 'vue';
+
+import zh from 'element-plus/lib/locale/lang/zh-cn'
+import en from 'element-plus/es/locale/lang/en'
+
+import { ref, watch,nextTick,onMounted } from 'vue';
 import type { TabsPaneContext } from 'element-plus';
 import router from '@/router';
 import { cmdServiceStore } from '@/store/modules/service';
@@ -45,7 +55,7 @@ import serviceSocket from '@/views/service/components/serviceSocket/index.vue';
 import serviceTimer from '@/views/service/components/serviceTimer/index.vue';
 import servicePath from '@/views/service/components/servicePath/index.vue';
 
-
+const lang = {zh,en}
 
 //引入store仓库
 const store = cmdServiceStore();
