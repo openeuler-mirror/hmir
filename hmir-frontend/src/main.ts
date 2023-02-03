@@ -52,13 +52,11 @@ import { setupI18n } from "./lang";
 const app = createApp(App)
 app.directive('deBounce', deBounce);
 //全局挂载
-setupStore(app)
+setupStore(app);
+setupI18n(app);
 app.use(ElementPlus).use(router)
-setupI18n(app)
 app.component('s3-layer', s3Layer);
-
 app.mount('#app')
-
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component)
 }
