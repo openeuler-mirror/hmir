@@ -22,7 +22,7 @@
     <about :minimizable="true" :maximizable="true" :closable="true"></about>
   </s3-layer>
   <s3-layer v-model="setting_visible" title="HMIR运维管理系统">
-    <langselect> </langselect>
+    <langselect :locale="locale" @localeChange="localeChange"> </langselect>
   </s3-layer>
 
 </template>
@@ -32,10 +32,12 @@ import { useRouter } from 'vue-router';
 import about from '@/views/windowHeader/about/index.vue';
 import langselect from '@/views/windowHeader/langselect/index.vue'
 import api from '@/api';
+import { useI18n } from 'vue-i18n'
+
 //about页面
 const visible = ref(false);
 const setting_visible = ref(false)
-
+const { locale } = useI18n()
 //引入路由
 const router = useRouter()
 
@@ -84,6 +86,11 @@ function openAboutWindow() {
 
 function openSettingWindow() {
   setting_visible.value = true;
+}
+
+//修改国际化语言
+function localeChange(data: string) {
+  locale.value = data
 }
 
 </script>
