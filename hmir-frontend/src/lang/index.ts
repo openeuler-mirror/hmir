@@ -1,17 +1,16 @@
-
 import type { App } from 'vue';
 import { createI18n } from 'vue-i18n'
 import en from './en'
 import zh from './zh'
 
 const messages = {
-    'zh_CN':zh,
-    'en_US':en
+    'zh_CN': zh,
+    'en_US': en
 }
 
 const localData = {
     globalInjextion: true,
-    lagacy: false,
+    legacy: false,
     locale: localStorage.getItem('lang') || 'zh_CN',
     messages
 }
