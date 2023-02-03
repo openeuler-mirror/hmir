@@ -10,11 +10,9 @@
 <script setup lang="ts">
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
-import Greet from "./components/Greet.vue";
-import { ElConfigProvider } from 'element-plus';
-import windowHeader from "@/views/windowHeader/index.vue";
+import { ElConfigProvider } from 'element-plus'
+import windowHeader from '@/views/windowHeader/index.vue'
 </script>
-
 
 <style scoped>
 .logo.vite:hover {
