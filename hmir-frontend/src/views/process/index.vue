@@ -19,15 +19,15 @@
 
 <script setup lang="ts">
 
-import { storeToRefs } from 'pinia';
-import { useProcStore } from '@/store/modules/proc';
-import { onMounted } from 'vue-demi';
+import { storeToRefs } from 'pinia'
+import { useProcStore } from '@/store/modules/proc'
+import { onMounted } from 'vue'
 
-//引入store仓库
-const store = useProcStore();
-const { processAllData } = storeToRefs(store);
+// 引入store仓库
+const store = useProcStore()
+const { processAllData } = storeToRefs(store)
 onMounted(() => {
-  store.cmd_process_info();
+  store.cmd_process_info()
 })
 
 </script>

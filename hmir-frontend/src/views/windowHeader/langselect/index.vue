@@ -8,22 +8,22 @@
 
 <script setup lang="ts">
 import { ElRadio, ElRadioGroup } from 'element-plus'
-import { ref, onMounted } from "vue";
+import { ref, onMounted } from 'vue'
 
 const props = defineProps({
   locale: {
     type: String,
-    default: "zh_CN",
-  },
-});
+    default: 'zh_CN'
+  }
+})
 
-//修改语言
-const emit = defineEmits(['localeChange']);
+// 修改语言
+const emit = defineEmits(['localeChange'])
 
 const radio = ref('1')
 
-//语言更换
-function handleSelectLanguage(data: any) {
+// 语言更换
+function handleSelectLanguage (data: any) {
   emit('localeChange', data)
 }
 

@@ -42,25 +42,25 @@
 
 <script setup lang="ts">
 
-import zh from 'element-plus/lib/locale/lang/zh-cn'
-import en from 'element-plus/es/locale/lang/en'
+// import zh from 'element-plus/lib/locale/lang/zh-cn'
+// import en from 'element-plus/es/locale/lang/en'
 
-import { ref, watch,nextTick,onMounted } from 'vue';
-import type { TabsPaneContext } from 'element-plus';
-import router from '@/router';
-import { cmdServiceStore } from '@/store/modules/service';
-import serviceTarget from '@/views/service/components/serviceTarget/index.vue';
-import systemService from '@/views/service/components/systemService/index.vue';
-import serviceSocket from '@/views/service/components/serviceSocket/index.vue';
-import serviceTimer from '@/views/service/components/serviceTimer/index.vue';
-import servicePath from '@/views/service/components/servicePath/index.vue';
+import { ref, nextTick, onMounted } from 'vue'
+import type { TabsPaneContext } from 'element-plus'
+// import router from '@/router'
+import { cmdServiceStore } from '@/store/modules/service'
+import serviceTarget from '@/views/service/components/serviceTarget/index.vue'
+import systemService from '@/views/service/components/systemService/index.vue'
+import serviceSocket from '@/views/service/components/serviceSocket/index.vue'
+import serviceTimer from '@/views/service/components/serviceTimer/index.vue'
+import servicePath from '@/views/service/components/servicePath/index.vue'
 
-const lang = {zh,en}
+// const lang = { zh, en }
 
-//引入store仓库
-const store = cmdServiceStore();
+// 引入store仓库
+const store = cmdServiceStore()
 
-//当前点击标签
+// 当前点击标签
 const serviceActive = ref('systemService')
 
 // const serviceAll = ref([
@@ -71,11 +71,10 @@ const serviceActive = ref('systemService')
 //   { lable: '路径', name: 'servicePath' },
 // ])
 
-//监听tableList的变化，实时刷新表格
+// 监听tableList的变化，实时刷新表格
 // watch(serviceActive, value => {
 //   router.push(`/service/${value}`)
 // });
-
 
 const handleClick = (tab: TabsPaneContext, event: Event) => {
   // console.log(tab, event)

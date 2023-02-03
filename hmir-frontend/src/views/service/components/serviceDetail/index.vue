@@ -113,44 +113,44 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute } from 'vue-router';
-import { onBeforeUnmount, ref, watch } from 'vue';
-import router from '@/router';
-import { cmdServiceStore } from '@/store/modules/service';
-import { storeToRefs } from 'pinia';
+import { useRoute } from 'vue-router'
+import { onBeforeUnmount, ref, watch } from 'vue'
+import router from '@/router'
+import { cmdServiceStore } from '@/store/modules/service'
+import { storeToRefs } from 'pinia'
 
-//引入store仓库
-const store = cmdServiceStore();
+// 引入store仓库
+const store = cmdServiceStore()
 
-const { serviceDetail, serviceAll } = storeToRefs(store);
+const { serviceDetail, serviceAll } = storeToRefs(store)
 
-const route = useRoute();
+const route = useRoute()
 
 const stateValue = ref<string | number | object>('重启')
 
-//监听serviceAll的变化，实时刷新表格
+// 监听serviceAll的变化，实时刷新表格
 watch(serviceAll, value => {
   if (value.cmdServiceEnabled.length === 0) {
-    store.cmd_service_all();
+    store.cmd_service_all()
   }
-  store.service_detail(route.params.serviceName);
+  store.service_detail(route.params.serviceName)
 }, {
-  //初始化立即执行
+  // 初始化立即执行
   immediate: true,
-  deep: true,
-});
+  deep: true
+})
 
-//监听跳转的路由并更新数据
+// 监听跳转的路由并更新数据
 watch(() => route.params.serviceName, value => {
-  value && store.service_detail(value);
+  value && store.service_detail(value)
 }, {
-  deep: true,
-});
+  deep: true
+})
 
 const goBack = () => {
-  //跳转到服务页
+  // 跳转到服务页
   router.push({
-    name: 'service',
+    name: 'service'
   })
 }
 
@@ -163,13 +163,13 @@ const handleClick = () => {
 }
 
 const toServiceDetail = (value: string) => {
-  serviceDetail.value = {} as any;
+  serviceDetail.value = {} as any
   router.push({
     name: 'serviceDetail',
     params: {
-      serviceName: value,
-    },
-  });
+      serviceName: value
+    }
+  })
 }
 
 onBeforeUnmount(() => {
@@ -177,7 +177,6 @@ onBeforeUnmount(() => {
 })
 
 </script>
-
 
 <style lang="scss" scoped>
 .box-card {
