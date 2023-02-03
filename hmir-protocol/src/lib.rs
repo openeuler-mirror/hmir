@@ -15,3 +15,4 @@ mod tests {
 
 
 pub mod systemd;
+pub mod proc;
