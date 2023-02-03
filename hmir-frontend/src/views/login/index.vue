@@ -83,7 +83,6 @@ import { useUsersStore } from '@/store/modules/user';
 import { localStorage } from '@/utils/localStorage';
 
 import {i18n} from '@/lang'
-
 const { t } = i18n.global
 
 //限制用户信息类型
@@ -148,7 +147,7 @@ const checkipPort = (rule: any, value: any, callback: any) => {
 //表单校验
 const rules = reactive<FormRules>({
   ipAddress: [
-    { required: true, message: 'IP地址不能为空', trigger: 'blur' },
+    { required: true, message: t('legalIP'), trigger: 'blur' },
     { validator: checkipAddress, trigger: 'blur' }
   ],
   ipPort: [
