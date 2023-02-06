@@ -18,5 +18,7 @@ serde = { version = "1.0.149", features = ["derive"] }
 jsonrpsee = { version = "0.15.1", features = ["full"] }
 jsonrpsee-core = "0.15.1"
 jsonrpsee-types = "0.15.1"
+regex = "1.7.0"
+lazy_static = "1.4.0"
 
 hmir-hash = {path = "../hmir-hash"}

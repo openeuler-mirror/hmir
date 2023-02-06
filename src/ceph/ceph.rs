@@ -5,7 +5,6 @@
 use jsonrpsee::ws_server::{RpcModule};
 use hmir_ceph::ceph_client;
 use hmir_ceph::pool;
-use hmir_ceph::osd;
 use hmir_ceph::mon;
 use hmir_ceph::pg;
 use hmir_ceph::base;
@@ -18,6 +17,7 @@ use std::collections::HashMap;
 use serde_json::json;
 use log::{error,info};
 
+use crate::ceph::osd::ceph_osd_register_method;
 #[doc(hidden)]
 pub fn register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
     //The svr module
@@ -271,36 +271,6 @@ pub fn ceph_mds_register_method(module : & mut RpcModule<()>) -> anyhow::Result<
     Ok(())
 }
 
-///osd 相关命令
-pub fn ceph_osd_register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
-    module.register_method("ceph-osd-tree", |_, _| {
-        //获取osd拓扑结构
-        Ok(ceph_osd_tree())
-    })?;
-
-    module.register_method("ceph-osd-versions", |_, _| {
-        //获取osd组件版本信息
-        Ok(ceph_osd_versions())
-    })?;
-
-    module.register_method("ceph-osd-metadata", |_, _| {
-        //获取osd组件元数据信息
-        Ok(ceph_osd_metadata())
-    })?;
-
-    module.register_method("ceph-osd-perf", |_, _| {
-        //osd性能测试
-        Ok(ceph_osd_perf())
-    })?;
-
-    module.register_method("ceph-osd-crush-rule-dump", |_, _| {
-        //获取osd的crush规则
-        Ok(ceph_osd_crush_rule_dump())
-    })?;
-    
-    Ok(())
-}
-
 //osd pool相关命令
 pub fn ceph_osd_pool_register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
     module.register_method("ceph-pool-list", |_, _| {
@@ -442,28 +412,4 @@ pub fn ceph_pool_list() -> String {
 
 pub fn ceph_pool_stats() -> String {
     pool::pool_stats()
-}
-
-
-///osd
-
-pub fn ceph_osd_tree() -> String {
-    osd::osd_tree()
-}
-
-pub fn ceph_osd_versions() -> String {
-    osd::osd_versions()
-}
-
-pub fn ceph_osd_metadata() -> String {
-    osd::osd_metadata()
-}
-
-pub fn ceph_osd_perf() -> String {
-    osd::osd_perf()
-}
-
-///osd crush
-pub fn ceph_osd_crush_rule_dump() -> String {
-    osd::osd_crush_rule_dump()
 }
