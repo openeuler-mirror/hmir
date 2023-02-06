@@ -1,11 +1,9 @@
-use std::borrow::Borrow;
 use crate::command;
 use crate::ceph_client;
 use ceph::{cmd, PoolOption, error::RadosResult, error::RadosError};
 // use serde_json::Value::String;
 use std::string::String;
 use serde_json::json;
-use serde_json::*;
 use serde::*;
 
 
@@ -224,7 +222,7 @@ pub fn test_pool_option() {
 
 #[test]
 pub fn test_pool_option1() {
-    let mut vec_s = vec![(String::from("a"), String::from("disable")), 
+    let vec_s = vec![(String::from("a"), String::from("disable")), 
                          (String::from("b"), String::from("enable"))];
     let vec = vec_s.into_iter().filter(|x| x.1.eq("disable"))
         .map(|x| x.0).collect::<Vec<String>>();

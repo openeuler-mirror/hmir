@@ -1,8 +1,6 @@
 // extern crate serde_json;
 
 use std::fmt::Debug;
-use std::path::Display;
-use std::ptr::null;
 use crate::command;
 use crate::arg;
 use crate::ceph_client;
@@ -11,7 +9,6 @@ use ceph::error::RadosError;
 use ceph::error::RadosResult;
 use log::error;
 use serde_json::json;
-use serde_json::*;
 use serde::*;
 
 ///list authentication state
@@ -50,7 +47,7 @@ pub struct AuthResult {
 
 #[test]
 pub fn test() {
-    let s = auth_get("client", "adm1in");
+    let s = auth_get("client", "admin");
     match s {
         Ok(s) => {
             let s = json!(&s).to_string();

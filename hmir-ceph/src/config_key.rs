@@ -1,6 +1,5 @@
 use ceph::cmd::config_key_exists;
 use log::error;
-use ceph::cmd;
 use ceph::error::RadosResult;
 use ceph::error::RadosError;
 use crate::arg;
