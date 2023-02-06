@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { cmd_get_ceph_status } from '@/api/ceph/index';
+import api from '@/api';
 import { store } from '../index';
 import useUsersStore from '@/store/modules/user';
 
@@ -20,7 +20,7 @@ export const useCephStore = defineStore('ceph', {
     //登录
     cmd_get_ceph_status() {
       return new Promise<void>((resolve, reject) => {
-        cmd_get_ceph_status({ host: userStore.host })
+        api.cmd_get_ceph_status({ host: userStore.host })
           .then((response: any) => {
             if (response.code === 0) {
               this.cmdCephStatus = JSON.parse(response.result);

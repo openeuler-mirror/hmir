@@ -10,67 +10,65 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from "vue";
-import ElMessage from '@/utils/message';
-import { useUsersStore } from '@/store/modules/user';
-import { cmd_ttyd_start, cmd_ttyd_stop } from '@/api/index';
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+import ElMessage from '@/utils/message'
+import { useUsersStore } from '@/store/modules/user'
+import api from '@/api'
 
 const loading = ref<Boolean>(false)
 
-//判断控制台是否显示
-const ttydtMsg = ref<any>("");
+// 判断控制台是否显示
+const ttydtMsg = ref<any>('')
 
-//引入store仓库
-const store = useUsersStore();
+// 引入store仓库
+const store = useUsersStore()
 
-//连接终端的地址
-const getPageUrl = ref<string>("");
+// 连接终端的地址
+const getPageUrl = ref<string>('')
 
-//连接终端
-async function ttydStart() {
-  //连接控制台
-  ttydtMsg.value = await cmd_ttyd_start({ host: store.host });
+// 连接终端
+async function ttydStart () {
+  // 连接控制台
+  ttydtMsg.value = await api.cmd_ttyd_start({ host: store.host })
   if (!ttydtMsg.value) {
     ElMessage({
       message: '连接失败，请重试',
       type: 'error',
-      customClass: 'login-message-error',
-    });
+      customClass: 'login-message-error'
+    })
   }
 }
 
-//断开终端
-async function ttydStop() {
+// 断开终端
+async function ttydStop () {
   // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-  let value = await cmd_ttyd_stop({ host: store.host });
+  const value = await api.cmd_ttyd_stop({ host: store.host })
   if (value) {
     ttydtMsg.value = false
   }
 }
 
-//刷新终端
-function refresh() {
+// 刷新终端
+function refresh () {
   ttydStart()
-  loading.value = true;
-  ttydtMsg.value = false;
+  loading.value = true
+  ttydtMsg.value = false
   setTimeout(() => {
-    loading.value = false;
-    ttydtMsg.value = true;
-  }, 1000 * Math.random());
+    loading.value = false
+    ttydtMsg.value = true
+  }, 1000 * Math.random())
 }
 
 onMounted(() => {
   getPageUrl.value = `http://${store.host}:3001`
-  ttydStart();
-});
+  ttydStart()
+})
 
-//注册一个钩子，在组件实例被卸载之前调用，关闭控制台连接
+// 注册一个钩子，在组件实例被卸载之前调用，关闭控制台连接
 onBeforeUnmount(() => {
   ttydStop()
 })
 </script>
-
-
 
 <style lang="scss" scoped>
 .iframe {

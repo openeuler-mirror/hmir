@@ -30,60 +30,60 @@
 </template>
 
 <script setup lang="tsx">
-import { ref, onMounted, computed, nextTick, watch } from 'vue';
-import type { Column } from 'element-plus';
-import { Loading as LoadingIcon } from '@element-plus/icons-vue';
-import router from '@/router';
-import cmdServiceStore from '@/store/modules/service';
+import { ref, onMounted, watch } from 'vue'
+import type { Column } from 'element-plus'
+import { Loading as LoadingIcon } from '@element-plus/icons-vue'
+import router from '@/router'
 
-//仓库
-const store = cmdServiceStore();
-
-//父组件传过来的数据
+// 父组件传过来的数据
 const props = defineProps({
   tableList: {
     type: Array,
-    default: []
+    default () {
+      return []
+    }
   },
   tableProp: {
     type: Array<any>,
-    default: []
+    default () {
+      return []
+    }
   }
-});
+})
 
-//表头数据
+// 表头数据
 const columns = ref<Column<any>[]>([])
 
-//每一列数据（总）
+// 每一列数据（总）
 const data = ref<any>([])
 
-//获取对应的点击项数据
+// 获取对应的点击项数据
 const handleCurrentChange = (val: any | undefined) => {
   return (event: Event) => {
-    //跳转到服务详情页
+    // 跳转到服务详情页
     router.push({
       name: 'serviceDetail',
       params: {
-        serviceName: val.name,
-      },
+        serviceName: val.name
+      }
     })
-  };
+  }
 }
 
-//监听tableList的变化，实时刷新表格
+// 监听tableList的变化，实时刷新表格
 watch(() => props.tableList, value => {
-  data.value = value;
+  data.value = value
 }, {
-  //初始化立即执行
+  // 初始化立即执行
   immediate: true
-});
+})
 
 const Row = ({ rowData, rowIndex, cells, columns }) => {
   return cells
 }
 
 onMounted(() => {
-  data.value = props.tableList;
+  data.value = props.tableList
   columns.value = props.tableProp
   columns.value.forEach((item) => {
     item.cellRenderer = ({ rowData }) => {
@@ -97,20 +97,20 @@ onMounted(() => {
     title: '状态',
     width: 200,
     cellRenderer: ({ rowData }) => {
-      //过滤转化为中文
+      // 过滤转化为中文
       const stateFilter = (value: any) => {
         let state = value
         switch (value) {
           case 'Active':
-            state = "激活";
-            break;
+            state = '激活'
+            break
         }
         return state
       }
       return <div value={rowData.checked} onClick={handleCurrentChange(rowData)} style={{ width: '100%', height: '100%' }}>
         {stateFilter(rowData.active_state)}{rowData.sub_state ? `(${rowData.sub_state})` : ''}
       </div>
-    },
+    }
   })
 })
 </script>

@@ -30,27 +30,37 @@
           <el-button type="primary" size="small">创建定时器</el-button>
         </template>
       </el-tab-pane>
+
+      <el-tab-pane name="" disabled v-if="(serviceActive === 'serviceTimer')">
+        <template #label>
+          <el-button type="primary" size="small">$t(hello)</el-button>
+        </template>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue';
-import type { TabsPaneContext } from 'element-plus';
-import router from '@/router';
-import { cmdServiceStore } from '@/store/modules/service';
-import serviceTarget from '@/views/service/components/serviceTarget/index.vue';
-import systemService from '@/views/service/components/systemService/index.vue';
-import serviceSocket from '@/views/service/components/serviceSocket/index.vue';
-import serviceTimer from '@/views/service/components/serviceTimer/index.vue';
-import servicePath from '@/views/service/components/servicePath/index.vue';
 
+// import zh from 'element-plus/lib/locale/lang/zh-cn'
+// import en from 'element-plus/es/locale/lang/en'
 
+import { ref, nextTick, onMounted } from 'vue'
+import type { TabsPaneContext } from 'element-plus'
+// import router from '@/router'
+import { cmdServiceStore } from '@/store/modules/service'
+import serviceTarget from '@/views/service/components/serviceTarget/index.vue'
+import systemService from '@/views/service/components/systemService/index.vue'
+import serviceSocket from '@/views/service/components/serviceSocket/index.vue'
+import serviceTimer from '@/views/service/components/serviceTimer/index.vue'
+import servicePath from '@/views/service/components/servicePath/index.vue'
 
-//引入store仓库
-const store = cmdServiceStore();
+// const lang = { zh, en }
 
-//当前点击标签
+// 引入store仓库
+const store = cmdServiceStore()
+
+// 当前点击标签
 const serviceActive = ref('systemService')
 
 // const serviceAll = ref([
@@ -61,18 +71,19 @@ const serviceActive = ref('systemService')
 //   { lable: '路径', name: 'servicePath' },
 // ])
 
-//监听tableList的变化，实时刷新表格
+// 监听tableList的变化，实时刷新表格
 // watch(serviceActive, value => {
 //   router.push(`/service/${value}`)
 // });
-
 
 const handleClick = (tab: TabsPaneContext, event: Event) => {
   // console.log(tab, event)
 }
 
 onMounted(() => {
-  store.cmd_service_all()
+  nextTick(() => {
+    store.cmd_service_all()
+  })
 })
 </script>
 

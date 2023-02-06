@@ -16,15 +16,15 @@ const props = defineProps({
   description: {
     type: Array<any>,
     default: [{ value: '' }]
-  },
-});
+  }
+})
 
-//默认展开项
+// 默认展开项
 const activeName = ref('')
 
 onMounted(() => {
   nextTick(() => {
-    activeName.value = props.description[0].value;
+    activeName.value = props.description[0].value
   })
 })
 </script>
