@@ -8,7 +8,7 @@
       <el-table-column prop="virt" label="VIRT" sortable/>
       <el-table-column prop="res" label="RES" sortable/>
       <el-table-column prop="shr" label="SHR" sortable/>
-      <el-table-column prop="s" label="进程状态" sortable/>
+      <el-table-column prop="state" label="进程状态" sortable/>
       <el-table-column prop="cpu" label="CPU(%)" sortable/>
       <el-table-column prop="mem" label="MEM(%)" sortable/>
       <el-table-column prop="time" label="TIME+" sortable/>
@@ -19,22 +19,21 @@
 
 <script setup lang="ts">
 
-import { storeToRefs } from 'pinia';
-import { useProcStore } from '@/store/modules/proc';
-import { onMounted,nextTick } from 'vue';
+import { storeToRefs } from 'pinia'
+import { useProcStore } from '@/store/modules/proc'
+import { onMounted, nextTick } from 'vue'
 
-//引入store仓库
-const store = useProcStore();
-const { processAllData } = storeToRefs(store);
+// 引入store仓库
+const store = useProcStore()
+const { processAllData } = storeToRefs(store)
 
 onMounted(() => {
   nextTick(() => {
     console.log('call onMounted')
-    // store.cmd_process_info().then(() => {
-    //     console.log(processAllData)
-    // });
+    store.cmd_process_info().then(() => {
+      console.log(processAllData)
+    })
   })
-
 })
 
 </script>
