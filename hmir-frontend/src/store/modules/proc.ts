@@ -1,4 +1,3 @@
-
 import { defineStore } from 'pinia';
 import api from '@/api';
 import { store } from '../index';
@@ -35,3 +34,8 @@ export const useProcStore = defineStore('proc', {
     },
   }
 })
+
+//在 非setup 中进行引入
+export default function useProcStoreHook() {
+  return useProcStore(store);
+};
