@@ -20,8 +20,8 @@
 </template>
 
 <script setup lang="ts">
-import Aside from './aside/index.vue';
-import Header from './header/index.vue';
+import Aside from './aside/index.vue'
+import Header from './header/index.vue'
 </script>
 
 <style lang="scss" scoped>
