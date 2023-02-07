@@ -10,7 +10,7 @@ export const useProcStore = defineStore('proc', {
   //存储用户数据
   state: () => {
     return {
-      processAllData: {},
+      processAllData: [],
     };
   },
   //计算属性
@@ -22,12 +22,13 @@ export const useProcStore = defineStore('proc', {
     cmd_process_info() {
       return new Promise<void>((resolve, reject) => {
         api.cmd_process_info({ host: userStore.host }).then((response: any) => {
-            if (response.code === 0) {
-                this.processAllData = JSON.parse(response.result);
-                resolve()
-            } else {
-                reject(response.errmsg); 
-            }
+          console.log(response)
+            // if (response[1].code === 0) {
+            //     this.processAllData = JSON.parse(response.result);
+            //     resolve()
+            // } else {
+            //     reject(response.errmsg); 
+            // }
         })
 
       })

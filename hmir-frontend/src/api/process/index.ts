@@ -10,6 +10,7 @@ import { invoke } from "@tauri-apps/api/tauri";
 
 //获取进程信息
 export function cmd_process_info(data: any) {
+  console.log("host is : " + data)
   return invoke('cmd_process_info', data)
 }
 
