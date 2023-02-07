@@ -21,13 +21,19 @@
 
 import { storeToRefs } from 'pinia';
 import { useProcStore } from '@/store/modules/proc';
-import { onMounted } from 'vue-demi';
+import { onMounted,nextTick } from 'vue';
 
 //引入store仓库
 const store = useProcStore();
 const { processAllData } = storeToRefs(store);
+
 onMounted(() => {
-  store.cmd_process_info();
+  nextTick(() => {
+    console.log('call onMounted')
+    // store.cmd_process_info().then(() => {
+    //     console.log(processAllData)
+    // });
+  })
 })
 
 </script>
