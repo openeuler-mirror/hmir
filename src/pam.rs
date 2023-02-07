@@ -93,7 +93,7 @@ pub fn is_pam_auth(username: &str, password: &str) -> bool
     });
 
 
-    let r = recv.recv_timeout(std::time::Duration::from_millis(500));
+    let r = recv.recv_timeout(std::time::Duration::from_millis(1000));
     match r {
         Ok(msg) => {
             if msg == "true" {
