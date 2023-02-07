@@ -22,12 +22,14 @@ export const useProcStore = defineStore('proc', {
       return new Promise<void>((resolve, reject) => {
         api.cmd_process_info({ host: userStore.host }).then((response: any) => {
           console.log(response)
-            // if (response[1].code === 0) {
-            //     this.processAllData = JSON.parse(response.result);
-            //     resolve()
-            // } else {
-            //     reject(response.errmsg); 
-            // }
+            if (response[0] === 0) {
+                let value = JSON.parse(response[1])
+                let arr: any = Array.from(Object.values(value), x => x)
+                this.processAllData = arr
+                resolve()
+            } else {
+                reject(response.errmsg); 
+            }
         })
 
       })
