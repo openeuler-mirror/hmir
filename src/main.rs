@@ -184,7 +184,7 @@ async fn run_ws_server(ip: &str , port : &str) -> anyhow::Result<(SocketAddr,WsS
         proc::register_method(& mut module)?;
         kernel::register_method(& mut module)?;
         observer::register_method(& mut module)?;
-        ceph::register_method(& mut module)?;
+        ceph::ceph::register_method(& mut module)?;
         virt::register_method(& mut module)?;
     }
 
@@ -197,7 +197,7 @@ async fn run_ws_server(ip: &str , port : &str) -> anyhow::Result<(SocketAddr,WsS
 
     let addr = server.local_addr()?;
     let server_handle = server.start(module)?;
-    info!("Sucess start the service with {}:{}",ip,port);
+    info!("Success start the service with {}:{}",ip,port);
     Ok((addr,server_handle))
 }
 

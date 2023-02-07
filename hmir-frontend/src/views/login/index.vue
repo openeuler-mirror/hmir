@@ -75,50 +75,50 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref, toRefs, watch, nextTick } from 'vue';
-import type { FormInstance, FormRules } from 'element-plus';
-import { useRouter } from 'vue-router';
-import { useRouterStore } from '@/store/modules/router';
-import { useUsersStore } from '@/store/modules/user';
-import { localStorage } from '@/utils/localStorage';
+import { onMounted, reactive, ref } from 'vue'
+import type { FormInstance, FormRules } from 'element-plus'
+import { useRouter } from 'vue-router'
+// import { useRouterStore } from '@/store/modules/router'
+import { useUsersStore } from '@/store/modules/user'
+import { localStorage } from '@/utils/localStorage'
+import { useI18n } from 'vue-i18n'
 
-import {i18n} from '@/lang'
-const { t } = i18n.global
+const { t } = useI18n()
 
-//限制用户信息类型
+// 限制用户信息类型
 interface userList {
   host: string;
   port: number;
   username: string;
 }
 
-//定义绑定的输入建议数据类型
+// 定义绑定的输入建议数据类型
 interface RestaurantItem {
   value: string;
 }
 
-//引入store仓库
-const store = useUsersStore();
-const routerStore = useRouterStore();
+// 引入store仓库
+const store = useUsersStore()
+// const routerStore = useRouterStore()
 
-//引入路由
+// 引入路由
 const router = useRouter()
 
-//表单校验绑定的ref
+// 表单校验绑定的ref
 const loginFormRef = ref<FormInstance>()
 
-//获取本地保持的所有用户数据
+// 获取本地保持的所有用户数据
 const userInformation: Array<userList> = localStorage.get('userInformation') === 'userInformation' ? [] : localStorage.get('userInformation')
 
-//加载
+// 加载
 const loading = ref<boolean>(false)
 
-//弹出提示最大值
+// 弹出提示最大值
 const config = reactive({
-  max: 1,
+  max: 1
 })
 
-//定义表单绑定数据
+// 定义表单绑定数据
 const loginData = reactive({
   ipAddress: '',
   ipPort: '',
@@ -126,70 +126,82 @@ const loginData = reactive({
   password: ''
 })
 
-//IP地址校验规则
+// IP地址校验规则
 const checkipAddress = (rule: any, value: any, callback: any) => {
-  if (!/([1-9]?\d|1\d{2}|2[0-4]\d|25[0-5])(\.([1-9]?\d|1\d{2}|2[0-4]\d|25[0-5])){3}$/.test(value)) {
+  if (value === '') {
+    callback(new Error(t('requireIPaddress')))
+  } else if (!/([1-9]?\d|1\d{2}|2[0-4]\d|25[0-5])(\.([1-9]?\d|1\d{2}|2[0-4]\d|25[0-5])){3}$/.test(value)) {
     callback(new Error(t('legalIP')))
   } else {
     callback()
   }
 }
 
-//端口校验规则
+// 端口校验规则
 const checkipPort = (rule: any, value: any, callback: any) => {
-  if (!/^([0-9]|[1-9]\d|[1-9]\d{2}|[1-9]\d{3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/.test(value)) {
+  if (value === '') {
+    callback(new Error(t('requireIPport')))
+  } else if (!/^([0-9]|[1-9]\d|[1-9]\d{2}|[1-9]\d{3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/.test(value)) {
     callback(new Error('请输入合法的端口号'))
   } else {
     callback()
   }
 }
 
-//表单校验
+// 校验用户名
+const checkName = (rule: any, value: any, callback: any) => {
+  if (value === '') {
+    callback(new Error(t('requireName')))
+  } else {
+    callback()
+  }
+}
+
+// 校验密码
+const checkPwd = (rule: any, value: any, callback: any) => {
+  if (value === '') {
+    callback(new Error(t('requirePwd')))
+  } else {
+    callback()
+  }
+}
+
+// 表单校验
 const rules = reactive<FormRules>({
   ipAddress: [
-    { required: true, message: t('legalIP'), trigger: 'blur' },
-    { validator: checkipAddress, trigger: 'blur' }
+    { required: true, validator: checkipAddress, trigger: 'blur' }
   ],
   ipPort: [
-    { required: true, message: '端口号不能为空', trigger: 'blur', },
-    { validator: checkipPort, trigger: 'blur' }
+    { required: true, validator: checkipPort, trigger: 'blur' }
   ],
   username: [
-    {
-      required: true,
-      message: '用户名不能为空',
-      trigger: 'blur',
-    },
+    { required: true, validator: checkName, trigger: 'blur' }
   ],
   password: [
-    {
-      required: true,
-      message: '密码不能为空',
-      trigger: 'blur',
-    },
+    { required: true, validator: checkPwd, trigger: 'blur' }
   ]
 })
 
-function login() {
+function login () {
   loading.value = true
-  let req = { host: loginData.ipAddress, port: +loginData.ipPort, username: loginData.username, password: loginData.password }
+  const req = { host: loginData.ipAddress, port: +loginData.ipPort, username: loginData.username, password: loginData.password }
   setTimeout(() => {
     store.cmdLogin(req)
       .then(() => {
         setTimeout(() => {
           router.push({ path: '/system' })
-        }, 500);
+        }, 500)
       })
       .catch(error => {
-        console.log(error);
+        console.log(error)
       })
       .finally(() => {
         loading.value = false
-      });
-  }, 50);
+      })
+  }, 50)
 }
 
-//登录
+// 登录
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl || loading.value) {
     return
@@ -201,40 +213,40 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   })
 }
 
-//生命周期
+// 生命周期
 onMounted(() => {
-  ipAddressResults.value = userListAll(userInformation, 'host');
-  ipPotrResults.value = userListAll(userInformation, 'port');
-  userResults.value = userListAll(userInformation, 'username');
-});
+  ipAddressResults.value = userListAll(userInformation, 'host')
+  ipPotrResults.value = userListAll(userInformation, 'port')
+  userResults.value = userListAll(userInformation, 'username')
+})
 
-//ip地址下拉数据
+// ip地址下拉数据
 const ipAddressResults = ref<RestaurantItem[]>([])
-//ip端口下拉数据
+// ip端口下拉数据
 const ipPotrResults = ref<RestaurantItem[]>([])
-//用户名下拉数据
+// 用户名下拉数据
 const userResults = ref<RestaurantItem[]>([])
 
-//下拉菜单列表数据
+// 下拉菜单列表数据
 const userListAll = (value: Array<userList>, field: string) => {
   if (typeof value === 'string') {
     return []
   }
-  let list: Array<string> = []
-  for (let item of value) {
+  const list: Array<string> = []
+  for (const item of value) {
     list.push(item[field])
   }
   return arrayFilter(list)
 }
 
-//过滤后的数据
+// 过滤后的数据
 const ipAddressQuery = (queryString: string, cb: any) => {
   let results: any = queryString
     ? ipAddressResults.value.filter(createFilter(queryString))
     : userInformation
-  if (!!queryString
-    && results.length === 1
-    && results[0].value === queryString) {
+  if (!!queryString &&
+    results.length === 1 &&
+    results[0].value === queryString) {
     results = []
   }
   // call callback function to return suggestions
@@ -245,9 +257,9 @@ const ipPortQuery = (queryString: string, cb: any) => {
   let results: any = queryString
     ? ipPotrResults.value.filter(createFilter(queryString))
     : ipPotrResults.value
-  if (!!queryString
-    && results.length === 1
-    && results[0].value === queryString) {
+  if (!!queryString &&
+    results.length === 1 &&
+    results[0].value === queryString) {
     results = []
   }
   // call callback function to return suggestions
@@ -258,41 +270,41 @@ const userQuery = (queryString: string, cb: any) => {
   let results: any = queryString
     ? userResults.value.filter(createFilter(queryString))
     : userInformation
-  if (!!queryString
-    && results.length === 1
-    && results[0].value === queryString) {
+  if (!!queryString &&
+    results.length === 1 &&
+    results[0].value === queryString) {
     results = []
   }
   // call callback function to return suggestions
   cb(results)
 }
 
-//过滤方法
+// 过滤方法
 const createFilter = (queryString: string) => {
   return (restaurant: RestaurantItem) => {
     return (
-      //匹配过滤大小写后的第一个字母
+      // 匹配过滤大小写后的第一个字母
       restaurant.value.toString().toLowerCase().indexOf(queryString.toLowerCase()) === 0
     )
   }
 }
 
-//过滤重复项
+// 过滤重复项
 const arrayFilter = (queryString: Array<string>) => {
   queryString = [...new Set(queryString)]
-  let value: Array<RestaurantItem> = []
-  for (let item of queryString) {
+  const value: Array<RestaurantItem> = []
+  for (const item of queryString) {
     value.push({ value: item })
   }
   return value
 }
 
-//选中的数据
+// 选中的数据
 const handleSelect: any = (item: any) => {
   if (!item.value) {
-    loginData.ipAddress = item.host;
-    loginData.ipPort = item.port;
-    loginData.username = item.username;
+    loginData.ipAddress = item.host
+    loginData.ipPort = item.port
+    loginData.username = item.username
     // 移除校验错误信息
     loginFormRef.value && loginFormRef.value.validateField('ipAddress')
     loginFormRef.value && loginFormRef.value.validateField('ipPort')

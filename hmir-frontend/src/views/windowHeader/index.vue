@@ -21,38 +21,36 @@
   <s3-layer v-model="visible" title="HMIR运维管理系统">
     <about :minimizable="true" :maximizable="true" :closable="true"></about>
   </s3-layer>
-  <s3-layer v-model="setting_visible" title="HMIR运维管理系统">
+  <s3-layer v-model="settingVisible" title="HMIR运维管理系统">
     <langselect :locale="locale" @localeChange="localeChange"> </langselect>
   </s3-layer>
 
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRouter } from 'vue-router';
-import about from '@/views/windowHeader/about/index.vue';
+// import { useRouter } from 'vue-router'
+import about from '@/views/windowHeader/about/index.vue'
 import langselect from '@/views/windowHeader/langselect/index.vue'
-import api from '@/api';
+import api from '@/api'
 import { useI18n } from 'vue-i18n'
 
-//about页面
-const visible = ref(false);
-const setting_visible = ref(false)
+// about页面
+const visible = ref(false)
+const settingVisible = ref(false)
 const { locale } = useI18n()
-//引入路由
-const router = useRouter()
+// 引入路由
+// const router = useRouter()
 
-//下拉框通过什么触发
+// 下拉框通过什么触发
 const menuTrigger = ref<string>('click')
 
-// 菜单激活回调	
+// 菜单激活回调
 const handleSelect = (key: string, keyPath: string[]) => {
   if (key === 'processQuit') {
     processQuit()
-  }
-  else if (key === 'about') {
+  } else if (key === 'about') {
     openAboutWindow()
-  }
-  else if (key === 'setting') {
+  } else if (key === 'setting') {
     openSettingWindow()
   }
   console.log(key, keyPath)
@@ -73,23 +71,23 @@ const handleClose = (key: string, keyPath: string[]) => {
   // processQuit()
 }
 
-//退出
-async function processQuit() {
-  //点击退出后关闭窗口
+// 退出
+async function processQuit () {
+  // 点击退出后关闭窗口
   api.cmd_quit()
 }
 
-//关于窗口
-function openAboutWindow() {
-  visible.value = true;
+// 关于窗口
+function openAboutWindow () {
+  visible.value = true
 }
 
-function openSettingWindow() {
-  setting_visible.value = true;
+function openSettingWindow () {
+  settingVisible.value = true
 }
 
-//修改国际化语言
-function localeChange(data: string) {
+// 修改国际化语言
+function localeChange (data: string) {
   locale.value = data
 }
 

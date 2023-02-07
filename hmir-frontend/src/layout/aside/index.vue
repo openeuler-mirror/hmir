@@ -21,31 +21,29 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-import { useRouterStore } from '@/store/modules/router';
-import { computed } from 'vue';
-//引入store仓库
-const routerStore = useRouterStore();
+import { ref, onMounted, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { useRouterStore } from '@/store/modules/router'
+// 引入store仓库
+const routerStore = useRouterStore()
 
-//左侧菜单栏信息
+// 左侧菜单栏信息
 const handleRouter = ref<any>()
 
-//左侧菜单栏是否关闭打开
+// 左侧菜单栏是否关闭打开
 const isCollapse = ref<Boolean>(false)
 
-//引入路由
+// 引入路由
 const router = useRouter()
 
-//进入后的初始页
+// 进入后的初始页
 const handleValue = computed<string>(() => {
-  const { meta, path } = router.currentRoute.value;
+  const { meta, path } = router.currentRoute.value
   if (meta?.handleValue) {
-    return meta.handleValue as string;
+    return meta.handleValue as string
   }
-  return path.includes('/service') ? '/service' : path;
-});
-
+  return path.includes('/service') ? '/service' : path
+})
 
 const handleOpen = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
@@ -60,13 +58,13 @@ const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
 }
 
-function handleQuery() {
+function handleQuery () {
   handleRouter.value = routerStore.userouter
 }
 
 onMounted(() => {
-  handleQuery();
-});
+  handleQuery()
+})
 </script>
 
 <style lang="scss" scoped>

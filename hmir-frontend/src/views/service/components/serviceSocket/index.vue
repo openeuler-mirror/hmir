@@ -5,16 +5,16 @@
 </template>
 
 <script setup lang="ts">
-import serviceCollapse from '@/components/serviceCollapse/index.vue';
-import { ref, watch } from 'vue';
-import serviceList from '@/views/service/interface/index';
-import { cmdServiceStore } from '@/store/modules/service';
-import { storeToRefs } from 'pinia';
+import serviceCollapse from '@/components/serviceCollapse/index.vue'
+import { ref, watch } from 'vue'
+import serviceList from '@/views/service/interface/index'
+import { cmdServiceStore } from '@/store/modules/service'
+import { storeToRefs } from 'pinia'
 
-//引入store仓库
-const store = cmdServiceStore();
+// 引入store仓库
+const store = cmdServiceStore()
 
-//所有数据
+// 所有数据
 const description = ref<serviceList[]>([{
   value: '启用',
   tableList: [],
@@ -23,13 +23,13 @@ const description = ref<serviceList[]>([{
       key: 'description',
       title: '描述',
       dataKey: 'description',
-      width: 310,
+      width: 310
     },
     {
       key: 'name',
       title: 'ID',
       dataKey: 'name',
-      width: 310,
+      width: 310
     }
   ]
 },
@@ -41,13 +41,13 @@ const description = ref<serviceList[]>([{
       key: 'description',
       title: '描述',
       dataKey: 'description',
-      width: 310,
+      width: 310
     },
     {
       key: 'name',
       title: 'ID',
       dataKey: 'name',
-      width: 310,
+      width: 310
     }
   ]
 },
@@ -59,29 +59,29 @@ const description = ref<serviceList[]>([{
       key: 'description',
       title: '描述',
       dataKey: 'description',
-      width: 310,
+      width: 310
     },
     {
       key: 'name',
       title: 'ID',
       dataKey: 'name',
-      width: 310,
+      width: 310
     }
   ]
-}]);
+}])
 
-const { serviceAll } = storeToRefs(store);
+const { serviceAll } = storeToRefs(store)
 
-//监听serviceAll的变化，实时刷新表格
+// 监听serviceAll的变化，实时刷新表格
 watch(serviceAll, value => {
-  description.value[0].tableList = value.cmdSocketEnabled as any;
-  description.value[1].tableList = value.cmdSocketDisabled as any;
-  description.value[2].tableList = value.cmdSocketStatic as any;
+  description.value[0].tableList = value.cmdSocketEnabled as any
+  description.value[1].tableList = value.cmdSocketDisabled as any
+  description.value[2].tableList = value.cmdSocketStatic as any
 }, {
-  //初始化立即执行
+  // 初始化立即执行
   immediate: true,
-  deep: true,
-});
+  deep: true
+})
 </script>
 
 <style lang="scss" scoped>
