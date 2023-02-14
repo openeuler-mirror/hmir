@@ -24,6 +24,8 @@ mod tokenmgr;
 #[cfg(target_os = "linux")]
 mod virt;
 
+mod sys;
+
 #[macro_use]
 extern crate lazy_static;
 
@@ -108,6 +110,7 @@ fn init_services() {
     #[cfg(target_os = "linux")]
     {
         svr::init_services_mg();
+        sys::init_sysinfo();
     }
 }
 
@@ -186,6 +189,7 @@ async fn run_ws_server(ip: &str , port : &str) -> anyhow::Result<(SocketAddr,WsS
         observer::register_method(& mut module)?;
         ceph::ceph::register_method(& mut module)?;
         virt::register_method(& mut module)?;
+        sys::register_method(& mut module)?;
     }
 
 
