@@ -34,14 +34,15 @@ core_affinity = "0.7.6"
 ssh2 = "0.9.3"
 pam = "0.7.0"
 cfg = "0.5.0"
-#tensorflow-sys = "0.22.1"
-#tensorflow = "0.19.1"
+#tensorflow-sys = {path = "tensorflow-sys",version ="0."}
+tensorflow = {path = "tensorflow-rust", version="0.19.1"}
 
 hmir-hash = {path = "hmir-hash" }
 hmir-ovs = {path = "hmir-ovs" }
 hmir-ceph = {path = "hmir-ceph" }
 hmir-token = {path = "hmir-token"}
 hmir-errno = {path = "hmir-errno"}
+hmir-protocol = { path = "hmir-protocol"}
 
 [target.'cfg(target_os="linux")'.dependencies]
 procfs = "0.14.1"

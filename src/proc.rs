@@ -23,28 +23,13 @@ use nix::sys::signal;
 use nix::unistd;
 use nix::libc;
 use std::ffi::CStr;
+use hmir_protocol::proc;
 
 extern crate core_affinity;
 
-
-#[derive(Clone, Debug,Serialize)]
-struct ProcInfo {
-    pub pid: i32,
-    pub user: String,
-    pub priority: i64,
-    pub nice : i64,
-    pub virt : u64,//KB,
-    pub res  : u64,//KB,
-    pub sha  : u64,//KB
-    pub state : String,
-    pub command: String,
-    pub cmdline: String,
-
-}
-
 macro_rules! proc_default_result {
     ($i:expr) =>{
-        let mut response = HashWrap::<i32,ProcInfo>:: new();
+        let mut response = HashWrap::<i32,proc::ProcInfo>:: new();
         response.set_code($i);
         let serialized = serde_json::to_string(&response).unwrap();
         return serialized;
@@ -68,7 +53,7 @@ fn proc_get_pagesize() -> i64 {
 
 pub fn process_all() -> std::string::String
 {
-    let mut map = HashWrap::<i32,ProcInfo>:: new();
+    let mut map = HashWrap::<i32,proc::ProcInfo>:: new();
     let page_sizeKB = proc_get_pagesize() as u64 >> 10;
     for prc in procfs::process::all_processes().unwrap() {
         // println!("{:?}",prc);
@@ -94,7 +79,7 @@ pub fn process_all() -> std::string::String
             let username = proc_get_username(ruid);
             if let Ok(stat) = p.stat() {
                 // total_time is in seconds
-                let data  = ProcInfo {
+                let data  = proc::ProcInfo {
                     user: username,
                     pid: stat.pid,
                     command: stat.comm,
@@ -102,7 +87,7 @@ pub fn process_all() -> std::string::String
                     priority : stat.priority,
                     virt : virt,
                     res: res,
-                    sha : sha,
+                    shr : sha,
                     state : String::from(stat.state),
                     cmdline : p.cmdline().unwrap().iter().map(|x| x.to_string() + " ").collect::<String>()
                 };
