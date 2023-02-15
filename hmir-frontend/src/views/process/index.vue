@@ -66,11 +66,31 @@ onMounted(() => {
   nextTick(() => {
     console.log('call onMounted')
     store.cmd_process_info().then(() => {
-      console.log(processAllData)
+      // console.log(processAllData)
+      data.value.tableData = processAllData.value
+      data.value.pageTotal = processAllData.value.length
+      console.log('数组长度', processAllData.value.length)
+      data.value.pageData = qurryByPage()
     })
   })
 })
 
+// 实现分页的方法
+const qurryByPage = (): ITable[] => {
+  const start = (data.value.currentPage - 1) * data.value.pageSize
+  const end = start + data.value.pageSize
+  return data.value.tableData.slice(start, end)
+}
+// 改变页码的方法
+const handleSizeChange = (val : number) => {
+  data.value.pageSize = val
+  data.value.pageData = qurryByPage()
+}
+// 改变当前页的方法
+const handleCurrentChange = (val:number) => {
+  data.value.currentPage = val
+  data.value.pageData = qurryByPage()
+}
 </script>
 
 <style lang="scss" scoped>
