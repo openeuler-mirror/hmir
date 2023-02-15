@@ -54,6 +54,13 @@ interface ITable {
 // 引入store仓库
 const store = useProcStore()
 const { processAllData } = storeToRefs(store)
+const data = ref({
+  tableData: [] as Array<ITable>,
+  pageData: [] as Array<ITable>,
+  currentPage: 1,
+  pageSize: 10,
+  pageTotal: 0
+})
 
 onMounted(() => {
   nextTick(() => {
