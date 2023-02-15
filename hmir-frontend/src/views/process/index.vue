@@ -36,6 +36,21 @@ import { storeToRefs } from 'pinia'
 import { useProcStore } from '@/store/modules/proc'
 import { onMounted, nextTick, ref } from 'vue'
 
+// 表格数据接口
+interface ITable {
+  pid?: number;
+  user?: string;
+  priority?: number;
+  nice?: number;
+  virt?: number;
+  res?: number;
+  shr?: number;
+  state?: string;
+  cpu?: number;
+  mem?: number;
+  time?: number;
+  command?: string;
+}
 // 引入store仓库
 const store = useProcStore()
 const { processAllData } = storeToRefs(store)
