@@ -35,7 +35,10 @@ ssh2 = "0.9.3"
 pam = "0.7.0"
 cfg = "0.5.0"
 #tensorflow-sys = {path = "tensorflow-sys",version ="0."}
-tensorflow = {path = "tensorflow-rust", version="0.19.1"}
+#tensorflow = {path = "tensorflow-rust", version="0.19.1"}
+clickhouse = "0.11.2"
+udev = "^0.7.0"
+regex = "1.7.0"
 
 hmir-hash = {path = "hmir-hash" }
 hmir-ovs = {path = "hmir-ovs" }
@@ -43,6 +46,7 @@ hmir-ceph = {path = "hmir-ceph" }
 hmir-token = {path = "hmir-token"}
 hmir-errno = {path = "hmir-errno"}
 hmir-protocol = { path = "hmir-protocol"}
+hmir-sysinfo = { path = "hmir-sysinfo"}
 
 [target.'cfg(target_os="linux")'.dependencies]
 procfs = "0.14.1"
@@ -51,6 +55,9 @@ iptables = "0.5.0"
 hmir-ipmitool = { path = "hmir-ipmitool"}
 hmir-virt = {path = "hmir-virt"}
 #hmir-dpkg = {path = "hmir-dpkg"}
+
+[dev-dependencies]
+clickhouse = { version = "0.11.2", features = ["test-util"] }
 
 [[test]]
 name = "integration"
