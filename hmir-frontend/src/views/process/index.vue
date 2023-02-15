@@ -14,6 +14,18 @@
       <el-table-column prop="time" label="TIME+" sortable/>
       <el-table-column prop="command" label="COMMAND" :min-width="100" sortable/>
     </el-table>
+    <el-table-v2 :columns="columns" :data="data" :width="width" :height="height" fixed :v-scrollbar-size="13">
+        <template #row="props">
+          <Row v-bind="props" />
+        </template>
+        <template #overlay v-if="false">
+          <div class="el-loading-mask" style="display: flex; align-items: center; justify-content: center">
+            <el-icon class="is-loading" color="var(--el-color-primary)" :size="26">
+              <loading-icon />
+            </el-icon>
+          </div>
+        </template>
+    </el-table-v2>
   </div>
 </template>
 
