@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-table :data="processAllData" style="width: 100%" table-layout="auto" :fit="true" >
+    <el-table :data="data.pageData" style="width: 100%" table-layout="auto" :fit="true" >
       <el-table-column prop="pid" label="进程号" sortable/>
       <el-table-column prop="user" label="用户名" sortable/>
       <el-table-column prop="priority" label="优先级" sortable/>
