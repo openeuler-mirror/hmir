@@ -34,7 +34,7 @@
 //       :total="pageTotal"
 import { storeToRefs } from 'pinia'
 import { useProcStore } from '@/store/modules/proc'
-import { onMounted, nextTick } from 'vue'
+import { onMounted, nextTick, ref } from 'vue'
 
 // 引入store仓库
 const store = useProcStore()
