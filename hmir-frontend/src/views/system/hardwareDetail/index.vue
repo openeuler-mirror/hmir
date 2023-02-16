@@ -1,6 +1,6 @@
 <template>
   <div class="hardwareDetail">
-    <el-page-header class="back" @back="goBack(true)" content="硬件信息">
+    <el-page-header class="back" @back="goBack" content="硬件信息">
     </el-page-header>
     <el-descriptions title="系统信息">
     <el-descriptions-item label="类型">桌面</el-descriptions-item>
