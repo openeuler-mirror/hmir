@@ -14,10 +14,11 @@ hmir是C/S架构，可以集成部署，也可以单机部署，整个架构由h
 
 HMIR主要分为3层: hmir前端、hmir-ws客户端以及hmir服务端,其中:
 
-- **HMIR前端**: 使用vue+ts+tauri框架实现客户端图形界面，由于tauri框架是跨平台的，因此C客户端图形
+- **HMIR前端(hmir-frontend)**: 使用vue+ts+tauri框架实现客户端图形界面，由于tauri框架是跨平台的，因此C客户端图形
   可同时运行在Linux、MacOS以及Windows系统上。
-- **HMIR客户端库**:封装了对RPC请求进行封装，同时实现了客户端管理以及基于token的认证管理,客户端作为Crate lib提供给hmir前端使用。
-- **HMIR服务后端** : 实现了生产环境下的主机管理的RPC接口。
+- **HMIR客户端库(hmir-ws-client)**:封装了对RPC请求进行封装，同时实现了客户端管理以及基于token的认证管理,客户端作为Crate lib提供给hmir前端使用。
+- **HMIR服务后端(hmir-service)** : 实现了生产环境下的主机管理的RPC接口。
+- **hmir-vector** : 主要用于
 
 ## HMIR服务后端
 
@@ -77,3 +78,8 @@ HMIR主要通过3个大的阶段的场景，以敏捷开发模型，阶段性的
 
 
 # 参与贡献
+
+# 参考
+
+- https://tech.meituan.com/2020/10/15/mt-aiops-horae.html
+- 
