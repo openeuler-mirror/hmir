@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div v-show="data.contentShow" class="content">
     <div class="dev">
         <div  class="left">
           <div class="devName"  v-for="(e, i) in data.option" :key="i">
@@ -8,7 +8,7 @@
         </div>
         <div class="detail">
           <div>
-            <el-link type="primary">LENOVO 90TDCTO1WW</el-link>
+            <el-link type="primary" @click="hardwareDetailShow">LENOVO 90TDCTO1WW</el-link>
           </div>
           <div>M70N0G61</div>
           <div>f2621d9c362b4ffda34188814503f800</div>
@@ -40,14 +40,23 @@
       <div></div>
     </div>
   </div>
+  <hardwareDetail v-show="data.hardwareShow" @hardwareDetailShow ="hardwareDetailShow"></hardwareDetail>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import hardwareDetail from '@/views/system/hardwareDetail/index.vue'
 const data = ref({
+  contentShow: true,
   option: ['硬件', '资产标签', '机器编码', '操作系统', '', '安全Shell密钥', '主机名', '域', '系统时间', '电源选项', '性能配置集', ''],
-  value1: true
+  value1: true,
+  dialogVisible: true,
+  hardwareShow: false
 })
+const hardwareDetailShow = () => {
+  data.value.contentShow = !data.value.contentShow
+  data.value.hardwareShow = !data.value.hardwareShow
+}
 </script>
 
 <style lang="scss" scoped>
@@ -93,16 +102,5 @@ const data = ref({
       margin-right: 10px;
     }
   }
-.detail div{
- height: 24px;
- line-height: 24px;
- margin-top: 5px;
-}
-.charts div{
-  width: 100%;
-  height: 130px;
-  background: teal;
-  margin-bottom: 10px;
-  margin-right: 10px;
 }
 </style>
