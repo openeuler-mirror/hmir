@@ -53,9 +53,10 @@ const data = ref({
     { level: 'bridge', type: 'Xeon E3-1200 v5/v6 / E3-1500 v5 / 6th/7th Gen Core Processor Gaussian Mixture Model', factory: 'Intel Corporation', slot: '0000:00:00.0' },
     { level: 'bridge', type: 'Xeon E3-1200 v5/v6 / E3-1500 v5 / 6th/7th Gen Core Processor Gaussian Mixture Model', factory: 'Intel Corporation', slot: '0000:00:00.0' }]
 })
-const emit = defineEmits(['hardwareDetailShow'])
+// 调用父组建传过来的方法
+const emit = defineEmits(['handleDialog'])
 const goBack = () => {
-  emit('hardwareDetailShow')
+  emit('handleDialog', 'hardware')
 }
 </script>
 
