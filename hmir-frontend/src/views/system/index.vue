@@ -19,7 +19,7 @@
           <div>
             <el-link type="primary">显示指印</el-link>
           </div>
-          <div><el-link type="primary">LINX</el-link></div>
+          <div><el-link type="primary" @click="handleComputerDialog">LINX</el-link></div>
           <div><el-link type="primary">加入域</el-link></div>
           <div><el-link type="primary">2023-02-16 10:35</el-link></div>
           <div>
@@ -39,6 +39,17 @@
       <div></div>
       <div></div>
     </div>
+      <el-dialog
+      title="提示"
+      v-model="data.dialogVisible"
+      width="30%"
+      :before-close="handleClose">
+      <span>这是一段信息</span>
+      <template #footer>
+        <el-button @click="data.dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="data.dialogVisible = false">确 定</el-button>
+      </template>
+    </el-dialog>
   </div>
   <hardwareDetail v-show="data.hardwareShow" @hardwareDetailShow ="hardwareDetailShow"></hardwareDetail>
 </template>
@@ -50,12 +61,15 @@ const data = ref({
   contentShow: true,
   option: ['硬件', '资产标签', '机器编码', '操作系统', '', '安全Shell密钥', '主机名', '域', '系统时间', '电源选项', '性能配置集', ''],
   value1: true,
-  dialogVisible: true,
+  dialogVisible: false,
   hardwareShow: false
 })
 const hardwareDetailShow = () => {
   data.value.contentShow = !data.value.contentShow
   data.value.hardwareShow = !data.value.hardwareShow
+}
+const handleComputerDialog = () => {
+  data.value.dialogVisible = true
 }
 </script>
 
