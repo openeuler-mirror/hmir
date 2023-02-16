@@ -117,6 +117,7 @@ const data = ref({
   saveDialog: false,
   hardwareShow: false
 })
+// 处理对话框的逻辑
 const handleDialog = (val:String) => {
   switch (val) {
     case 'hardware':
