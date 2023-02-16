@@ -25,6 +25,7 @@ mod tokenmgr;
 mod virt;
 
 mod sys;
+mod tensorflow;
 
 #[macro_use]
 extern crate lazy_static;
@@ -81,6 +82,7 @@ macro_rules! assert_single_instance{
     ()=>{
         let __instance = SingleInstance::new(constants::LOCKFILE).unwrap();
         if(!__instance.is_single() ){
+            println!("Already have an instance running");
             error!("Already have an instance running");
             process::exit(1);
         }
@@ -117,14 +119,8 @@ fn init_services() {
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
 
-    #[cfg(target_os = "linux")]
-    {
-        log_init();
-        assert_single_instance!();
-    }
-
-
-
+    log_init();
+    assert_single_instance!();
     init_services();
 
 
