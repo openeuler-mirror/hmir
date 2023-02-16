@@ -8,7 +8,7 @@
         </div>
         <div class="detail">
           <div>
-            <el-link type="primary" @click="hardwareDetailShow">LENOVO 90TDCTO1WW</el-link>
+            <el-link type="primary" @click="handleDialog('hardware')">LENOVO 90TDCTO1WW</el-link>
           </div>
           <div>M70N0G61</div>
           <div>f2621d9c362b4ffda34188814503f800</div>
@@ -100,7 +100,7 @@
       </template>
       </el-dialog>
   </div>
-  <hardwareDetail v-show="data.hardwareShow" @hardwareDetailShow ="hardwareDetailShow"></hardwareDetail>
+  <hardwareDetail v-show="data.hardwareShow" @handleDialog ="handleDialog"></hardwareDetail>
 </template>
 
 <script setup lang="ts">
@@ -117,12 +117,13 @@ const data = ref({
   saveDialog: false,
   hardwareShow: false
 })
-const hardwareDetailShow = () => {
-  data.value.contentShow = !data.value.contentShow
-  data.value.hardwareShow = !data.value.hardwareShow
-}
 const handleDialog = (val:String) => {
   switch (val) {
+    case 'hardware':
+      console.log('hardware进来了')
+      data.value.contentShow = !data.value.contentShow
+      data.value.hardwareShow = !data.value.hardwareShow
+      break
     case 'safe':
       data.value.safeDialog = !data.value.safeDialog
       break
