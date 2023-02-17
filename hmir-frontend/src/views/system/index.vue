@@ -45,10 +45,14 @@
       v-model="data.safeDialog"
       width="30%"
       :before-close="handleClose">
-      <span>安全Shell密钥的对话框</span>
+      <el-card class="box-card">
+      <div v-for="o in 4" :key="o" class="text item">
+        <div>ECDSA</div>
+        <div>MD5:11:4f:b7:ca:fe:0d:7d:70:5e:e9:50:f4:e4:5f:27:8b SHA256:hSHBYf2p4ZV+P5CV1WPaPQbVVrKCljZtaWP9J/I7+4g</div>
+      </div>
+      </el-card>
       <template #footer>
-        <el-button @click="data.safeDialog = false">取 消</el-button>
-        <el-button type="primary" @click="data.safeDialog = false">确 定</el-button>
+        <el-button @click="data.safeDialog = false">关闭</el-button>
       </template>
       </el-dialog>
       <!-- 主机名的对话框 -->
@@ -57,10 +61,11 @@
       v-model="data.dialogVisible"
       width="30%"
       :before-close="handleClose">
-      <span>这是主机名对话框</span>
+      好主机名<el-input v-model="input" placeholder="请输入内容"></el-input>
+      <el-input v-model="input" placeholder="请输入内容"></el-input>
       <template #footer>
         <el-button @click="data.dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="data.dialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="data.dialogVisible = false">变更</el-button>
       </template>
       </el-dialog>
       <!-- 域的对话框 -->
@@ -69,10 +74,10 @@
       v-model="data.areaDialog"
       width="30%"
       :before-close="handleClose">
-      <span>这是域的对话框</span>
+      <span>即将安装realmad</span>
       <template #footer>
         <el-button @click="data.areaDialog = false">取 消</el-button>
-        <el-button type="primary" @click="data.areaDialog = false">确 定</el-button>
+        <el-button type="primary" @click="data.areaDialog = false">安装</el-button>
       </template>
       </el-dialog>
       <!-- 系统时间对话框 -->
@@ -81,10 +86,39 @@
       v-model="data.timeDialog"
       width="30%"
       :before-close="handleClose">
-      <span>系统时间对话框</span>
+      <slot>
+        <el-input
+          v-model="timeInput"
+          clearable>
+        </el-input>
+        <el-select v-model="value" style="width:100%;" placeholder="请选择">
+        <el-option
+          v-for="item in [{value: 1,label: '手动的'},{value: 2,label: '自动使用NTP'},{value: 3,label: '自动使用指定的NTP服务器'},]"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+      </el-select>
+       <div class="block"  style="width:100%;">
+        <el-date-picker
+          v-model="value1"
+          type="date"
+          style="width:80%;"
+          placeholder="选择日期">
+        </el-date-picker>
+        <el-time-picker
+        style="width:20%;"
+        v-model="value1"
+        :picker-options="{
+          selectableRange: '18:30:00 - 20:30:00'
+        }"
+        placeholder="任意时间点">
+      </el-time-picker>
+      </div>
+      </slot>
       <template #footer>
         <el-button @click="data.timeDialog = false">取 消</el-button>
-        <el-button type="primary" @click="data.timeDialog = false">确 定</el-button>
+        <el-button type="primary" @click="data.timeDialog = false">变更</el-button>
       </template>
       </el-dialog>
       <!-- 启用保存的指标对话框 -->
@@ -93,10 +127,10 @@
       v-model="data.saveDialog"
       width="30%"
       :before-close="handleClose">
-      <span>启用保存的指标对话框</span>
+      <span>将安装 cockpit-pcp。</span>
       <template #footer>
         <el-button @click="data.saveDialog = false">取 消</el-button>
-        <el-button type="primary" @click="data.saveDialog = false">确 定</el-button>
+        <el-button type="primary" @click="data.saveDialog = false">安装</el-button>
       </template>
       </el-dialog>
   </div>
@@ -115,7 +149,8 @@ const data = ref({
   areaDialog: false,
   timeDialog: false,
   saveDialog: false,
-  hardwareShow: false
+  hardwareShow: false,
+  timeInput: ''
 })
 // 处理对话框的逻辑
 const handleDialog = (val:String) => {
@@ -153,6 +188,7 @@ const handleDialog = (val:String) => {
   justify-content:space-between;
   .dev{
     width:30%;
+    min-width: 480px;
     display: flex;
     flex-direction:row;
     justify-content:space-between;
