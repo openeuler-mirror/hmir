@@ -2,20 +2,38 @@
   <div id="menu">
     <el-menu ref="menuHeader" :default-active="handleValue" class="el-menu-vertical-demo-header" :collapse="isCollapse"
       @open="handleOpen" @close="handleClose" @select="handleSelect" router>
-      <el-menu-item :index="item.path" v-for="item in handleRouter" :key="item.name" :disabled="item.meta.disabled">
-        <el-icon>
-          <component :is="item.meta.icon" style="width: 16px;height: 16px;"></component>
-        </el-icon>
-        <template #title>{{ item.meta.title }}</template>
-      </el-menu-item>
-      <el-affix position="bottom" :offset="0" target="#menu" class="classFooter">
-        <el-menu-item index="console" class="classFooter">
-          <el-icon>
-            <component :is="'Setting'" style="width: 16px;height: 16px;"></component>
-          </el-icon>
-          <template #title>控制台</template>
-        </el-menu-item>
-      </el-affix>
+          <template v-for="item in handleRouter">
+             <el-sub-menu v-if="item.children" :key="item.name" :disabled="item.meta.disabled">
+                <template #title>
+                  <el-icon><component :is="item.meta.icon" style="width: 16px;height: 16px;"></component></el-icon>
+                {{ item.meta.title }}
+                </template>
+                <el-menu-item
+                  v-for="item2 in item.children"
+                  :key="item2.name"
+                  :index="item2.path"
+                >
+                  <template #title>
+                  <el-icon><component :is="item2.meta.icon" style="width: 16px;height: 16px;"></component></el-icon>
+                {{ item2.meta.title }}
+                </template>
+                </el-menu-item>
+             </el-sub-menu>
+             <el-menu-item v-else :index="item.path" :key="item.name" :disabled="item.meta.disabled">
+                <el-icon>
+                  <component :is="item.meta.icon" style="width: 16px;height: 16px;"></component>
+                </el-icon>
+                <template #title>{{ item.meta.title }}</template>
+             </el-menu-item>
+          </template>
+          <el-affix position="bottom" :offset="0" target="#menu" class="classFooter">
+            <el-menu-item index="console" class="classFooter">
+              <el-icon>
+                <component :is="'Setting'" style="width: 16px;height: 16px;"></component>
+              </el-icon>
+              <template #title>控制台</template>
+            </el-menu-item>
+          </el-affix>
     </el-menu>
   </div>
 </template>
