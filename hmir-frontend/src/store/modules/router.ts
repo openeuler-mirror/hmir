@@ -24,8 +24,17 @@ export const useRouterStore = defineStore('router', {
           {
             path: '/clusterHealth',
             name: 'ceph',
-            component: () => import('@/views/ceph/index.vue'),
-            meta: { title: 'Ceph', icon: 'Menu', disabled: false }
+            redirect: '/clusterHealth/dashBoard',
+            // component: () => import('@/views/ceph/index.vue'),
+            meta: { title: 'Ceph', icon: 'Menu', disabled: false },
+            children: [
+              {
+                path: '/clusterHealth/dashBoard',
+                name: 'dashBoard',
+                component: () => import('@/views/ceph/components/dashBoard/index.vue'),
+                meta: { title: '仪表盘', icon: 'Menu', disabled: false }
+              }
+            ]
           },
           {
             path: '/service',
