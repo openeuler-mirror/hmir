@@ -116,3 +116,11 @@ button {
 .el-virtual-scrollbar {
   width: 13px !important;
 }
+/* 解决el-input等有内部白边 */
+.el-input__wrapper{
+  padding: 0 !important;
+  border: none;
+}
+.el-input__inner{
+  border: none;
+}

@@ -62,7 +62,7 @@
       width="30%"
       :before-close="handleClose">
       好主机名<el-input v-model="input" placeholder="请输入内容"></el-input>
-      <el-input v-model="input" placeholder="请输入内容"></el-input>
+      实际主机名<el-input v-model="input" placeholder="请输入内容"></el-input>
       <template #footer>
         <el-button @click="data.dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="data.dialogVisible = false">变更</el-button>
