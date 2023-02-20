@@ -22,12 +22,17 @@
           <div><el-link type="primary" @click="handleDialog('compuer')">LINX</el-link></div>
           <div><el-link type="primary" @click="handleDialog('area')">加入域</el-link></div>
           <div><el-link type="primary" @click="handleDialog('time')">2023-02-16 10:35</el-link></div>
-          <div>
-            <el-switch
-                v-model="data.value1"
-                active-text="重启"
-                inactive-text="关机">
-              </el-switch>
+          <div class="restart">
+            <!-- <div class="restart">重启</div><div class="simple">v</div> -->
+            <el-select v-model="sourceValue" placeholder="重启">
+            <el-option
+              v-for="item in [{value:1, label: '重启'}, {value:2, label: '关机'}]"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+              :disabled="item.disabled">
+            </el-option>
+          </el-select>
           </div>
           <div>空</div>
           <div><el-link type="primary" @click="handleDialog('save')">启用保存的指标</el-link></div>
@@ -86,13 +91,17 @@
       width="30%"
       :before-close="handleClose">
       <slot>
-        <el-input
-          v-model="timeInput"
-          clearable>
-        </el-input>
-        <el-select v-model="value" style="width:100%;" placeholder="请选择">
+         <el-select v-model="data.timeAreaValue" style="width:100%;" filterable placeholder=" ">
+          <el-option
+            v-for="item in data.areaOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+        <el-select v-model="data.timeValue" style="width:100%;" placeholder="请选择">
         <el-option
-          v-for="item in [{value: 1,label: '手动的'},{value: 2,label: '自动使用NTP'},{value: 3,label: '自动使用指定的NTP服务器'},]"
+          v-for="item in data.timeTypeOption"
           :key="item.value"
           :label="item.label"
           :value="item.value">
@@ -151,7 +160,26 @@ const data = ref({
   timeDialog: false,
   saveDialog: false,
   hardwareShow: false,
-  timeInput: '',
+  sourceValue: '',
+  timeAreaValue: '',
+  areaOptions: [{
+    value: 1,
+    label: 'Asia/Shanghai'
+  }, {
+    value: 2,
+    label: 'America/New York'
+  }],
+  timeValue: '',
+  timeTypeOption: [{
+    value: 1,
+    label: '手动的'
+  }, {
+    value: 2,
+    label: '自动使用NTP'
+  }, {
+    value: 3,
+    label: '自动使用指定的NTP服务器'
+  }],
   chartData: [
     {
       id: 'chart11',
@@ -295,6 +323,9 @@ console.log('图标数据', data.value.chartData[0])
     }
     .detail{
       width:60%;
+      .restart{
+        width: 60px
+      }
       div{
         height: 24px;
         line-height: 24px;
