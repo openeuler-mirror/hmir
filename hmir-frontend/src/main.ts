@@ -47,6 +47,7 @@ import 'normalize.css/normalize.css';
 import 'element-plus/dist/index.css';
 import "./style.css";
 import 'animate.css';
+import echarts from "./utils/echarts";
 import { setupI18n } from "./lang";
 
 const app = createApp(App)
@@ -55,6 +56,7 @@ app.directive('deBounce', deBounce);
 setupStore(app);
 setupI18n(app);
 app.use(ElementPlus).use(router)
+app.config.globalProperties.$echarts = echarts
 app.component('s3-layer', s3Layer);
 app.mount('#app')
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
