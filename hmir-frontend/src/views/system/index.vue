@@ -33,11 +33,10 @@
           <div><el-link type="primary" @click="handleDialog('save')">启用保存的指标</el-link></div>
         </div>
     </div>
-    <div class="charts">
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
+    <div class="charts" >
+      <div class="chart-box" v-for="(e,i) in 4" :key="i">
+        <Echarts :chartData = data.chartData[i] ></Echarts>
+      </div>
     </div>
       <!-- 安全Shell密钥的对话框 -->
        <el-dialog
@@ -139,8 +138,10 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import Echarts from '@/views/ceph/components/dashBoard/echarts.vue'
 import hardwareDetail from '@/views/system/hardwareDetail/index.vue'
 const data = ref({
+  // ids: ['chart11', 'chart12', 'chart13', 'chart14'],
   contentShow: true,
   option: ['硬件', '资产标签', '机器编码', '操作系统', '', '安全Shell密钥', '主机名', '域', '系统时间', '电源选项', '性能配置集', ''],
   value1: true,
@@ -150,7 +151,92 @@ const data = ref({
   timeDialog: false,
   saveDialog: false,
   hardwareShow: false,
-  timeInput: ''
+  timeInput: '',
+  chartData: [
+    {
+      id: 'chart11',
+      title: { text: '12CPU内核' },
+      tooltip: {
+        trigger: 'item'
+      },
+      legend: {
+        top: '5%',
+        left: 'center'
+      },
+      xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+      },
+      yAxis: {
+        type: 'value'
+      },
+      series: [
+        {
+          data: [820, 932, 901, 934, 1290, 1330, 1320],
+          type: 'line',
+          areaStyle: {}
+        }
+      ]
+    },
+    {
+      id: 'chart12',
+      title: { text: '内存和交换空间' },
+      xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+      },
+      yAxis: {
+        type: 'value'
+      },
+      series: [
+        {
+          data: [820, 932, 901, 934, 1290, 1330, 1320],
+          type: 'line',
+          areaStyle: {}
+        }
+      ]
+    },
+    {
+      id: 'chart13',
+      title: { text: '磁盘 I/O' },
+      xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+      },
+      yAxis: {
+        type: 'value'
+      },
+      series: [
+        {
+          data: [820, 932, 901, 934, 1290, 1330, 1320],
+          type: 'line',
+          areaStyle: {}
+        }
+      ]
+    },
+    {
+      id: 'chart14',
+      title: { text: '网络流量' },
+      xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+      },
+      yAxis: {
+        type: 'value'
+      },
+      series: [
+        {
+          data: [820, 932, 901, 934, 1290, 1330, 1320],
+          type: 'line',
+          areaStyle: {}
+        }
+      ]
+    }
+  ]
 })
 // 处理对话框的逻辑
 const handleDialog = (val:String) => {
@@ -179,6 +265,7 @@ const handleDialog = (val:String) => {
       break
   }
 }
+console.log('图标数据', data.value.chartData[0])
 </script>
 
 <style lang="scss" scoped>
@@ -217,10 +304,10 @@ const handleDialog = (val:String) => {
   }
   .charts{
     width:65%;
-    div{
+    .chart-box{
       width: 100%;
       height: 130px;
-      background: teal;
+      // background: teal;
       margin-bottom: 10px;
       margin-right: 10px;
     }
