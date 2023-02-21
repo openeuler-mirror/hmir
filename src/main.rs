@@ -80,7 +80,7 @@ impl middleware::WsMiddleware for Timings {
 
 macro_rules! assert_single_instance{
     ()=>{
-        let __instance = SingleInstance::new(constants::LOCKFILE).unwrap();
+        let __instance = SingleInstance::new("the-hmir-lock").unwrap();
         if(!__instance.is_single() ){
             println!("Already have an instance running");
             error!("Already have an instance running");
