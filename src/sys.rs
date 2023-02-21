@@ -15,9 +15,33 @@ use hmir_hash::HashWrap;
 use hmir_protocol::sys;
 use hmir_errno::errno;
 use hmir_token::TokenChecker;
-use gethostname::gethostname;
+use std::ffi::OsString;
 
-
+fn gethostname() -> OsString {
+    use nix::libc::{c_char, sysconf, _SC_HOST_NAME_MAX};
+    use std::os::unix::ffi::OsStringExt;
+    // Get the maximum size of host names on this system, and account for the
+    // trailing NUL byte.
+    let hostname_max = unsafe { sysconf(_SC_HOST_NAME_MAX) };
+    let mut buffer = vec![0; (hostname_max as usize) + 1];
+    let returncode = unsafe { nix::libc::gethostname(buffer.as_mut_ptr() as *mut c_char, buffer.len()) };
+    if returncode != 0 {
+        // There are no reasonable failures, so lets panic
+        panic!(
+            "gethostname failed: {}
+    Please report an issue to <https://github.com/swsnr/gethostname.rs/issues>!",
+            std::io::Error::last_os_error()
+        );
+    }
+    // We explicitly search for the trailing NUL byte and cap at the buffer
+    // length: If the buffer's too small (which shouldn't happen since we
+    // explicitly use the max hostname size above but just in case) POSIX
+    // doesn't specify whether there's a NUL byte at the end, so if we didn't
+    // check we might read from memory that's not ours.
+    let end = buffer.iter().position(|&b| b == 0).unwrap_or(buffer.len());
+    buffer.resize(end, 0);
+    OsString::from_vec(buffer)
+}
 
 lazy_static! {
     static ref SYS_PCI_INFO_CACHE: Mutex<String> = Mutex::new(String::new());
