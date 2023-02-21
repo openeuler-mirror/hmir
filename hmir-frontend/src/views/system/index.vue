@@ -129,6 +129,58 @@
         <el-button type="primary" @click="data.timeDialog = false">变更</el-button>
       </template>
       </el-dialog>
+      <!-- 关机重启对话框 -->
+      <el-dialog
+        :title="data.offDown"
+        v-model="data.turnUpDown"
+        width="30%"
+        style="min-width:430px"
+        :before-close="handleClose">
+        <slot>
+          <el-input
+              type="textarea"
+              :rows="4"
+              placeholder="登录用户的信息"
+              v-model="data.textarea">
+          </el-input>
+          <div class="block"  style="width:100%;">
+               延时
+            <el-select style="width:30%;" v-model="data.delayValue" placeholder="请选择" @change= handleDelay>
+            <el-option-group
+              v-for="group in data.delayOption"
+                    :key="group.label"
+                    :label="group.label">
+              <el-option
+                v-for="item in group.options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-option-group>
+            </el-select>
+            <template v-if="data.sureDelay">
+                <el-date-picker
+              v-model="value1"
+              type="date"
+              style="width:30%;"
+              placeholder="选择日期">
+            </el-date-picker>
+            <el-time-picker
+            style="width:30%;"
+            v-model="value1"
+            :picker-options="{
+              selectableRange: '18:30:00 - 20:30:00'
+            }"
+            placeholder="任意时间点">
+            </el-time-picker>
+            </template>
+          </div>
+        </slot>
+          <template #footer>
+          <el-button @click="data.turnUpDown = false">取 消</el-button>
+          <el-button type="primary" @click="data.turnUpDown = false">{{data.offDown}}</el-button>
+        </template>
+      </el-dialog>
       <!-- 启用保存的指标对话框 -->
        <el-dialog
       title="安装软件"
@@ -155,7 +207,6 @@ import useUserStore from '@/store/modules/user'
 const userStore = useUserStore()
 
 const data = ref({
-  // ids: ['chart11', 'chart12', 'chart13', 'chart14'],
   contentShow: true,
   option: ['硬件', '资产标签', '机器编码', '操作系统', '', '安全Shell密钥', '主机名', '域', '系统时间', '电源选项', '性能配置集', ''],
   value1: true,
@@ -163,6 +214,7 @@ const data = ref({
   dialogVisible: false,
   areaDialog: false,
   timeDialog: false,
+  turnUpDown: false,
   saveDialog: false,
   hardwareShow: false,
   sourceValue: '',
@@ -185,6 +237,40 @@ const data = ref({
     value: 3,
     label: '自动使用指定的NTP服务器'
   }],
+  // 重启or关机
+  delayValue: '',
+  sureDelay: false,
+  offDown: '',
+  textarea: '',
+  delayOption: [{
+    options: [{
+      value: 1,
+      label: '1分钟'
+    }, {
+      value: 5,
+      label: '5分钟'
+    }, {
+      value: 20,
+      label: '20分钟'
+    }, {
+      value: 40,
+      label: '40分钟'
+    }, {
+      value: 60,
+      label: '60分钟'
+    }]
+  }, {
+    options: [
+      {
+        value: 0,
+        label: '无延时'
+      }, {
+        value: 100,
+        label: '指定时间'
+      }
+    ]
+  }],
+  // 图表的数据
   chartData: [
     {
       id: 'chart11',
@@ -291,6 +377,9 @@ const handleDialog = (val:String) => {
       break
     case 'time':
       data.value.timeDialog = !data.value.timeDialog
+      break
+    case 'offDown':
+      data.value.turnUpDown = true
       break
     case 'save':
       data.value.saveDialog = !data.value.saveDialog
