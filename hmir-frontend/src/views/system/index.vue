@@ -22,9 +22,9 @@
           <div><el-link type="primary" @click="handleDialog('compuer')">LINX</el-link></div>
           <div><el-link type="primary" @click="handleDialog('area')">加入域</el-link></div>
           <div><el-link type="primary" @click="handleDialog('time')">2023-02-16 10:35</el-link></div>
-          <div class="restart">
+          <div class="restart" @click = turnOffDown>
             <!-- <div class="restart">重启</div><div class="simple">v</div> -->
-            <el-select v-model="sourceValue" placeholder="重启">
+            <el-select v-model="data.sourceValue" placeholder ="重启" @change = turnOffDown>
             <el-option
               v-for="item in [{value:1, label: '重启'}, {value:2, label: '关机'}]"
               :key="item.value"
@@ -109,13 +109,13 @@
       </el-select>
        <div class="block"  style="width:100%;">
         <el-date-picker
-          v-model="value1"
+          v-model="systemTimeValue"
           type="date"
-          style="width:80%;"
+          style="width:70%;"
           placeholder="选择日期">
         </el-date-picker>
         <el-time-picker
-        style="width:20%;"
+        style="width:30%;"
         v-model="value1"
         :picker-options="{
           selectableRange: '18:30:00 - 20:30:00'
@@ -324,12 +324,12 @@ console.log('图标数据', data.value.chartData[0])
     .detail{
       width:60%;
       .restart{
-        width: 60px
+        width: 80px
       }
       div{
-        height: 24px;
-        line-height: 24px;
-        margin-top: 5px;
+        height: 29px;
+        line-height: 29px;
+        margin-top: 0px;
       }
     }
   }
@@ -339,7 +339,7 @@ console.log('图标数据', data.value.chartData[0])
       width: 100%;
       height: 130px;
       // background: teal;
-      margin-bottom: 10px;
+      margin-bottom: 25px;
       margin-right: 10px;
     }
   }
