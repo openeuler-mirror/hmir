@@ -10,53 +10,20 @@ use hmir_sysinfo::bios::BiosRelease;
 use hmir_sysinfo::chassis::ChassisInfo;
 use hmir_sysinfo::machine::MachineInfo;
 use hmir_sysinfo::product::ProductInfo;
+use hmir_sysinfo::board::BoardInfo;
 use hmir_hash::HashWrap;
 use hmir_protocol::sys;
 use hmir_errno::errno;
 use hmir_token::TokenChecker;
+use gethostname::gethostname;
+
 
 
 lazy_static! {
     static ref SYS_PCI_INFO_CACHE: Mutex<String> = Mutex::new(String::new());
 }
 
-fn sys_os_info() -> String
-{
-    let release = OsInfo::new().unwrap();
-    release.name.into()
-}
 
-fn sys_bios_info()
-{
-
-    let b = BiosRelease::new().unwrap();
-    println!("vendor  {}",b.bios_vendor);
-    println!("date    {}",b.bios_date);
-    println!("release {}",b.bios_release);
-    println!("version {}",b.bios_version);
-}
-
-fn sys_chassis_info()
-{
-    let b = ChassisInfo::new().unwrap();
-    println!("Serial:  {}",b.chassis_serial);
-    println!("Vendor:    {}",b.chassis_vendor);
-    println!("Asset Tag: {}",b.chassis_asset_tag);
-    println!("Type: {}",b.chassis_type);
-    println!("Version: {}",b.chassis_version);
-}
-
-fn sys_machine_info()
-{
-    let b = MachineInfo::new().unwrap();
-    println!("Machine ID:  {}",b.machine_id);
-}
-
-fn sys_product_info()
-{
-    let b = ProductInfo::new().unwrap();
-    println!("Product is:  {:?}",b);
-}
 
 pub fn init_sysinfo()
 {
@@ -145,6 +112,26 @@ fn sys_list_pci_info() -> String {
     result
 }
 
+fn sys_all_os_info() -> String
+{
+    let b = BiosRelease::new().unwrap();
+    let board_info = BoardInfo::new().unwrap();
+    let chass_info = ChassisInfo::new().unwrap();
+    let machine_info = MachineInfo::new().unwrap();
+    let os_release = OsInfo::new().unwrap();
+
+    let info = sys::SystemAllInfo {
+        board_vendor: board_info.board_vendor.into(),
+        board_name: board_info.board_name.into(),
+        chassis_serial: chass_info.chassis_serial.into(),
+        machine_id: machine_info.machine_id.into(),
+        os_release: os_release.name.into(),
+        hostname: gethostname().into_string().unwrap(),
+    };
+
+    let serialized = serde_json::to_string(&info).unwrap();
+    serialized
+}
 
 pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
 
@@ -155,6 +142,12 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
         Ok(sys_list_pci_info())
     })?;
 
+    module.register_method("sys-os-all-info", |params, _| {
+        //默认没有error就是成功的
+        let token = params.one::<std::string::String>()?;
+        TokenChecker!(token);
+        Ok(sys_all_os_info())
+    })?;
     Ok(())
 }
 
@@ -163,38 +156,11 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
 mod tests {
     use super::*;
 
-    #[test]
-    fn test_os_release(){
-        let name = sys_os_info();
-        println!("name is {}",name);
-    }
 
     #[test]
-    fn test_bios_release(){
-        sys_bios_info();
+    fn test_sys_all_os_info() {
+        let info = sys_all_os_info();
+        println!("{}",info);
     }
-
-    #[test]
-    fn test_chassis_info(){
-        sys_chassis_info();
-    }
-
-    #[test]
-    fn test_machine_info(){
-        sys_machine_info();
-    }
-
-
-    #[test]
-    fn test_product_info(){
-        sys_product_info();
-    }
-
-    #[test]
-    fn test_pci_info_worked(){
-        let d = sys_pci_info();
-        println!("{}",d);
-    }
-
-
 }
+

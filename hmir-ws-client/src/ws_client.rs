@@ -19,9 +19,21 @@ pub struct RequestClient {
     pub runtime : tokio::runtime::Runtime,
 }
 
+macro_rules! client_check {
+    ( $client : expr ) =>{
+        if !$client.is_connected(){
+            return (errno::HMIR_ERR_CONNECT_SERVER,"".to_string());
+        }
+    }
+}
+
+
 impl RequestClient {
+
     //根据uri返回一个wc client
     pub fn new(uri : String) -> Result<Self,bool> {
+
+
         let runtime = Builder::new_current_thread().enable_all().build().unwrap();
         let client = runtime.block_on(async {
             let uri: Uri = format!("ws://{}", uri).parse().unwrap();

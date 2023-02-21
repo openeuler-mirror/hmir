@@ -19,6 +19,9 @@ use hmir_protocol::systemd;
 impl RequestClient {
 
     fn _svr_get_unit(&self,cmd: &str) -> (usize,String) {
+
+        client_check!(self.client);
+
         let token = self.token.clone();
         let (state,service) = self.runtime.block_on(async{
             let response: Result<String, _> = self.client.request(cmd, rpc_params![token]).await;

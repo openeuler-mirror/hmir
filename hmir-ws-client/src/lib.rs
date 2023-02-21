@@ -1,3 +1,5 @@
+
+#[macro_use]
 pub mod ws_client;
 mod login;
 mod tests;

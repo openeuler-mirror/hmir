@@ -11,30 +11,41 @@ use std::collections::BTreeMap;
 
 impl RequestClient {
 
-    pub fn ttyd_start(&self) -> bool {
+    pub fn ttyd_start(&self) ->  (usize,String) {
+
         let token = self.token.clone();
         let state = self.runtime.block_on(async {
             let response: Result<String,_>= self.client.request("ttyd-start", rpc_params![token]).await;
             match response {
                 Ok(result) => {
                     let p: HashWrap::<i32, i32> = serde_json::from_str(result.as_str()).unwrap();
-                    return p.is_success();
+                    return (p.code(),serde_json::to_string(&p.result).unwrap());
                 },
-                Err(_e) => {
-                    return false;
+                _ => {
+                    return (errno::HMIR_ERR_COMM,"".to_string())
                 }
             }
         });
         return state;
     }
 
-    pub fn ttyd_stop(&self) -> bool {
-        let token = self.token.clone();
-        let state = self.runtime.block_on(async {
+    pub fn ttyd_stop(&self) ->  (usize,String)  {
 
-            let response: String = self.client.request("ttyd-stop", rpc_params![token]).await.unwrap();
-            let p: HashWrap::<i32,i32> = serde_json::from_str(response.as_str()).unwrap();
-            return p.is_success();
+        // client_check!(self.client);
+
+        let token = self.token.clone();
+        let state= self.runtime.block_on(async {
+
+            let response: Result<String,_>= self.client.request("ttyd-stop", rpc_params![token]).await;
+            match response {
+                Ok(result) => {
+                    let p: HashWrap::<i32, i32> = serde_json::from_str(result.as_str()).unwrap();
+                    return (p.code(),serde_json::to_string(&p.result).unwrap());
+                },
+                _ => {
+                    return (errno::HMIR_ERR_COMM,"".to_string())
+                }
+            }
         });
         return state;
     }

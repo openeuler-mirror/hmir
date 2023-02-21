@@ -18,7 +18,7 @@ openvswitch官网：https://www.openvswitch.org/
 ##### ovs-vsctl（ovs网络设置）
 
 | 接口                             | 接口说明                   |
-| -------------------------------- | -------------------------- |
+| -------------------------------- | ------------------------ |
 | ovs-vsctl-add-br                 | 添加ovs网桥                |
 | ovs-vsctl-del-br                 | 删除ovs网桥                |
 | ovs-vsctl-add-port               | 网桥中添加端口             |
@@ -27,7 +27,7 @@ openvswitch官网：https://www.openvswitch.org/
 | ovs-vsctl-del-netflow-rule       | 网桥中删除netflow 规则     |
 | ovs-vsctl-set-ipfix-rule         | 网桥中设置ipfix 规则       |
 | ovs-vsctl-del-ipfix-rule         | 网桥中删除ipfix 规则       |
-| ovs-vsctl-set-port-vlan          | 设置ovs port vlanID        |
+| ovs-vsctl-set-port-vlan          | 设置ovs port vlanID      |
 | ovs-vsctl-set-port-patch         | 设置ovs网桥间的连接patch口 |
 | ovs-vsctl-set-port-bond          | ovs网桥添加bond接口        |
 | ovs-vsctl-set-interface-policing | 设置接口限流policing       |
