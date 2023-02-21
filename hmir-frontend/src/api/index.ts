@@ -12,6 +12,7 @@ import * as quit from "./quit";
 import * as login from "./login";
 import * as service from "./service";
 import * as process from "./process";
+import * as  system from "./system"
 
 const api = {
   ...ceph,
@@ -19,7 +20,8 @@ const api = {
   ...quit,
   ...login,
   ...service,
-  ...process
+  ...process,
+  ...system
 }
 
 export default api
