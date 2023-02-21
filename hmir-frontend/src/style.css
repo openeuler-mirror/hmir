@@ -55,8 +55,8 @@ h1 {
 
 input,
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
+  /* border-radius: 8px; */
+  /* border: 1px solid transparent; */
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
@@ -64,7 +64,7 @@ button {
   color: #0f0f0f;
   background-color: #ffffff;
   transition: border-color 0.25s;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+  /* box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2); */
 }
 
 button {
@@ -117,10 +117,25 @@ button {
   width: 13px !important;
 }
 /* 解决el-input等有内部白边 */
-.el-input__wrapper{
+/* .el-input__wrapper{
   padding: 0 !important;
   border: none;
 }
 .el-input__inner{
   border: none;
+} */
+.el-input__inner::placeholder {
+  color:  #101010;
+}
+/* 谷歌 */
+.el-input__inner::-webkit-input-placeholder {
+  color:  #101010;
+}
+/* 火狐 */
+.el-input__inner:-moz-placeholder {
+  color:  #101010;
+}
+/*ie*/
+.el-input__inner:-ms-input-placeholder {
+  color:  #101010;
 }
