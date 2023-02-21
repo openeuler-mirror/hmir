@@ -1,5 +1,5 @@
 import * as echarts from "echarts/core";
-import { BarChart, LineChart } from "echarts/charts";
+import { BarChart, LineChart,PieChart } from "echarts/charts";
 import {
     TitleComponent,
     TooltipComponent,
@@ -22,6 +22,7 @@ echarts.use([
     LabelLayout,
     UniversalTransition,
     CanvasRenderer,
-    LineChart
+    LineChart,
+    PieChart
 ])
 export default echarts
