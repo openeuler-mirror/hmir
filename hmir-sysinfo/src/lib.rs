@@ -24,3 +24,4 @@ pub mod bios;
 pub mod chassis;
 pub mod machine;
 pub mod product;
+pub mod board;
