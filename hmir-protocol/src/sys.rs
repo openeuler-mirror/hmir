@@ -7,3 +7,14 @@ pub struct PciDeviceInfo {
     pub vendor: String, //ID_VENDOR_FROM_DATABASE
     pub slot : String,  //PCI_SLOT_NAME
 }
+
+
+#[derive(Clone, Debug,Serialize,Deserialize)]
+pub struct SystemAllInfo {
+    pub board_vendor : String,
+    pub board_name : String,    //硬件
+    pub chassis_serial : String,//资产标签
+    pub machine_id : String,    //机器编号
+    pub os_release : String,
+    pub hostname : String,
+}
