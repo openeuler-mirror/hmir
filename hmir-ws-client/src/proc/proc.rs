@@ -9,10 +9,15 @@ use serde_json::json;
 use std::collections::BTreeMap;
 use hmir_protocol::proc;
 
+#[macro_use]
+
+// use crate::ws_client::client_check;
 
 impl RequestClient {
     #[allow(dead_code)]
     pub fn proc_process_info(&self) -> (usize, String) {
+
+        client_check!(self.client);
 
         let token = self.token.clone();
         let (state,info) = self.runtime.block_on(async{

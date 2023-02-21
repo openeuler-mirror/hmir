@@ -60,18 +60,6 @@ pub fn pam_auth(username : &str, password : &str) -> String
 
 pub fn is_pam_auth(username: &str, password: &str) -> bool
 {
-    // let sy_time = std::time::SystemTime::now();
-    // let mut authenticator = Authenticator::with_password("system-auth")
-    //     .expect("Failed to init PAM client.");
-    // authenticator.get_handler().set_credentials(username, password);
-    // println!("Time cost : {:?}", std::time::SystemTime::now().duration_since(sy_time).unwrap().as_millis());
-    // if authenticator.authenticate().is_ok() && authenticator.open_session().is_ok() {
-    //     return true;
-    // }
-    // else {
-    //     return false;
-    // }
-
     let (send, recv) = std::sync::mpsc::channel();
     let user = String::from(username);
     let pass = String::from(password);
@@ -92,8 +80,7 @@ pub fn is_pam_auth(username: &str, password: &str) -> bool
         }
     });
 
-
-    let r = recv.recv_timeout(std::time::Duration::from_millis(1000));
+    let r = recv.recv_timeout(std::time::Duration::from_millis(3000));
     match r {
         Ok(msg) => {
             if msg == "true" {
