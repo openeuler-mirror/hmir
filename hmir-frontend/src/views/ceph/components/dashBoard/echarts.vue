@@ -10,11 +10,13 @@ import { defineProps, reactive, onMounted } from 'vue'
 import * as echarts from 'echarts'
 const props = defineProps(['chartData'])
 const chartData = reactive(props.chartData)
-console.log('这是表格数据', chartData)
 
 onMounted(() => {
   const myChart = echarts.init(document.getElementById(chartData.id))
   myChart.setOption(chartData)
+  window.addEventListener('resize', () => {
+    myChart.resize()
+  })
 })
 
 </script>
