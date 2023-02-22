@@ -8,20 +8,20 @@
         </div>
         <div class="detail">
           <div>
-            <el-link type="primary" @click="handleDialog('hardware')">LENOVO 90TDCTO1WW</el-link>
+            <el-link type="primary" @click="handleDialog('hardware')">{{systemData.board_name ? systemData.board_name : '未知' }}</el-link>
           </div>
-          <div>{{systemData.chassis_serial}}</div>
-          <div>{{systemData.machine_id}}</div>
-          <div>Linx GNU/Linux 6.0.100 (buster)</div>
+          <div>{{systemData.chassis_serial ? systemData.chassis_serial : '未知'}}</div>
+          <div>{{systemData.machine_id ? systemData.machine_id: '未知'}}</div>
+          <div>{{systemData.os_release ? systemData.os_release : '未知'}}</div>
           <div>
             <el-link type="primary">错误修复的更新可以使用</el-link>
           </div>
           <div>
             <el-link type="primary" @click="handleDialog('safe')">显示指印</el-link>
           </div>
-          <div><el-link type="primary" @click="handleDialog('compuer')" >{{systemData.hostname}}</el-link></div>
+          <div><el-link type="primary" @click="handleDialog('compuer')" >{{systemData.hostname ? systemData.hostname : '未知'}}</el-link></div>
           <div><el-link type="primary" @click="handleDialog('area')">加入域</el-link></div>
-          <div><el-link type="primary" @click="handleDialog('time')">2023-02-16 10:35</el-link></div>
+          <div><el-link type="primary" @click="handleDialog('time')">{{nowTime}}</el-link></div>
           <div class="restart" @click = turnOffDown>
             <!-- <div class="restart">重启</div><div class="simple">v</div> -->
             <el-select v-model="data.sourceValue" placeholder ="重启" @change = turnOffDown>
