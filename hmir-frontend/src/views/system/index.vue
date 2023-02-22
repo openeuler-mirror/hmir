@@ -10,8 +10,8 @@
           <div>
             <el-link type="primary" @click="handleDialog('hardware')">LENOVO 90TDCTO1WW</el-link>
           </div>
-          <div>M70N0G61</div>
-          <div>f2621d9c362b4ffda34188814503f800</div>
+          <div>{{systemData.chassis_serial}}</div>
+          <div>{{systemData.machine_id}}</div>
           <div>Linx GNU/Linux 6.0.100 (buster)</div>
           <div>
             <el-link type="primary">错误修复的更新可以使用</el-link>
@@ -19,7 +19,7 @@
           <div>
             <el-link type="primary" @click="handleDialog('safe')">显示指印</el-link>
           </div>
-          <div><el-link type="primary" @click="handleDialog('compuer')">LINX</el-link></div>
+          <div><el-link type="primary" @click="handleDialog('compuer')" >{{systemData.hostname}}</el-link></div>
           <div><el-link type="primary" @click="handleDialog('area')">加入域</el-link></div>
           <div><el-link type="primary" @click="handleDialog('time')">2023-02-16 10:35</el-link></div>
           <div class="restart" @click = turnOffDown>
@@ -146,9 +146,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import Echarts from '@/views/ceph/components/dashBoard/echarts.vue'
 import hardwareDetail from '@/views/system/hardwareDetail/index.vue'
+import api from '@/api'
+import useUserStore from '@/store/modules/user'
+
+const userStore = useUserStore()
+
 const data = ref({
   // ids: ['chart11', 'chart12', 'chart13', 'chart14'],
   contentShow: true,
@@ -266,6 +271,7 @@ const data = ref({
     }
   ]
 })
+const systemData = ref({})
 // 处理对话框的逻辑
 const handleDialog = (val:String) => {
   switch (val) {
@@ -294,6 +300,36 @@ const handleDialog = (val:String) => {
   }
 }
 console.log('图标数据', data.value.chartData[0])
+
+const turnOffDown = (val: Number) => {
+  handleDialog('offDown')
+  if (val === 1) {
+    data.value.offDown = '重启'
+  } else if (val === 2) {
+    data.value.offDown = '关机'
+  }
+  console.log('选中的是', val)
+}
+
+const handleDelay = (val: Number) => {
+  if (val === 100) {
+    data.value.sureDelay = true
+  } else {
+    data.value.sureDelay = false
+  }
+}
+onMounted(() => {
+  api.cmd_sys_info({ host: userStore.host }).then((res: any) => {
+    if (res[0] === 0) {
+      console.log('cmd_sys_info')
+      console.log('这是系统页面返回的数据', (JSON.parse(res[1]).sysinfo))
+      systemData.value = (JSON.parse(res[1]).sysinfo)
+    }
+  }).catch((error) => {
+    console.log(error)
+  })
+})
+
 </script>
 
 <style lang="scss" scoped>
