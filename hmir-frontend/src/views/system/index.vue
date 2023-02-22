@@ -109,16 +109,16 @@
       </el-select>
        <div class="block"  style="width:100%;">
         <el-date-picker
-          v-model="systemTimeValue"
+          v-model="systemDateValue"
           type="date"
           style="width:70%;"
           placeholder="选择日期">
         </el-date-picker>
         <el-time-picker
         style="width:30%;"
-        v-model="value1"
+        v-model="systemTimeValue"
         :picker-options="{
-          selectableRange: '18:30:00 - 20:30:00'
+          selectableRange: '00:00:00 - 23:59:59'
         }"
         placeholder="任意时间点">
       </el-time-picker>
@@ -160,16 +160,16 @@
             </el-select>
             <template v-if="data.sureDelay">
                 <el-date-picker
-              v-model="value1"
+              v-model="delayDateValue"
               type="date"
               style="width:30%;"
               placeholder="选择日期">
             </el-date-picker>
             <el-time-picker
             style="width:30%;"
-            v-model="value1"
+            v-model="delayTimeValue"
             :picker-options="{
-              selectableRange: '18:30:00 - 20:30:00'
+              selectableRange: '00:00:00 - 23:59:59'
             }"
             placeholder="任意时间点">
             </el-time-picker>
@@ -198,12 +198,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onBeforeMount } from 'vue'
 import Echarts from '@/views/ceph/components/dashBoard/echarts.vue'
 import hardwareDetail from '@/views/system/hardwareDetail/index.vue'
 import api from '@/api'
 import useUserStore from '@/store/modules/user'
-
+import getDate from '@/utils/time'
 const userStore = useUserStore()
 
 const data = ref({
@@ -218,7 +218,7 @@ const data = ref({
   saveDialog: false,
   hardwareShow: false,
   sourceValue: '',
-  timeAreaValue: '',
+  timeAreaValue: 1,
   areaOptions: [{
     value: 1,
     label: 'Asia/Shanghai'
@@ -226,7 +226,7 @@ const data = ref({
     value: 2,
     label: 'America/New York'
   }],
-  timeValue: '',
+  timeValue: 1,
   timeTypeOption: [{
     value: 1,
     label: '手动的'
@@ -238,7 +238,7 @@ const data = ref({
     label: '自动使用指定的NTP服务器'
   }],
   // 重启or关机
-  delayValue: '',
+  delayValue: 1,
   sureDelay: false,
   offDown: '',
   textarea: '',
@@ -357,7 +357,6 @@ const data = ref({
     }
   ]
 })
-const systemData = ref({})
 // 处理对话框的逻辑
 const handleDialog = (val:String) => {
   switch (val) {
@@ -376,9 +375,13 @@ const handleDialog = (val:String) => {
       data.value.areaDialog = !data.value.areaDialog
       break
     case 'time':
+      systemDateValue.value = new Date()
+      systemTimeValue.value = new Date()
       data.value.timeDialog = !data.value.timeDialog
       break
     case 'offDown':
+      delayDateValue.value = new Date()
+      delayTimeValue.value = new Date()
       data.value.turnUpDown = true
       break
     case 'save':
@@ -388,7 +391,6 @@ const handleDialog = (val:String) => {
       break
   }
 }
-console.log('图标数据', data.value.chartData[0])
 
 const turnOffDown = (val: Number) => {
   handleDialog('offDown')
@@ -400,25 +402,52 @@ const turnOffDown = (val: Number) => {
   console.log('选中的是', val)
 }
 
-const handleDelay = (val: Number) => {
-  if (val === 100) {
-    data.value.sureDelay = true
-  } else {
-    data.value.sureDelay = false
-  }
-}
+// 处理detail的显示
+const systemData = ref({})
 onMounted(() => {
   api.cmd_sys_info({ host: userStore.host }).then((res: any) => {
     if (res[0] === 0) {
       console.log('cmd_sys_info')
       console.log('这是系统页面返回的数据', (JSON.parse(res[1]).sysinfo))
       systemData.value = (JSON.parse(res[1]).sysinfo)
+    } else {
+      console.log('cmd_sys_info失败')
     }
   }).catch((error) => {
     console.log(error)
   })
 })
 
+// 系统时间以及dialog
+const systemDateValue = ref(new Date())
+const systemTimeValue = ref(new Date())
+const nowTime = ref(getDate())
+const setTime = () => {
+  nowTime.value = getDate()
+}
+const timer :any = ref()
+onMounted(() => {
+  timer.value = setInterval(() => {
+    setTime()
+  }, 5000)
+})
+onBeforeMount(() => {
+  clearInterval(timer.value)
+  timer.value = null
+})
+
+// 重启关机
+const delayDateValue :any = ref()
+const delayTimeValue :any = ref()
+const handleDelay = (val: Number) => {
+  if (val === 100) {
+    delayDateValue.value = new Date()
+    delayTimeValue.value = new Date()
+    data.value.sureDelay = true
+  } else {
+    data.value.sureDelay = false
+  }
+}
 </script>
 
 <style lang="scss" scoped>
