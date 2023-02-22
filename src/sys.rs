@@ -153,7 +153,10 @@ fn sys_all_os_info() -> String
         hostname: gethostname().into_string().unwrap(),
     };
 
-    let serialized = serde_json::to_string(&info).unwrap();
+    let mut map  = hmir_hash::HashWrap::new();
+    map.insert("sysinfo",info);
+
+    let serialized = serde_json::to_string(&map).unwrap();
     serialized
 }
 
@@ -176,15 +179,40 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
 }
 
 
+pub fn sys_set_hostname(pretty_hostname : String, static_hostname : String) -> String
+{
+    let output = process::Command::new("hostnamectl")
+        .arg("set-hostname")
+        .arg("--pretty")
+        .arg(pretty_hostname)
+        .arg("--static")
+        .arg(static_hostname)
+        .output()
+        .expect("failed to execute process");
+    let mut map  = HashWrap::<i32,i32>:: new();
+    match output.status.success() {
+        true => map.set_code(0),
+        false => map.set_code(errno::HMIR_ERR_COMMAND),
+    }
+
+    let serialized = serde_json::to_string(&map).unwrap();
+    serialized
+}
+
+
 #[cfg(test)]
 mod tests {
     use super::*;
-
 
     #[test]
     fn test_sys_all_os_info() {
         let info = sys_all_os_info();
         println!("{}",info);
+    }
+
+    #[test]
+    fn test_set_hostname(){
+        sys_set_hostname("I am dwj".to_string(),"dwj".to_string());
     }
 }
 
