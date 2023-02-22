@@ -16,6 +16,8 @@ use hmir_protocol::sys;
 use hmir_errno::errno;
 use hmir_token::TokenChecker;
 use std::ffi::OsString;
+use serde::{Serialize,Deserialize};
+
 
 fn gethostname() -> OsString {
     use nix::libc::{c_char, sysconf, _SC_HOST_NAME_MAX};
@@ -175,6 +177,22 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
         TokenChecker!(token);
         Ok(sys_all_os_info())
     })?;
+
+    module.register_method("sys-set-hostname", |params, _| {
+
+        #[derive(Clone, Debug,Serialize,Deserialize)]
+        struct p {
+            token:String,
+            pretty_name:String,
+            static_name:String,
+        };
+
+        //默认没有error就是成功的
+        let param = params.parse::<p>()?;
+        TokenChecker!(param.token);
+        Ok(sys_set_hostname(param.pretty_name,param.static_name))
+    })?;
+
     Ok(())
 }
 

@@ -36,13 +36,31 @@ impl RequestClient {
     pub fn sys_os_all_info(&self) -> (usize,String) {
 
         client_check!(self.client);
-        
+
         let token = self.token.clone();
         let state = self.runtime.block_on(async {
             let response: Result<String,_>= self.client.request("sys-os-all-info", rpc_params![token]).await;
             match response {
                 Ok(result) => {
                     let p: HashWrap::<String,sys::SystemAllInfo> = serde_json::from_str(result.as_str()).unwrap();
+                    return (p.code(),serde_json::to_string(&p.result).unwrap());
+                },
+                _ => { return (errno::HMIR_ERR_COMM,"".to_string())}
+            };
+        });
+        return state;
+    }
+
+    pub fn sys_set_hostname(&self, pretty_name : &str, static_name : &str) -> (usize,String)
+    {
+        client_check!(self.client);
+
+        let token = self.token.clone();
+        let state = self.runtime.block_on(async {
+            let response: Result<String,_>= self.client.request("sys-set-hostname", rpc_params![token,pretty_name,static_name]).await;
+            match response {
+                Ok(result) => {
+                    let p: HashWrap::<i32,i32> = serde_json::from_str(result.as_str()).unwrap();
                     return (p.code(),serde_json::to_string(&p.result).unwrap());
                 },
                 _ => { return (errno::HMIR_ERR_COMM,"".to_string())}
@@ -59,7 +77,7 @@ impl RequestClient {
 mod tests {
     use super::*;
 
-    const URL : &str = "127.0.0.1:5899";
+    const URL : &str = "172.30.21.13:5899";
 
     #[test]
     fn sys_list_pci_info_worked() {
@@ -69,6 +87,33 @@ mod tests {
                 c.login("root","root");
                 let (state,pci_info) = c.sys_list_pci_info();
                 println!("{}",pci_info);
+            },
+            _ => {}
+        }
+    }
+
+    #[test]
+    fn sys_os_all_info_worked() {
+        let client = RequestClient::new(String::from(URL));
+        match client {
+            Ok(mut c) => {
+                c.login("root","root");
+                let (state,pci_info) = c.sys_os_all_info();
+                println!("{}",pci_info);
+            },
+            _ => {}
+        }
+    }
+
+    #[test]
+    fn test_sys_set_hostname_worked() {
+        let client = RequestClient::new(String::from(URL));
+        match client {
+            Ok(mut c) => {
+                c.login("root","root");
+                let (state,pci_info) = c.sys_set_hostname("I am developer","dwj");
+
+                println!("{}",errno::HMIR_MSG[state]);
             },
             _ => {}
         }
