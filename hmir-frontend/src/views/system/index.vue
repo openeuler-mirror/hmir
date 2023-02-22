@@ -7,23 +7,22 @@
           </div>
         </div>
         <div class="detail">
-          <div>
+          <div class = "detail-Box">
             <el-link type="primary" @click="handleDialog('hardware')">{{systemData.board_name ? systemData.board_name : '未知' }}</el-link>
           </div>
-          <div>{{systemData.chassis_serial ? systemData.chassis_serial : '未知'}}</div>
-          <div>{{systemData.machine_id ? systemData.machine_id: '未知'}}</div>
-          <div>{{systemData.os_release ? systemData.os_release : '未知'}}</div>
-          <div>
+          <div class = "detail-Box">{{systemData.chassis_serial ? systemData.chassis_serial : '未知'}}</div>
+          <div class = "detail-Box">{{systemData.machine_id ? systemData.machine_id: '未知'}}</div>
+          <div class = "detail-Box">{{systemData.os_release ? systemData.os_release : '未知'}}</div>
+          <div class = "detail-Box">
             <el-link type="primary">错误修复的更新可以使用</el-link>
           </div>
-          <div>
+          <div class = "detail-Box">
             <el-link type="primary" @click="handleDialog('safe')">显示指印</el-link>
           </div>
-          <div><el-link type="primary" @click="handleDialog('compuer')" >{{systemData.hostname ? systemData.hostname : '未知'}}</el-link></div>
-          <div><el-link type="primary" @click="handleDialog('area')">加入域</el-link></div>
-          <div><el-link type="primary" @click="handleDialog('time')">{{nowTime}}</el-link></div>
-          <div class="restart" @click = turnOffDown>
-            <!-- <div class="restart">重启</div><div class="simple">v</div> -->
+          <div class = "detail-Box"><el-link type="primary" @click="handleDialog('compuer')" >{{systemData.hostname ? systemData.hostname : '未知'}}</el-link></div>
+          <div class = "detail-Box"><el-link type="primary" @click="handleDialog('area')">加入域</el-link></div>
+          <div class = "detail-Box"><el-link type="primary" @click="handleDialog('time')">{{nowTime}}</el-link></div>
+          <div class = "detail-Box restart" @click = turnOffDown>
             <el-select v-model="data.sourceValue" placeholder ="重启" @change = turnOffDown>
             <el-option
               v-for="item in [{value:1, label: '重启'}, {value:2, label: '关机'}]"
@@ -34,8 +33,8 @@
             </el-option>
           </el-select>
           </div>
-          <div>空</div>
-          <div><el-link type="primary" @click="handleDialog('save')">启用保存的指标</el-link></div>
+          <div class = "detail-Box">空</div>
+          <div class = "detail-Box"><el-link type="primary" @click="handleDialog('save')">启用保存的指标</el-link></div>
         </div>
     </div>
     <div class="charts" >
@@ -478,12 +477,12 @@ const handleDelay = (val: Number) => {
     .detail{
       width:60%;
       .restart{
-        width: 80px
+        width: 80px;
+        margin-bottom: 2px;
       }
-      div{
+      .detail-Box{
         height: 29px;
         line-height: 29px;
-        margin-top: 0px;
       }
     }
   }
