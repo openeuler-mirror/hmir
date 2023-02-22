@@ -39,13 +39,13 @@ import Echarts from './echarts.vue'
 const data = ref({
   statusData: [
     { name: '集群状态', content: 'HEALTY_OK' },
-    { name: '主机', content: 1 },
-    { name: 'Monitor', content: 1 },
-    { name: 'OSD', content: 1 },
-    { name: 'Manigers', content: 1 },
-    { name: '对象网关', content: 1 },
-    { name: 'metaData 服务器', content: 1 },
-    { name: 'iSCSI网关', content: 1 }
+    { name: '主机', content: '1total' },
+    { name: 'Monitor', content: '1(quorum 0)' },
+    { name: 'OSD', content: '4总数 4启用,4加入' },
+    { name: 'Manigers', content: '1工作 0待机' },
+    { name: '对象网关', content: '1total' },
+    { name: 'metaData 服务器', content: '1工作 0待机' },
+    { name: 'iSCSI网关', content: '1total 1up, 0down' }
   ],
   chartData: [
     {
