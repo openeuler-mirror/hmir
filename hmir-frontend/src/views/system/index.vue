@@ -22,14 +22,13 @@
           <div class = "detail-Box"><el-link type="primary" @click="handleDialog('computer')" >{{systemData.hostname ? systemData.hostname : '未知'}}</el-link></div>
           <div class = "detail-Box"><el-link type="primary" @click="handleDialog('area')">加入域</el-link></div>
           <div class = "detail-Box"><el-link type="primary" @click="handleDialog('time')">{{nowTime}}</el-link></div>
-          <div class = "detail-Box restart" @click = turnOffDown>
+          <div class = "detail-Box restart" @click = turnOffDown(3)>
             <el-select v-model="data.sourceValue" placeholder ="重启" @change = turnOffDown>
             <el-option
               v-for="item in [{value:1, label: '重启'}, {value:2, label: '关机'}]"
               :key="item.value"
               :label="item.label"
-              :value="item.value"
-              :disabled="item.disabled">
+              :value="item.value">
             </el-option>
           </el-select>
           </div>
@@ -48,7 +47,7 @@
       title="主机 SSH 密钥指纹"
       v-model="data.safeDialog"
       width="30%"
-      :before-close="handleClose">
+      >
       <el-card class="box-card">
       <div v-for="o in 4" :key="o" class="text item">
         <div>ECDSA</div>
@@ -64,7 +63,7 @@
       title="修改主机名"
       v-model="data.dialogVisible"
       width="30%"
-      :before-close="handleClose">
+      >
       好主机名<el-input v-model="goodHostName" placeholder="请输入内容"></el-input>
       实际主机名<el-input v-model="realHostName" placeholder="请输入内容"></el-input>
       <template #footer>
@@ -77,7 +76,7 @@
       title="安装软件"
       v-model="data.areaDialog"
       width="30%"
-      :before-close="handleClose">
+      >
       <span>即将安装realmad</span>
       <template #footer>
         <el-button @click="data.areaDialog = false">取 消</el-button>
@@ -89,7 +88,7 @@
       title="修改系统时间"
       v-model="data.timeDialog"
       width="30%"
-      :before-close="handleClose">
+      >
       <slot>
          <el-select v-model="data.timeAreaValue" style="width:100%;" filterable placeholder=" ">
           <el-option
@@ -135,7 +134,7 @@
         v-model="data.turnUpDown"
         width="30%"
         style="min-width:430px"
-        :before-close="handleClose">
+        >
         <slot>
           <el-input
               type="textarea"
@@ -147,7 +146,7 @@
                延时
             <el-select style="width:30%;" v-model="data.delayValue" placeholder="请选择" @change= handleDelay>
             <el-option-group
-              v-for="group in data.delayOption"
+              v-for="group in delayOption"
                     :key="group.label"
                     :label="group.label">
               <el-option
@@ -186,7 +185,7 @@
       title="安装软件"
       v-model="data.saveDialog"
       width="30%"
-      :before-close="handleClose">
+      >
       <span>将安装 cockpit-pcp。</span>
       <template #footer>
         <el-button @click="data.saveDialog = false">取 消</el-button>
@@ -242,34 +241,6 @@ const data = ref({
   sureDelay: false,
   offDown: '',
   textarea: '',
-  delayOption: [{
-    options: [{
-      value: 1,
-      label: '1分钟'
-    }, {
-      value: 5,
-      label: '5分钟'
-    }, {
-      value: 20,
-      label: '20分钟'
-    }, {
-      value: 40,
-      label: '40分钟'
-    }, {
-      value: 60,
-      label: '60分钟'
-    }]
-  }, {
-    options: [
-      {
-        value: 0,
-        label: '无延时'
-      }, {
-        value: 100,
-        label: '指定时间'
-      }
-    ]
-  }],
   // 图表的数据
   chartData: [
     {
@@ -383,11 +354,42 @@ const data = ref({
     }
   ]
 })
+// 处理延时
+const delayOption:any = ref()
+delayOption.value = [
+  {
+    options: [{
+      value: 1,
+      label: '1分钟'
+    }, {
+      value: 5,
+      label: '5分钟'
+    }, {
+      value: 20,
+      label: '20分钟'
+    }, {
+      value: 40,
+      label: '40分钟'
+    }, {
+      value: 60,
+      label: '60分钟'
+    }]
+  }, {
+    options: [
+      {
+        value: 0,
+        label: '无延时'
+      }, {
+        value: 100,
+        label: '指定时间'
+      }
+    ]
+  }
+]
 // 处理对话框的逻辑
 const handleDialog = (val:String) => {
   switch (val) {
     case 'hardware':
-      console.log('hardware进来了')
       data.value.contentShow = !data.value.contentShow
       data.value.hardwareShow = !data.value.hardwareShow
       break
@@ -397,7 +399,6 @@ const handleDialog = (val:String) => {
     case 'computer':
       data.value.dialogVisible = !data.value.dialogVisible
       if (data.value.dialogVisible) {
-        console.log('打开主机名dialog', systemData.value)
         realHostName.value = systemData.value.hostname ? systemData.value.hostname : '未知'
       }
       break
@@ -429,18 +430,15 @@ const turnOffDown = (val: Number) => {
   } else if (val === 2) {
     data.value.offDown = '关机'
   }
-  console.log('选中的是', val)
 }
 // 主机名对话框
 const goodHostName = ref()
 const realHostName = ref()
 // 处理detail的显示
-const systemData = ref({})
+const systemData:any = ref({})
 onMounted(() => {
   api.cmd_sys_info({ host: userStore.host }).then((res: any) => {
     if (res[0] === 0) {
-      console.log('cmd_sys_info')
-      console.log('这是系统页面返回的数据', (JSON.parse(res[1]).sysinfo))
       systemData.value = (JSON.parse(res[1]).sysinfo)
     } else {
       console.log('cmd_sys_info失败')
