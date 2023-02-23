@@ -12,7 +12,8 @@ const props = defineProps(['chartData'])
 const chartData = reactive(props.chartData)
 
 onMounted(() => {
-  const myChart = echarts.init(document.getElementById(chartData.id))
+  const dom = document.getElementById(chartData.id) as HTMLElement
+  const myChart = echarts.init(dom)
   myChart.setOption(chartData)
   window.addEventListener('resize', () => {
     myChart.resize()
