@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, defineProps } from 'vue'
 const props = defineProps(['statusData'])
 const statusData = reactive(props.statusData)
 </script>
