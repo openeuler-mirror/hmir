@@ -32,6 +32,16 @@ macro_rules! client_instance {
     }
 }
 
+#[macro_export]
+macro_rules! mgr_fn_define {
+    ($name:ident) => {
+        pub fn $name(host: & str) -> (usize,String){
+            let h = host.to_string();
+            return client_instance!(&h).$name();
+        }
+    }
+}
+
 #[allow(dead_code)]
 pub fn register_client(host : &str, port : i32) -> bool
 {
