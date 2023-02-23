@@ -193,6 +193,21 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
         Ok(sys_set_hostname(param.pretty_name,param.static_name))
     })?;
 
+
+    module.register_method("sys-set-date", |params, _| {
+
+        #[derive(Clone, Debug,Serialize,Deserialize)]
+        struct p {
+            token:String,
+            date:String,
+        };
+
+        //默认没有error就是成功的
+        let param = params.parse::<p>()?;
+        TokenChecker!(param.token);
+        Ok(sys_set_date(param.date))
+    })?;
+
     Ok(())
 }
 
@@ -217,6 +232,22 @@ pub fn sys_set_hostname(pretty_hostname : String, static_hostname : String) -> S
     serialized
 }
 
+pub fn sys_set_date(date: String) -> String {
+
+    let output = process::Command::new("date")
+        .arg("-s")
+        .arg(date)
+        .output()
+        .expect("failed to execute process");
+    let mut map  = HashWrap::<i32,i32>:: new();
+    match output.status.success() {
+        true => map.set_code(0),
+        false => map.set_code(errno::HMIR_ERR_COMMAND),
+    }
+    let serialized = serde_json::to_string(&map).unwrap();
+    serialized
+}
+
 
 #[cfg(test)]
 mod tests {
@@ -231,6 +262,12 @@ mod tests {
     #[test]
     fn test_set_hostname(){
         sys_set_hostname("I am dwj".to_string(),"dwj".to_string());
+    }
+
+    #[test]
+    fn test_set_datetime() {
+        let out = sys_set_date("2023-02-23 15:08:00".to_string());
+        println!("{}",out);
     }
 }
 
