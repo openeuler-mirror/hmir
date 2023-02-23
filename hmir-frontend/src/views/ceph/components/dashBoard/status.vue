@@ -1,9 +1,9 @@
 <template>
   <div>
-   <div>
+   <div class="statusName">
     {{statusData.name}}
    </div>
-   <div>
+   <div class="statusContent">
     {{statusData.content}}
    </div>
   </div>
@@ -13,9 +13,18 @@
 import { reactive } from 'vue'
 const props = defineProps(['statusData'])
 const statusData = reactive(props.statusData)
-console.log('这是传过来的数据', statusData)
 </script>
 
 <style lang="scss" scoped>
-
+.statusName{
+  color:green;
+   font-size: 20px;
+   font-weight: 300;
+}
+.statusContent{
+  margin-top: 10%;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 300;
+}
 </style>
