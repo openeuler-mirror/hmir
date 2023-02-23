@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="main">
     <div>
         <p>状态</p>
        <div class="status">
@@ -11,22 +11,20 @@
     <div>
         <p>容量</p>
         <div class="capacity">
-            <!-- <div class="capacity-box">基本容量</div> -->
             <div class="capacity-box" v-for="(e,i) in 4" :key="i">
                 <Echarts :chartData = data.chartData[i] ></Echarts>
             </div>
-            <!-- <div class="capacity-box">对象树</div>
-            <div class="capacity-box">PG状态</div>
-            <div class="capacity-box">储存池</div> -->
         </div>
     </div>
     <div>
         <p>性能</p>
         <div class="performance">
-            <div class="performance-box">客户端读写</div>
-            <div class="performance-box">客户端吞吐量</div>
-            <div class="performance-box">恢复复吞吐量</div>
-            <div class="performance-box">Scrubling</div>
+          <div class="performance-box" v-for="(e, i) in performance" :key="i">
+              <Echarts :chartData = performance[i]></Echarts>
+            </div>
+            <div class="performance-box" v-for="(e,i) in performanceData" :key="i">
+              <Status :statusData = performanceData[i]></Status>
+            </div>
         </div>
     </div>
   </div>
@@ -55,8 +53,31 @@ const data = ref({
         trigger: 'item'
       },
       legend: {
-        top: '5%',
-        left: 'center'
+               // icon: 'circle',
+        // itemWidth: 12,
+        // itemHeight: 12,
+        itemGap: 25,
+        top: '10%',
+        left: 'right',
+        x: 100,
+        y: 50,
+        orient: 'vertical',
+        textStyle: {
+          color: '#000'
+        },
+        formatter: function (name:any) {
+          const data1 = data.value.chartData[0].series[0].data
+          let total = 0
+          let tarValue:any
+          for (let i = 0, l = data1.length; i < l; i++) {
+            total += data1[i].value
+            if (data1[i].name === name) {
+              tarValue = data1[i].value
+            }
+          }
+          const p = ((tarValue / total) * 100).toFixed(2)
+          return name + '' + '' + p + '%'
+        }
       },
       series: [
         {
@@ -84,10 +105,8 @@ const data = ref({
             show: false
           },
           data: [
-            { value: 100, name: 'Healthy' },
-            { value: 10, name: 'Misplaced' },
-            { value: 20, name: 'Degraed' },
-            { value: 30, name: 'Unfound' }
+            { value: 100, name: '已使用' },
+            { value: 10, name: '空闲' }
           ]
         }
       ]
@@ -143,8 +162,10 @@ const data = ref({
         trigger: 'item'
       },
       legend: {
-        top: '5%',
-        left: 'center'
+        top: '10%',
+        left: 'right',
+        orient: 'vertical',
+        itemGap: 25
       },
       series: [
         {
@@ -172,10 +193,10 @@ const data = ref({
             show: false
           },
           data: [
-            { value: 100, name: 'Healthy' },
-            { value: 10, name: 'Misplaced' },
-            { value: 20, name: 'Degraed' },
-            { value: 30, name: 'Unfound' }
+          { value: 100, name: '正常' },
+            { value: 10, name: '运行中' },
+            { value: 20, name: '警报' },
+            { value: 30, name: '未知' }
           ]
         }
       ]
@@ -187,8 +208,10 @@ const data = ref({
         trigger: 'item'
       },
       legend: {
-        top: '5%',
-        left: 'center'
+        top: '10%',
+        left: 'right',
+        orient: 'vertical',
+        itemGap: 25
       },
       series: [
         {
@@ -216,21 +239,139 @@ const data = ref({
             show: false
           },
           data: [
-            { value: 100, name: 'Healthy' },
-            { value: 10, name: 'Misplaced' },
-            { value: 20, name: 'Degraed' },
-            { value: 30, name: 'Unfound' }
+          { value: 100, name: '已使用' },
+          { value: 10, name: '空闲' }
           ]
         }
       ]
     }
   ]
 })
-// console.log(data.value.ids)
+
+// 性能
+const performance = ref([
+  {
+    id: 'chart101',
+    title: { text: '客户端读写' },
+    tooltip: {
+      trigger: 'item'
+    },
+    legend: {
+      itemGap: 25,
+      top: '10%',
+      left: 'right',
+      x: 100,
+      y: 50,
+      orient: 'vertical',
+      textStyle: {
+        color: '#000'
+      },
+      formatter: function (name:any) {
+        const data1 = data.value.chartData[0].series[0].data
+        let total = 0
+        let tarValue:any
+        for (let i = 0, l = data1.length; i < l; i++) {
+          total += data1[i].value
+          if (data1[i].name === name) {
+            tarValue = data1[i].value
+          }
+        }
+        const p = ((tarValue / total) * 100).toFixed(2)
+        return name + '' + '' + p + '%'
+      }
+    },
+    series: [
+      {
+        name: 'Access From',
+        type: 'pie',
+        radius: ['40%', '70%'],
+        avoidLabelOverlap: false,
+        itemStyle: {
+          borderRadius: 10,
+          borderColor: '#fff',
+          borderWidth: 2
+        },
+        label: {
+          show: false,
+          position: 'center'
+        },
+        emphasis: {
+          label: {
+            show: true,
+            fontSize: 40,
+            fontWeight: 'bold'
+          }
+        },
+        labelLine: {
+          show: false
+        },
+        data: [
+          { value: 100, name: '已使用' },
+          { value: 10, name: '空闲' }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'chart102',
+    title: { text: '客户端吞吐量' },
+    tooltip: {
+      trigger: 'item'
+    },
+    legend: {
+      itemGap: 25,
+      orient: 'vertical',
+      top: '10%',
+      left: 'right'
+    },
+    series: [
+      {
+        name: 'Access From',
+        type: 'pie',
+        radius: ['40%', '70%'],
+        avoidLabelOverlap: false,
+        itemStyle: {
+          borderRadius: 10,
+          borderColor: '#fff',
+          borderWidth: 2
+        },
+        label: {
+          show: false,
+          position: 'center'
+        },
+        emphasis: {
+          label: {
+            show: true,
+            fontSize: 40,
+            fontWeight: 'bold'
+          }
+        },
+        labelLine: {
+          show: false
+        },
+        data: [
+          { value: 100, name: 'Healthy' },
+          { value: 10, name: 'Misplaced' },
+          { value: 20, name: 'Degraed' },
+          { value: 30, name: 'Unfound' }
+        ]
+      }
+    ]
+  }
+])
+const performanceData = ref([
+  { name: '恢复复吞吐量', content: '0B/s' },
+  { name: 'Scrubling', content: 'inactive' }
+])
+
 </script>
 
 <style lang="scss" scoped>
-.status {
+  .main {
+  width: 100%;
+  height: 100%;
+  min-width: 1000px;
+  .status {
     display: flex;
     justify-content: center;
     flex-wrap:wrap;
@@ -266,6 +407,7 @@ const data = ref({
          margin-right:1% ;
          margin-bottom: 1%;
      }
+}
 }
 
 </style>
