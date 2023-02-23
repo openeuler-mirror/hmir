@@ -19,7 +19,7 @@
           <div class = "detail-Box">
             <el-link type="primary" @click="handleDialog('safe')">显示指印</el-link>
           </div>
-          <div class = "detail-Box"><el-link type="primary" @click="handleDialog('compuer')" >{{systemData.hostname ? systemData.hostname : '未知'}}</el-link></div>
+          <div class = "detail-Box"><el-link type="primary" @click="handleDialog('computer')" >{{systemData.hostname ? systemData.hostname : '未知'}}</el-link></div>
           <div class = "detail-Box"><el-link type="primary" @click="handleDialog('area')">加入域</el-link></div>
           <div class = "detail-Box"><el-link type="primary" @click="handleDialog('time')">{{nowTime}}</el-link></div>
           <div class = "detail-Box restart" @click = turnOffDown>
@@ -39,6 +39,7 @@
     </div>
     <div class="charts" >
       <div class="chart-box" v-for="(e,i) in 4" :key="i">
+        <div class="chart-name"><el-link type="primary">{{chartName[i]}}</el-link></div>
         <Echarts :chartData = data.chartData[i] ></Echarts>
       </div>
     </div>
@@ -64,8 +65,8 @@
       v-model="data.dialogVisible"
       width="30%"
       :before-close="handleClose">
-      好主机名<el-input v-model="input" placeholder="请输入内容"></el-input>
-      实际主机名<el-input v-model="input" placeholder="请输入内容"></el-input>
+      好主机名<el-input v-model="goodHostName" placeholder="请输入内容"></el-input>
+      实际主机名<el-input v-model="realHostName" placeholder="请输入内容"></el-input>
       <template #footer>
         <el-button @click="data.dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="data.dialogVisible = false">变更</el-button>
@@ -273,7 +274,6 @@ const data = ref({
   chartData: [
     {
       id: 'chart11',
-      title: { text: '12CPU内核' },
       tooltip: {
         trigger: 'item'
       },
@@ -284,10 +284,20 @@ const data = ref({
       xAxis: {
         type: 'category',
         boundaryGap: false,
-        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        data: ['17:13', '17:14', '17:15', '17:16', '17:17']
       },
       yAxis: {
-        type: 'value'
+        name: '%',
+        type: 'value',
+        nameTextStyle: {
+          color: 'black',
+          fontSize: 14
+        }
+      },
+      axisLabel: {
+        color: 'black',
+        fontsize: '20',
+        align: 'left'
       },
       series: [
         {
@@ -299,18 +309,17 @@ const data = ref({
     },
     {
       id: 'chart12',
-      title: { text: '内存和交换空间' },
       xAxis: {
         type: 'category',
         boundaryGap: false,
-        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        data: ['17:13', '17:14', '17:15', '17:16', '17:17']
       },
       yAxis: {
         type: 'value'
       },
       series: [
         {
-          data: [820, 932, 901, 934, 1290, 1330, 1320],
+          data: [820, 932, 901, 934, 1290, 1330, 1320, 932, 901, 934, 1290, 1330, 1320, 932, 901, 934, 1290, 1330, 1320],
           type: 'line',
           areaStyle: {}
         }
@@ -318,14 +327,23 @@ const data = ref({
     },
     {
       id: 'chart13',
-      title: { text: '磁盘 I/O' },
       xAxis: {
         type: 'category',
         boundaryGap: false,
-        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        data: ['17:13', '17:14', '17:15', '17:16', '17:17']
       },
       yAxis: {
-        type: 'value'
+        name: 'Mib/s',
+        type: 'value',
+        nameTextStyle: {
+          color: 'black',
+          fontSize: 14
+        }
+      },
+      axisLabel: {
+        color: 'black',
+        fontsize: '20',
+        align: 'left'
       },
       series: [
         {
@@ -337,14 +355,23 @@ const data = ref({
     },
     {
       id: 'chart14',
-      title: { text: '网络流量' },
       xAxis: {
         type: 'category',
         boundaryGap: false,
-        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        data: ['17:13', '17:14', '17:15', '17:16', '17:17']
       },
       yAxis: {
-        type: 'value'
+        name: 'Kbps',
+        type: 'value',
+        nameTextStyle: {
+          color: 'black',
+          fontSize: 14
+        }
+      },
+      axisLabel: {
+        color: 'black',
+        fontsize: 30,
+        align: 'left'
       },
       series: [
         {
@@ -367,8 +394,12 @@ const handleDialog = (val:String) => {
     case 'safe':
       data.value.safeDialog = !data.value.safeDialog
       break
-    case 'compuer':
+    case 'computer':
       data.value.dialogVisible = !data.value.dialogVisible
+      if (data.value.dialogVisible) {
+        console.log('打开主机名dialog', systemData.value)
+        realHostName.value = systemData.value.hostname ? systemData.value.hostname : '未知'
+      }
       break
     case 'area':
       data.value.areaDialog = !data.value.areaDialog
@@ -400,7 +431,9 @@ const turnOffDown = (val: Number) => {
   }
   console.log('选中的是', val)
 }
-
+// 主机名对话框
+const goodHostName = ref()
+const realHostName = ref()
 // 处理detail的显示
 const systemData = ref({})
 onMounted(() => {
@@ -447,6 +480,7 @@ const handleDelay = (val: Number) => {
     data.value.sureDelay = false
   }
 }
+const chartName = ref(['12CPU内核', '内存和交换空间', '磁盘 I/O', '网络流量'])
 </script>
 
 <style lang="scss" scoped>
@@ -494,6 +528,15 @@ const handleDelay = (val: Number) => {
       // background: teal;
       margin-bottom: 25px;
       margin-right: 10px;
+      position: relative;
+      .chart-name{
+       position: absolute;
+        top: 26px;
+        left: 13%;
+        font-size: 13px;
+        cursor: pointer;
+        z-index: 3;
+      }
     }
   }
 }
