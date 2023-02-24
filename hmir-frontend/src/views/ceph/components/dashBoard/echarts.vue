@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div :id= chartData.id :style="{width:'100%',height: '200px' }">
+    <div :id= chartData.id :style="height ? 'height:'+height+'px': 'height:200px'" class="chart-box">
     </div>
   </div>
 </template>
@@ -8,9 +8,9 @@
 <script setup lang="ts">
 import { defineProps, reactive, onMounted } from 'vue'
 import * as echarts from 'echarts'
-const props = defineProps(['chartData'])
+const props = defineProps(['chartData', 'height'])
 const chartData = reactive(props.chartData)
-
+const height = reactive(props.height)
 onMounted(() => {
   const dom = document.getElementById(chartData.id) as HTMLElement
   const myChart = echarts.init(dom)
@@ -23,5 +23,7 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-
+.chart-box{
+  width: 100%;
+}
 </style>
