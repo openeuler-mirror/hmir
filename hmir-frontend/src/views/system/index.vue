@@ -1,199 +1,145 @@
 <template>
-  <div v-show="data.contentShow" class="content">
+  <div v-if="data.contentShow" class="content">
     <div class="dev">
-        <div  class="left">
-          <div class="devName"  v-for="(e, i) in data.option" :key="i">
-            <div>{{ e }}</div>
-          </div>
+      <div class="left">
+        <div class="devName" v-for="(e, i) in data.option" :key="i">
+          <div>{{ e }}</div>
         </div>
-        <div class="detail">
-          <div class = "detail-Box">
-            <el-link type="primary" @click="handleDialog('hardware')">{{systemData.board_name ? systemData.board_name : '未知' }}</el-link>
-          </div>
-          <div class = "detail-Box">{{systemData.chassis_serial ? systemData.chassis_serial : '未知'}}</div>
-          <div class = "detail-Box">{{systemData.machine_id ? systemData.machine_id: '未知'}}</div>
-          <div class = "detail-Box">{{systemData.os_release ? systemData.os_release : '未知'}}</div>
-          <div class = "detail-Box">
-            <el-link type="primary">错误修复的更新可以使用</el-link>
-          </div>
-          <div class = "detail-Box">
-            <el-link type="primary" @click="handleDialog('safe')">显示指印</el-link>
-          </div>
-          <div class = "detail-Box"><el-link type="primary" @click="handleDialog('computer')" >{{systemData.hostname ? systemData.hostname : '未知'}}</el-link></div>
-          <div class = "detail-Box"><el-link type="primary" @click="handleDialog('area')">加入域</el-link></div>
-          <div class = "detail-Box"><el-link type="primary" @click="handleDialog('time')">{{nowTime}}</el-link></div>
-          <div class = "detail-Box restart" @click = turnOffDown(3)>
-            <el-select v-model="data.sourceValue" placeholder ="重启" @change = turnOffDown>
-            <el-option
-              v-for="item in [{value:1, label: '重启'}, {value:2, label: '关机'}]"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
+      </div>
+      <div class="detail">
+        <div class="detail-Box">
+          <el-link type="primary" @click="handleDialog('hardware')">{{ systemData.board_name ? systemData.board_name :
+            '未知'
+          }}</el-link>
+        </div>
+        <div class="detail-Box">{{ systemData.chassis_serial ? systemData.chassis_serial : '未知' }}</div>
+        <div class="detail-Box">{{ systemData.machine_id ? systemData.machine_id : '未知' }}</div>
+        <div class="detail-Box">{{ systemData.os_release ? systemData.os_release : '未知' }}</div>
+        <div class="detail-Box">
+          <el-link type="primary">错误修复的更新可以使用</el-link>
+        </div>
+        <div class="detail-Box">
+          <el-link type="primary" @click="handleDialog('safe')">显示指印</el-link>
+        </div>
+        <div class="detail-Box"><el-link type="primary" @click="handleDialog('computer')">{{ systemData.hostname ?
+          systemData.hostname : '未知' }}</el-link></div>
+        <div class="detail-Box"><el-link type="primary" @click="handleDialog('area')">加入域</el-link></div>
+        <div class="detail-Box"><el-link type="primary" @click="handleDialog('time')">{{ nowTime }}</el-link></div>
+        <div class="detail-Box restart" @click=turnOffDown(3)>
+          <el-select v-model="data.sourceValue" placeholder="重启" @change=turnOffDown>
+            <el-option v-for="item in [{ value: 1, label: '重启' }, { value: 2, label: '关机' }]" :key="item.value"
+              :label="item.label" :value="item.value">
             </el-option>
           </el-select>
-          </div>
-          <div class = "detail-Box">空</div>
-          <div class = "detail-Box"><el-link type="primary" @click="handleDialog('save')">启用保存的指标</el-link></div>
         </div>
-    </div>
-    <div class="charts" >
-      <div class="chart-box" v-for="(e,i) in 4" :key="i">
-        <div class="chart-name"><el-link type="primary">{{chartName[i]}}</el-link></div>
-        <Echarts :chartData = data.chartData[i] ></Echarts>
+        <div class="detail-Box">空</div>
+        <div class="detail-Box"><el-link type="primary" @click="handleDialog('save')">启用保存的指标</el-link></div>
       </div>
     </div>
-      <!-- 安全Shell密钥的对话框 -->
-       <el-dialog
-      title="主机 SSH 密钥指纹"
-      v-model="data.safeDialog"
-      width="30%"
-      >
+    <div class="charts">
+      <div class="chart-box" v-for="(e, i) in 4" :key="i">
+        <div class="chart-name" @click="clickChartNameHandler(chartName[i].value)"><el-link type="primary">{{
+          chartName[i].name }}</el-link></div>
+        <Echarts :chartData=data.chartData[i]></Echarts>
+      </div>
+    </div>
+    <!-- 安全Shell密钥的对话框 -->
+    <el-dialog title="主机 SSH 密钥指纹" v-model="data.safeDialog" width="30%">
       <el-card class="box-card">
-      <div v-for="o in 4" :key="o" class="text item">
-        <div>ECDSA</div>
-        <div>MD5:11:4f:b7:ca:fe:0d:7d:70:5e:e9:50:f4:e4:5f:27:8b SHA256:hSHBYf2p4ZV+P5CV1WPaPQbVVrKCljZtaWP9J/I7+4g</div>
-      </div>
+        <div v-for="o in 4" :key="o" class="text item">
+          <div>ECDSA</div>
+          <div>MD5:11:4f:b7:ca:fe:0d:7d:70:5e:e9:50:f4:e4:5f:27:8b SHA256:hSHBYf2p4ZV+P5CV1WPaPQbVVrKCljZtaWP9J/I7+4g
+          </div>
+        </div>
       </el-card>
       <template #footer>
         <el-button @click="data.safeDialog = false">关闭</el-button>
       </template>
-      </el-dialog>
-      <!-- 主机名的对话框 -->
-      <el-dialog
-      title="修改主机名"
-      v-model="data.dialogVisible"
-      width="30%"
-      >
+    </el-dialog>
+    <!-- 主机名的对话框 -->
+    <el-dialog title="修改主机名" v-model="data.dialogVisible" width="30%">
       好主机名<el-input v-model="goodHostName" placeholder="请输入内容"></el-input>
       实际主机名<el-input v-model="realHostName" placeholder="请输入内容"></el-input>
       <template #footer>
         <el-button @click="data.dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="data.dialogVisible = false">变更</el-button>
       </template>
-      </el-dialog>
-      <!-- 域的对话框 -->
-      <el-dialog
-      title="安装软件"
-      v-model="data.areaDialog"
-      width="30%"
-      >
+    </el-dialog>
+    <!-- 域的对话框 -->
+    <el-dialog title="安装软件" v-model="data.areaDialog" width="30%">
       <span>即将安装realmad</span>
       <template #footer>
         <el-button @click="data.areaDialog = false">取 消</el-button>
         <el-button type="primary" @click="data.areaDialog = false">安装</el-button>
       </template>
-      </el-dialog>
-      <!-- 系统时间对话框 -->
-       <el-dialog
-      title="修改系统时间"
-      v-model="data.timeDialog"
-      width="30%"
-      >
+    </el-dialog>
+    <!-- 系统时间对话框 -->
+    <el-dialog title="修改系统时间" v-model="data.timeDialog" width="30%">
       <slot>
-         <el-select v-model="data.timeAreaValue" style="width:100%;" filterable placeholder=" ">
-          <el-option
-            v-for="item in data.areaOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
+        <el-select v-model="data.timeAreaValue" style="width:100%;" filterable placeholder=" ">
+          <el-option v-for="item in data.areaOptions" :key="item.value" :label="item.label" :value="item.value">
           </el-option>
         </el-select>
         <el-select v-model="data.timeValue" style="width:100%;" placeholder="请选择">
-        <el-option
-          v-for="item in data.timeTypeOption"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-        </el-option>
-      </el-select>
-       <div class="block"  style="width:100%;">
-        <el-date-picker
-          v-model="systemDateValue"
-          type="date"
-          style="width:70%;"
-          placeholder="选择日期">
-        </el-date-picker>
-        <el-time-picker
-        style="width:30%;"
-        v-model="systemTimeValue"
-        :picker-options="{
-          selectableRange: '00:00:00 - 23:59:59'
-        }"
-        placeholder="任意时间点">
-      </el-time-picker>
-      </div>
+          <el-option v-for="item in data.timeTypeOption" :key="item.value" :label="item.label" :value="item.value">
+          </el-option>
+        </el-select>
+        <div class="block" style="width:100%;">
+          <el-date-picker v-model="systemDateValue" type="date" style="width:70%;" placeholder="选择日期">
+          </el-date-picker>
+          <el-time-picker style="width:30%;" v-model="systemTimeValue" :picker-options="{
+            selectableRange: '00:00:00 - 23:59:59'
+          }" placeholder="任意时间点">
+          </el-time-picker>
+        </div>
       </slot>
       <template #footer>
         <el-button @click="data.timeDialog = false">取 消</el-button>
         <el-button type="primary" @click="data.timeDialog = false">变更</el-button>
       </template>
-      </el-dialog>
-      <!-- 关机重启对话框 -->
-      <el-dialog
-        :title="data.offDown"
-        v-model="data.turnUpDown"
-        width="30%"
-        style="min-width:430px"
-        >
-        <slot>
-          <el-input
-              type="textarea"
-              :rows="4"
-              placeholder="登录用户的信息"
-              v-model="data.textarea">
-          </el-input>
-          <div class="block"  style="width:100%;">
-               延时
-            <el-select style="width:30%;" v-model="data.delayValue" placeholder="请选择" @change= handleDelay>
-            <el-option-group
-              v-for="group in delayOption"
-                    :key="group.label"
-                    :label="group.label">
-              <el-option
-                v-for="item in group.options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
+    </el-dialog>
+    <!-- 关机重启对话框 -->
+    <el-dialog :title="data.offDown" v-model="data.turnUpDown" width="30%" style="min-width:430px">
+      <slot>
+        <el-input type="textarea" :rows="4" placeholder="登录用户的信息" v-model="data.textarea">
+        </el-input>
+        <div class="block" style="width:100%;">
+          延时
+          <el-select style="width:30%;" v-model="data.delayValue" placeholder="请选择" @change=handleDelay>
+            <el-option-group v-for="group in delayOption" :key="group.label" :label="group.label">
+              <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-option-group>
-            </el-select>
-            <template v-if="data.sureDelay">
-                <el-date-picker
-              v-model="delayDateValue"
-              type="date"
-              style="width:30%;"
-              placeholder="选择日期">
+          </el-select>
+          <template v-if="data.sureDelay">
+            <el-date-picker v-model="delayDateValue" type="date" style="width:30%;" placeholder="选择日期">
             </el-date-picker>
-            <el-time-picker
-            style="width:30%;"
-            v-model="delayTimeValue"
-            :picker-options="{
+            <el-time-picker style="width:30%;" v-model="delayTimeValue" :picker-options="{
               selectableRange: '00:00:00 - 23:59:59'
-            }"
-            placeholder="任意时间点">
+            }" placeholder="任意时间点">
             </el-time-picker>
-            </template>
-          </div>
-        </slot>
-          <template #footer>
-          <el-button @click="data.turnUpDown = false">取 消</el-button>
-          <el-button type="primary" @click="data.turnUpDown = false">{{data.offDown}}</el-button>
-        </template>
-      </el-dialog>
-      <!-- 启用保存的指标对话框 -->
-       <el-dialog
-      title="安装软件"
-      v-model="data.saveDialog"
-      width="30%"
-      >
+          </template>
+        </div>
+      </slot>
+      <template #footer>
+        <el-button @click="data.turnUpDown = false">取 消</el-button>
+        <el-button type="primary" @click="data.turnUpDown = false">{{ data.offDown }}</el-button>
+      </template>
+    </el-dialog>
+    <!-- 启用保存的指标对话框 -->
+    <el-dialog title="安装软件" v-model="data.saveDialog" width="30%">
       <span>将安装 cockpit-pcp。</span>
       <template #footer>
         <el-button @click="data.saveDialog = false">取 消</el-button>
         <el-button type="primary" @click="data.saveDialog = false">安装</el-button>
       </template>
-      </el-dialog>
+    </el-dialog>
   </div>
-  <hardwareDetail v-show="data.hardwareShow" @handleDialog ="handleDialog"></hardwareDetail>
+  <div v-if="openChart" class="bigChart">
+    <div @click="back">返回</div>
+    <Echarts :height="500" :chartData="bigChartData"></Echarts>
+  </div>
+  <hardwareDetail v-show="data.hardwareShow" @handleDialog="handleDialog"></hardwareDetail>
 </template>
 
 <script setup lang="ts">
@@ -286,7 +232,17 @@ const data = ref({
         data: ['17:13', '17:14', '17:15', '17:16', '17:17']
       },
       yAxis: {
-        type: 'value'
+        name: 'GiB',
+        type: 'value',
+        nameTextStyle: {
+          color: 'black',
+          fontSize: 14
+        }
+      },
+      axisLabel: {
+        color: 'black',
+        fontsize: '20',
+        align: 'left'
       },
       series: [
         {
@@ -355,7 +311,7 @@ const data = ref({
   ]
 })
 // 处理延时
-const delayOption:any = ref()
+const delayOption: any = ref()
 delayOption.value = [
   {
     options: [{
@@ -387,7 +343,7 @@ delayOption.value = [
   }
 ]
 // 处理对话框的逻辑
-const handleDialog = (val:String) => {
+const handleDialog = (val: String) => {
   switch (val) {
     case 'hardware':
       data.value.contentShow = !data.value.contentShow
@@ -435,7 +391,7 @@ const turnOffDown = (val: Number) => {
 const goodHostName = ref()
 const realHostName = ref()
 // 处理detail的显示
-const systemData:any = ref({})
+const systemData: any = ref({})
 onMounted(() => {
   api.cmd_sys_info({ host: userStore.host }).then((res: any) => {
     if (res[0] === 0) {
@@ -455,7 +411,7 @@ const nowTime = ref(getDate())
 const setTime = () => {
   nowTime.value = getDate()
 }
-const timer :any = ref()
+const timer: any = ref()
 onMounted(() => {
   timer.value = setInterval(() => {
     setTime()
@@ -467,8 +423,8 @@ onBeforeMount(() => {
 })
 
 // 重启关机
-const delayDateValue :any = ref()
-const delayTimeValue :any = ref()
+const delayDateValue: any = ref()
+const delayTimeValue: any = ref()
 const handleDelay = (val: Number) => {
   if (val === 100) {
     delayDateValue.value = new Date()
@@ -478,57 +434,187 @@ const handleDelay = (val: Number) => {
     data.value.sureDelay = false
   }
 }
-const chartName = ref(['12CPU内核', '内存和交换空间', '磁盘 I/O', '网络流量'])
+// 展开大图
+const openChart = ref(false)
+const chartName = ref([
+  { name: '12CPU内核', value: 1 },
+  { name: '内存和交换空间', value: 2 },
+  { name: '磁盘 I/O', value: 3 },
+  { name: '网络流量', value: 4 }])
+const bigChartData = ref({
+  id: 'chart111',
+  title: {
+    text: '使用12CPU内核'
+  },
+  tooltip: {
+    trigger: 'axis',
+    axisPointer: {
+      type: 'cross',
+      label: {
+        backgroundColor: '#6a7985'
+      }
+    }
+  },
+  legend: {
+    top: '10%',
+    left: 'right',
+    orient: 'vertical',
+    itemGap: 25,
+    data: ['Nice', '用户', '内核', 'I/O等待']
+  },
+  grid: {
+    left: '3%',
+    right: '4%',
+    bottom: '3%',
+    containLabel: true
+  },
+  xAxis: [
+    {
+      type: 'category',
+      boundaryGap: false,
+      data: ['5min', '4min', '3min', '2min', '1min']
+    }
+  ],
+  yAxis: [
+    {
+      type: 'value'
+    }
+  ],
+  axisLabel: {
+    color: 'black',
+    fontsize: '20',
+    align: 'left'
+  },
+  series: [
+    {
+      name: 'Nice',
+      type: 'line',
+      stack: 'Total',
+      areaStyle: {},
+      emphasis: {
+        focus: 'series'
+      },
+      data: [120, 132, 101, 134, 90]
+    },
+    {
+      name: '用户',
+      type: 'line',
+      stack: 'Total',
+      areaStyle: {},
+      emphasis: {
+        focus: 'series'
+      },
+      data: [220, 182, 191, 234, 290]
+    },
+    {
+      name: '内核',
+      type: 'line',
+      stack: 'Total',
+      areaStyle: {},
+      emphasis: {
+        focus: 'series'
+      },
+      data: [150, 232, 201, 154, 190]
+    },
+    {
+      name: 'I/O等待',
+      type: 'line',
+      stack: 'Total',
+      areaStyle: {},
+      emphasis: {
+        focus: 'series'
+      },
+      data: [320, 332, 301, 334, 390]
+    }
+  ]
+}
+)
+const clickChartNameHandler = (val: number) => {
+  switch (val) {
+    case 1:
+      data.value.contentShow = false
+      openChart.value = true
+      console.log(1)
+      break
+    case 2:
+      data.value.contentShow = false
+      openChart.value = true
+      console.log(2)
+      break
+    case 3:
+      openChart.value = false
+      console.log(3)
+      break
+    case 4:
+      openChart.value = false
+      console.log(4)
+      break
+  }
+}
+const back = () => {
+  data.value.contentShow = true
+  openChart.value = false
+}
 </script>
 
 <style lang="scss" scoped>
-.content{
+.content {
   display: flex;
   flex: 1;
-  justify-content:space-between;
-  .dev{
-    width:30%;
+  justify-content: space-between;
+
+  .dev {
+    width: 30%;
     min-width: 480px;
     display: flex;
-    flex-direction:row;
-    justify-content:space-between;
-    .left{
-      width:35%;
-      .devName{
+    flex-direction: row;
+    justify-content: space-between;
+
+    .left {
+      width: 35%;
+
+      .devName {
         display: flex;
-        flex-direction:row;
+        flex-direction: row;
         text-align: right;
-        div{
-          width:80%;
-          height:24px;
-          margin-right:10px;
+
+        div {
+          width: 80%;
+          height: 24px;
+          margin-right: 10px;
           margin-top: 5px;
         }
       }
     }
-    .detail{
-      width:60%;
-      .restart{
+
+    .detail {
+      width: 60%;
+
+      .restart {
         width: 80px;
         margin-bottom: 2px;
       }
-      .detail-Box{
+
+      .detail-Box {
         height: 29px;
         line-height: 29px;
       }
     }
   }
-  .charts{
-    width:65%;
-    .chart-box{
+
+  .charts {
+    width: 65%;
+
+    .chart-box {
       width: 100%;
       height: 130px;
       // background: teal;
       margin-bottom: 25px;
       margin-right: 10px;
       position: relative;
-      .chart-name{
-       position: absolute;
+
+      .chart-name {
+        position: absolute;
         top: 26px;
         left: 13%;
         font-size: 13px;
@@ -537,5 +623,10 @@ const chartName = ref(['12CPU内核', '内存和交换空间', '磁盘 I/O', '�
       }
     }
   }
+}
+
+.bigChart {
+  width: 100%;
+  height: 500px;
 }
 </style>
