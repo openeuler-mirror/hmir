@@ -64,12 +64,10 @@ const data = ref({
 
 onMounted(() => {
   nextTick(() => {
-    console.log('call onMounted')
     store.cmd_process_info().then(() => {
       // console.log(processAllData)
       data.value.tableData = processAllData.value
       data.value.pageTotal = processAllData.value.length
-      console.log('数组长度', processAllData.value.length)
       data.value.pageData = qurryByPage()
     })
   })
