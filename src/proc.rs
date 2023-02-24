@@ -23,7 +23,10 @@ use nix::sys::signal;
 use nix::unistd;
 use nix::libc;
 use std::ffi::CStr;
+use futures::StreamExt;
 use hmir_protocol::proc;
+use sysinfo::{Pid, ProcessExt, System, SystemExt};
+
 
 extern crate core_affinity;
 
@@ -36,7 +39,7 @@ macro_rules! proc_default_result {
     }
 }
 
-fn proc_get_username(uid : libc::uid_t) -> String
+fn proc_get_username(uid: libc::uid_t) -> String
 {
     unsafe {
         let passwd = nix::libc::getpwuid(uid);
@@ -51,72 +54,146 @@ fn proc_get_pagesize() -> i64 {
     }
 }
 
+pub fn get_cpu_total_occupy() -> f64
+{
+    let stat = procfs::KernelStats::new().unwrap();
+    return (stat.total.user + stat.total.nice + stat.total.system + stat.total.idle) as f64;
+}
+
+pub fn get_cpu_proc_occupy(pid: i32) -> f64
+{
+    let prc = procfs::process::Process::new(pid);
+    if let p = prc.unwrap() {
+        if let Ok(stat) = p.stat() {
+            return (stat.utime + stat.stime + stat.cutime as u64 + stat.cstime as u64) as f64;
+        }
+    }
+    return 0.0;
+}
+
+
+pub fn process_cpu_usage(pid: i32) -> f64
+{
+    let totalcputime1 = get_cpu_total_occupy();
+    let procputime1 = get_cpu_proc_occupy(pid);
+
+    unsafe {
+        libc::usleep(200000);
+    }
+    let totalcputime2 = get_cpu_total_occupy();
+    let procputime2 = get_cpu_proc_occupy(pid);
+
+    let mut pcpu = 0.0;
+    if (totalcputime2 - totalcputime1).abs() > std::f64::EPSILON
+    {
+        pcpu = 100.0 * (procputime2 - procputime1) / (totalcputime2 - totalcputime1);
+    }
+
+    println!("cpu usage: {}", pcpu);
+    return pcpu;
+}
+
+
+pub fn sys_total_memory() -> f64 {
+    let mut sys = System::new_all();
+    sys.total_memory() as f64
+}
+
+fn update_all_cpu_usage(map: &mut HashWrap::<i32, proc::ProcInfo>)
+{
+    for (k,v)  in map.result.iter_mut() {
+        v.cpu_usage = get_cpu_proc_occupy(*k);
+    }
+    let total_cpu_time1 = get_cpu_total_occupy();
+    std::thread::sleep(std::time::Duration::from_millis(200));
+    let total_cpu_time2 = get_cpu_total_occupy();
+
+    for (k,v)  in map.result.iter_mut() {
+        v.cpu_usage = get_cpu_proc_occupy(*k) - v.cpu_usage;
+    }
+    if (total_cpu_time2 - total_cpu_time1).abs() > f64::EPSILON
+    {
+        for (k,v)  in map.result.iter_mut() {
+            v.cpu_usage = 100.0 * v.cpu_usage / (total_cpu_time2 - total_cpu_time1)
+        }
+    }
+}
+
+fn update_all_mem_usage(map: &mut HashWrap::<i32, proc::ProcInfo>)
+{
+
+}
+
 pub fn process_all() -> std::string::String
 {
-    let mut map = HashWrap::<i32,proc::ProcInfo>:: new();
+    let mut map = HashWrap::<i32, proc::ProcInfo>::new();
     let page_sizeKB = proc_get_pagesize() as u64 >> 10;
+
+    let total_memory = sys_total_memory();
+
     for prc in procfs::process::all_processes().unwrap() {
         // println!("{:?}",prc);
         let mut ruid: u32 = 0;
-        let mut virt : u64 = 0;
-        let mut res : u64 = 0;
-        let mut sha : u64 = 0;
+        let mut virt: u64 = 0;
+        let mut res: u64 = 0;
+        let mut sha: u64 = 0;
 
         if let p = prc.unwrap() {
-
-            if let Ok(status ) = p.status() {
+            if let Ok(status) = p.status() {
                 ruid = status.ruid;
             }
 
             if let Ok(statm) = p.statm() {
                 virt = statm.size * page_sizeKB;
                 res = statm.resident * page_sizeKB;
-                sha = statm.shared * page_sizeKB ;
+                sha = statm.shared * page_sizeKB;
             }
-
-            println!("{:?}",p.cmdline());
 
             let username = proc_get_username(ruid);
             if let Ok(stat) = p.stat() {
                 // total_time is in seconds
-                let data  = proc::ProcInfo {
+                let data = proc::ProcInfo {
                     user: username,
                     pid: stat.pid,
                     command: stat.comm,
-                    nice : stat.nice,
-                    priority : stat.priority,
-                    virt : virt,
+                    nice: stat.nice,
+                    priority: stat.priority,
+                    virt: virt,
                     res: res,
-                    shr : sha,
-                    state : String::from(stat.state),
-                    cmdline : p.cmdline().unwrap().iter().map(|x| x.to_string() + " ").collect::<String>()
+                    shr: sha,
+                    state: String::from(stat.state),
+                    cpu_usage: 0.0,
+                    mem_usage: ((res as f64 / total_memory) * 10_000.0).round() / 10_000.0,
+                    cmdline: p.cmdline().unwrap().iter().map(|x| x.to_string() + " ").collect::<String>(),
                 };
-                map.insert(stat.pid,data);
+
+
+                map.insert(stat.pid, data);
             }
         }
     }
+
+    update_all_cpu_usage(&mut map);
+
 
     let serialized = serde_json::to_string(&map).unwrap();
     serialized
 }
 
 
-
-
-
-fn is_valid_process(pid : i32) -> bool {
+fn is_valid_process(pid: i32) -> bool {
     let process = procfs::process::Process::new(pid);
     match process {
         Err(_e) => {
             return false;
-        },
+        }
         _ => {
             return true;
         }
     }
 }
 
-pub fn process_kill(pid : i32) -> std::string::String {
+pub fn process_kill(pid: i32) -> std::string::String {
     if is_valid_process(pid) {
         signal::kill(unistd::Pid::from_raw(pid), signal::Signal::SIGTERM).unwrap();
         proc_default_result!(0);
@@ -124,7 +201,7 @@ pub fn process_kill(pid : i32) -> std::string::String {
     proc_default_result!(errno::HMIR_ERR_COMM);
 }
 
-pub fn process_bind_cpu(pid : i32) -> std::string::String {
+pub fn process_bind_cpu(pid: i32) -> std::string::String {
     // 进程绑定cpu运行
     if is_valid_process(pid) {
         let core_ids = core_affinity::get_core_ids().unwrap();
@@ -138,8 +215,7 @@ pub fn process_bind_cpu(pid : i32) -> std::string::String {
 
 
 #[doc(hidden)]
-pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
-
+pub fn register_method(module: &mut RpcModule<()>) -> anyhow::Result<()> {
     module.register_method("process-all", |_, _| {
         //默认没有error就是成功的
         Ok(process_all())
@@ -162,16 +238,39 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
 }
 
 
-
-
 #[cfg(test)]
 mod tests {
     use super::*;
+
     #[test]
     fn process_all_it_works() {
         let s = process_all();
-        println!("{}",s);
+        println!("{}", s);
     }
 
+    #[test]
+    fn process_cpu_test() {
+        let data = proc::ProcInfo {
+            pid: 1,
+            user: "".to_string(),
+            priority: 0,
+            nice: 0,
+            virt: 0,
+            res: 0,
+            shr: 0,
+            state: "".to_string(),
+            cpu_usage: 0.0,
+            mem_usage: 0.0,
+            command: "".to_string(),
+            cmdline: "".to_string(),
+        };
+        let mut map = HashWrap::<i32, proc::ProcInfo>::new();
+        map.insert(data.pid, data);
+        update_all_cpu_usage(& mut map);
 
+        for (k,v) in map.result.into_iter() {
+            println!("----- {} : {}",k,v.cpu_usage);
+        }
+
+    }
 }
