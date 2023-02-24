@@ -53,9 +53,6 @@ const data = ref({
         trigger: 'item'
       },
       legend: {
-               // icon: 'circle',
-        // itemWidth: 12,
-        // itemHeight: 12,
         itemGap: 25,
         top: '10%',
         left: 'right',
@@ -193,7 +190,7 @@ const data = ref({
             show: false
           },
           data: [
-          { value: 100, name: '正常' },
+            { value: 100, name: '正常' },
             { value: 10, name: '运行中' },
             { value: 20, name: '警报' },
             { value: 30, name: '未知' }
@@ -239,8 +236,8 @@ const data = ref({
             show: false
           },
           data: [
-          { value: 100, name: '已使用' },
-          { value: 10, name: '空闲' }
+            { value: 100, name: '已使用' },
+            { value: 10, name: '空闲' }
           ]
         }
       ]
