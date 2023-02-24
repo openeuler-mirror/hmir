@@ -115,8 +115,10 @@ const data = ref({
         trigger: 'item'
       },
       legend: {
-        top: '5%',
-        left: 'center'
+        top: '10%',
+        left: 'right',
+        orient: 'vertical',
+        itemGap: 25
       },
       series: [
         {
