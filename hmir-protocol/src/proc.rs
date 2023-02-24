@@ -11,6 +11,8 @@ pub struct ProcInfo {
     pub res : u64,
     pub shr : u64,
     pub state : String,
+    pub cpu_usage : f64,
+    pub mem_usage : f64,
     pub command : String,
     pub cmdline : String
 }
