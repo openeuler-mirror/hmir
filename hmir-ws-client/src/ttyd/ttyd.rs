@@ -12,6 +12,8 @@ use std::collections::BTreeMap;
 impl RequestClient {
 
     pub fn ttyd_start(&self) ->  (usize,String) {
+        
+        client_check!(self.client);
 
         let token = self.token.clone();
         let state = self.runtime.block_on(async {
@@ -31,7 +33,7 @@ impl RequestClient {
 
     pub fn ttyd_stop(&self) ->  (usize,String)  {
 
-        // client_check!(self.client);
+        client_check!(self.client);
 
         let token = self.token.clone();
         let state= self.runtime.block_on(async {
