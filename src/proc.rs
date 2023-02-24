@@ -26,6 +26,8 @@ use std::ffi::CStr;
 use futures::StreamExt;
 use hmir_protocol::proc;
 use sysinfo::{Pid, ProcessExt, System, SystemExt};
+use std::{thread, time};
+use std::sync::{RwLock,Mutex};
 
 
 extern crate core_affinity;
@@ -38,6 +40,11 @@ macro_rules! proc_default_result {
         return serialized;
     }
 }
+
+lazy_static! {
+    static ref SYS_PROCESS_CACHE: Mutex<String> = Mutex::new(String::new());
+}
+
 
 fn proc_get_username(uid: libc::uid_t) -> String
 {
@@ -63,11 +70,17 @@ pub fn get_cpu_total_occupy() -> f64
 pub fn get_cpu_proc_occupy(pid: i32) -> f64
 {
     let prc = procfs::process::Process::new(pid);
-    if let p = prc.unwrap() {
-        if let Ok(stat) = p.stat() {
-            return (stat.utime + stat.stime + stat.cutime as u64 + stat.cstime as u64) as f64;
+    match prc {
+        Ok(p) => {
+            if let Ok(stat) = p.stat() {
+                return (stat.utime + stat.stime + stat.cutime as u64 + stat.cstime as u64) as f64;
+            }
+        },
+        _ => {
+            return 0.0;
         }
     }
+
     return 0.0;
 }
 
@@ -124,7 +137,24 @@ fn update_all_mem_usage(map: &mut HashWrap::<i32, proc::ProcInfo>)
 
 }
 
-pub fn process_all() -> std::string::String
+fn update_process_all()
+{
+    *SYS_PROCESS_CACHE.lock().unwrap() = _process_all();
+}
+
+#[doc(hidden)]
+pub fn init_proc_mg()  {
+    tokio::task::spawn(async{
+        //运行在一个不阻塞的线程
+        let sec = time::Duration::from_millis(1000);
+        loop {
+            update_process_all();
+            thread::sleep(sec);
+        }
+    });
+}
+
+pub fn _process_all() -> std::string::String
 {
     let mut map = HashWrap::<i32, proc::ProcInfo>::new();
     let page_sizeKB = proc_get_pagesize() as u64 >> 10;
@@ -163,10 +193,9 @@ pub fn process_all() -> std::string::String
                     shr: sha,
                     state: String::from(stat.state),
                     cpu_usage: 0.0,
-                    mem_usage: ((res as f64 / total_memory) * 10_000.0).round() / 10_000.0,
+                    mem_usage: ((res as f64 * 1024.0 / total_memory) * 10_000.0).round() / 100.0,
                     cmdline: p.cmdline().unwrap().iter().map(|x| x.to_string() + " ").collect::<String>(),
                 };
-
 
                 map.insert(stat.pid, data);
             }
@@ -174,10 +203,14 @@ pub fn process_all() -> std::string::String
     }
 
     update_all_cpu_usage(&mut map);
-
-
     let serialized = serde_json::to_string(&map).unwrap();
     serialized
+}
+
+pub fn process_all() -> std::string::String
+{
+    let result = (*SYS_PROCESS_CACHE.lock().unwrap()).clone();
+    result
 }
 
 

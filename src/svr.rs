@@ -212,9 +212,9 @@ fn get_unit_list_by_pattern(states: Vec<&str>, patterns: Vec<&str>) -> String {
     serialized
 }
 
+
 #[doc(hidden)]
-fn create_svrmg_thread()
-{
+pub fn init_services_mg()  {
     tokio::task::spawn(async{
         //运行在一个不阻塞的线程
         let sec = time::Duration::from_millis(1000);
@@ -223,12 +223,6 @@ fn create_svrmg_thread()
             thread::sleep(sec);
         }
     });
-}
-
-
-#[doc(hidden)]
-pub fn init_services_mg()  {
-    create_svrmg_thread();
 }
 
 fn basename(filename: &str) -> Option<&str> {

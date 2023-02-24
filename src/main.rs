@@ -42,7 +42,7 @@ use jsonrpsee::ws_server::{RpcModule, WsServerBuilder,WsServerHandle};
 use jsonrpsee::core::middleware::{self, Headers, MethodKind, Params};
 use std::time::Instant;
 
-use std::{net::SocketAddr};
+use std::{net::SocketAddr,thread,time};
 
 
 // use hmir_dpkg;
@@ -112,9 +112,11 @@ fn init_services() {
     #[cfg(target_os = "linux")]
     {
         svr::init_services_mg();
+        proc::init_proc_mg();
         sys::init_sysinfo();
     }
 }
+
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
