@@ -69,6 +69,24 @@ impl RequestClient {
         return state;
     }
 
+    pub fn sys_set_date(&self, date : String) -> (usize,String)
+    {
+        client_check!(self.client);
+
+        let token = self.token.clone();
+        let state = self.runtime.block_on(async {
+            let response: Result<String,_>= self.client.request("sys-set-date", rpc_params![token,date]).await;
+            match response {
+                Ok(result) => {
+                    let p: HashWrap::<i32,i32> = serde_json::from_str(result.as_str()).unwrap();
+                    return (p.code(),serde_json::to_string(&p.result).unwrap());
+                },
+                _ => { return (errno::HMIR_ERR_COMM,"".to_string())}
+            };
+        });
+        return state;
+    }
+
 
 }
 
@@ -112,6 +130,20 @@ mod tests {
             Ok(mut c) => {
                 c.login("root","root");
                 let (state,pci_info) = c.sys_set_hostname("I am developer","dwj");
+
+                println!("{}",errno::HMIR_MSG[state]);
+            },
+            _ => {}
+        }
+    }
+
+    #[test]
+    fn test_sys_set_date_worked() {
+        let client = RequestClient::new(String::from(URL));
+        match client {
+            Ok(mut c) => {
+                c.login("root","root");
+                let (state,pci_info) = c.sys_set_date("2023-02-23 15:19:00".to_string());
 
                 println!("{}",errno::HMIR_MSG[state]);
             },

@@ -10,4 +10,5 @@ mod svr;
 mod virt;
 mod proc;
 mod sys;
+mod pkg;
 

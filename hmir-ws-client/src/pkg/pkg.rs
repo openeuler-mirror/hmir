@@ -7,7 +7,7 @@ use crate::ws_client::RequestClient;
 use jsonrpsee_types::ParamsSer;
 use serde_json::json;
 use std::collections::BTreeMap;
-use hmir_protocol::proc;
+use hmir_protocol::pkg;
 
 #[macro_use]
 
@@ -15,16 +15,16 @@ use hmir_protocol::proc;
 
 impl RequestClient {
     #[allow(dead_code)]
-    pub fn proc_process_info(&self) -> (usize, String) {
+    pub fn pkg_all_info(&self) -> (usize, String) {
 
         client_check!(self.client);
 
         let token = self.token.clone();
         let (state,info) = self.runtime.block_on(async{
-            let response: Result<String, _> = self.client.request("process-all", rpc_params![token]).await;
+            let response: Result<String, _> = self.client.request("pkg-all-info", rpc_params![token]).await;
             match response {
                 Ok(result) => {
-                    let p: HashWrap::<String,proc::ProcInfo> = serde_json::from_str(result.as_str()).unwrap();
+                    let p: HashWrap::<String, pkg::DebPkgInfo> = serde_json::from_str(result.as_str()).unwrap();
                     return (p.code(),serde_json::to_string(&p.result).unwrap());
                 },
                 _ => { return (errno::HMIR_ERR_COMM,"".to_string())}
@@ -32,4 +32,26 @@ impl RequestClient {
         });
         return (state,info);
     }
+}
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    const URL : &str = "127.0.0.1:5899";
+
+    #[test]
+    fn test_pkg_info_worked() {
+        let client = RequestClient::new(String::from(URL));
+        match client {
+            Ok(mut c) => {
+                c.login("root","root");
+                let (state,pkg_info) = c.pkg_all_info();
+                println!("{}",pkg_info);
+            },
+            _ => {}
+        }
+    }
+
 }
