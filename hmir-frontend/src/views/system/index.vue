@@ -136,7 +136,8 @@
     </el-dialog>
   </div>
   <div v-if="openChart" class="bigChart">
-    <div @click="back">返回</div>
+    <el-page-header title="返回" class="big-chart-back" @back="back"></el-page-header>
+    <!-- <div @click="back">返回</div> -->
     <Echarts :height="500" :chartData="bigChartData"></Echarts>
   </div>
   <hardwareDetail v-show="data.hardwareShow" @handleDialog="handleDialog"></hardwareDetail>
@@ -534,12 +535,10 @@ const clickChartNameHandler = (val: number) => {
     case 1:
       data.value.contentShow = false
       openChart.value = true
-      console.log(1)
       break
     case 2:
       data.value.contentShow = false
       openChart.value = true
-      console.log(2)
       break
     case 3:
       openChart.value = false
@@ -628,5 +627,8 @@ const back = () => {
 .bigChart {
   width: 100%;
   height: 500px;
+}
+.big-chart-back{
+  margin-bottom: 20px;
 }
 </style>
