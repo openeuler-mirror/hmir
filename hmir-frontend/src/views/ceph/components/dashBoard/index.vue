@@ -31,9 +31,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import Status from './status.vue'
 import Echarts from './echarts.vue'
+import { useCephStore } from '@/store/modules/ceph'
+import { storeToRefs } from 'pinia'
+// 引入store仓库
+const store = useCephStore()
+
+const { cmdCephStatus } = storeToRefs(store)
+
+onMounted(() => {
+  console.log('进来了')
+  store.cmd_get_ceph_status().then(() => {
+    console.log('ceph数据', cmdCephStatus)
+  })
+})
 const data = ref({
   statusData: [
     { name: '集群状态', content: 'HEALTY_OK' },
