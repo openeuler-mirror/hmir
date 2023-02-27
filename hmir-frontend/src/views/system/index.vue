@@ -32,8 +32,8 @@
             </el-option>
           </el-select>
         </div>
-        <div class="detail-Box">空</div>
-        <div class="detail-Box"><el-link type="primary" @click="handleDialog('save')">启用保存的指标</el-link></div>
+        <!-- <div class="detail-Box">空</div>
+        <div class="detail-Box"><el-link type="primary" @click="handleDialog('save')">启用保存的指标</el-link></div> -->
       </div>
     </div>
     <div class="charts">
@@ -153,7 +153,7 @@ const userStore = useUserStore()
 
 const data = ref({
   contentShow: true,
-  option: ['硬件', '资产标签', '机器编码', '操作系统', '', '安全Shell密钥', '主机名', '域', '系统时间', '电源选项', '性能配置集', ''],
+  option: ['硬件', '资产标签', '机器编码', '操作系统', '', '安全Shell密钥', '主机名', '域', '系统时间', '电源选项'],
   value1: true,
   safeDialog: false,
   dialogVisible: false,
