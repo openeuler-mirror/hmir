@@ -4,11 +4,11 @@
     </el-page-header>
     <el-descriptions title="系统信息">
     <el-descriptions-item label="类型">桌面</el-descriptions-item>
-    <el-descriptions-item label="BIOS">LENOVO</el-descriptions-item>
-    <el-descriptions-item label="名称">90TDCTO1WW</el-descriptions-item>
-    <el-descriptions-item label="BIOS版本">M4PKT0AA</el-descriptions-item>
-    <el-descriptions-item label="版本">YangTianT4900ks00</el-descriptions-item>
-    <el-descriptions-item label="BOIS日期">2023/02/15</el-descriptions-item>
+    <el-descriptions-item label="BIOS">{{ messageData.board_vendor }}</el-descriptions-item>
+    <el-descriptions-item label="名称">{{ messageData.board_name }}</el-descriptions-item>
+    <el-descriptions-item label="BIOS版本">{{ messageData.bios_version}}</el-descriptions-item>
+    <el-descriptions-item label="版本">{{ messageData.board_name }}</el-descriptions-item>
+    <el-descriptions-item label="BOIS日期">{{ messageData.bios_date.split('/')[2] +'-'+  messageData.bios_date.split('/')[0]  +'-'+ messageData.bios_date.split('/')[1]}}</el-descriptions-item>
     <el-descriptions-item label="CPU">12x Intel(R) Core(TM) i5-10400 CPU @ 2.90GHz</el-descriptions-item>
 </el-descriptions>
  <el-table
@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineEmits, onMounted } from 'vue'
+import { ref, defineEmits, onMounted, defineProps, watch } from 'vue'
 import api from '@/api'
 import useUserStore from '@/store/modules/user'
 const userStore = useUserStore()
@@ -52,6 +52,13 @@ interface T {
 const tableData = ref([] as Array <T>)
 // 调用父组建传过来的方法
 const emit = defineEmits(['handleDialog'])
+const props = defineProps(['systemData'])
+
+const messageData = ref(props.systemData)
+watch(messageData, (newValue:any, oldValue:any) => {
+  messageData.value = newValue
+}, { deep: true })
+
 const goBack = () => {
   emit('handleDialog', 'hardware')
 }
