@@ -33,7 +33,7 @@ extern crate lazy_static;
 extern crate single_instance;
 
 use single_instance::SingleInstance;
-use std::{io, process};
+use std::{process};
 use constants::constants;
 use log4rs;
 use log::{error, info};
@@ -43,13 +43,8 @@ use jsonrpsee::ws_server::{RpcModule, WsServerBuilder, WsServerHandle};
 use jsonrpsee::core::middleware::{self, Headers, MethodKind, Params};
 use std::time::Instant;
 
-use std::{net::SocketAddr, thread, time};
-use std::fs::File;
+use std::{net::SocketAddr};
 use nix::{libc};
-use std::fs::OpenOptions;
-use std::os::fd::AsRawFd;
-use nix::errno::{Errno, errno};
-use nix::libc::{F_GETFD, F_SETFD, FD_CLOEXEC};
 
 // use hmir_dpkg;
 
@@ -124,47 +119,7 @@ fn init_services() {
 }
 
 
-
-
-fn singleton_process()
-{
-
-    let file = OpenOptions::new()
-        .read(true)
-        .write(true)
-        .create(true)
-        .open("/var/run/hmir.lock");
-    if let Ok(file) = file {
-        let fd = file.as_raw_fd();
-
-        unsafe {
-            let mut flags = libc::fcntl(fd,F_GETFD);
-            flags = flags | FD_CLOEXEC;
-            libc::fcntl(fd,F_SETFD,flags);
-        }
-
-        let res = unsafe {
-            let res = libc::flock(fd, libc::LOCK_EX);
-            if res == 0 {
-                println!("lock file success");
-            }
-        };
-        let e = errno();
-        println!("E is {}",e);
-
-        // if let Ok(_) = res {
-        // } else {
-        //     println!("Already have an instance running");
-        //     error!("Already have an instance running");
-        //     process::exit(1);
-        // }
-    }else {
-        println!("Open the /var/run/hmir.lock failed");
-    }
-}
-
-
-fn daemonize() {
+fn _daemonize() {
     // 将当前进程设置为守护进程
     unsafe {
         let pid = libc::fork();

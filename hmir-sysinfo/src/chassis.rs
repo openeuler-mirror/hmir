@@ -22,7 +22,4 @@ impl ChassisInfo {
         chass.chassis_version = simple_line_read("/sys/class/dmi/id/chassis_version").unwrap_or("Invalid".to_string());
         Ok(chass)
     }
-
-
-
 }

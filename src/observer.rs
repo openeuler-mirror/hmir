@@ -109,7 +109,7 @@ pub fn is_valid_obs_cmd(t : u32) -> bool {
 }
 
 
-fn do_remote_post(result : & std::string::String , url : & std::string::String ){
+fn do_remote_post(_result : & std::string::String , _url : & std::string::String ){
 
 
 }

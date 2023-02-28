@@ -165,7 +165,7 @@ macro_rules! ExecVirtQueryResult {
 }
 
 pub fn register_virt_query(module :  & mut RpcModule<()>) -> anyhow::Result<()>{
-    module.register_method("virt-check-connection", |params, _| {
+    module.register_method("virt-check-connection", |_params, _| {
         //let info = params.parse::<BTreeMap<&str, Value>>()?;
         //VirtTokenChecker!(info);
         Ok(virt_check_connection())
@@ -276,14 +276,13 @@ fn virt_show_hypervisor() -> String{
         },
     };
 
-    let mut hv_info = HmirHvisor::default();
     if let Ok(hv_type) = conn.get_type() {
         if let Ok(hv_ver) = conn.get_hyp_version() {
             let hv_ver_str = translate_version(hv_ver);
             let is_alive = conn.is_alive().unwrap_or_default();
             let is_enc = conn.is_encrypted().unwrap_or_default();
             let is_sec= conn.is_secure().unwrap_or_default();
-            hv_info = HmirHvisor::new(hv_type, hv_ver_str, is_alive, is_enc, is_sec);
+            let hv_info = HmirHvisor::new(hv_type, hv_ver_str, is_alive, is_enc, is_sec);
             
             let ret_info = serde_json::to_string(&hv_info).unwrap_or_default();
             ExecVirtQueryResult!(errno::HMIR_SUCCESS, ret_info, "".to_string());

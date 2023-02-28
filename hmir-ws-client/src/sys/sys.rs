@@ -5,8 +5,6 @@ use jsonrpsee_core::rpc_params;
 use ws_client::RequestClient;
 use crate::ws_client;
 
-use jsonrpsee_types::ParamsSer;
-use serde_json::json;
 use hmir_protocol::sys;
 
 impl RequestClient {
@@ -51,7 +49,7 @@ impl RequestClient {
         return state;
     }
 
-    pub fn sys_set_hostname(&self, pretty_name : &str, static_name : &str) -> (usize,String)
+    pub fn sys_set_hostname(&self, pretty_name : String, static_name : String) -> (usize,String)
     {
         client_check!(self.client);
 
@@ -87,6 +85,21 @@ impl RequestClient {
         return state;
     }
 
+    pub fn sys_get_date(&self) -> (usize,String){
+        client_check!(self.client);
+        let token = self.token.clone();
+        let state = self.runtime.block_on(async {
+            let response: Result<String,_>= self.client.request("sys-get-date", rpc_params![token]).await;
+            match response {
+                Ok(result) => {
+                    let p: HashWrap::<i32,i32> = serde_json::from_str(result.as_str()).unwrap();
+                    return (p.code(),serde_json::to_string(&p.result).unwrap());
+                },
+                _ => { return (errno::HMIR_ERR_COMM,"".to_string())}
+            };
+        });
+        return state;
+    }
 
 }
 

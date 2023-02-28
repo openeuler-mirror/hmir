@@ -1,6 +1,3 @@
-use ws_client::RequestClient;
-use crate::ws_client;
-use crate::tests::test_default_args::URL;
 
 #[test]
 fn get_ceph_status() {

@@ -1,16 +1,16 @@
-use ws_client::RequestClient;
-use crate::ws_client;
-use crate::tests::test_default_args::URL;
+#[cfg(test)]
+mod tests {
+    use crate::ws_client::RequestClient;
 
-
-#[test]
-fn login_worked() {
-    let client = RequestClient::new(String::from(URL));
-    match client {
-        Ok(mut c) => {
-            let login_state = c.login("root", "root");
-            assert_eq!(login_state, 0)
+    #[test]
+    fn login_worked() {
+        let client = RequestClient::new(String::from(URL));
+        match client {
+            Ok(mut c) => {
+                let login_state = c.login("root", "root");
+                assert_eq!(login_state, 0)
+            }
+            _ => {}
         }
-        _ => {}
     }
 }

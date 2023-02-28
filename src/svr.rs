@@ -82,14 +82,14 @@
 //! ```
 
 use jsonrpsee::ws_server::{RpcModule};
-use std::sync::{RwLock,Mutex};
+use std::sync::{Mutex};
 use hmir_hash::HashWrap;
 use hmir_errno::errno;
 use std::{thread, time};
 use std::path::Path;
 use std::ffi::OsStr;
 
-use hmir_systemd::{build_blocking_client, DerefContainer,
+use hmir_systemd::{build_blocking_client,
                    unit::blocking::UnitProperties,manager::blocking::{OrgFreedesktopSystemd1Manager},
                    models::{Unit,HmirUnit, UnitProps,IntoModel}, SystemdObjectType};
 use hmir_token::TokenChecker;
@@ -182,7 +182,7 @@ fn get_unit_list_by_pattern(states: Vec<&str>, patterns: Vec<&str>) -> String {
                     let props_map = client.get_unit_properties().unwrap();
                     let unit_props: UnitProps = props_map.into_model().unwrap();
                     let unit: Unit = u.into_model().unwrap().clone();
-                    let mut hmir_unit = HmirUnit {
+                    let hmir_unit = HmirUnit {
                         name: unit.name.into(),
                         description: unit.description.into(),
                         load_state: unit.load_state.into(),
@@ -428,7 +428,6 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
         let token = params.one::<std::string::String>()?;
         TokenChecker!(token);
 
-        let service = params.one::<std::string::String>()?;
         Ok(svr_list_disabled_socket())
     })?;
 
@@ -457,8 +456,6 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
 
         let token = params.one::<std::string::String>()?;
         TokenChecker!(token);
-
-        let service = params.one::<std::string::String>()?;
         Ok(svr_list_disabled_target())
     })?;
 

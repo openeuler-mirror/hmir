@@ -1,17 +1,10 @@
 
 
-use jsonrpsee::client_transport::ws::{Uri, WsTransportClientBuilder};
-use jsonrpsee::core::client::{Client, ClientBuilder, ClientT};
-use tokio::runtime::Builder;
+use jsonrpsee::core::client::{ClientT};
 use jsonrpsee::rpc_params;
 use hmir_hash::HashWrap;
 // use nix::libc::stat;
-use log4rs;
-use log::{error,info};
 use hmir_errno::errno;
-
-use serde_json::json;
-use std::collections::BTreeMap;
 use crate::ws_client::RequestClient;
 
 use hmir_protocol::systemd;

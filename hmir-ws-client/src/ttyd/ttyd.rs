@@ -5,9 +5,6 @@ use jsonrpsee_core::rpc_params;
 use ws_client::RequestClient;
 use crate::ws_client;
 
-use jsonrpsee_types::ParamsSer;
-use serde_json::json;
-use std::collections::BTreeMap;
 
 impl RequestClient {
 
