@@ -9,8 +9,8 @@
           <el-table-column prop="res" label="RES" sortable="custom" />
           <el-table-column prop="shr" label="SHR" sortable="custom" />
           <el-table-column prop="state" label="进程状态" sortable="custom" />
-          <el-table-column prop="cpu" label="CPU(%)" sortable="custom" />
-          <el-table-column prop="mem" label="MEM(%)" sortable="custom" />
+          <el-table-column prop="cpu_usage" label="CPU(%)" sortable="custom" />
+          <el-table-column prop="mem_usage" label="MEM(%)" sortable="custom" />
           <el-table-column prop="time" label="TIME+" sortable="custom" />
           <el-table-column prop="command" label="COMMAND" :min-width="100" sortable="custom" />
       </el-table>
