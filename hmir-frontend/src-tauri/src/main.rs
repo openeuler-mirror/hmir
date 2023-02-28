@@ -155,7 +155,9 @@ fn main() {
             cmd_process_info,
             cmd_get_ceph_status,
             cmd_sys_info,
-            cmd_sys_pci_info])
+            cmd_sys_pci_info,
+            cmd_sys_set_date,
+            cmd_sys_set_hostname])
         // .invoke_handler(tauri::generate_handler![ttyd_start])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

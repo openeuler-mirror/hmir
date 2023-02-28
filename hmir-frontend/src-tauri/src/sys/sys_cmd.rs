@@ -23,3 +23,14 @@ pub fn cmd_sys_pci_info(host : &str) -> (usize,String)
 }
 
 
+#[tauri::command]
+pub fn cmd_sys_set_date(host : &str, date : String) -> (usize,String)
+{
+    return clientmgr::sys_set_date(host,date);
+}
+
+#[tauri::command]
+pub fn cmd_sys_set_hostname(host: & str, pretty_name : String,static_name : String) -> (usize,String)
+{
+    return clientmgr::sys_set_hostname(host,pretty_name,static_name);
+}
