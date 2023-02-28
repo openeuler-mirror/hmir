@@ -145,6 +145,9 @@ fn sys_all_os_info() -> String
     let machine_info = MachineInfo::new().unwrap();
     let os_release = OsInfo::new().unwrap();
     let product_info = ProductInfo::new().unwrap();
+    let cpu_info = procfs::CpuInfo::new().unwrap();
+    let cpu_model = cpu_info.num_cores().to_string() +"x " + cpu_info.model_name(0).unwrap_or("Unkown");
+
 
     let info = sys::SystemAllInfo {
         board_vendor: board_info.board_vendor.into(),
@@ -158,6 +161,7 @@ fn sys_all_os_info() -> String
         bios_date: bios_info.bios_date.into(),
         product_name : product_info.product_name.into(),
         product_version : product_info.product_version.into(),
+        model_name : cpu_model.into()
     };
 
     let mut map  = hmir_hash::HashWrap::new();

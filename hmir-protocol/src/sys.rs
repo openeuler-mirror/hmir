@@ -22,4 +22,5 @@ pub struct SystemAllInfo {
     pub bios_date   : String,   //BIOS 日期
     pub product_name : String,
     pub product_version : String,
+    pub model_name : String,
 }
