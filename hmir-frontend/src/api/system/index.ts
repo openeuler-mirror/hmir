@@ -12,4 +12,6 @@ import { invoke } from "@tauri-apps/api/tauri";
 export function cmd_sys_info(data: any) {
   return invoke('cmd_sys_info', data)
 }
-
+export function cmd_sys_pci_info(data: any) {
+  return invoke('cmd_sys_pci_info', data)
+}
