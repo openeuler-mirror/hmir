@@ -153,6 +153,7 @@ fn sys_all_os_info() -> String
         board_vendor: board_info.board_vendor.into(),
         board_name: board_info.board_name.into(),
         chassis_serial: chass_info.chassis_serial.into(),
+        chassis_type : chass_info.chassis_type.into(),
         machine_id: machine_info.machine_id.into(),
         os_release: os_release.name.into(),
         hostname: gethostname().into_string().unwrap(),
