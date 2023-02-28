@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineEmits, onMounted, defineProps, watch } from 'vue'
+import { ref, defineEmits, onMounted, defineProps, watch, reactive } from 'vue'
 import api from '@/api'
 import useUserStore from '@/store/modules/user'
 const userStore = useUserStore()
@@ -53,10 +53,26 @@ const tableData = ref([] as Array <T>)
 // 调用父组建传过来的方法
 const emit = defineEmits(['handleDialog'])
 const props = defineProps(['systemData'])
-
-const messageData = ref(props.systemData)
-watch(messageData, (newValue:any, oldValue:any) => {
-  messageData.value = newValue
+interface A {
+  board_vendor: string,
+  board_name: string,
+  bios_version: string,
+  bios_date: string,
+  board_type: string,
+  [propName: string] : string
+}
+const messageData = reactive<A>({
+  board_vendor: '',
+  board_name: '',
+  bios_version: '',
+  bios_date: '',
+  board_type: ''
+})
+watch(() => props.systemData, (newValue:any, oldValue:any) => {
+  messageData.board_vendor = newValue.board_vendor
+  messageData.bios_date = newValue.bios_date
+  messageData.board_name = newValue.board_name
+  messageData.bios_version = newValue.bios_version
 }, { deep: true })
 
 const goBack = () => {
