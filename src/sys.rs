@@ -140,11 +140,12 @@ fn sys_list_pci_info() -> String {
 
 fn sys_all_os_info() -> String
 {
-    let b = BiosRelease::new().unwrap();
+    let bios_info = BiosRelease::new().unwrap();
     let board_info = BoardInfo::new().unwrap();
     let chass_info = ChassisInfo::new().unwrap();
     let machine_info = MachineInfo::new().unwrap();
     let os_release = OsInfo::new().unwrap();
+    let product_info = ProductInfo::new().unwrap();
 
     let info = sys::SystemAllInfo {
         board_vendor: board_info.board_vendor.into(),
@@ -153,6 +154,11 @@ fn sys_all_os_info() -> String
         machine_id: machine_info.machine_id.into(),
         os_release: os_release.name.into(),
         hostname: gethostname().into_string().unwrap(),
+        bios_vendor: bios_info.bios_vendor.into(),
+        bios_version: bios_info.bios_version.into(),
+        bios_date: bios_info.bios_date.into(),
+        product_name : product_into.product_name.into(),
+        product_version : product_info.product_version.into(),
     };
 
     let mut map  = hmir_hash::HashWrap::new();
