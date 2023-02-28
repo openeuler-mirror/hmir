@@ -12,19 +12,19 @@
     <el-descriptions-item label="CPU">12x Intel(R) Core(TM) i5-10400 CPU @ 2.90GHz</el-descriptions-item>
 </el-descriptions>
  <el-table
-      :data="data.tableData"
+      :data="tableData"
       style="width: 100%">
       <el-table-column
-        prop="level"
+        prop="cls"
         label="等级"
         width="180">
       </el-table-column>
       <el-table-column
-        prop="type"
+        prop="model"
         label="型号">
       </el-table-column>
       <el-table-column
-        prop="factory"
+        prop="vendor"
         label="厂商"
          width="180">
       </el-table-column>
@@ -38,26 +38,37 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineEmits } from 'vue'
-const data = ref({
-  tableData: [{ level: 'bridge', type: 'Xeon E3-1200 v5/v6 / E3-1500 v5 / 6th/7th Gen Core Processor Gaussian Mixture Model', factory: 'Intel Corporation', slot: '0000:00:00.0' },
-    { level: 'bridge', type: 'Xeon E3-1200 v5/v6 / E3-1500 v5 / 6th/7th Gen Core Processor Gaussian Mixture Model', factory: 'Intel Corporation', slot: '0000:00:00.0' },
-    { level: 'bridge', type: 'Xeon E3-1200 v5/v6 / E3-1500 v5 / 6th/7th Gen Core Processor Gaussian Mixture Model', factory: 'Intel Corporation', slot: '0000:00:00.0' },
-    { level: 'bridge', type: 'Xeon E3-1200 v5/v6 / E3-1500 v5 / 6th/7th Gen Core Processor Gaussian Mixture Model', factory: 'Intel Corporation', slot: '0000:00:00.0' },
-    { level: 'bridge', type: 'Xeon E3-1200 v5/v6 / E3-1500 v5 / 6th/7th Gen Core Processor Gaussian Mixture Model', factory: 'Intel Corporation', slot: '0000:00:00.0' },
-    { level: 'bridge', type: 'Xeon E3-1200 v5/v6 / E3-1500 v5 / 6th/7th Gen Core Processor Gaussian Mixture Model', factory: 'Intel Corporation', slot: '0000:00:00.0' },
-    { level: 'bridge', type: 'Xeon E3-1200 v5/v6 / E3-1500 v5 / 6th/7th Gen Core Processor Gaussian Mixture Model', factory: 'Intel Corporation', slot: '0000:00:00.0' },
-    { level: 'bridge', type: 'Xeon E3-1200 v5/v6 / E3-1500 v5 / 6th/7th Gen Core Processor Gaussian Mixture Model', factory: 'Intel Corporation', slot: '0000:00:00.0' },
-    { level: 'bridge', type: 'Xeon E3-1200 v5/v6 / E3-1500 v5 / 6th/7th Gen Core Processor Gaussian Mixture Model', factory: 'Intel Corporation', slot: '0000:00:00.0' },
-    { level: 'bridge', type: 'Xeon E3-1200 v5/v6 / E3-1500 v5 / 6th/7th Gen Core Processor Gaussian Mixture Model', factory: 'Intel Corporation', slot: '0000:00:00.0' },
-    { level: 'bridge', type: 'Xeon E3-1200 v5/v6 / E3-1500 v5 / 6th/7th Gen Core Processor Gaussian Mixture Model', factory: 'Intel Corporation', slot: '0000:00:00.0' },
-    { level: 'bridge', type: 'Xeon E3-1200 v5/v6 / E3-1500 v5 / 6th/7th Gen Core Processor Gaussian Mixture Model', factory: 'Intel Corporation', slot: '0000:00:00.0' }]
-})
+import { ref, defineEmits, onMounted } from 'vue'
+import api from '@/api'
+import useUserStore from '@/store/modules/user'
+const userStore = useUserStore()
+
+interface T {
+  cls: string
+  model: string
+  vendor: string,
+  slot: string
+}
+const tableData = ref([] as Array <T>)
 // 调用父组建传过来的方法
 const emit = defineEmits(['handleDialog'])
 const goBack = () => {
   emit('handleDialog', 'hardware')
 }
+onMounted(() => {
+  api.cmd_sys_pci_info({ host: userStore.host }).then((res: any) => {
+    if (res[0] === 0) {
+      const temp:any = JSON.parse(res[1])
+      for (const key in temp) {
+        tableData.value.push(temp[key])
+      }
+    } else {
+      console.log('cmd_sys_pci_info失败')
+    }
+  }).catch((error) => {
+    console.log(error)
+  })
+})
 </script>
 
 <style lang="scss" scoped>
