@@ -14,6 +14,7 @@ pub struct SystemAllInfo {
     pub board_vendor : String,
     pub board_name : String,    //硬件
     pub chassis_serial : String,//资产标签
+    pub chassis_type : String,
     pub machine_id : String,    //机器编号
     pub os_release : String,
     pub hostname : String,
