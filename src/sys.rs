@@ -157,7 +157,7 @@ fn sys_all_os_info() -> String
         bios_vendor: bios_info.bios_vendor.into(),
         bios_version: bios_info.bios_version.into(),
         bios_date: bios_info.bios_date.into(),
-        product_name : product_into.product_name.into(),
+        product_name : product_info.product_name.into(),
         product_version : product_info.product_version.into(),
     };
 

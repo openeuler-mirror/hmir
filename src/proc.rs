@@ -127,7 +127,7 @@ fn update_all_cpu_usage(map: &mut HashWrap::<i32, proc::ProcInfo>)
     if (total_cpu_time2 - total_cpu_time1).abs() > f64::EPSILON
     {
         for (k,v)  in map.result.iter_mut() {
-            v.cpu_usage = 100.0 * v.cpu_usage / (total_cpu_time2 - total_cpu_time1)
+            v.cpu_usage = (10000.0 * v.cpu_usage / (total_cpu_time2 - total_cpu_time1)).round()/100.0;
         }
     }
 }
