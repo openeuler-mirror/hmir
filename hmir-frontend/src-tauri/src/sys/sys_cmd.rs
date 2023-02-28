@@ -16,3 +16,10 @@ pub fn cmd_sys_info(host : &str) -> (usize,String)
     return clientmgr::sys_os_all_info(host);
 }
 
+#[tauri::command]
+pub fn cmd_sys_pci_info(host : &str) -> (usize,String)
+{
+    return clientmgr::sys_list_pci_info(host);
+}
+
+
