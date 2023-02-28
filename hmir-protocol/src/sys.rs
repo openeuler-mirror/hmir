@@ -17,4 +17,9 @@ pub struct SystemAllInfo {
     pub machine_id : String,    //机器编号
     pub os_release : String,
     pub hostname : String,
+    pub bios_vendor : String,   //LENOVO
+    pub bios_version : String,  //BIOS 版本
+    pub bios_date   : String,   //BIOS 日期
+    pub product_name : String,
+    pub product_version : String,
 }
