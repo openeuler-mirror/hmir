@@ -108,7 +108,7 @@
     <el-page-header title="返回" class="big-chart-back" @back="back"></el-page-header>
     <Echarts :height="500" :chartData="bigChartData"></Echarts>
   </div>
-  <hardwareDetail :systemData = "systemData" v-if="data.hardwareShow" @handleDialog="handleDialog"></hardwareDetail>
+  <hardwareDetail :systemData = "systemData" v-show="data.hardwareShow" @handleDialog="handleDialog"></hardwareDetail>
 </template>
 
 <script setup lang="ts">
