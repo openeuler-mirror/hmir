@@ -15,12 +15,6 @@
         <div class="detail-Box">{{ systemData.chassis_serial ? systemData.chassis_serial : '未知' }}</div>
         <div class="detail-Box">{{ systemData.machine_id ? systemData.machine_id : '未知' }}</div>
         <div class="detail-Box">{{ systemData.os_release ? systemData.os_release : '未知' }}</div>
-        <div class="detail-Box">
-          <el-link type="primary">错误修复的更新可以使用</el-link>
-        </div>
-        <div class="detail-Box">
-          <el-link type="primary" @click="handleDialog('safe')">显示指印</el-link>
-        </div>
         <div class="detail-Box"><el-link type="primary" @click="handleDialog('computer')">{{ systemData.hostname ?
           systemData.hostname : '未知' }}</el-link></div>
         <div class="detail-Box"><el-link type="primary" @click="handleDialog('area')">加入域</el-link></div>
@@ -43,19 +37,6 @@
         <Echarts :chartData=data.chartData[i]></Echarts>
       </div>
     </div>
-    <!-- 安全Shell密钥的对话框 -->
-    <el-dialog title="主机 SSH 密钥指纹" v-model="data.safeDialog" width="30%">
-      <el-card class="box-card">
-        <div v-for="o in 4" :key="o" class="text item">
-          <div>ECDSA</div>
-          <div>MD5:11:4f:b7:ca:fe:0d:7d:70:5e:e9:50:f4:e4:5f:27:8b SHA256:hSHBYf2p4ZV+P5CV1WPaPQbVVrKCljZtaWP9J/I7+4g
-          </div>
-        </div>
-      </el-card>
-      <template #footer>
-        <el-button @click="data.safeDialog = false">关闭</el-button>
-      </template>
-    </el-dialog>
     <!-- 主机名的对话框 -->
     <el-dialog title="修改主机名" v-model="data.dialogVisible" width="30%">
       好主机名<el-input v-model="goodHostName" placeholder="请输入内容"></el-input>
@@ -76,10 +57,6 @@
     <!-- 系统时间对话框 -->
     <el-dialog title="修改系统时间" v-model="data.timeDialog" width="30%">
       <slot>
-        <el-select v-model="data.timeAreaValue" style="width:100%;" filterable placeholder=" ">
-          <el-option v-for="item in data.areaOptions" :key="item.value" :label="item.label" :value="item.value">
-          </el-option>
-        </el-select>
         <el-select v-model="data.timeValue" style="width:100%;" placeholder="请选择">
           <el-option v-for="item in data.timeTypeOption" :key="item.value" :label="item.label" :value="item.value">
           </el-option>
@@ -126,21 +103,12 @@
         <el-button type="primary" @click="data.turnUpDown = false">{{ data.offDown }}</el-button>
       </template>
     </el-dialog>
-    <!-- 启用保存的指标对话框 -->
-    <el-dialog title="安装软件" v-model="data.saveDialog" width="30%">
-      <span>将安装 cockpit-pcp。</span>
-      <template #footer>
-        <el-button @click="data.saveDialog = false">取 消</el-button>
-        <el-button type="primary" @click="data.saveDialog = false">安装</el-button>
-      </template>
-    </el-dialog>
   </div>
   <div v-if="openChart" class="bigChart">
     <el-page-header title="返回" class="big-chart-back" @back="back"></el-page-header>
-    <!-- <div @click="back">返回</div> -->
     <Echarts :height="500" :chartData="bigChartData"></Echarts>
   </div>
-  <hardwareDetail v-show="data.hardwareShow" @handleDialog="handleDialog"></hardwareDetail>
+  <hardwareDetail :systemData = "systemData" v-if="data.hardwareShow" @handleDialog="handleDialog"></hardwareDetail>
 </template>
 
 <script setup lang="ts">
@@ -154,24 +122,14 @@ const userStore = useUserStore()
 
 const data = ref({
   contentShow: true,
-  option: ['硬件', '资产标签', '机器编码', '操作系统', '', '安全Shell密钥', '主机名', '域', '系统时间', '电源选项'],
+  option: ['硬件', '资产标签', '机器编码', '操作系统', '主机名', '域', '系统时间', '电源选项'],
   value1: true,
-  safeDialog: false,
   dialogVisible: false,
   areaDialog: false,
   timeDialog: false,
   turnUpDown: false,
-  saveDialog: false,
   hardwareShow: false,
   sourceValue: '',
-  timeAreaValue: 1,
-  areaOptions: [{
-    value: 1,
-    label: 'Asia/Shanghai'
-  }, {
-    value: 2,
-    label: 'America/New York'
-  }],
   timeValue: 1,
   timeTypeOption: [{
     value: 1,
@@ -350,9 +308,6 @@ const handleDialog = (val: String) => {
       data.value.contentShow = !data.value.contentShow
       data.value.hardwareShow = !data.value.hardwareShow
       break
-    case 'safe':
-      data.value.safeDialog = !data.value.safeDialog
-      break
     case 'computer':
       data.value.dialogVisible = !data.value.dialogVisible
       if (data.value.dialogVisible) {
@@ -371,9 +326,6 @@ const handleDialog = (val: String) => {
       delayDateValue.value = new Date()
       delayTimeValue.value = new Date()
       data.value.turnUpDown = true
-      break
-    case 'save':
-      data.value.saveDialog = !data.value.saveDialog
       break
     default:
       break
