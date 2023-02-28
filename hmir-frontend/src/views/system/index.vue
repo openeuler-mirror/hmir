@@ -403,6 +403,15 @@ onMounted(() => {
   }).catch((error) => {
     console.log(error)
   })
+  api.cmd_sys_pci_info({ host: userStore.host }).then((res: any) => {
+    if (res[0] === 0) {
+      console.log('cmd_sys_pci_info', JSON.parse(res[1]))
+    } else {
+      console.log('cmd_sys_pci_info失败')
+    }
+  }).catch((error) => {
+    console.log(error)
+  })
 })
 
 // 系统时间以及dialog
