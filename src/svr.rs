@@ -304,7 +304,7 @@ pub fn svr_list_all_slice() -> String {
 /// service-stop接口实现
 ///
 /// 停止指定服务
-pub fn service_stop(service: std::string::String) -> String {
+pub fn service_stop(service: String) -> String {
     // let mut  response = HashWrap::<String,Unit>:: new();
     let client = build_blocking_client(SystemdObjectType::Manager).unwrap();
     let result = client.stop_unit(service.as_str(), "replace");
@@ -316,7 +316,7 @@ pub fn service_stop(service: std::string::String) -> String {
 /// service-start接口实现
 ///
 /// 启动指定服务
-pub fn service_start(service: std::string::String) -> String {
+pub fn service_start(service: String) -> String {
     let client = build_blocking_client(SystemdObjectType::Manager).unwrap();
     let result = client.start_unit(service.as_str(), "replace");
     svr_default_result!(result);
