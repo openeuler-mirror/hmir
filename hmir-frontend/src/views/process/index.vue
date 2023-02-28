@@ -1,6 +1,6 @@
 <template>
   <div>
-      <el-table :data="data.pageData" style="width: 100%" table-layout="auto" :fit="true" @sort-change=sortHandle>
+      <el-table :data="data.pageData" style="width: 100%" :key="String(data.tableKey)" table-layout="auto" :fit="true" @sort-change=sortHandle>
           <el-table-column prop="pid" label="进程号" sortable="custom" />
           <el-table-column prop="user" label="用户名" sortable="custom" />
           <el-table-column prop="priority" label="优先级" sortable="custom" />
@@ -46,6 +46,7 @@ interface ITable {
 const store = useProcStore()
 const { processAllData } = storeToRefs(store)
 const data = ref({
+  tableKey: false,
   tableData: [] as Array<ITable>,
   pageData: [] as Array<ITable>,
   currentPage: 1,
@@ -62,9 +63,10 @@ onMounted(() => {
     })
   })
 })
-// 排序
+// 排序的方法
 const sortHandle = (res: any) => {
   data.value.tableData.sort(compare(res.prop, res.order))
+  data.value.pageData = qurryByPage()
 }
 
 /**
@@ -76,7 +78,6 @@ const sortHandle = (res: any) => {
 const compare = (propertyName: string, sort: string) => {
 // 判断是否为数字
   function isNumberV (val: any) {
-    console.log('排序拿到的数据', val)
     const regPos = /^\d+(\.\d+)?$/ // 非负浮点数
     const regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/ // 负浮点数
     if (regPos.test(val) || regNeg.test(val)) {
@@ -87,7 +88,6 @@ const compare = (propertyName: string, sort: string) => {
   }
 
   return function (obj1: any, obj2: any) {
-    console.log('return', obj1, obj2, propertyName)
     const value1 = obj1[propertyName]
     const value2 = obj2[propertyName]
     // 数字类型的比较
@@ -101,6 +101,7 @@ const compare = (propertyName: string, sort: string) => {
       const res = value1.localeCompare(value2, 'zh')
       return sort === 'ascending' ? res : -res
     }
+  // 布尔值比较
   // else if (_.isBoolean(value1) && _.isBoolean(value2)) {
   //   if (sort === 'ascending') {
   //     return value1 - value2;
