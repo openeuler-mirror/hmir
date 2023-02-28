@@ -1,5 +1,4 @@
 use hmir_errno::errno;
-use hmir_hash::HashWrap;
 use jsonrpsee_core::client::ClientT;
 use jsonrpsee_core::rpc_params;
 use ws_client::RequestClient;

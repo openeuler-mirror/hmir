@@ -1,7 +1,6 @@
 use crate::client_instance;
 use crate::mgr_fn_define;
 use crate::ws_client_mgr::CLIENT_MAP;
-use crate::ws_client_mgr::unregister_client;
 
 
 mgr_fn_define!(svr_list_disabled_service);

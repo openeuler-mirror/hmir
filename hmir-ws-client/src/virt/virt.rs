@@ -1,7 +1,6 @@
 use hmir_errno::errno;
 use hmir_hash::HashWrap;
 use jsonrpsee_core::client::ClientT;
-use jsonrpsee_core::rpc_params;
 use crate::ws_client::RequestClient;
 
 use jsonrpsee_types::ParamsSer;

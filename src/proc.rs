@@ -16,18 +16,16 @@
 use jsonrpsee::ws_server::{RpcModule};
 
 use procfs;
-use serde::{Serialize};
 use hmir_hash::HashWrap;
 use hmir_errno::errno;
 use nix::sys::signal;
 use nix::unistd;
 use nix::libc;
 use std::ffi::CStr;
-use futures::StreamExt;
 use hmir_protocol::proc;
-use sysinfo::{Pid, ProcessExt, System, SystemExt};
+use sysinfo::{System, SystemExt};
 use std::{thread, time};
-use std::sync::{RwLock,Mutex};
+use std::sync::{Mutex};
 
 
 extern crate core_affinity;
@@ -85,30 +83,11 @@ pub fn get_cpu_proc_occupy(pid: i32) -> f64
 }
 
 
-pub fn process_cpu_usage(pid: i32) -> f64
-{
-    let totalcputime1 = get_cpu_total_occupy();
-    let procputime1 = get_cpu_proc_occupy(pid);
 
-    unsafe {
-        libc::usleep(200000);
-    }
-    let totalcputime2 = get_cpu_total_occupy();
-    let procputime2 = get_cpu_proc_occupy(pid);
-
-    let mut pcpu = 0.0;
-    if (totalcputime2 - totalcputime1).abs() > std::f64::EPSILON
-    {
-        pcpu = 100.0 * (procputime2 - procputime1) / (totalcputime2 - totalcputime1);
-    }
-
-    println!("cpu usage: {}", pcpu);
-    return pcpu;
-}
 
 
 pub fn sys_total_memory() -> f64 {
-    let mut sys = System::new_all();
+    let sys = System::new_all();
     sys.total_memory() as f64
 }
 
@@ -126,15 +105,10 @@ fn update_all_cpu_usage(map: &mut HashWrap::<i32, proc::ProcInfo>)
     }
     if (total_cpu_time2 - total_cpu_time1).abs() > f64::EPSILON
     {
-        for (k,v)  in map.result.iter_mut() {
+        for (_k,v)  in map.result.iter_mut() {
             v.cpu_usage = (10000.0 * v.cpu_usage / (total_cpu_time2 - total_cpu_time1)).round()/100.0;
         }
     }
-}
-
-fn update_all_mem_usage(map: &mut HashWrap::<i32, proc::ProcInfo>)
-{
-
 }
 
 fn update_process_all()
@@ -157,7 +131,7 @@ pub fn init_proc_mg()  {
 pub fn _process_all() -> std::string::String
 {
     let mut map = HashWrap::<i32, proc::ProcInfo>::new();
-    let page_sizeKB = proc_get_pagesize() as u64 >> 10;
+    let page_size_kb = proc_get_pagesize() as u64 >> 10;
 
     let total_memory = sys_total_memory();
 
@@ -168,15 +142,15 @@ pub fn _process_all() -> std::string::String
         let mut res: u64 = 0;
         let mut sha: u64 = 0;
 
-        if let p = prc.unwrap() {
+        if let Ok(p) = prc {
             if let Ok(status) = p.status() {
                 ruid = status.ruid;
             }
 
             if let Ok(statm) = p.statm() {
-                virt = statm.size * page_sizeKB;
-                res = statm.resident * page_sizeKB;
-                sha = statm.shared * page_sizeKB;
+                virt = statm.size * page_size_kb;
+                res = statm.resident * page_size_kb;
+                sha = statm.shared * page_size_kb;
             }
 
             let username = proc_get_username(ruid);

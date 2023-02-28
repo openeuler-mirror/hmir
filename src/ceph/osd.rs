@@ -1,18 +1,5 @@
 use jsonrpsee::ws_server::{RpcModule};
-use hmir_ceph::ceph_client;
-use hmir_ceph::pool;
 use hmir_ceph::osd::osd;
-use hmir_ceph::mon;
-use hmir_ceph::pg;
-use hmir_ceph::base;
-use hmir_ceph::auth;
-use hmir_ceph::fs;
-use hmir_ceph::mgr;
-use hmir_ceph::mds;
-use hmir_ceph::config_key;
-use std::collections::HashMap;
-use serde_json::json;
-use log::{error,info};
 
 pub fn ceph_osd_register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
     module.register_method("ceph-osd-tree", |_, _| {

@@ -15,7 +15,7 @@ use hmir_ceph::mds;
 use hmir_ceph::config_key;
 use std::collections::HashMap;
 use serde_json::json;
-use log::{error,info};
+use log::{error};
 
 use crate::ceph::osd::ceph_osd_register_method;
 #[doc(hidden)]
@@ -40,7 +40,7 @@ pub fn register_method(module : & mut RpcModule<()>) -> anyhow::Result<()> {
     
     ceph_osd_pool_register_method(module)?;
     
-    ceph_config_key_register_method(module);
+    ceph_config_key_register_method(module)?;
     
     module.register_method("ceph-cluster-stat", |_, _| {
         //获取ceph集群状态
@@ -152,7 +152,7 @@ pub fn ceph_auth_register_method(module : & mut RpcModule<()>) -> anyhow::Result
                 let result = json!(&result).to_string();
                 Ok(result)
             },
-            Err(result) => {
+            Err(_) => {
                 Ok("Error to get auth".to_string())
             },
         }
@@ -348,7 +348,7 @@ pub fn ceph_osd_pool_register_method(module : & mut RpcModule<()>) -> anyhow::Re
             Ok(result) => {
                 Ok(result)
             },
-            Err(result) => {
+            Err(_) => {
                 Ok(format!("Error to rename pool"))
             },
         }
@@ -362,7 +362,7 @@ pub fn ceph_osd_pool_register_method(module : & mut RpcModule<()>) -> anyhow::Re
             Ok(result) => {
                 Ok(result)
             },
-            Err(result) => {
+            Err(_) => {
                 Ok(format!("Error to get pool quota"))
             },
         }

@@ -12,6 +12,7 @@ Host management in rust
   或者缺少对应的库，因此这里会使用bindgen技术，对C库进行bind和封装，提供给src/xxxx.rs调用。
 
 
+#### 安装依赖
 
 #### 安装教程
 

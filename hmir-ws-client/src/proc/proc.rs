@@ -4,12 +4,8 @@ use jsonrpsee_core::client::ClientT;
 use jsonrpsee_core::rpc_params;
 use crate::ws_client::RequestClient;
 
-use jsonrpsee_types::ParamsSer;
-use serde_json::json;
-use std::collections::BTreeMap;
 use hmir_protocol::proc;
 
-#[macro_use]
 
 // use crate::ws_client::client_check;
 

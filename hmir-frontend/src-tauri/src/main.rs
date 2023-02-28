@@ -20,18 +20,9 @@
     windows_subsystem = "windows"
 )]
 
-use jsonrpsee::client_transport::ws::{Uri, WsTransportClientBuilder};
-use jsonrpsee::core::client::{Client, ClientBuilder, ClientT};
-use jsonrpsee::ws_server::{RpcModule, WsServerBuilder};
-use anyhow;
-use futures::executor::block_on;
-use tokio;
-use tauri::{CustomMenuItem, Menu, MenuItem, Submenu};
 use tauri::Manager;
-use tauri::WindowBuilder;
 
 //use log4rs;
-use log::{error,info};
 use std::process;
 use hmir_errno::errno;
 
@@ -157,7 +148,8 @@ fn main() {
             cmd_sys_info,
             cmd_sys_pci_info,
             cmd_sys_set_date,
-            cmd_sys_set_hostname])
+            cmd_sys_set_hostname,
+            cmd_error_description])
         // .invoke_handler(tauri::generate_handler![ttyd_start])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -3,8 +3,6 @@ use hmir_hash::HashWrap;
 use lazy_static::lazy_static;
 use std::cell::RefCell;
 use hmir_ws_client::ws_client::RequestClient;
-use crate::tests::test_default_args::PORT;
-use crate::tests::test_default_args::HOST;
 
 pub struct ClientInstance{
     #[allow(dead_code)]

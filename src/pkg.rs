@@ -6,7 +6,6 @@
 //! 支持以下的请求
 //! -
 //!
-use std::process;
 use jsonrpsee::ws_server::{RpcModule};
 use std::str::Split;
 use regex::Regex;
@@ -56,7 +55,7 @@ fn dpkg_package_info() -> String
     let mut status = "";
     let mut priority = "";
     let mut section = "";
-    let mut installed_size = 0;;
+    let mut installed_size = 0;
     let mut maintainer = "";
     let mut architecture = "";
     let mut source = "";
@@ -67,8 +66,8 @@ fn dpkg_package_info() -> String
     // let packagedb = std::str::from_utf8(&output.stdout);
     let mut packagedb = String::new();
     let file = File::open("/var/lib/dpkg/status").expect("Error in reading file");
-    let mut bufferReader = BufReader::new(file);
-    bufferReader.read_to_string(&mut packagedb).expect("Unable to read line");
+    let mut buffer_reader = BufReader::new(file);
+    buffer_reader.read_to_string(&mut packagedb).expect("Unable to read line");
     let mut map  = hmir_hash::HashWrap::new();
 
     let records: Split<&str> = packagedb.split("\n\n");
@@ -104,7 +103,7 @@ fn dpkg_package_info() -> String
             }
             else if depends_re.is_match(line) {
                 let depend = line.trim_start_matches("Depends: ");
-                depends = record.split(",").into_iter().map(|x|x.to_string()).collect();
+                depends = depend.split(",").into_iter().map(|x|x.to_string()).collect();
             }
             else if description_re.is_match(line) {
                 description = line.trim_start_matches("Description: ");
@@ -136,9 +135,9 @@ mod tests {
     use super::*;
 
 
-    // #[test]
-    // fn dpkg_list_it_worked(){
-    //     hmir_dpkg::dpkg_list();
-    // }
+    #[test]
+    fn dpkg_list_it_worked(){
+        dpkg_package_info();
+    }
 
 }

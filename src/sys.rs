@@ -2,7 +2,7 @@
 use std::process;
 use std::str::Split;
 use regex::Regex;
-use std::sync::{RwLock,Mutex};
+use std::sync::{Mutex};
 use jsonrpsee::ws_server::{RpcModule};
 
 use hmir_sysinfo::release::OsInfo;
@@ -88,7 +88,7 @@ fn sys_pci_info() -> String
     let mut model = "";
     let mut slot = "";
     let mut pci_id = "";
-    let mut is_pci = false;
+    let mut is_pci;
     let mut map  = hmir_hash::HashWrap::new();
     let mut syspath = "";
 
@@ -96,7 +96,6 @@ fn sys_pci_info() -> String
         is_pci = false;
         let rlines: Split<&str> = record.split("\n");
         for line in rlines {
-
             if udev_path_re.is_match(line) {
                 syspath = line.trim_start_matches("P: ");
             }
@@ -187,14 +186,14 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
     module.register_method("sys-set-hostname", |params, _| {
 
         #[derive(Clone, Debug,Serialize,Deserialize)]
-        struct p {
+        struct P {
             token:String,
             pretty_name:String,
             static_name:String,
-        };
+        }
 
         //默认没有error就是成功的
-        let param = params.parse::<p>()?;
+        let param = params.parse::<P>()?;
         TokenChecker!(param.token);
         Ok(sys_set_hostname(param.pretty_name,param.static_name))
     })?;
@@ -203,13 +202,13 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
     module.register_method("sys-set-date", |params, _| {
 
         #[derive(Clone, Debug,Serialize,Deserialize)]
-        struct p {
+        struct P {
             token:String,
             date:String,
-        };
+        }
 
         //默认没有error就是成功的
-        let param = params.parse::<p>()?;
+        let param = params.parse::<P>()?;
         TokenChecker!(param.token);
         Ok(sys_set_date(param.date))
     })?;

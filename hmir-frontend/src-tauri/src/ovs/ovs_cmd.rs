@@ -1,29 +1,6 @@
-use hmir_errno::errno;
-use hmir_ws_client_mgr::login::login_mgr;
-use hmir_ws_client_mgr::ws_client_mgr;
-
-//use log4rs;
-use log::{error,info};
-use tauri::{CustomMenuItem, Menu, MenuItem, Submenu};
-use tauri::Manager;
-use tauri::WindowBuilder;
 
 
 use hmir_ws_client_mgr::net::net_mgr as clientmgr;
-
-
-#[tauri::command]
-fn greet(name : & str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
-}
-
-///返回后端进程信息，默认返回json字符串。
-#[tauri::command]
-fn cmd_process_info(host : & str) -> String {
-    todo!();
-}
-
-
 
 #[tauri::command]
 pub fn cmd_ovs_query_connection(host : &str) -> (usize,String)
