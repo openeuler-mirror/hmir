@@ -15,3 +15,11 @@ export function cmd_sys_info(data: any) {
 export function cmd_sys_pci_info(data: any) {
   return invoke('cmd_sys_pci_info', data)
 }
+export function cmd_sys_set_date(data: any) {
+  return invoke('cmd_sys_set_date', data)
+}
+export function cmd_sys_set_hostname(data: any) {
+  return invoke('cmd_sys_set_hostname', data)
+}
+
+
