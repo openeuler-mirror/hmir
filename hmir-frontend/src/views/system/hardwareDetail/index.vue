@@ -9,7 +9,7 @@
     <el-descriptions-item label="BIOS版本">{{ messageData.bios_version}}</el-descriptions-item>
     <el-descriptions-item label="版本">{{ messageData.board_name }}</el-descriptions-item>
     <el-descriptions-item label="BOIS日期">{{ messageData.bios_date.split('/')[2] +'-'+  messageData.bios_date.split('/')[0]  +'-'+ messageData.bios_date.split('/')[1]}}</el-descriptions-item>
-    <el-descriptions-item label="CPU">12x Intel(R) Core(TM) i5-10400 CPU @ 2.90GHz</el-descriptions-item>
+    <el-descriptions-item label="CPU">{{ messageData.model_name }}</el-descriptions-item>
 </el-descriptions>
  <el-table
       :data="tableData"
@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineEmits, onMounted, defineProps, watch, reactive } from 'vue'
+import { ref, defineEmits, onMounted, defineProps, watch } from 'vue'
 import api from '@/api'
 import useUserStore from '@/store/modules/user'
 const userStore = useUserStore()
@@ -58,21 +58,18 @@ interface A {
   board_name: string,
   bios_version: string,
   bios_date: string,
-  board_type: string,
+  model_name: string,
   [propName: string] : string
 }
-const messageData = reactive<A>({
+const messageData = ref<A>({
   board_vendor: '',
   board_name: '',
   bios_version: '',
   bios_date: '',
-  board_type: ''
+  model_name: ''
 })
 watch(() => props.systemData, (newValue:any, oldValue:any) => {
-  messageData.board_vendor = newValue.board_vendor
-  messageData.bios_date = newValue.bios_date
-  messageData.board_name = newValue.board_name
-  messageData.bios_version = newValue.bios_version
+  messageData.value = newValue
 }, { deep: true })
 
 const goBack = () => {
