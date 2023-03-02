@@ -33,6 +33,7 @@ import about from '@/views/windowHeader/about/index.vue'
 import langselect from '@/views/windowHeader/langselect/index.vue'
 import api from '@/api'
 import { useI18n } from 'vue-i18n'
+import { useAppStore } from '@/store/modules/app'
 
 // about页面
 const visible = ref(false)
@@ -42,7 +43,7 @@ const { locale } = useI18n()
 // const router = useRouter()
 
 // 下拉框通过什么触发
-const menuTrigger = ref<string>('click')
+const menuTrigger = ref<any>('click')
 
 // 菜单激活回调
 const handleSelect = (key: string, keyPath: string[]) => {
@@ -86,9 +87,11 @@ function openSettingWindow () {
   settingVisible.value = true
 }
 
+const store = ref(useAppStore())
 // 修改国际化语言
 function localeChange (data: string) {
   locale.value = data
+  store.value.SET_LOCALE(data)
 }
 
 </script>
