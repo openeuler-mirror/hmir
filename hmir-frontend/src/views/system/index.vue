@@ -72,7 +72,7 @@
       </slot>
       <template #footer>
         <el-button @click="data.timeDialog = false">取 消</el-button>
-        <el-button type="primary" @click="data.timeDialog = false">变更</el-button>
+        <el-button type="primary" @click="changeTime">变更</el-button>
       </template>
     </el-dialog>
     <!-- 关机重启对话框 -->
@@ -372,6 +372,15 @@ onMounted(() => {
 // 系统时间以及dialog
 const systemDateValue = ref(new Date())
 const systemTimeValue = ref(new Date())
+const changeTime = () => {
+  data.value.timeDialog = false
+  // console.log('设置时间', systemDateValue.value.getFullYear(), systemTimeValue.value)
+  api.cmd_sys_set_date({ host: userStore.host, date: '' }).then((res) => {
+    console.log('设置时间', res)
+  }).catch((error) => {
+    console.log(error)
+  })
+}
 const nowTime = ref(getDate())
 const setTime = () => {
   nowTime.value = getDate()
