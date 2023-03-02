@@ -43,7 +43,7 @@
       实际主机名<el-input v-model="realHostName" placeholder="请输入内容"></el-input>
       <template #footer>
         <el-button @click="data.dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="data.dialogVisible = false">变更</el-button>
+        <el-button type="primary" @click="changeName">变更</el-button>
       </template>
     </el-dialog>
     <!-- 域的对话框 -->
@@ -341,8 +341,20 @@ const turnOffDown = (val: Number) => {
   }
 }
 // 主机名对话框
-const goodHostName = ref()
-const realHostName = ref()
+const goodHostName = ref('')
+const realHostName = ref('')
+const changeName = () => {
+  data.value.dialogVisible = false
+  api.cmd_sys_set_hostname({ host: userStore.host, prettyName: goodHostName.value, staticName: realHostName.value }).then((res: any) => {
+    if (res[0] === 6) {
+      systemData.value.hostname = realHostName.value
+    } else {
+      console.log('修改主机名失败')
+    }
+  }).catch((error) => {
+    console.log(error)
+  })
+}
 // 处理detail的显示
 const systemData: any = ref({})
 onMounted(() => {
