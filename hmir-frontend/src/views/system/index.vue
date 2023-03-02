@@ -117,7 +117,7 @@ import Echarts from '@/views/ceph/components/dashBoard/echarts.vue'
 import hardwareDetail from '@/views/system/hardwareDetail/index.vue'
 import api from '@/api'
 import useUserStore from '@/store/modules/user'
-import getDate from '@/utils/time'
+import { timeFormate, getYMD, getSFM } from '@/utils/time'
 const userStore = useUserStore()
 
 const data = ref({
@@ -373,17 +373,19 @@ onMounted(() => {
 const systemDateValue = ref(new Date())
 const systemTimeValue = ref(new Date())
 const changeTime = () => {
+  let str = ''
+  str = getYMD(systemDateValue.value.toString()) + ' ' + getSFM(systemTimeValue.value.toString())
   data.value.timeDialog = false
   // console.log('设置时间', systemDateValue.value.getFullYear(), systemTimeValue.value)
-  api.cmd_sys_set_date({ host: userStore.host, date: '' }).then((res) => {
+  api.cmd_sys_set_date({ host: userStore.host, date: str }).then((res) => {
     console.log('设置时间', res)
   }).catch((error) => {
     console.log(error)
   })
 }
-const nowTime = ref(getDate())
+const nowTime = ref(timeFormate())
 const setTime = () => {
-  nowTime.value = getDate()
+  nowTime.value = timeFormate()
 }
 const timer: any = ref()
 onMounted(() => {
