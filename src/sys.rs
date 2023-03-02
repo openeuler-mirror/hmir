@@ -242,18 +242,31 @@ pub fn sys_set_hostname(pretty_hostname : String, static_hostname : String) -> S
     serialized
 }
 
-pub fn sys_set_date(date: String) -> String {
+fn validate_datetime_format(datetime_str : & String) -> bool {
+    let re = Regex::new(r"^\d{4}-\d{2}-\d{2} \d{2}:\d:{2}\d{2}$").unwrap();
+    return re.is_match(datetime_str);
+}
 
-    let output = process::Command::new("date")
-        .arg("-s")
-        .arg(date)
-        .output()
-        .expect("failed to execute process");
+pub fn sys_set_date(date: String) -> String {
     let mut map  = HashWrap::<i32,i32>:: new();
-    match output.status.success() {
-        true => map.set_code(0),
-        false => map.set_code(errno::HMIR_ERR_COMMAND),
+
+    match validate_datetime_format(&date) {
+        false => {
+            map.error(errno::HMIR_ERR_PARAM, errno::HMIR_MSG[errno::HMIR_ERR_PARAM].to_string());
+        }
+        true => {
+            let output = process::Command::new("date")
+                .arg("-s")
+                .arg(date)
+                .output()
+                .expect("failed to execute process");
+            match output.status.success() {
+                true => map.set_code(0),
+                false => map.set_code(errno::HMIR_ERR_COMMAND),
+            }
+        }
     }
+
     let serialized = serde_json::to_string(&map).unwrap();
     serialized
 }
