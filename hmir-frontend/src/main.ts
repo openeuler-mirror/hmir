@@ -48,14 +48,17 @@ import 'element-plus/dist/index.css';
 import "./style.css";
 import 'animate.css';
 import echarts from "./utils/echarts";
-import { setupI18n } from "./lang";
+import { setupI18n, i18n } from "./lang";
 
+const { t } = i18n.global
 const app = createApp(App)
 app.directive('deBounce', deBounce);
 //全局挂载
 setupStore(app);
 setupI18n(app);
-app.use(ElementPlus).use(router)
+app.use(ElementPlus,{
+  il8n: (key: any,value: any) => t(key,value)
+}).use(router)
 app.config.globalProperties.$echarts = echarts
 app.component('s3-layer', s3Layer);
 app.mount('#app')
