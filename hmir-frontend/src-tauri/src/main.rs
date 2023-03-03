@@ -148,6 +148,7 @@ fn main() {
             cmd_sys_info,
             cmd_sys_pci_info,
             cmd_sys_set_date,
+            cmd_sys_get_date,
             cmd_sys_set_hostname,
             cmd_error_description])
         // .invoke_handler(tauri::generate_handler![ttyd_start])

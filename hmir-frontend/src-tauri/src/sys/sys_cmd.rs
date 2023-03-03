@@ -14,6 +14,10 @@ pub fn cmd_sys_pci_info(host : &str) -> (usize,String)
     return clientmgr::sys_list_pci_info(host);
 }
 
+#[tauri::command]
+pub fn cmd_sys_get_date(host : &str) ->  (usize,String) {
+    return clientmgr::sys_get_date(host);
+}
 
 #[tauri::command]
 pub fn cmd_sys_set_date(host : &str, date : String) -> (usize,String)
