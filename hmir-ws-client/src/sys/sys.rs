@@ -142,7 +142,7 @@ mod tests {
         match client {
             Ok(mut c) => {
                 c.login("root","root");
-                let (state,pci_info) = c.sys_set_hostname("I am developer","dwj");
+                let (state,pci_info) = c.sys_set_hostname("I am developer".to_string(),"dwj".to_string());
 
                 println!("{}",errno::HMIR_MSG[state]);
             },
@@ -164,4 +164,16 @@ mod tests {
         }
     }
 
+    #[test]
+    fn test_sys_get_date_worked() {
+        let client = RequestClient::new(String::from(URL));
+        match client {
+            Ok(mut c) => {
+                c.login("root","root");
+                let (state,pci_info) = c.sys_get_date();
+                println!("{}",errno::HMIR_MSG[state]);
+            },
+            _ => {}
+        }
+    }
 }
