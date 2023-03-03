@@ -288,5 +288,54 @@ const containValue = ref(2)
 </script>
 
 <style lang="scss" scoped>
-
+.box-card{
+  margin-bottom: 10px;
+  .detail-back{
+    display: flex;
+  }
+}
+.card{
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  span {
+    color: #409eff;
+  }
+}
+.vm-title{
+  display: flex;
+  .vm-name{
+    width: 50%;
+  }
+  .vm-search{
+    width: 25%;
+  }
+  .vm-button{
+    width: 25%;
+    display: flex;
+    justify-content: center;
+  }
+}
+.vm-pool{
+  display: flex;
+  justify-content: space-between;
+  .vm-pool-name{
+    width: 20%;
+  }
+  .vm-pool-button{
+    width: 20%;
+  }
+}
+.vm-detail {
+  display: flex;
+  margin-bottom: 5px;
+  .vm-detail-name{
+    width: 20%;
+    height: 30px;
+    line-height: 30px;
+  }
+  .message-right{
+    width: 80%;
+  }
+}
 </style>
