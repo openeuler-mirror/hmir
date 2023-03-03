@@ -200,7 +200,91 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
+import SvgIcon from '@/components/svgIcon/index.vue'
 
+// 控制详情页的显隐
+const isOpenDetail = ref(false)
+const detailName = ref()
+const isPool = ref(false)
+const isNet = ref(false)
+
+const openDetail = (str:String) => {
+  isOpenDetail.value = !isOpenDetail.value
+  switch (str) {
+    case 'pool':
+      detailName.value = '存储池'
+      isPool.value = true
+      break
+    case 'net':
+      detailName.value = '网络'
+      isNet.value = true
+      break
+    default:
+      break
+  }
+}
+const backVm = () => {
+  isPool.value = false
+  isNet.value = false
+  isOpenDetail.value = !isOpenDetail.value
+}
+
+const searchInput = ref()
+const vmTableData = ref()
+const poolTableData = ref()
+const netTableData = ref()
+
+// dialog
+const dialogName = ref()
+const dialogVisible = ref(false)
+const buttonName = ref(true)
+const dialogFlag = ref({
+  createVm: false,
+  importVm: false,
+  createPool: false,
+  createNet: false
+})
+const handleClose = () => {
+  dialogFlag.value = {
+    createVm: false,
+    importVm: false,
+    createPool: false,
+    createNet: false
+  }
+  dialogVisible.value = false
+  buttonName.value = true
+}
+const openDialog = (val:string) => {
+  console.log(val)
+  switch (val) {
+    case 'createVm':
+      dialogName.value = '创建新的虚拟机'
+      dialogFlag.value.createVm = true
+      break
+    case 'importVm':
+      dialogName.value = '导入一个虚拟机'
+      dialogFlag.value.importVm = true
+      buttonName.value = false
+      break
+    case 'createPool':
+      dialogName.value = '创建存储池'
+      dialogFlag.value.createPool = true
+      break
+    case 'createNet':
+      dialogName.value = '创建虚拟网络'
+      dialogFlag.value.createNet = true
+      break
+  }
+  dialogVisible.value = true
+}
+
+// 第一个dialog
+const createVmInput = ref()
+const createVmRadio = ref('1')
+const createVmValue = ref()
+const containInput = ref(10)
+const containValue = ref(2)
 </script>
 
 <style lang="scss" scoped>
