@@ -82,6 +82,12 @@ export const useRouterStore = defineStore('router', {
             meta: { title: '进程', icon: 'Menu', disabled: false },
           },
           {
+            path: '/virtual',
+            name: 'virtual',
+            component: () => import('@/views/virt/index.vue'),
+            meta: { title: '虚拟机', icon: 'Menu', disabled: false },
+          },
+          {
             path: '/serviceDetail/:serviceName(.*)',
             name: 'serviceDetail',
             component: () => import('@/views/service/components/serviceDetail/index.vue'),
