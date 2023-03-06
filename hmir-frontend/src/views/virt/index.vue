@@ -187,14 +187,15 @@
           </div>
         </div></div>
         <div class="vm-detail"><div class="vm-detail-name">内存</div><div class="message-right" style="display: flex;">
-          <div style="width:50%"><el-slider
+          <div style="width:80%"><el-slider
             v-model="memoryValue"
             :min="0"
             :max="125"
+            :show-input="true"
             >
           </el-slider></div>
-          <div style="display: flex; width:50%" >
-            <div style="width:10%;min-width: 50px;"><el-input v-model="memoryValue" placeholder=" "></el-input></div>
+          <div style="display: flex; width:20%" >
+            <!-- <div style="width:10%;min-width: 50px;"><el-input v-model="memoryValue" placeholder=" "></el-input></div> -->
             <div>
              <el-select v-model="memorySelect" placeholder=" ">
              <el-option
@@ -245,14 +246,15 @@
         </el-select>
         </div></div>
         <div class="vm-detail"><div class="vm-detail-name">内存</div><div class="message-right" style="display: flex;">
-          <div style="width:50%"><el-slider
+          <div style="width:80%"><el-slider
             v-model="importMemoryValue"
             :min="0"
             :max="125"
+            :show-input="true"
             >
           </el-slider></div>
-          <div style="display: flex; width:50%" >
-            <div style="width:10%;min-width: 50px;"><el-input v-model="importMemoryValue" placeholder=" "></el-input></div>
+          <div style="display: flex; width:20%" >
+            <!-- <div style="width:10%;min-width: 50px;"><el-input v-model="importMemoryValue" placeholder=" "></el-input></div> -->
             <div>
              <el-select v-model="importMemorySelect" placeholder=" ">
              <el-option
@@ -353,6 +355,107 @@
         </div></div>
       </div>
 
+      <div v-show="dialogFlag.createNet" style="line-height: 30px;">
+        <div class="vm-detail"><div class="vm-detail-name">连接</div><div class="message-right">system</div></div>
+        <div class="vm-detail"><div class="vm-detail-name">名称</div><div class="message-right">
+          <el-input v-model="uniqueNameInput" placeholder="唯一的网络名称"></el-input>
+        </div></div>
+        <div class="vm-detail"><div class="vm-detail-name">转发模式</div><div class="message-right">
+          <el-select v-model="transmitValue" placeholder="" :clearable="true" style="width: 100%;">
+          <el-option
+            v-for="item in [{value: 1,label: 'NTA'},{value: 2,label: '打开'},{value: 3,label: '无(隔离的网络)'}]"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+        </div></div>
+        <div class="vm-detail" v-show="transmitValue === 1 ? true : false"><div class="vm-detail-name">设备</div><div class="message-right">
+          <el-select v-model="equipmentValue" placeholder="请选择" style="width: 100%;">
+          <el-option-group
+            v-for="group in equipmentOptions"
+            :key="group.label"
+            :label="group.label">
+            <el-option
+              v-for="item in group.options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-option-group>
+        </el-select>
+        </div></div>
+        <div class="vm-detail"><div class="vm-detail-name">IP配置</div><div class="message-right">
+          <el-select v-model="ipConfigValue" placeholder="" :clearable="true" style="width: 100%;">
+          <el-option
+            v-for="item in [{value: 1,label: '仅IPV4'},{value: 2,label: '仅IPV6'},{value: 3,label: 'IPV4和IPV6'}]"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+          </el-select>
+        </div></div>
+        <!-- ipv4 -->
+        <div v-show = "ipConfigValue === 2 ? false : true">
+          <div class="vm-detail"><div class="vm-detail-name"></div><div class="message-right">
+          <div style="display: flex;justify-content: space-between;">
+            <div>IPV4网络</div>
+            <div><el-input v-model="IPV4input" placeholder=" "></el-input></div>
+          </div>
+        </div></div>
+        <div class="vm-detail"><div class="vm-detail-name"></div><div class="message-right">
+          <div style="display: flex; justify-content: space-between;">
+            <div>掩码或前缀长度</div>
+            <div><el-input v-model="IPV4PrefixInput" placeholder=" "></el-input></div>
+          </div>
+        </div></div>
+        <div class="vm-detail"><div class="vm-detail-name"></div><div class="message-right">
+          <el-checkbox v-model="ipv4Checked">设置dhcp范围</el-checkbox>
+        </div></div>
+        <div class="vm-detail" v-show="ipv4Checked"><div class="vm-detail-name"></div><div class="message-right">
+          <div style="display: flex;">
+             <div style="display: flex;">
+                <div style="min-width: 35px;">启动</div>
+                <div><el-input v-model="IPV4StartInput" placeholder=" "></el-input></div>
+              </div>
+              <div style="display: flex;">
+                <div style="min-width: 35px;">结束</div>
+                <div><el-input v-model="IPV4EndInput" placeholder=" "></el-input></div>
+              </div>
+          </div>
+        </div></div>
+        </div>
+        <!-- ipv6 -->
+        <div v-show="ipConfigValue === 1 ? false : true">
+          <div class="vm-detail"><div class="vm-detail-name"></div><div class="message-right">
+          <div style="display: flex; justify-content: space-between;">
+            <div>IPV6网络</div>
+            <div><el-input v-model="IPV6input" placeholder=" "></el-input></div>
+          </div>
+        </div></div>
+        <div class="vm-detail"><div class="vm-detail-name"></div><div class="message-right">
+          <div style="display: flex; justify-content: space-between;">
+            <div>前缀长度</div>
+            <div><el-input v-model="IPV6PrefixInput" placeholder=" "></el-input></div>
+          </div>
+        </div></div>
+        <div class="vm-detail"><div class="vm-detail-name"></div><div class="message-right">
+          <el-checkbox v-model="ipv6Checked">设置dhcp范围</el-checkbox>
+        </div></div>
+        <div class="vm-detail" v-show="ipv6Checked"><div class="vm-detail-name"></div><div class="message-right">
+          <div style="display: flex;">
+             <div style="display: flex;width: 50%;">
+                <div style="min-width: 35px;">启动</div>
+                <div><el-input v-model="IPV6StartInput" placeholder=" "></el-input></div>
+              </div>
+              <div style="display: flex; width: 50%;">
+                <div style="min-width: 35px;">结束</div>
+                <div><el-input v-model="IPV6EndInput" placeholder=" "></el-input></div>
+              </div>
+          </div>
+        </div></div>
+        </div>
+      </div>
     </slot>
     <template #footer>
       <el-button @click="handleClose">取 消</el-button>
@@ -551,6 +654,102 @@ const no6StartInput = ref('')
 
 // 创建虚拟网络dialog数据
 const uniqueNameInput = ref('')
+const transmitValue = ref(1)
+const equipmentValue = ref(1)
+const equipmentOptions = ref([
+  {
+    label: '自动',
+    options: [
+      {
+        value: 1,
+        label: '自动'
+      }
+    ]
+  },
+  {
+    label: '设备',
+    options: [
+      {
+        value: 2,
+        label: 'br-11ebd06709bb'
+      },
+      {
+        value: 3,
+        label: 'br-24d13a24fe2b'
+      },
+      {
+        value: 4,
+        label: 'docker0'
+      },
+      {
+        value: 5,
+        label: 'eno1'
+      },
+      {
+        value: 6,
+        label: 'eno2'
+      },
+      {
+        value: 7,
+        label: 'eno3'
+      },
+      {
+        value: 8,
+        label: 'eno4'
+      },
+      {
+        value: 9,
+        label: 'enp175s0'
+      },
+      {
+        value: 10,
+        label: 'lo'
+      },
+      {
+        value: 11,
+        label: 'ovirtmgmt'
+      },
+      {
+        value: 12,
+        label: 'veth22cab25'
+      },
+      {
+        value: 13,
+        label: 'veth3978e88'
+      },
+      {
+        value: 14,
+        label: 'veth6624458'
+      },
+      {
+        value: 15,
+        label: 'veth9ef7394'
+      },
+      {
+        value: 16,
+        label: 'vetha2a0606'
+      },
+      {
+        value: 17,
+        label: 'veth77c04f'
+      }
+    ]
+  }
+]
+)
+const ipConfigValue = ref(1)
+
+const ipv4Checked = ref(false)
+const IPV4input = ref('196.168.100.1')
+const IPV4PrefixInput = ref('24')
+const IPV4StartInput = ref('')
+const IPV4EndInput = ref('')
+
+const ipv6Checked = ref(false)
+const IPV6input = ref('')
+const IPV6PrefixInput = ref('')
+const IPV6StartInput = ref('')
+const IPV6EndInput = ref('')
 </script>
 
 <style lang="scss" scoped>
