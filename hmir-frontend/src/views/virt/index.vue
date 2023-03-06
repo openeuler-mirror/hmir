@@ -34,7 +34,10 @@
       <div class="vm-title">
         <div class="vm-name">虚拟机</div>
         <div class="vm-search"><el-input v-model="searchInput" placeholder="根据名称过滤"></el-input></div>
-        <div class="vm-button"><el-button @click="openDialog('createVm')" plain>创建虚拟机</el-button><el-button @click="openDialog('importVm')" plain>导入VM</el-button></div>
+        <div class="vm-button">
+          <el-button @click="openDialog('createVm')" plain>创建虚拟机</el-button>
+          <el-button @click="openDialog('importVm')" plain>导入VM</el-button>
+        </div>
       </div>
       <div>
         <el-table
@@ -182,9 +185,36 @@
           </el-select>
           </div>
         </div></div>
-        <div class="vm-detail"><div class="vm-detail-name">内存</div><div class="message-right">内容</div></div>
-        <div class="vm-detail"><div class="vm-detail-name"></div><div class="message-right">内容</div></div>
-        <div class="vm-detail"><div class="vm-detail-name"></div><div class="message-right">内容</div></div>
+        <div class="vm-detail"><div class="vm-detail-name">内存</div><div class="message-right" style="display: flex;">
+          <div style="width:50%"><el-slider
+            v-model="memoryValue"
+            :min="0"
+            :max="125"
+            >
+          </el-slider></div>
+          <div style="display: flex; width:50%" >
+            <div style="width:10%;min-width: 50px;"><el-input v-model="memoryValue" placeholder=" "></el-input></div>
+            <div>
+             <el-select v-model="memorySelect" placeholder=" ">
+             <el-option
+              style="width:40%;min-width: 50px;"
+              v-for="item in [{value:1, label:'MiB'},{value:2, label:'GiB'}]"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+            </div>
+          </div>
+        </div></div>
+        <div class="vm-detail"><div class="vm-detail-name"></div><div class="message-right">
+          <el-tooltip class="item" effect="dark" content="所选操作系统不支持无人值守安装" placement="top">
+            <el-checkbox v-model="noBodyChecked" disabled>执行无人值守安装</el-checkbox>
+          </el-tooltip>
+        </div></div>
+        <div class="vm-detail"><div class="vm-detail-name"></div><div class="message-right">
+          <el-checkbox v-model="restartNowChecked">立即启动VM</el-checkbox>
+        </div></div>
       </div>
       <div v-show="dialogFlag.importVm">导入VM</div>
       <div v-show="dialogFlag.createPool">创建存储池</div>
@@ -193,7 +223,7 @@
     </slot>
     <template #footer>
       <el-button @click="handleClose">取 消</el-button>
-      <el-button type="primary" @click="dialogVisible = false">{{ buttonName ? '创建' : '导入' }}</el-button>
+      <el-button type="primary" @click="finishCreat(createName)">{{ buttonName ? '创建' : '导入' }}</el-button>
     </template>
   </el-dialog>
   </div>
@@ -245,6 +275,7 @@ const dialogFlag = ref({
   createPool: false,
   createNet: false
 })
+const createName = ref('')
 const handleClose = () => {
   dialogFlag.value = {
     createVm: false,
@@ -256,6 +287,7 @@ const handleClose = () => {
   buttonName.value = true
 }
 const openDialog = (val:string) => {
+  createName.value = val
   console.log(val)
   switch (val) {
     case 'createVm':
@@ -278,6 +310,10 @@ const openDialog = (val:string) => {
   }
   dialogVisible.value = true
 }
+const finishCreat = (val: string) => {
+  handleClose()
+  console.log(val)
+}
 
 // 第一个dialog
 const createVmInput = ref()
@@ -285,6 +321,10 @@ const createVmRadio = ref('1')
 const createVmValue = ref()
 const containInput = ref(10)
 const containValue = ref(2)
+const memoryValue = ref(0)
+const memorySelect = ref(2)
+const noBodyChecked = ref(false)
+const restartNowChecked = ref(true)
 </script>
 
 <style lang="scss" scoped>
