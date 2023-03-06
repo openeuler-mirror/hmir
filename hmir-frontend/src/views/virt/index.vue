@@ -217,6 +217,7 @@
           <el-checkbox v-model="restartNowChecked">立即启动VM</el-checkbox>
         </div></div>
       </div>
+
       <div v-show="dialogFlag.importVm">
         <div class="vm-detail"><div class="vm-detail-name">名称</div><div class="message-right"><el-input v-model="importVmInput" placeholder="唯一名称"></el-input></div></div>
         <div class="vm-detail"><div class="vm-detail-name">连接</div><div class="message-right">
@@ -269,8 +270,88 @@
           <el-checkbox v-model="importRestartChecked">立即启动VM</el-checkbox>
         </div></div>
       </div>
-      <div v-show="dialogFlag.createPool">创建存储池</div>
-      <div v-show="dialogFlag.createNet">创建虚拟网络</div>
+
+      <div v-show="dialogFlag.createPool">
+        <div class="vm-detail"><div class="vm-detail-name">连接</div><div class="message-right">
+          <el-radio v-model="createPoolRadio" label="1">系统</el-radio>
+          <el-radio v-model="createPoolRadio" label="2">会话</el-radio>
+        </div></div>
+        <div class="vm-detail"><div class="vm-detail-name">名称</div><div class="message-right">
+          <el-input v-model="createPoolInput" placeholder="存储池名"></el-input>
+        </div></div>
+        <div class="vm-detail"><div class="vm-detail-name">类型</div><div class="message-right">
+          <el-select v-model="PoolValue" placeholder="" :clearable="true" style="width: 100%;">
+          <el-option
+            v-for="item in PoolOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+          </el-select>
+        </div></div>
+        <div v-show="PoolValue === 5 ? false : PoolValue === 6 ? false : true" class="vm-detail"><div class="vm-detail-name">目标路径</div><div class="message-right">
+          <el-select v-model="fileSysValue" placeholder="主机文件系统上的路径" :clearable="true" style="width: 100%;">
+          <el-option
+            v-for="item in fileSysOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+        </div></div>
+        <!-- 选择PoolOptions的第2、3、6个value时出现 -->
+        <div v-show="PoolValue === 2 ? true : PoolValue === 3 ? true : PoolValue === 6 ? true : false" class="vm-detail"><div class="vm-detail-name">主机</div><div class="message-right">
+          <el-input v-model="no235HostInput" placeholder="主机名"></el-input>
+        </div></div>
+        <!-- 选择PoolOptions的第2个value时出现 -->
+        <div v-show="PoolValue === 2" class="vm-detail"><div class="vm-detail-name">源路径</div><div class="message-right">
+          <el-input v-model="no2CatalogueInput" placeholder="服务器上的目录被导出"></el-input>
+        </div></div>
+        <!-- 选择PoolOptions的第3个value时出现 -->
+        <div v-show="PoolValue === 3" class="vm-detail"><div class="vm-detail-name">源路径</div><div class="message-right">
+          <el-input v-model="no3CatalogueInput" placeholder="iSCSI目标IQN"></el-input>
+        </div></div>
+          <!-- 选择PoolOptions的第4个value时出现 -->
+        <div v-show="PoolValue === 4" class="vm-detail"><div class="vm-detail-name">源路径</div><div class="message-right" style="display: flex;">
+          <div style="width: 60px;min-width: 183px;">
+            <el-select v-model="no4FileValue" placeholder="主机上的物理磁盘设备" :clearable="true" style="width: 100%;">
+            <el-option
+              v-for="item in no4FileOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+            </el-select>
+          </div>
+          <div style="display: flex;">
+            <div style="line-height: 30px;min-width: 43px;">格式化</div>
+            <div style="width:60%;">
+              <el-select v-model="formatValue" placeholder="" style="width: 100%;">
+            <el-option
+              v-for="item in [{value: 1, label:'dos'},{value: 2, label:'dvh'},{value: 3, label:'gpt'},{value: 4, label:'mac'}]"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+            </el-select>
+            </div>
+          </div>
+        </div></div>
+         <!-- 选择PoolOptions的第5个value时出现 -->
+         <div v-show="PoolValue === 5 ? true : false" class="vm-detail"><div class="vm-detail-name">主机</div><div class="message-right">
+          <el-input v-model="no5VolumeGroupInput" placeholder="卷组名称"></el-input>
+        </div></div>
+        <!-- 选择PoolOptions的第6个value时出现 -->
+        <div v-show="PoolValue === 6 ? true : false" class="vm-detail"><div class="vm-detail-name">源路径</div><div class="message-right">
+          <el-input v-model="no6SourceInput" placeholder="iSCSI目标IQN"></el-input>
+        </div></div>
+        <div v-show="PoolValue === 6 ? true : false" class="vm-detail"><div class="vm-detail-name">启动器</div><div class="message-right">
+          <el-input v-model="no6StartInput" placeholder="iSCI initiator INQ"></el-input>
+        </div></div>
+        <div class="vm-detail"><div class="vm-detail-name">启动</div><div class="message-right">
+          <el-checkbox v-model="poolRestartChecked">在主机引导时启动池</el-checkbox>
+        </div></div>
+      </div>
 
     </slot>
     <template #footer>
@@ -367,7 +448,7 @@ const finishCreat = (val: string) => {
   console.log(val)
 }
 
-// 第一个dialog
+// 创建虚拟机dialog数据
 const createVmInput = ref()
 const createVmRadio = ref('1')
 const createVmValue = ref()
@@ -378,7 +459,7 @@ const memorySelect = ref(2)
 const noBodyChecked = ref(false)
 const restartNowChecked = ref(true)
 
-// 第二个dialog
+// 导入VM dialog 数据
 const importVmInput = ref()
 const importVmRadio = ref('1')
 const MirrorValue = ref()
@@ -414,6 +495,62 @@ const OSoptions = ref([
 const importMemoryValue = ref(0)
 const importMemorySelect = ref(2)
 const importRestartChecked = ref(true)
+
+// 创建存储池 dialog数据
+const createPoolRadio = ref('1')
+const createPoolInput = ref()
+const PoolValue = ref(1)
+const PoolOptions = ref([
+  { value: 1, label: '文件系统目录' },
+  { value: 2, label: '网络文件系统' },
+  { value: 3, label: 'iSCSI目标' },
+  { value: 4, label: '物理磁盘设备' },
+  { value: 5, label: 'LVM卷组' },
+  { value: 6, label: 'iSCSI直接目标' }
+])
+const fileSysValue = ref(0)
+const fileSysOptions = ref([
+  { value: 0, label: '/' },
+  { value: 1, label: '/.autorelabel' },
+  { value: 2, label: '/.cache/' },
+  { value: 3, label: '/.rpmdb/' },
+  { value: 4, label: '/.viminfo' },
+  { value: 5, label: '/bin/' },
+  { value: 6, label: '/boot/' },
+  { value: 7, label: '/dev/' },
+  { value: 8, label: '/dockers/' },
+  { value: 9, label: '/etc/' },
+  { value: 10, label: '/home/' }
+])
+const poolRestartChecked = ref(true)
+// 选择PoolOptions的第二个出现
+const no235HostInput = ref('')
+const no2CatalogueInput = ref('')
+const no3CatalogueInput = ref('')
+const formatValue = ref(1)
+// 选择PoolOptions的第4个出现
+const no4FileValue = ref(0)
+const no4FileOptions = ref([
+  { value: 0, label: '/' },
+  { value: 1, label: '/.autorelabel' },
+  { value: 2, label: '/.cache/' },
+  { value: 3, label: '/.rpmdb/' },
+  { value: 4, label: '/.viminfo' },
+  { value: 5, label: '/bin/' },
+  { value: 6, label: '/boot/' },
+  { value: 7, label: '/dev/' },
+  { value: 8, label: '/dockers/' },
+  { value: 9, label: '/etc/' },
+  { value: 10, label: '/home/' }
+])
+// 选择PoolOptions的5个出现
+const no5VolumeGroupInput = ref('')
+// 选择PoolOptions的6个出现
+const no6SourceInput = ref('')
+const no6StartInput = ref('')
+
+// 创建虚拟网络dialog数据
+const uniqueNameInput = ref('')
 </script>
 
 <style lang="scss" scoped>
