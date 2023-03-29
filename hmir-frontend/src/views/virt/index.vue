@@ -134,6 +134,7 @@
     :title="dialogName"
     v-model="dialogVisible"
     width="30%"
+    style="min-width:430px;"
     :before-close="handleClose">
     <slot>
       <div v-show="dialogFlag.createVm">
@@ -216,7 +217,58 @@
           <el-checkbox v-model="restartNowChecked">立即启动VM</el-checkbox>
         </div></div>
       </div>
-      <div v-show="dialogFlag.importVm">导入VM</div>
+      <div v-show="dialogFlag.importVm">
+        <div class="vm-detail"><div class="vm-detail-name">名称</div><div class="message-right"><el-input v-model="importVmInput" placeholder="唯一名称"></el-input></div></div>
+        <div class="vm-detail"><div class="vm-detail-name">连接</div><div class="message-right">
+          <el-radio v-model="importVmRadio" label="1">系统</el-radio>
+          <el-radio v-model="importVmRadio" label="2">会话</el-radio>
+        </div></div>
+        <div class="vm-detail"><div class="vm-detail-name">Installation Source</div><div class="message-right">
+          <el-select v-model="MirrorValue" placeholder="主机文件上存在的磁盘镜像" :clearable="true" style="width: 100%;">
+          <el-option
+            v-for="item in MirrorOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+        </div></div>
+        <div class="vm-detail"><div class="vm-detail-name">操作系统</div><div class="message-right">
+          <el-select v-model="OSValue" placeholder="选择一个操作系统" :clearable="true" style="width: 100%;">
+          <el-option
+            v-for="item in OSoptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+        </div></div>
+        <div class="vm-detail"><div class="vm-detail-name">内存</div><div class="message-right" style="display: flex;">
+          <div style="width:50%"><el-slider
+            v-model="importMemoryValue"
+            :min="0"
+            :max="125"
+            >
+          </el-slider></div>
+          <div style="display: flex; width:50%" >
+            <div style="width:10%;min-width: 50px;"><el-input v-model="importMemoryValue" placeholder=" "></el-input></div>
+            <div>
+             <el-select v-model="importMemorySelect" placeholder=" ">
+             <el-option
+              style="width:40%;min-width: 50px;"
+              v-for="item in [{value:1, label:'MiB'},{value:2, label:'GiB'}]"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+            </div>
+          </div>
+        </div></div>
+        <div class="vm-detail"><div class="vm-detail-name"></div><div class="message-right">
+          <el-checkbox v-model="importRestartChecked">立即启动VM</el-checkbox>
+        </div></div>
+      </div>
       <div v-show="dialogFlag.createPool">创建存储池</div>
       <div v-show="dialogFlag.createNet">创建虚拟网络</div>
 
@@ -325,6 +377,43 @@ const memoryValue = ref(0)
 const memorySelect = ref(2)
 const noBodyChecked = ref(false)
 const restartNowChecked = ref(true)
+
+// 第二个dialog
+const importVmInput = ref()
+const importVmRadio = ref('1')
+const MirrorValue = ref()
+const MirrorOptions = ref([
+  { value: 0, label: '/' },
+  { value: 1, label: '/.autorelabel' },
+  { value: 2, label: '/.cache/' },
+  { value: 3, label: '/.rpmdb/' },
+  { value: 4, label: '/.viminfo' },
+  { value: 5, label: '/bin/' },
+  { value: 6, label: '/boot/' },
+  { value: 7, label: '/dev/' },
+  { value: 8, label: '/dockers/' },
+  { value: 9, label: '/etc/' },
+  { value: 10, label: '/home/' }
+])
+const OSValue = ref()
+const OSoptions = ref([
+  { value: 1, label: 'Fedora Silverblue (unknown)' },
+  { value: 2, label: 'Fedora Silverblue Rawhide' },
+  { value: 3, label: 'Guix 1.1' },
+  { value: 4, label: 'Endless OS 3.9' },
+  { value: 5, label: 'Scientific Linux 7 Unknown (7-unknown)' },
+  { value: 6, label: 'Red Hat Enterprise Linux 7 Unknown (7-unknown Maipo)' },
+  { value: 7, label: 'Manjaro' },
+  { value: 8, label: 'Arch Linux' },
+  { value: 9, label: 'Red Hat Enterprise Linux 7.9 (Maipo)' },
+  { value: 10, label: 'Red Hat Enterprise Linux 9.0 (Plow)' },
+  { value: 11, label: 'Red Hat Enterprise Linux 8.4 (Ootpa)' },
+  { value: 12, label: 'Pop!_OS 20.10' },
+  { value: 13, label: 'Pop!_OS 20.04' }
+])
+const importMemoryValue = ref(0)
+const importMemorySelect = ref(2)
+const importRestartChecked = ref(true)
 </script>
 
 <style lang="scss" scoped>
@@ -370,8 +459,9 @@ const restartNowChecked = ref(true)
   display: flex;
   margin-bottom: 5px;
   .vm-detail-name{
-    width: 20%;
+    width: 30%;
     height: 30px;
+    min-width: 140px;
     line-height: 30px;
   }
   .message-right{
