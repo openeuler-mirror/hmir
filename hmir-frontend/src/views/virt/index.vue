@@ -30,7 +30,7 @@
          </div>
       </slot>
     </el-card>
-    <el-card v-show="!isOpenDetail" class="box-card" shadow="hover">
+    <el-card v-show="!isOpenDetail" class="box-card" shadow="never">
       <div class="vm-title">
         <div class="vm-name">虚拟机</div>
         <div class="vm-search"><el-input v-model="searchInput" placeholder="根据名称过滤"></el-input></div>
@@ -60,16 +60,16 @@
     </el-table>
       </div>
     </el-card>
-    <el-card v-show="isOpenDetail" class="box-card">
+    <el-card v-show="isOpenDetail" class="box-card" shadow="never">
       <div class="detail-back">
-        <div @click="backVm">虚拟机</div>
+        <div @click="backVm" class="back-virt">虚拟机</div>
         <div><svg-icon icon-class='arrow-_1'></svg-icon></div>
         <div>{{ detailName }}</div>
       </div>
     </el-card>
-    <el-card v-show="isOpenDetail" class="box-card" shadow="hover">
+    <el-card v-show="isOpenDetail" class="box-card" shadow="always">
       <div class="vm-pool">
-        <div class="vm-pool-name">储存池</div>
+        <div class="vm-pool-name">{{ detailName }}</div>
         <div v-if="isPool" class="vm-pool-button"><el-button @click="openDialog('createPool')" plain>创建存储池</el-button></div>
         <div v-if="isNet" class="vm-pool-button"><el-button @click="openDialog('createNet')" plain>创建虚拟网络</el-button></div>
       </div>
@@ -755,6 +755,14 @@ const IPV6EndInput = ref('')
 <style lang="scss" scoped>
 .box-card{
   margin-bottom: 10px;
+  .back-virt{
+    color:#409eff;
+    cursor: pointer;
+  }
+  .back-virt:hover {
+    // color:#409eff;
+    text-decoration:underline
+  }
   .detail-back{
     display: flex;
   }
