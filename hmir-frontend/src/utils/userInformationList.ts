@@ -1,4 +1,13 @@
+/*
+ * @Author: zhang_tianran
+ * @Date: 2023-05-16 17:05:12
+ * @LastEditors: zhang_tianran
+ * @LastEditTime: 2023-05-16 19:30:38
+ * @Description: 
+ */
 import { localStorage } from '@/utils/localStorage'
+import Cache from '@/utils/cache/index'
+
 
 export const userInformationList = function (user: any) {
   let history: any = localStorage.get('userInformation') !== 'userInformation' ? localStorage.get('userInformation') : [];
@@ -21,5 +30,5 @@ export const userInformationList = function (user: any) {
       history.pop()
     }
   }
-  localStorage.set('userInformation', history)
+  Cache.setUserInformation(history)
 }

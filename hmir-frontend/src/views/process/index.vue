@@ -57,7 +57,6 @@ const data = ref({
 onMounted(() => {
   nextTick(() => {
     store.cmd_process_info().then(() => {
-      console.log(processAllData.value)
       data.value.tableData = processAllData.value
       data.value.pageTotal = processAllData.value.length
       data.value.pageData = qurryByPage()
