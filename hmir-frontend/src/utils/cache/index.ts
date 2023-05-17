@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-02-03 14:58:33
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-05-17 16:14:46
+ * @LastEditTime: 2023-05-17 16:29:28
  * @Description: 
  */
 
@@ -34,6 +34,9 @@ class Cache {
 	}
 	getUserInfo = () => {
 		return	sessionStorage.get(CacheKey.il8nLang)
+	}
+	removeUserInfo = () => {
+		sessionStorage.remove(CacheKey.il8nLang)
 	}
 }
 
