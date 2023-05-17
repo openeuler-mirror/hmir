@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { store } from '@/store'
 import {i18n} from '@/lang'
-
+import Cache from '@/utils/cache/index'
 export const useAppStore = defineStore('app', {
   state: () => {
     return {
@@ -11,7 +11,7 @@ export const useAppStore = defineStore('app', {
   actions: {
     SET_LOCALE(locale: any) { //语言切换
       this.locale = locale
-      localStorage.setItem('lang', locale)
+      Cache.setIl8nLang(locale)
       i18n.global.locale = locale
     }
   }
