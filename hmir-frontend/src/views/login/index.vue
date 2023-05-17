@@ -80,7 +80,7 @@ import type { FormInstance, FormRules } from 'element-plus'
 import { useRouter } from 'vue-router'
 // import { useRouterStore } from '@/store/modules/router'
 import { useUsersStore } from '@/store/modules/user'
-import { localStorage } from '@/utils/localStorage'
+import Cache from '@/utils/cache/index'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
@@ -108,7 +108,7 @@ const router = useRouter()
 const loginFormRef = ref<FormInstance>()
 
 // 获取本地保持的所有用户数据
-const userInformation: Array<userList> = localStorage.get('userInformation') === 'userInformation' ? [] : localStorage.get('userInformation')
+const userInformation: Array<userList> = Cache.getUserInformation() === 'userInformation' ? [] : Cache.getUserInformation()
 
 // 加载
 const loading = ref<boolean>(false)
