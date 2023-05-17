@@ -5,7 +5,7 @@ import { userInformationList } from '@/utils/userInformationList';
 import api from '@/api';
 import { store } from '../index';
 import { resetRouter } from '@/router';
-
+import Cache from '@/utils/cache/index'
 interface loginData {
   host: string;
   port: number;
@@ -45,7 +45,7 @@ export const useUsersStore = defineStore('user', {
               this.username = loginData.username;
               //将清除password后的数据保存到会话存储中，防止刷新页面后丢失数据
               const { password, ...value } = loginData;
-              sessionStorage.set('user', value);
+              Cache.setUserInfo(value)
               userInformationList(value);
               ElMessage.success('登录成功');
               resolve();
