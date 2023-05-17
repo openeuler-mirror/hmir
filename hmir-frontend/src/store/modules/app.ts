@@ -5,7 +5,7 @@ import Cache from '@/utils/cache/index'
 export const useAppStore = defineStore('app', {
   state: () => {
     return {
-      locale: localStorage.getItem('lang') || 'zh_CN'
+      locale: Cache.getIl8nLang() || 'zh_CN'
     }
   },
   actions: {
