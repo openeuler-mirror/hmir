@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-02-03 14:58:33
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-05-17 16:29:28
+ * @LastEditTime: 2023-05-17 17:58:00
  * @Description: 
  */
 
@@ -30,13 +30,13 @@ class Cache {
 		return	localStorage.get(CacheKey.il8nLang)
 	}
 	setUserInfo = (value: Object) => {
-		sessionStorage.set(CacheKey.il8nLang, value)
+		sessionStorage.set(CacheKey.userInfo, value)
 	}
 	getUserInfo = () => {
-		return	sessionStorage.get(CacheKey.il8nLang)
+		return	sessionStorage.get(CacheKey.userInfo)
 	}
 	removeUserInfo = () => {
-		sessionStorage.remove(CacheKey.il8nLang)
+		sessionStorage.remove(CacheKey.userInfo)
 	}
 }
 
