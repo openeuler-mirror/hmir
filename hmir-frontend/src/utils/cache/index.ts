@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-02-03 14:58:33
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-05-16 19:49:44
+ * @LastEditTime: 2023-05-17 16:04:56
  * @Description: 
  */
 
@@ -24,6 +24,9 @@ class Cache {
 	}
   setIl8nLang = (value: String) => {
 		localStorage.set(CacheKey.il8nLang, value)
+	}
+	getIl8nLang = () => {
+		return	localStorage.get(CacheKey.il8nLang)
 	}
 }
 
