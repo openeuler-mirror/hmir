@@ -1,3 +1,10 @@
+/*
+ * @Author: zhang_tianran
+ * @Date: 2023-05-17 18:10:04
+ * @LastEditors: zhang_tianran
+ * @LastEditTime: 2023-05-18 17:35:53
+ * @Description: 
+ */
 /**
  * window.localStorage 永久缓存
  */
@@ -6,7 +13,7 @@ export const localStorage = {
   set(key: string, val: any) {
     // window.localStorage.setItem(key, JSON.stringify(val));
     try {
-      const newStateValue = typeof val === "object" ? JSON.stringify(val) : val;
+      const newStateValue =  JSON.stringify(val);
       window.localStorage.setItem(key, newStateValue);
     } catch (error) {
       // eslint-disable-next-line no-console
