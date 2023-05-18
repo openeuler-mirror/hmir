@@ -30,12 +30,6 @@
           <el-button type="primary" size="small">创建定时器</el-button>
         </template>
       </el-tab-pane>
-
-      <el-tab-pane name="" disabled v-if="(serviceActive === 'serviceTimer')">
-        <template #label>
-          <el-button type="primary" size="small">$t(hello)</el-button>
-        </template>
-      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
