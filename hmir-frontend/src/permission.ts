@@ -1,10 +1,9 @@
 import router from '@/router';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
-import { sessionStorage } from '@/utils/sessionStorage';
 import { RouteRecordRaw } from 'vue-router';
 import useRouterStoreHook from '@/store/modules/router';
-
+import Cache from '@/utils/cache/index'
 // 进度条
 NProgress.configure({ showSpinner: false });
 
@@ -15,7 +14,7 @@ const useRouterStore = useRouterStoreHook()
 
 router.beforeEach((to, from, next) => {
   NProgress.start();
-  let value = sessionStorage.get('user')
+  let value = Cache.getUserInfo()
   //判断用户是否登录
   if (value !== 'user') {
     //动态添加路由
