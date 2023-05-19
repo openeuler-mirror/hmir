@@ -1,3 +1,11 @@
+<!--
+ * @Author: zhang_tianran dev17101@linx-info.com
+ * @Date: 2023-05-17 13:56:02
+ * @LastEditors: zhang_tianran dev17101@linx-info.com
+ * @LastEditTime: 2023-05-18 19:25:43
+ * @FilePath: /hmir-frontend/src/views/system/index.vue
+ * @Description: 系统首页
+-->
 <template>
   <div v-if="data.contentShow" class="content">
     <el-row>

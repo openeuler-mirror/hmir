@@ -1,3 +1,11 @@
+<!--
+ * @Author: zhang_tianran dev17101@linx-info.com
+ * @Date: 2023-05-17 13:56:02
+ * @LastEditors: zhang_tianran dev17101@linx-info.com
+ * @LastEditTime: 2023-05-18 19:20:59
+ * @FilePath: /hmir-frontend/src/views/ceph/components/dashBoard/index.vue
+ * @Description: 仪表盘
+-->
 <template>
   <div class="main">
     <el-row>

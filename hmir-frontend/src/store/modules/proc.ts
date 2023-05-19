@@ -1,3 +1,10 @@
+/*
+ * @Author: zhang_tianran
+ * @Date: 2023-05-16 17:05:12
+ * @LastEditors: zhang_tianran
+ * @LastEditTime: 2023-05-16 19:00:07
+ * @Description: 
+ */
 import { defineStore } from 'pinia';
 import api from '@/api';
 import { store } from '../index';
@@ -31,7 +38,6 @@ export const useProcStore = defineStore('proc', {
                 reject(response.errmsg); 
             }
         })
-
       })
     },
   }
