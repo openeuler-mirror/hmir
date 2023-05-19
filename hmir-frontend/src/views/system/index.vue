@@ -1,12 +1,20 @@
+<!--
+ * @Author: zhang_tianran dev17101@linx-info.com
+ * @Date: 2023-05-17 13:56:02
+ * @LastEditors: zhang_tianran dev17101@linx-info.com
+ * @LastEditTime: 2023-05-18 19:25:43
+ * @FilePath: /hmir-frontend/src/views/system/index.vue
+ * @Description: 系统首页
+-->
 <template>
   <div v-if="data.contentShow" class="content">
-    <div class="dev">
-      <div class="left">
+    <el-row>
+      <el-col :span="2" style="margin-top: 50px;">
         <div class="devName" v-for="(e, i) in data.option" :key="i">
           <div>{{ e }}</div>
         </div>
-      </div>
-      <div class="detail">
+      </el-col>
+      <el-col :span="5" style="margin-top: 50px;">
         <div class="detail-Box">
           <el-link type="primary" @click="handleDialog('hardware')">{{ systemData.board_name ? systemData.board_name :
             '未知'
@@ -26,17 +34,16 @@
             </el-option>
           </el-select>
         </div>
-        <!-- <div class="detail-Box">空</div>
-        <div class="detail-Box"><el-link type="primary" @click="handleDialog('save')">启用保存的指标</el-link></div> -->
+      </el-col>
+      <el-col :span="17">
+        <div class="chart-box" v-for="(e, i) in 4" :key="i">
+        <div class="chart-name" @click="clickChartNameHandler(chartName[i].value)">
+          <el-link type="primary">{{chartName[i].name }}</el-link>
+        </div>
+        <Echarts :chartData=data.chartData[i] :height="200"></Echarts>
       </div>
-    </div>
-    <div class="charts">
-      <div class="chart-box" v-for="(e, i) in 4" :key="i">
-        <div class="chart-name" @click="clickChartNameHandler(chartName[i].value)"><el-link type="primary">{{
-          chartName[i].name }}</el-link></div>
-        <Echarts :chartData=data.chartData[i]></Echarts>
-      </div>
-    </div>
+      </el-col>
+    </el-row>
     <!-- 主机名的对话框 -->
     <el-dialog title="修改主机名" v-model="data.dialogVisible" width="30%">
       好主机名<el-input v-model="goodHostName" placeholder="请输入内容"></el-input>
@@ -532,72 +539,24 @@ const back = () => {
 </script>
 
 <style lang="scss" scoped>
-.content {
-  display: flex;
-  flex: 1;
-  justify-content: space-between;
-
-  .dev {
-    width: 30%;
-    min-width: 480px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-
-    .left {
-      width: 35%;
 
       .devName {
-        display: flex;
-        flex-direction: row;
-        text-align: right;
-
-        div {
-          width: 80%;
-          height: 24px;
-          margin-right: 10px;
-          margin-top: 5px;
-        }
+        height: 35px;
+        text-align: end;
+        line-height: 35px;
       }
-    }
-
-    .detail {
-      width: 60%;
-
-      .restart {
-        width: 80px;
-        margin-bottom: 2px;
+      .detail-Box{
+        margin-left: 20px;
+        height: 35px;
+        line-height: 35px;
       }
-
-      .detail-Box {
-        height: 29px;
-        line-height: 29px;
-      }
-    }
-  }
-
-  .charts {
-    width: 65%;
-
-    .chart-box {
-      width: 100%;
-      height: 130px;
-      // background: teal;
-      margin-bottom: 25px;
-      margin-right: 10px;
-      position: relative;
-
-      .chart-name {
-        position: absolute;
-        top: 26px;
-        left: 13%;
-        font-size: 13px;
+      .chart-name{
+        position: relative;
+        top: 50px;
+        left: 8px;
         cursor: pointer;
         z-index: 3;
       }
-    }
-  }
-}
 
 .bigChart {
   width: 100%;

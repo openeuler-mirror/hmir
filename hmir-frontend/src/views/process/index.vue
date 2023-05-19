@@ -1,6 +1,30 @@
+<!--
+ * @Author: zhang_tianran dev17101@linx-info.com
+<<<<<<< HEAD
+ * @Date: 2023-05-18 19:46:26
+ * @LastEditors: zhang_tianran dev17101@linx-info.com
+ * @LastEditTime: 2023-05-18 20:06:28
+ * @FilePath: /hmir-frontend/src/views/process/index.vue
+ * @Description: 进程页面
+-->
+
+=======
+ * @Date: 2023-05-17 14:05:00
+ * @LastEditors: zhang_tianran dev17101@linx-info.com
+ * @LastEditTime: 2023-05-18 19:22:17
+ * @FilePath: /hmir-frontend/src/views/process/index.vue
+ * @Description: 进程页面
+-->
+>>>>>>> upstream/feature-kpang-20230518-2
 <template>
   <div>
-      <el-table :data="data.pageData" style="width: 100%" :key="String(data.tableKey)" table-layout="auto" :fit="true" @sort-change=sortHandle>
+      <el-table
+       :data="data.pageData"
+       :key="String(data.tableKey)"
+       :fit="true"
+       height="750"
+        @sort-change=sortHandle
+        >
           <el-table-column prop="pid" label="进程号" sortable="custom" />
           <el-table-column prop="user" label="用户名" sortable="custom" />
           <el-table-column prop="priority" label="优先级" sortable="custom" />
