@@ -1,32 +1,36 @@
 <template>
   <div class="main">
-    <div>
-        <p>状态</p>
-       <div class="status">
+    <el-row>
+      <el-col :span="24" class="title-margin">
+        状态
+      </el-col>
+      <el-col :span="24">
         <div class="status-box" v-for="(e,i) in data.statusData" :key="i">
             <Status :statusData= data.statusData[i]></Status>
         </div>
-       </div>
-    </div>
-    <div>
-        <p>容量</p>
-        <div class="capacity">
-            <div class="capacity-box" v-for="(e,i) in 4" :key="i">
+      </el-col>
+      <el-col :span="24" class="title-margin">
+        容量
+      </el-col>
+      <el-col :span="24" style="display:flex">
+        <div class="capacity-box" v-for="(e,i) in 4" :key="i">
                 <Echarts :chartData = data.chartData[i] ></Echarts>
-            </div>
         </div>
-    </div>
-    <div>
-        <p>性能</p>
-        <div class="performance">
-          <div class="performance-box" v-for="(e, i) in performance" :key="i">
-              <Echarts :chartData = performance[i]></Echarts>
+      </el-col>
+      <el-col :span="24" class="title-margin">
+        性能
+      </el-col>
+      <el-col :span="24">
+        <div style="display: flex;">
+            <div class="performance-box" v-for="(e, i) in performance" :key="i">
+                  <Echarts :chartData = performance[i]></Echarts>
             </div>
             <div class="performance-box" v-for="(e,i) in performanceData" :key="i">
-              <Status :statusData = performanceData[i]></Status>
+                  <Status :statusData = performanceData[i]></Status>
             </div>
         </div>
-    </div>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -38,7 +42,6 @@ import { useCephStore } from '@/store/modules/ceph'
 import { storeToRefs } from 'pinia'
 // 引入store仓库
 const store = useCephStore()
-
 const { cmdCephStatus } = storeToRefs(store)
 
 onMounted(() => {
@@ -383,22 +386,16 @@ const performanceData = ref([
   width: 100%;
   height: 100%;
   min-width: 1000px;
-  .status {
-    display: flex;
-    justify-content: center;
-    flex-wrap:wrap;
     .status-box{
-         border-radius: 4px;
+        border-radius: 4px;
         background: #f5f5f5;
         width: 24%;
+        float: left;
         height: 108px;
         margin-right:1% ;
         margin-bottom: 1%;
-    }
 }
-.capacity{
-    display: flex;
-     flex-wrap:nowrap;
+
      .capacity-box{
          width: 24%;
          border-radius: 4px;
@@ -407,10 +404,6 @@ const performanceData = ref([
         margin-bottom: 1%;
          background: #f5f5f5 ;
      }
-}
-.performance{
-    display: flex;
-     flex-wrap:nowrap;
      .performance-box{
         width: 24%;
          border-radius: 4px;
@@ -419,7 +412,11 @@ const performanceData = ref([
          margin-right:1% ;
          margin-bottom: 1%;
      }
-}
+     .title-margin{
+      font-size: 18px;
+      font-weight:bolder;
+      margin-bottom: 15px;
+     }
 }
 
 </style>
