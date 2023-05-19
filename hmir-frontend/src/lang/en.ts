@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-02-02 15:29:41
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-05-18 16:30:05
+ * @LastEditTime: 2023-05-19 15:07:43
  * @Description: 
  */
 
@@ -19,5 +19,15 @@ export default {
     inputUserName:'Please Enter The User Name',
     ipAddress:'IP Address',
     port:'Port',
-    inputVoildPort:'Please Enter a Valid Port Number'
+    inputVoildPort:'Please Enter a Valid Port Number',
+    about:'About',
+    setting:'Setting',
+    help:'Help',
+    exit:'Exit',
+    SwitchingLang:'Switching Language',
+    file:'File',
+    HMIRsystem:'HMIR Operation And Maintenance Management System',
+    chinese:'Chinese',
+    english:'English',
+    success:'Modified Successfully'
 }
