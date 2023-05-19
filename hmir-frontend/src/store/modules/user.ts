@@ -1,11 +1,10 @@
 import { defineStore } from 'pinia';
 import ElMessage from '@/utils/message';
-import { sessionStorage } from '@/utils/sessionStorage';
 import { userInformationList } from '@/utils/userInformationList';
 import api from '@/api';
 import { store } from '../index';
 import { resetRouter } from '@/router';
-
+import Cache from '@/utils/cache/index'
 interface loginData {
   host: string;
   port: number;
@@ -22,7 +21,7 @@ export const useUsersStore = defineStore('user', {
   //存储用户数据
   state: () => {
     //获取登录成功后保存在本地的数据
-    const user = sessionStorage.get('user')
+    const user = Cache.getUserInfo()
     return {
       host: user.host || '',
       port: user.port || 0,
@@ -45,7 +44,7 @@ export const useUsersStore = defineStore('user', {
               this.username = loginData.username;
               //将清除password后的数据保存到会话存储中，防止刷新页面后丢失数据
               const { password, ...value } = loginData;
-              sessionStorage.set('user', value);
+              Cache.setUserInfo(value)
               userInformationList(value);
               ElMessage.success('登录成功');
               resolve();
@@ -73,7 +72,7 @@ export const useUsersStore = defineStore('user', {
             if (response) {
               //重置所有的用户信息
               this.$reset();
-              sessionStorage.remove('user');
+              Cache.removeUserInfo()
               //注销成功后重置路由
               resetRouter()
               ElMessage.success('注销成功');

@@ -1,8 +1,8 @@
 /*
  * @Author: zhang_tianran
  * @Date: 2023-02-03 14:58:33
- * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-05-16 19:49:44
+ * @LastEditors: zhang_tianran dev17101@linx-info.com
+ * @LastEditTime: 2023-05-19 10:43:40
  * @Description: 
  */
 
@@ -10,7 +10,8 @@ import { localStorage } from '@/utils/localStorage'
 import { sessionStorage } from '@/utils/sessionStorage'
 const CacheKey = {
 	userInformation: 'userInformation',
-  il8nLang: 'lang'
+  il8nLang: 'lang',
+	userInfo: 'user'
 }
 
 
@@ -24,6 +25,20 @@ class Cache {
 	}
   setIl8nLang = (value: String) => {
 		localStorage.set(CacheKey.il8nLang, value)
+	}
+	getIl8nLang = () => {
+		let lang = localStorage.get(CacheKey.il8nLang)
+		lang =  (lang === 'lang') ? 'zh_CN' : lang
+		return	lang
+	}
+	setUserInfo = (value: Object) => {
+		sessionStorage.set(CacheKey.userInfo, value)
+	}
+	getUserInfo = () => {
+		return	sessionStorage.get(CacheKey.userInfo)
+	}
+	removeUserInfo = () => {
+		sessionStorage.remove(CacheKey.userInfo)
 	}
 }
 

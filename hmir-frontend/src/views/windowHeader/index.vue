@@ -21,8 +21,8 @@
   <s3-layer v-model="visible" title="HMIR运维管理系统">
     <about :minimizable="true" :maximizable="true" :closable="true"></about>
   </s3-layer>
-  <s3-layer v-model="settingVisible" title="HMIR运维管理系统">
-    <langselect :locale="locale" @localeChange="localeChange"> </langselect>
+  <s3-layer v-model="settingVisible" title="HMIR运维管理系统" @yes="localeChange">
+    <langselect ref="langselectData" :locale="locale"> </langselect>
   </s3-layer>
 
 </template>
@@ -34,13 +34,15 @@ import langselect from '@/views/windowHeader/langselect/index.vue'
 import api from '@/api'
 import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/store/modules/app'
-
+import ElMessage from '@/utils/message'
 // about页面
 const visible = ref(false)
 const settingVisible = ref(false)
 const { locale } = useI18n()
 // 引入路由
 // const router = useRouter()
+
+const langselectData = ref()
 
 // 下拉框通过什么触发
 const menuTrigger = ref<any>('click')
@@ -54,7 +56,6 @@ const handleSelect = (key: string, keyPath: string[]) => {
   } else if (key === 'setting') {
     openSettingWindow()
   }
-  console.log(key, keyPath)
 }
 
 //  展开的回调
@@ -89,9 +90,12 @@ function openSettingWindow () {
 
 const store = ref(useAppStore())
 // 修改国际化语言
-function localeChange (data: string) {
-  locale.value = data
-  store.value.SET_LOCALE(data)
+function localeChange () {
+  const lang = langselectData.value.radio
+  locale.value = lang
+  store.value.SET_LOCALE(lang)
+  settingVisible.value = false
+  ElMessage.success('修改成功')
 }
 
 </script>

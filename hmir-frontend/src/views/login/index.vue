@@ -13,7 +13,7 @@
           </el-icon>
         </span>
         <el-autocomplete v-model.trim="loginData.ipAddress" :fetch-suggestions="ipAddressQuery" clearable class=""
-          placeholder="IP地址" highlight-first-item @select="handleSelect">
+          :placeholder="t('ipAddress')" highlight-first-item @select="handleSelect">
           <template #default="{ item }">
             <div v-if="!loginData.ipAddress">
               <div>{{ item.host }}:{{ item.port }}</div>
@@ -30,7 +30,7 @@
         <span class="ipPort-container">
         </span>
         <el-autocomplete v-model.trim="loginData.ipPort" :fetch-suggestions="ipPortQuery" :trigger-on-focus="false"
-          clearable class="ipPortAutocomplete" placeholder="端口" highlight-first-item @select="handleSelect">
+          clearable class="ipPortAutocomplete" :placeholder="t('port')" highlight-first-item @select="handleSelect">
         </el-autocomplete>
       </el-form-item>
 
@@ -41,7 +41,7 @@
           </el-icon>
         </span>
         <el-autocomplete v-model.trim="loginData.username" :fetch-suggestions="userQuery" clearable class=""
-          placeholder="用户名" highlight-first-item @select="handleSelect">
+          :placeholder="t('inputUserName')" highlight-first-item @select="handleSelect">
           <template #default="{ item }">
             <div v-if="!loginData.username">
               <div>{{ item.host }}:{{ item.port }}</div>
@@ -60,14 +60,14 @@
             <Lock />
           </el-icon>
         </span>
-        <el-input ref="passwordRef" v-model="loginData.password" placeholder="密码" name="password" clearable
+        <el-input ref="passwordRef" v-model="loginData.password" :placeholder="t('inputPwd')" name="password" clearable
           type="password" show-password />
       </el-form-item>
 
       <el-config-provider :message="config">
         <el-button size="default" type="primary" style="width: 100%; margin-bottom: 30px; margin-top: 10px;"
           @click="submitForm(loginFormRef)" :loading="loading" v-deBounce>
-          登 录
+           {{ t('login') }}
         </el-button>
       </el-config-provider>
     </el-form>
