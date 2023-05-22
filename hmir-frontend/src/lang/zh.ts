@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-02-02 15:29:41
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-05-22 18:33:49
+ * @LastEditTime: 2023-05-22 18:44:27
  * @Description: 
  */
 
@@ -35,5 +35,9 @@ export default {
     process:'进程',
     vm:'虚拟机',
     serviceDetails:'服务详情',
-    console:'控制台'
+    console:'控制台',
+    loginSuccess:'登录成功',
+    loginError:'登录失败，请重试',
+    logoutSuccess:'注销成功',
+    logoutError:'注销失败,请联系管理员'
 }

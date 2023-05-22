@@ -4,7 +4,10 @@ import { userInformationList } from '@/utils/userInformationList';
 import api from '@/api';
 import { store } from '../index';
 import { resetRouter } from '@/router';
-import Cache from '@/utils/cache/index'
+import Cache from '@/utils/cache/index';
+import { i18n } from '@/lang/index';
+
+const { t } = i18n.global
 interface loginData {
   host: string;
   port: number;
@@ -46,11 +49,11 @@ export const useUsersStore = defineStore('user', {
               const { password, ...value } = loginData;
               Cache.setUserInfo(value)
               userInformationList(value);
-              ElMessage.success('登录成功');
+              ElMessage.success(t('loginSuccess'));
               resolve();
             } else {
               ElMessage({
-                message: '登录失败，请重试',
+                message: t('loginError'),
                 type: 'error',
                 customClass: 'login-message-error',
               });
@@ -75,11 +78,11 @@ export const useUsersStore = defineStore('user', {
               Cache.removeUserInfo()
               //注销成功后重置路由
               resetRouter()
-              ElMessage.success('注销成功');
+              ElMessage.success(t('logoutSuccess'));
               resolve();
             } else {
               ElMessage.error({
-                message: '注销失败,请联系管理员',
+                message: t('logoutError'),
                 customClass: 'logout-message-error'
               });
               reject();
