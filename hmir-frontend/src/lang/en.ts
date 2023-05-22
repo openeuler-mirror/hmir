@@ -29,5 +29,6 @@ export default {
     HMIRsystem:'HMIR Operation And Maintenance Management System',
     chinese:'Chinese',
     english:'English',
-    success:'Modified Successfully'
+    success:'Modified Successfully',
+    determine:'determine'
 }

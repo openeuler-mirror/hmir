@@ -28,5 +28,6 @@ export default {
     HMIRsystem:'HMIR运维管理系统',
     chinese:'简体中文',
     english:'英文',
-    success:'修改成功'
+    success:'修改成功',
+    determine:'确定'
 }

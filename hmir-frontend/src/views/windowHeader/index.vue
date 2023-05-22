@@ -21,7 +21,7 @@
   <s3-layer v-model="visible" :title="t('HMIRsystem')">
     <about :minimizable="true" :maximizable="true" :closable="true"></about>
   </s3-layer>
-  <s3-layer v-model="settingVisible" :title="t('HMIRsystem')" @yes="localeChange">
+  <s3-layer v-model="settingVisible" :title="t('HMIRsystem')" @yes="localeChange" :btn="t('determine')">
     <langselect ref="langselectData" :locale="locale" :localeLang="localeLang"> </langselect>
   </s3-layer>
 
