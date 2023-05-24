@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-02-02 15:29:41
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-05-19 15:07:43
+ * @LastEditTime: 2023-05-22 18:43:09
  * @Description: 
  */
 
@@ -36,5 +36,9 @@ export default {
     process:'Process',
     vm:'Virtual Machine',
     serviceDetails:'Service Details',
-    console:'Console'
+    console:'Console',
+    loginSuccess:'Login Successfully',
+    loginError:'Login failed, please try again',
+    logoutSuccess:'Logout Successfully',
+    logoutError:'Logout failed. Please contact the administrator'
 }
