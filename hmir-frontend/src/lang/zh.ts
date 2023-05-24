@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-02-02 15:29:41
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-05-18 16:26:09
+ * @LastEditTime: 2023-05-22 18:33:49
  * @Description: 
  */
 
@@ -29,5 +29,11 @@ export default {
     chinese:'简体中文',
     english:'英文',
     success:'修改成功',
-    determine:'确定'
+    determine:'确定',
+    system:'系统',
+    instrumentPanel:'仪表盘',
+    process:'进程',
+    vm:'虚拟机',
+    serviceDetails:'服务详情',
+    console:'控制台'
 }

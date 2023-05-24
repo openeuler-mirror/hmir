@@ -30,5 +30,11 @@ export default {
     chinese:'Chinese',
     english:'English',
     success:'Modified Successfully',
-    determine:'determine'
+    determine:'determine',
+    system:'system',
+    instrumentPanel:'Instrument panel',
+    process:'Process',
+    vm:'Virtual Machine',
+    serviceDetails:'Service Details',
+    console:'Console'
 }
