@@ -18,5 +18,15 @@ export default {
     inputUserName:'请输入用户名',
     ipAddress:'IP地址',
     port:'端口',
-    inputVoildPort:'请输入合法的端口号'
+    inputVoildPort:'请输入合法的端口号',
+    about:'关于',
+    setting:'设置',
+    help:'帮助',
+    exit:'退出',
+    SwitchingLang:'切换语言',
+    file:'文件',
+    HMIRsystem:'HMIR运维管理系统',
+    chinese:'简体中文',
+    english:'英文',
+    success:'修改成功'
 }
