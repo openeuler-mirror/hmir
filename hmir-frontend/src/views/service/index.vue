@@ -35,22 +35,22 @@
     <el-dialog v-model="dialogFormVisible" title="创建定时器">
       <el-form :model="timerData">
         <el-form-item label="服务名称" :label-width="formLabelWidth">
-          <el-input v-model="timerData.name" autocomplete="off" />
+          <el-input v-model="timerData.name"/>
         </el-form-item>
         <el-form-item label="描述" :label-width="formLabelWidth">
-          <el-input v-model="timerData.description" autocomplete="off" />
+          <el-input v-model="timerData.description"  />
         </el-form-item>
         <el-form-item label="命令" :label-width="formLabelWidth">
-          <el-input v-model="timerData.command" autocomplete="off" />
+          <el-input v-model="timerData.command" />
         </el-form-item>
         <el-form-item label="运行" :label-width="formLabelWidth">
-          <el-select v-model="timerData.run" placeholder="Please select a zone">
+          <el-select v-model="timerData.run" style="width:30%;margin-right:40px;">
             <el-option label="系统启动后" value="startup" />
             <el-option label="在指定时间" value="appointedTaQime" />
           </el-select>
-        </el-form-item>
-        <el-form-item label="后" :label-width="formLabelWidth">
-          <el-select v-model="timerData.after" placeholder="Please select a zone">
+          <span style="margin-right:10px;">后</span>
+          <el-input v-model="timerData.timer"  style="width:22%;margin-right:20px;"/>
+          <el-select v-model="timerData.after" style="width:30%;">
             <el-option label="秒" value="seconds" />
             <el-option label="分钟" value="minutes" />
             <el-option label="小时" value="hour" />
@@ -80,8 +80,6 @@ import serviceSocket from '@/views/service/components/serviceSocket/index.vue'
 import serviceTimer from '@/views/service/components/serviceTimer/index.vue'
 import servicePath from '@/views/service/components/servicePath/index.vue'
 
-// const lang = { zh, en }
-
 // 引入store仓库
 const store = cmdServiceStore()
 
@@ -97,7 +95,8 @@ const timerData = ref({
   description: '',
   command: '',
   run: 'startup',
-  after: 'seconds'
+  after: 'seconds',
+  timer: '00'
 })
 
 // const serviceAll = ref([
