@@ -1,34 +1,39 @@
 <template>
   <div v-if="data.contentShow" class="content">
     <div class="dev">
-      <div class="left">
-        <div class="devName" v-for="(e, i) in data.option" :key="i">
-          <div>{{ e }}</div>
-        </div>
-      </div>
-      <div class="detail">
-        <div class="detail-Box">
+      <el-form label-width="120px" :model="systemData">
+        <el-form-item label="硬件">
           <el-link type="primary" @click="handleDialog('hardware')">{{ systemData.board_name ? systemData.board_name :
             '未知'
           }}</el-link>
-        </div>
-        <div class="detail-Box">{{ systemData.chassis_serial ? systemData.chassis_serial : '未知' }}</div>
-        <div class="detail-Box">{{ systemData.machine_id ? systemData.machine_id : '未知' }}</div>
-        <div class="detail-Box">{{ systemData.os_release ? systemData.os_release : '未知' }}</div>
-        <div class="detail-Box"><el-link type="primary" @click="handleDialog('computer')">{{ systemData.hostname ?
-          systemData.hostname : '未知' }}</el-link></div>
-        <div class="detail-Box"><el-link type="primary" @click="handleDialog('area')">加入域</el-link></div>
-        <div class="detail-Box"><el-link type="primary" @click="handleDialog('time')">{{ nowTime }}</el-link></div>
-        <div class="detail-Box restart" @click=turnOffDown(3)>
+        </el-form-item>
+        <el-form-item label="资产标签">
+          <div class="detail-Box">{{ systemData.chassis_serial ? systemData.chassis_serial : '未知' }}</div>
+        </el-form-item>
+        <el-form-item label="机器编码">
+          <div class="detail-Box">{{ systemData.machine_id ? systemData.machine_id : '未知' }}</div>
+        </el-form-item>
+        <el-form-item label="操作系统">
+          <div class="detail-Box">{{ systemData.os_release ? systemData.os_release : '未知' }}</div>
+        </el-form-item>
+        <el-form-item label="主机名">
+          <div class="detail-Box"><el-link type="primary" @click="handleDialog('computer')">{{ systemData.hostname ?
+            systemData.hostname : '未知' }}</el-link></div>
+        </el-form-item>
+        <el-form-item label="域">
+          <div class="detail-Box"><el-link type="primary" @click="handleDialog('area')">加入域</el-link></div>
+        </el-form-item>
+        <el-form-item label="系统时间">
+          <div class="detail-Box"><el-link type="primary" @click="handleDialog('time')">{{ nowTime }}</el-link></div>
+        </el-form-item>
+        <el-form-item label="电源选项">
           <el-select v-model="data.sourceValue" placeholder="重启" @change=turnOffDown>
             <el-option v-for="item in [{ value: 1, label: '重启' }, { value: 2, label: '关机' }]" :key="item.value"
               :label="item.label" :value="item.value">
             </el-option>
           </el-select>
-        </div>
-        <!-- <div class="detail-Box">空</div>
-        <div class="detail-Box"><el-link type="primary" @click="handleDialog('save')">启用保存的指标</el-link></div> -->
-      </div>
+        </el-form-item>
+      </el-form>
     </div>
     <div class="charts">
       <div class="chart-box" v-for="(e, i) in 4" :key="i">
@@ -122,7 +127,6 @@ const userStore = useUserStore()
 
 const data = ref({
   contentShow: true,
-  option: ['硬件', '资产标签', '机器编码', '操作系统', '主机名', '域', '系统时间', '电源选项'],
   value1: true,
   dialogVisible: false,
   areaDialog: false,
@@ -605,5 +609,9 @@ const back = () => {
 }
 .big-chart-back{
   margin-bottom: 20px;
+}
+
+.el-form-item{
+  margin-bottom: 0;
 }
 </style>
