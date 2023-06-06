@@ -138,6 +138,7 @@ fn sys_list_pci_info() -> String {
     result
 }
 
+#[cfg(target_os = "linux")]
 fn sys_all_os_info() -> String
 {
     let bios_info = BiosRelease::new().unwrap();
@@ -182,12 +183,15 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
         Ok(sys_list_pci_info())
     })?;
 
-    module.register_method("sys-os-all-info", |params, _| {
-        //默认没有error就是成功的
-        let token = params.one::<std::string::String>()?;
-        TokenChecker!(token);
-        Ok(sys_all_os_info())
-    })?;
+    #[cfg(target_os = "linux")]
+    {
+        module.register_method("sys-os-all-info", |params, _| {
+            //默认没有error就是成功的
+            let token = params.one::<std::string::String>()?;
+            TokenChecker!(token);
+            Ok(sys_all_os_info())
+        })?;
+    }
 
     module.register_method("sys-set-hostname", |params, _| {
 
@@ -289,11 +293,19 @@ pub fn sys_get_date() -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use serde_json::{json, Value};
+
+    fn format_json(json_str: &str) -> anyhow::Result<()>   {
+        let v: Value = serde_json::from_str(json_str)?;
+        println!("{}", serde_json::to_string_pretty(&v)?);
+        Ok(())
+    }
 
     #[test]
     fn test_sys_all_os_info() {
         let info = sys_all_os_info();
-        println!("{}",info);
+        // println!("{}",info);
+        format_json(info.as_str());
     }
 
     #[test]
