@@ -138,6 +138,7 @@ fn sys_list_pci_info() -> String {
     result
 }
 
+#[cfg(target_os = "linux")]
 fn sys_all_os_info() -> String
 {
     let bios_info = BiosRelease::new().unwrap();
@@ -182,12 +183,15 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
         Ok(sys_list_pci_info())
     })?;
 
-    module.register_method("sys-os-all-info", |params, _| {
-        //默认没有error就是成功的
-        let token = params.one::<std::string::String>()?;
-        TokenChecker!(token);
-        Ok(sys_all_os_info())
-    })?;
+    #[cfg(target_os = "linux")]
+    {
+        module.register_method("sys-os-all-info", |params, _| {
+            //默认没有error就是成功的
+            let token = params.one::<std::string::String>()?;
+            TokenChecker!(token);
+            Ok(sys_all_os_info())
+        })?;
+    }
 
     module.register_method("sys-set-hostname", |params, _| {
 
