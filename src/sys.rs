@@ -17,6 +17,7 @@ use hmir_errno::errno;
 use hmir_token::TokenChecker;
 use std::ffi::OsString;
 use serde::{Serialize,Deserialize};
+use chrono::{Local};
 
 
 fn gethostname() -> OsString {
@@ -218,6 +219,13 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()> {
         Ok(sys_set_date(param.date))
     })?;
 
+    module.register_method("sys-get-date", |params, _| {
+        let token = params.one::<std::string::String>()?;
+        TokenChecker!(token);
+        Ok(sys_get_date())
+    })?;
+
+
     Ok(())
 }
 
@@ -271,6 +279,12 @@ pub fn sys_set_date(date: String) -> String {
     serialized
 }
 
+pub fn sys_get_date() -> String {
+    let fmt = "%Y-%m-%d %H:%M:%S";
+    let now = Local::now().format(fmt);
+    now.to_string()
+}
+
 
 #[cfg(test)]
 mod tests {
@@ -291,6 +305,11 @@ mod tests {
     fn test_set_datetime() {
         let out = sys_set_date("2023-02-23 15:08:00".to_string());
         println!("{}",out);
+    }
+
+    #[test]
+    fn test_get_date(){
+        sys_get_date();
     }
 }
 
