@@ -4,25 +4,25 @@
       text-color="#000" :menu-trigger="menuTrigger" unique-opened @open="handleOpen" @close="handleClose"
       @select="handleSelect">
       <el-sub-menu index="0" :popper-offset="0">
-        <template #title>文件</template>
-        <el-menu-item index="processQuit" class="el-menu-item-height">退出</el-menu-item>
+        <template #title>{{ t('file') }}</template>
+        <el-menu-item index="processQuit" class="el-menu-item-height">{{ t('exit') }}</el-menu-item>
       </el-sub-menu>
       <el-sub-menu index="1" :popper-offset="0">
-        <template #title>帮助</template>
-        <el-menu-item index="about" class="el-menu-item-height">关于</el-menu-item>
+        <template #title>{{ t('help') }}</template>
+        <el-menu-item index="about" class="el-menu-item-height">{{ t('about') }}</el-menu-item>
       </el-sub-menu>
       <el-sub-menu index="2" :popper-offset="0">
-        <template #title>设置</template>
-        <el-menu-item index="setting" class="el-menu-item-height"> 切换语言</el-menu-item>
+        <template #title>{{ t('setting') }}</template>
+        <el-menu-item index="setting" class="el-menu-item-height">{{ t('SwitchingLang') }}</el-menu-item>
       </el-sub-menu>
       <div class="flex-grow" />
     </el-menu>
   </div>
-  <s3-layer v-model="visible" title="HMIR运维管理系统">
+  <s3-layer v-model="visible" :title="t('HMIRsystem')">
     <about :minimizable="true" :maximizable="true" :closable="true"></about>
   </s3-layer>
-  <s3-layer v-model="settingVisible" title="HMIR运维管理系统">
-    <langselect :locale="locale" @localeChange="localeChange"> </langselect>
+  <s3-layer v-model="settingVisible" :title="t('HMIRsystem')" @yes="localeChange" :btn="t('determine')">
+    <langselect ref="langselectData" :locale="locale" :localeLang="localeLang"> </langselect>
   </s3-layer>
 
 </template>
@@ -34,16 +34,23 @@ import langselect from '@/views/windowHeader/langselect/index.vue'
 import api from '@/api'
 import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/store/modules/app'
-
+import ElMessage from '@/utils/message'
 // about页面
 const visible = ref(false)
 const settingVisible = ref(false)
-const { locale } = useI18n()
+const { locale, t } = useI18n()
 // 引入路由
 // const router = useRouter()
 
+const langselectData = ref()
+
 // 下拉框通过什么触发
 const menuTrigger = ref<any>('click')
+
+const localeLang = ref({
+  english: () => t('english'),
+  chinese: () => t('chinese')
+})
 
 // 菜单激活回调
 const handleSelect = (key: string, keyPath: string[]) => {
@@ -54,21 +61,18 @@ const handleSelect = (key: string, keyPath: string[]) => {
   } else if (key === 'setting') {
     openSettingWindow()
   }
-  console.log(key, keyPath)
 }
 
 //  展开的回调
 const handleOpen = (key: string, keyPath: string[]) => {
   // 只要有一个菜单展开后将菜单展开的触发条件改为hover触发
   menuTrigger.value = 'hover'
-  console.log(key, keyPath)
 }
 
 // 收起的回调
 const handleClose = (key: string, keyPath: string[]) => {
   // 所有菜单关闭后将菜单展开的触发条件改为click触发
   menuTrigger.value = 'click'
-  console.log(key, keyPath)
   // processQuit()
 }
 
@@ -89,9 +93,12 @@ function openSettingWindow () {
 
 const store = ref(useAppStore())
 // 修改国际化语言
-function localeChange (data: string) {
-  locale.value = data
-  store.value.SET_LOCALE(data)
+function localeChange () {
+  const lang = langselectData.value.radio
+  locale.value = lang
+  store.value.SET_LOCALE(lang)
+  settingVisible.value = false
+  ElMessage.success(t('success'))
 }
 
 </script>

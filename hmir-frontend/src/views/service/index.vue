@@ -27,27 +27,52 @@
       </el-tab-pane> -->
       <el-tab-pane name="" disabled v-if="(serviceActive === 'serviceTimer')">
         <template #label>
-          <el-button type="primary" size="small">创建定时器</el-button>
-        </template>
-      </el-tab-pane>
-
-      <el-tab-pane name="" disabled v-if="(serviceActive === 'serviceTimer')">
-        <template #label>
-          <el-button type="primary" size="small">$t(hello)</el-button>
+          <el-button type="primary" size="small" @click="dialogFormVisible = true">创建定时器</el-button>
         </template>
       </el-tab-pane>
     </el-tabs>
+
+    <el-dialog v-model="dialogFormVisible" title="创建定时器">
+      <el-form :model="timerData">
+        <el-form-item label="服务名称" :label-width="formLabelWidth">
+          <el-input v-model="timerData.name"/>
+        </el-form-item>
+        <el-form-item label="描述" :label-width="formLabelWidth">
+          <el-input v-model="timerData.description"  />
+        </el-form-item>
+        <el-form-item label="命令" :label-width="formLabelWidth">
+          <el-input v-model="timerData.command" />
+        </el-form-item>
+        <el-form-item label="运行" :label-width="formLabelWidth">
+          <el-select v-model="timerData.run" style="width:30%;margin-right:40px;">
+            <el-option label="系统启动后" value="startup" />
+            <el-option label="在指定时间" value="appointedTaQime" />
+          </el-select>
+          <span style="margin-right:10px;">后</span>
+          <el-input v-model="timerData.timer"  style="width:22%;margin-right:20px;"/>
+          <el-select v-model="timerData.after" style="width:30%;">
+            <el-option label="秒" value="seconds" />
+            <el-option label="分钟" value="minutes" />
+            <el-option label="小时" value="hour" />
+            <el-option label="周" value="week" />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取消</el-button>
+          <el-button type="primary" @click="dialogFormVisible = false">
+            保存
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-
-// import zh from 'element-plus/lib/locale/lang/zh-cn'
-// import en from 'element-plus/es/locale/lang/en'
-
 import { ref, nextTick, onMounted } from 'vue'
 import type { TabsPaneContext } from 'element-plus'
-// import router from '@/router'
 import { cmdServiceStore } from '@/store/modules/service'
 import serviceTarget from '@/views/service/components/serviceTarget/index.vue'
 import systemService from '@/views/service/components/systemService/index.vue'
@@ -55,13 +80,24 @@ import serviceSocket from '@/views/service/components/serviceSocket/index.vue'
 import serviceTimer from '@/views/service/components/serviceTimer/index.vue'
 import servicePath from '@/views/service/components/servicePath/index.vue'
 
-// const lang = { zh, en }
-
 // 引入store仓库
 const store = cmdServiceStore()
 
 // 当前点击标签
 const serviceActive = ref('systemService')
+
+const dialogFormVisible = ref(false)
+
+const formLabelWidth = '80px'
+
+const timerData = ref({
+  name: '',
+  description: '',
+  command: '',
+  run: 'startup',
+  after: 'seconds',
+  timer: '00'
+})
 
 // const serviceAll = ref([
 //   { lable: '目标', name: 'serviceTarget' },

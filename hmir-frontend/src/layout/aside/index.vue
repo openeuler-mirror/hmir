@@ -2,8 +2,8 @@
   <div id="menu">
     <el-menu ref="menuHeader" :default-active="handleValue" class="el-menu-vertical-demo-header" :collapse="isCollapse"
       @open="handleOpen" @close="handleClose" @select="handleSelect" router>
-          <template v-for="item in handleRouter">
-             <el-sub-menu v-if="item.children" :key="item.name" :disabled="item.meta.disabled">
+          <template v-for="(item) in handleRouter">
+             <el-sub-menu v-if="item.children" :index="item.path" :key="item.name" :disabled="item.meta.disabled">
                 <template #title>
                   <el-icon><component :is="item.meta.icon" style="width: 16px;height: 16px;"></component></el-icon>
                 {{ item.meta.title }}
@@ -19,7 +19,7 @@
                 </template>
                 </el-menu-item>
              </el-sub-menu>
-             <el-menu-item v-else :index="item.path" :key="item.name" :disabled="item.meta.disabled">
+             <el-menu-item v-else :index="item.path" :key="item.name + '1'" :disabled="item.meta.disabled">
                 <el-icon>
                   <component :is="item.meta.icon" style="width: 16px;height: 16px;"></component>
                 </el-icon>
@@ -49,7 +49,7 @@ const routerStore = useRouterStore()
 const handleRouter = ref<any>()
 
 // 左侧菜单栏是否关闭打开
-const isCollapse = ref<Boolean>(false)
+const isCollapse = ref<boolean | undefined>(false)
 
 // 引入路由
 const router = useRouter()

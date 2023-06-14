@@ -1,31 +1,37 @@
+<!--
+ * @Author: zhang_tianran
+ * @Date: 2023-05-17 18:16:11
+ * @LastEditors: zhang_tianran
+ * @LastEditTime: 2023-05-19 15:57:37
+ * @Description:
+-->
 
 <template>
-  <el-radio-group v-model="radio" class="ml-4" @change="handleSelectLanguage">
-    <el-radio label="zh_CN" size="large">简体中文</el-radio>
-    <el-radio label="en_US" size="large">英文</el-radio>
+  <el-radio-group v-model="radio" class="ml-4" >
+    <el-radio label="zh_CN" size="large">{{ props.localeLang.chinese() }}</el-radio>
+    <el-radio label="en_US" size="large">{{ props.localeLang.english()  }}</el-radio>
   </el-radio-group>
 </template>
 
 <script setup lang="ts">
 import { ElRadio, ElRadioGroup } from 'element-plus'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, defineExpose } from 'vue'
 
 const props = defineProps({
   locale: {
     type: String,
     default: 'zh_CN'
+  },
+  localeLang: {
+    type: Object,
+    default () {
+      return {}
+    }
   }
 })
 
-// 修改语言
-const emit = defineEmits(['localeChange'])
-
-const radio = ref('1')
-
-// 语言更换
-function handleSelectLanguage (data: any) {
-  emit('localeChange', data)
-}
+const radio = ref('zh_CN')
+defineExpose({ radio })
 
 onMounted(() => {
   radio.value = props.locale

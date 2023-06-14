@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia';
 import { store } from '../index'
+import { i18n } from '@/lang/index'
 
+const { t } = i18n.global
 //引入Layout组件
 export const Layout = () => import('@/layout/index.vue');
 
@@ -19,7 +21,7 @@ export const useRouterStore = defineStore('router', {
             path: '/system',
             name: 'system',
             component: () => import('@/views/system/index.vue'),
-            meta: { title: '系统', icon: 'Menu', disabled: false }
+            meta: { title: t('system'), icon: 'Menu', disabled: false }
           },
           {
             path: '/clusterHealth',
@@ -31,8 +33,8 @@ export const useRouterStore = defineStore('router', {
               {
                 path: '/clusterHealth/dashBoard',
                 name: 'dashBoard',
-                component: () => import('@/views/ceph/components/dashBoard/index.vue'),
-                meta: { title: '仪表盘', icon: 'Menu', disabled: false }
+                component: () => import('@/views/ceph/dashBoard/index.vue'),
+                meta: { title: t('instrumentPanel'), icon: 'Menu', disabled: false }
               }
             ]
           },
@@ -41,7 +43,7 @@ export const useRouterStore = defineStore('router', {
             name: 'service',
             // redirect: '/service/systemService',
             component: () => import('@/views/service/index.vue'),
-            meta: { title: '服务', icon: 'Menu', disabled: false },
+            meta: { title: t('service'), icon: 'Menu', disabled: false },
             // children: [
             //   {
             //     path: '/service/serviceTarget',
@@ -79,25 +81,25 @@ export const useRouterStore = defineStore('router', {
             path: '/process',
             name: 'process',
             component: () => import('@/views/process/index.vue'),
-            meta: { title: '进程', icon: 'Menu', disabled: false },
+            meta: { title:t('process'), icon: 'Menu', disabled: false },
           },
           {
             path: '/virtual',
             name: 'virtual',
             component: () => import('@/views/virt/index.vue'),
-            meta: { title: '虚拟机', icon: 'Menu', disabled: false },
+            meta: { title: t('vm'), icon: 'Menu', disabled: false },
           },
           {
             path: '/serviceDetail/:serviceName(.*)',
             name: 'serviceDetail',
             component: () => import('@/views/service/components/serviceDetail/index.vue'),
-            meta: { title: '服务详情', icon: 'Menu', disabled: false },
+            meta: { title: t('serviceDetails'), icon: 'Menu', disabled: false },
           },
           {
             path: '/console',
             name: 'console',
             component: () => import('@/views/consoleCommand/index.vue'),
-            meta: { title: '控制台', icon: 'Setting', disabled: false }
+            meta: { title: t('console'), icon: 'Setting', disabled: false }
           },
         ]
       }],
