@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 09:47:34
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-14 15:31:10
+ * @LastEditTime: 2023-06-14 17:11:00
  * @Description:
 -->
 <template>
@@ -41,7 +41,5 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-:deep(.el-button-group) {
-  display: flex;
-}
+
 </style>
