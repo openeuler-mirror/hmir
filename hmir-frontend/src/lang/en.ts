@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-02-02 15:29:41
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-05-22 18:43:09
+ * @LastEditTime: 2023-06-14 09:54:32
  * @Description: 
  */
 
@@ -40,5 +40,7 @@ export default {
     loginSuccess:'Login Successfully',
     loginError:'Login failed, please try again',
     logoutSuccess:'Logout Successfully',
-    logoutError:'Logout failed. Please contact the administrator'
+    logoutError:'Logout failed. Please contact the administrator',
+    cluster:'Cluster',
+    hosts:'Hosts'
 }

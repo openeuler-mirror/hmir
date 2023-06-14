@@ -24,6 +24,20 @@ export const useRouterStore = defineStore('router', {
             meta: { title: t('system'), icon: 'Menu', disabled: false }
           },
           {
+            path: '/cluster',
+            name: 'cluster',
+            meta: { title: t('cluster'), icon: 'Menu', disabled: false },
+            redirect: '/cluster/hosts',
+            children: [
+              {
+                path: '/cluster/hosts',
+                name: 'hosts',
+                component: () => import('@/views/cluster/hosts/index.vue'),
+                meta: { title: t('hosts'), icon: 'Menu', disabled: false }
+              }
+            ]
+          },
+          {
             path: '/clusterHealth',
             name: 'ceph',
             redirect: '/clusterHealth/dashBoard',

@@ -39,5 +39,7 @@ export default {
     loginSuccess:'登录成功',
     loginError:'登录失败，请重试',
     logoutSuccess:'注销成功',
-    logoutError:'注销失败,请联系管理员'
+    logoutError:'注销失败,请联系管理员',
+    cluster:'集群',
+    hosts:'主机'
 }
