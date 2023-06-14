@@ -2,19 +2,19 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 14:03:21
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-14 14:26:55
+ * @LastEditTime: 2023-06-14 17:59:53
  * @Description:
 -->
 <template>
   <div class="tableTitle">
-    <el-row :gutter="20">
-      <el-col :span="12">
+    <el-row>
+      <el-col :span="8">
         <div class="grid-content">
           <slot name="tableTitleLeft"></slot>
         </div>
       </el-col>
-      <el-col :span="12">
-        <div class="grid-content">
+      <el-col :span="16">
+        <div class="grid-content tableTitleRight">
           <slot name="tableTitleRight"></slot>
         </div>
       </el-col>
@@ -107,10 +107,18 @@ function rowClick (row: any, column: any) {
 .tableTitle {
   display: flex;
   justify-content: space-between;
+  .tableTitleRight{
+    float: right;
+  }
 }
 
 .grid-content {
   border-radius: 4px;
   min-height: 36px;
+}
+
+.el-row{
+  width: 100%;
+  padding-bottom: 10px;
 }
 </style>
