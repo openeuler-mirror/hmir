@@ -2,28 +2,33 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 09:47:34
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-14 14:55:43
+ * @LastEditTime: 2023-06-14 15:23:01
  * @Description:
 -->
 <template>
   <breadcrumb :breadcrumb="breadcrumbTitle">
     <template v-slot:breadcrumbBody>
-      <ClusterBodyTable>
-        <template v-slot:tableTitleLeft>
-          <el-dropdown split-button type="primary" @click="handleClick(dropdownText)" @command="dropdownCommand" trigger="click">
-            {{ dropdownText }}
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item command="add" :icon="Plus">Add</el-dropdown-item>
-                <el-dropdown-item command="edit" :icon="CircleCheck">Edit</el-dropdown-item>
-                <el-dropdown-item command="stopDrain" :icon="Plus">Stop Drain</el-dropdown-item>
-                <el-dropdown-item command="remove" :icon="Plus">Remove</el-dropdown-item>
-                <el-dropdown-item command="enterMaintenance" :icon="Plus">Enter Maintenance</el-dropdown-item>
-              </el-dropdown-menu>
+      <el-tabs type="card">
+        <el-tab-pane label="Hosts List">
+          <ClusterBodyTable>
+            <template v-slot:tableTitleLeft>
+              <el-dropdown split-button type="primary" @click="handleClick(dropdownText)" @command="dropdownCommand" trigger="click">
+                {{ dropdownText }}
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item command="add" :icon="Plus">Add</el-dropdown-item>
+                    <el-dropdown-item command="edit" :icon="CircleCheck">Edit</el-dropdown-item>
+                    <el-dropdown-item command="stopDrain" :icon="Plus">Stop Drain</el-dropdown-item>
+                    <el-dropdown-item command="remove" :icon="Plus">Remove</el-dropdown-item>
+                    <el-dropdown-item command="enterMaintenance" :icon="Plus">Enter Maintenance</el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
             </template>
-          </el-dropdown>
-        </template>
-      </ClusterBodyTable>
+          </ClusterBodyTable>
+        </el-tab-pane>
+        <el-tab-pane label="Overall Performance">Overall Performance</el-tab-pane>
+      </el-tabs>
     </template>
   </breadcrumb>
 </template>
