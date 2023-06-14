@@ -33,7 +33,7 @@ export const useRouterStore = defineStore('router', {
               {
                 path: '/clusterHealth/dashBoard',
                 name: 'dashBoard',
-                component: () => import('@/views/ceph/dashBoard/index.vue'),
+                component: () => import('@/views/ceph/components/dashBoard/index.vue'),
                 meta: { title: t('instrumentPanel'), icon: 'Menu', disabled: false }
               }
             ]
