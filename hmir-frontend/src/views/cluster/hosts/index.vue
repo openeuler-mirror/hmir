@@ -2,87 +2,31 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 09:47:34
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-14 09:48:49
+ * @LastEditTime: 2023-06-14 13:25:50
  * @Description:
 -->
 <template>
-  <div>
-    <el-row :gutter="20">
-      <el-col :span="12">
-        <div class="grid-content ep-bg-purple">1</div>
-      </el-col>
-      <el-col :span="12">
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <div class="grid-content ep-bg-purple">
-              <div class="info-box">
-                <span class="info-box-icon bg-grey"><i class="fa fa-database"></i></span>
-                <div class="info-box-content">
-                  <span class="info-box-text">Monitors</span>
-                  <span class="info-box-number">3 (quorum 0, 1, 2)</span>
-                </div>
-              </div>
-            </div>
-          </el-col>
-          <el-col :span="12">
-            <div class="grid-content ep-bg-purple">2</div>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <div class="grid-content ep-bg-purple">1</div>
-          </el-col>
-          <el-col :span="12">
-            <div class="grid-content ep-bg-purple">2</div>
-          </el-col>
-        </el-row>
-      </el-col>
-    </el-row>
-    <el-row :gutter="20">
-      <el-col :span="12">
-        <div class="grid-content ep-bg-purple">1</div>
-      </el-col>
-      <el-col :span="12">
-        <div class="grid-content ep-bg-purple">2</div>
-      </el-col>
-    </el-row>
-    {{ cmdCephStatus }}
-  </div>
+  <breadcrumb :breadcrumb="breadcrumbTitle">
+
+  </breadcrumb>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
-import { useCephStore } from '@/store/modules/ceph'
-import { storeToRefs } from 'pinia'
+import breadcrumb from '@/components/ClusterHeader/index.vue'
+import { onMounted, ref } from 'vue'
+import { hostsProcStore } from '@/store/modules/cluster/host'
 
 // 引入store仓库
-const store = useCephStore()
+const store = hostsProcStore()
 
-const { cmdCephStatus } = storeToRefs(store)
+const breadcrumbTitle = ref()
 
 onMounted(() => {
-  store.cmd_get_ceph_status().then(() => {
-    console.log(cmdCephStatus)
-  })
+  breadcrumbTitle.value = store.get_defaultTitle(['Hosts'])
 })
 
 </script>
 
 <style lang="scss" scoped>
-.el-row {
-  margin-bottom: 20px;
-}
 
-.el-row:last-child {
-  margin-bottom: 0;
-}
-
-.el-col {
-  border-radius: 4px;
-}
-
-.grid-content {
-  border-radius: 4px;
-  min-height: 36px;
-}
 </style>
