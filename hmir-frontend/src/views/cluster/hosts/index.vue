@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 09:47:34
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-14 17:11:00
+ * @LastEditTime: 2023-06-14 17:54:35
  * @Description:
 -->
 <template>
@@ -13,6 +13,9 @@
           <ClusterBodyTable>
             <template v-slot:tableTitleLeft>
               <hostTableTitleLeft></hostTableTitleLeft>
+            </template>
+            <template v-slot:tableTitleRight>
+              <ClusterTableTitleRight></ClusterTableTitleRight>
             </template>
           </ClusterBodyTable>
         </el-tab-pane>
@@ -26,6 +29,7 @@
 import breadcrumb from '@/components/ClusterHeader/index.vue'
 import ClusterBodyTable from '@/components/ClusterBodyTable/index.vue'
 import hostTableTitleLeft from './components/hostTableTitleLeft.vue'
+import ClusterTableTitleRight from '@/components/ClusterTableTitleRight/index.vue'
 import { onMounted, ref } from 'vue'
 import { hostsProcStore } from '@/store/modules/cluster/host'
 
