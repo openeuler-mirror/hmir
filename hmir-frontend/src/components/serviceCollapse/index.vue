@@ -1,3 +1,10 @@
+<!--
+ * @Author: zhang_tianran
+ * @Date: 2023-06-14 15:28:36
+ * @LastEditors: zhang_tianran
+ * @LastEditTime: 2023-06-14 16:29:58
+ * @Description:
+-->
 <template>
   <div class="demo-collapse">
     <el-collapse v-model="activeName" accordion>
@@ -9,13 +16,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted, nextTick, defineProps } from 'vue'
 import serviceTable from '../serviceTable/index.vue'
 
 const props = defineProps({
   description: {
     type: Array<any>,
-    default: [{ value: '' }]
+    default () {
+      return [{ value: '' }]
+    }
   }
 })
 
