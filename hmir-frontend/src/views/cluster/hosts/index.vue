@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 09:47:34
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-15 16:45:46
+ * @LastEditTime: 2023-06-15 17:03:45
  * @Description:
 -->
 <template>
@@ -44,7 +44,72 @@ const rowClick = (row: Object) => {
   selectRow.value = row
 }
 
-const tableData = ref([])
+const tableData = ref([{
+  hostname: 'Linx123',
+  service: ['grafana:1', 'alertmanager:1'],
+  labels: '_admin',
+  status: '',
+  model: 'PowerEdge (PowerEdge R740)',
+  cpus: 2,
+  cores: 12,
+  totalMemory: '125.4 GiB',
+  capacity: '18.2 TiB',
+  hdds: 9,
+  flash: 0,
+  nics: 5
+}, {
+  hostname: 'Linx123',
+  service: ['grafana:1', 'alertmanager:1'],
+  labels: '_admin',
+  status: '',
+  model: 'PowerEdge (PowerEdge R740)',
+  cpus: 2,
+  cores: 12,
+  totalMemory: '125.4 GiB',
+  capacity: '18.2 TiB',
+  hdds: 9,
+  flash: 0,
+  nics: 5
+}, {
+  hostname: 'Linx123',
+  service: ['grafana:1', 'alertmanager:1'],
+  labels: '_admin',
+  status: '',
+  model: 'PowerEdge (PowerEdge R740)',
+  cpus: 2,
+  cores: 12,
+  totalMemory: '125.4 GiB',
+  capacity: '18.2 TiB',
+  hdds: 9,
+  flash: 0,
+  nics: 5
+}, {
+  hostname: 'Linx123',
+  service: ['grafana:1', 'alertmanager:1'],
+  labels: '_admin',
+  status: '',
+  model: 'PowerEdge (PowerEdge R740)',
+  cpus: 2,
+  cores: 12,
+  totalMemory: '125.4 GiB',
+  capacity: '18.2 TiB',
+  hdds: 9,
+  flash: 0,
+  nics: 5
+}, {
+  hostname: 'Linx123',
+  service: ['grafana:1', 'alertmanager:1'],
+  labels: '_admin',
+  status: '',
+  model: 'PowerEdge (PowerEdge R740)',
+  cpus: 2,
+  cores: 12,
+  totalMemory: '125.4 GiB',
+  capacity: '18.2 TiB',
+  hdds: 9,
+  flash: 0,
+  nics: 5
+}])
 
 const tableColumn = ref([{
   label: 'Hostname',
