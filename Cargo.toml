@@ -36,9 +36,9 @@ pam = "0.7.0"
 cfg = "0.5.0"
 #tensorflow = {path = "tensorflow-rust", version="0.19.1"}
 #clickhouse = "0.11.2"
+udev = "^0.7.0"
 regex = "1.7.0"
 sysinfo = "0.27.1"
-chrono = "0.4.23"
 
 hmir-hash = {path = "hmir-hash" }
 hmir-ovs = {path = "hmir-ovs" }
@@ -49,7 +49,6 @@ hmir-protocol = { path = "hmir-protocol"}
 hmir-sysinfo = { path = "hmir-sysinfo"}
 
 [target.'cfg(target_os="linux")'.dependencies]
-udev = "^0.7.0"
 procfs = "0.14.1"
 hmir-systemd = {path = "hmir-systemd" }
 iptables = "0.5.0"

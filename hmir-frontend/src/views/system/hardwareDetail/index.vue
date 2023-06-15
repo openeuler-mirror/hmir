@@ -33,12 +33,12 @@
         label="插槽"
          width="180">
       </el-table-column>
-    </el-table>
+  </el-table>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, defineEmits, onMounted, defineProps, watch } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import api from '@/api'
 import useUserStore from '@/store/modules/user'
 const userStore = useUserStore()
@@ -89,6 +89,10 @@ onMounted(() => {
     console.log(error)
   })
 })
+
+const openDia = () => {
+
+}
 </script>
 
 <style lang="scss" scoped>

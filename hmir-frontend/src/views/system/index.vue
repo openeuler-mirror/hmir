@@ -118,7 +118,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onBeforeMount } from 'vue'
-import Echarts from '@/views/ceph/components/dashBoard/echarts.vue'
+import Echarts from '@/views/ceph/dashBoard/components/echarts.vue'
 import hardwareDetail from '@/views/system/hardwareDetail/index.vue'
 import api from '@/api'
 import useUserStore from '@/store/modules/user'
