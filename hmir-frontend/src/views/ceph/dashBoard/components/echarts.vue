@@ -1,12 +1,24 @@
+<!--
+ * @Author: zhang_tianran dev17101@linx-info.com
+ * @Date: 2023-05-18 19:46:26
+ * @LastEditors: zhang_tianran dev17101@linx-info.com
+ * @LastEditTime: 2023-06-14 14:11:37
+ * @FilePath: /hmir-frontend/src/views/ceph/dashBoard/components/echarts.vue
+ * @Description: echart小组件
+-->
 <template>
   <div>
-    <div :id= chartData.id :style="height ? 'height:'+height+'px': 'height:200px'" class="chart-box">
+    <div
+    :id= chartData.id
+    :style="height ? 'height:'+height+'px': 'height:200px'"
+    class="chart-box"
+    >
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { defineProps, reactive, onMounted } from 'vue'
+import { reactive, onMounted } from 'vue'
 import * as echarts from 'echarts'
 const props = defineProps(['chartData', 'height'])
 const chartData = reactive(props.chartData)
