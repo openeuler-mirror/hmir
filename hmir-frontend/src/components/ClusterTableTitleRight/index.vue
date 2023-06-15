@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 17:24:16
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-14 18:05:11
+ * @LastEditTime: 2023-06-15 08:52:35
  * @Description:
 -->
 <template>
@@ -44,10 +44,7 @@ const props = defineProps({
   num: {
     type: Number,
     default () {
-      return [{
-        command: '',
-        value: ''
-      }]
+      return 1
     }
   }
 })
@@ -56,7 +53,7 @@ const num = ref(1)
 
 const inputValue = ref('')
 
-const handleChange = (value: number | undefined) => {
+const handleChange = (value: Number | undefined) => {
   console.log(value)
 }
 

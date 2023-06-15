@@ -89,10 +89,6 @@ onMounted(() => {
     console.log(error)
   })
 })
-
-const openDia = () => {
-
-}
 </script>
 
 <style lang="scss" scoped>
