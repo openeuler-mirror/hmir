@@ -2,15 +2,16 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 16:19:55
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-14 17:10:24
+ * @LastEditTime: 2023-06-15 16:00:40
  * @Description:
 -->
 <template>
   <el-dropdown split-button type="primary" @click="handleClick(dropdownText)" @command="dropdownCommand" trigger="click">
-    {{ dropdownText }}
+    <span>{{ dropdownText }}</span>
     <template #dropdown>
       <el-dropdown-menu>
-        <el-dropdown-item v-for="item in props.dropdownList" :key="item.command" :command="item.command">{{ item.value }}</el-dropdown-item>
+        <el-dropdown-item v-for="item in props.dropdownList" :key="item.command" :command="item.command"
+          :disabled="item.disabled" :class="{'is-disabled':item.disabled }">{{ item.value }}</el-dropdown-item>
       </el-dropdown-menu>
     </template>
   </el-dropdown>
@@ -52,6 +53,18 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+/* 设置鼠标悬停时下拉框调整颜色 */
+:deep(.el-dropdown-menu__item:hover),
+:deep(.el-dropdown-menu__item:focus) {
+  background-color: var(--el-dropdown-menuItem-hover-fill);
+  color: var(--el-dropdown-menuItem-hover-color);
+}
+
+:deep(.is-disabled){
+  color: var(--el-text-color-disabled) !important;
+  background-color:transparent !important;
+}
+
 :deep(.el-button-group) {
   display: flex;
 }
