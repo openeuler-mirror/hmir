@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 14:03:21
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-15 16:30:00
+ * @LastEditTime: 2023-06-16 14:45:43
  * @Description:
 -->
 <template>
@@ -57,12 +57,11 @@ const clusterBodyTable = ref<InstanceType<typeof ElTable>>()
 
 const rowClick = (row: Object, column: any) => {
   clusterBodyTable.value!.setCurrentRow(row)
-  console.log(row, column)
   emit('selectRowData', row)
 }
 
 const rowKey = (row: any) => {
-  return row.id || row[props.tableColumn[0]]
+  return row.id || row[props.tableColumn[0].prop]
 }
 </script>
 
