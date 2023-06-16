@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 14:03:21
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-14 17:59:53
+ * @LastEditTime: 2023-06-15 09:13:18
  * @Description:
 -->
 <template>
@@ -20,15 +20,17 @@
       </el-col>
     </el-row>
   </div>
-  <el-table :data="tableData" border style="width: 100%" @row-click="rowClick">
+  <el-table :data="tableData" ref="clusterBodyTable" border style="width: 100%" @row-click="rowClick" highlight-current-row>
     <el-table-column type="expand">
-      <template #default="props">
-        <div m="4">
-          <p m="t-0 b-2">State: {{ props.row.state }}</p>
-          <p m="t-0 b-2">City: {{ props.row.city }}</p>
-          <p m="t-0 b-2">Address: {{ props.row.address }}</p>
-          <p m="t-0 b-2">Zip: {{ props.row.zip }}</p>
-        </div>
+      <template v-slot:default="props">
+        <slot name="expand">
+          <div m="4">
+            <p m="t-0 b-2">State: {{ props.row.state }}</p>
+            <p m="t-0 b-2">City: {{ props.row.city }}</p>
+            <p m="t-0 b-2">Address: {{ props.row.address }}</p>
+            <p m="t-0 b-2">Zip: {{ props.row.zip }}</p>
+          </div>
+        </slot>
       </template>
     </el-table-column>
     <el-table-column label="Date" prop="date" />
@@ -37,7 +39,10 @@
 </template>
 
 <script lang="ts" setup>
-// import { ref } from 'vue'
+import { ref } from 'vue'
+import type { ElTable } from 'element-plus'
+
+const clusterBodyTable = ref<InstanceType<typeof ElTable>>()
 
 const tableData = [
   {
@@ -98,7 +103,8 @@ const tableData = [
   }
 ]
 
-function rowClick (row: any, column: any) {
+const rowClick = (row: any, column: any) => {
+  clusterBodyTable.value!.setCurrentRow(row)
   console.log(row, column)
 }
 </script>
@@ -107,7 +113,8 @@ function rowClick (row: any, column: any) {
 .tableTitle {
   display: flex;
   justify-content: space-between;
-  .tableTitleRight{
+
+  .tableTitleRight {
     float: right;
   }
 }
@@ -117,7 +124,7 @@ function rowClick (row: any, column: any) {
   min-height: 36px;
 }
 
-.el-row{
+.el-row {
   width: 100%;
   padding-bottom: 10px;
 }
