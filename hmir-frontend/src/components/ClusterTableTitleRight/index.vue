@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 17:24:16
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-15 08:52:35
+ * @LastEditTime: 2023-06-21 17:09:29
  * @Description:
 -->
 <template>
@@ -29,6 +29,23 @@
   <el-divider direction="vertical" />
   <el-input-number v-model="num" controls-position="right" @change="handleChange" :min="0"/>
   <el-divider direction="vertical" />
+  <el-dropdown style="display:inline;" @command="dropdownCommand">
+    <el-button type="primary" trigger="click">
+      {{ hostname }}
+      <el-icon class="el-icon--right"><arrow-down /></el-icon>
+    </el-button>
+    <template #dropdown>
+      <el-dropdown-menu>
+        <el-dropdown-item command="Hostname">Hostname</el-dropdown-item>
+        <el-dropdown-item command="Type">Type</el-dropdown-item>
+        <el-dropdown-item command="Available">Available</el-dropdown-item>
+        <el-dropdown-item command="Vendor">Vendor</el-dropdown-item>
+        <el-dropdown-item command="Model">Model</el-dropdown-item>
+        <el-dropdown-item command="Size">Size</el-dropdown-item>
+      </el-dropdown-menu>
+    </template>
+  </el-dropdown>
+  <el-divider direction="vertical" />
   <el-input v-model="inputValue" clearable style="width:auto;">
     <template #prepend>
       <el-button :icon="Search" />
@@ -53,8 +70,14 @@ const num = ref(1)
 
 const inputValue = ref('')
 
+const hostname = ref('Hostname')
+
 const handleChange = (value: Number | undefined) => {
   console.log(value)
+}
+
+const dropdownCommand = (commandText: string) => {
+  hostname.value = commandText
 }
 
 onMounted(() => {
