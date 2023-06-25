@@ -2,14 +2,14 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 17:24:16
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-21 17:09:29
+ * @LastEditTime: 2023-06-21 17:35:47
  * @Description:
 -->
 <template>
-  <el-divider direction="vertical" />
-  <el-button type="primary" :icon="Refresh" />
-  <el-divider direction="vertical" />
-  <el-dropdown style="display:inline;">
+  <el-divider direction="vertical" v-if="refreshBtn"/>
+  <el-button type="primary" :icon="Refresh"  v-if="refreshBtn"/>
+  <el-divider direction="vertical" v-if="columnShow" />
+  <el-dropdown style="display:inline;"  v-if="columnShow">
     <el-button type="primary" trigger="click">
       <el-icon>
         <Grid />
@@ -26,10 +26,10 @@
       </el-dropdown-menu>
     </template>
   </el-dropdown>
-  <el-divider direction="vertical" />
-  <el-input-number v-model="num" controls-position="right" @change="handleChange" :min="0"/>
-  <el-divider direction="vertical" />
-  <el-dropdown style="display:inline;" @command="dropdownCommand">
+  <el-divider direction="vertical" v-if="numShow"/>
+  <el-input-number v-model="num" controls-position="right" @change="handleChange" :min="0" v-if="numShow"/>
+  <el-divider direction="vertical" v-if="columnSort"/>
+  <el-dropdown style="display:inline;" @command="dropdownCommand" v-if="columnSort">
     <el-button type="primary" trigger="click">
       {{ hostname }}
       <el-icon class="el-icon--right"><arrow-down /></el-icon>
@@ -45,8 +45,8 @@
       </el-dropdown-menu>
     </template>
   </el-dropdown>
-  <el-divider direction="vertical" />
-  <el-input v-model="inputValue" clearable style="width:auto;">
+  <el-divider direction="vertical" v-if="searchInputShow"/>
+  <el-input v-model="inputValue" clearable style="width:auto;" v-if="searchInputShow">
     <template #prepend>
       <el-button :icon="Search" />
     </template>
@@ -63,6 +63,26 @@ const props = defineProps({
     default () {
       return 1
     }
+  },
+  refreshBtn: {
+    type: Boolean,
+    default: false
+  },
+  columnShow: {
+    type: Boolean,
+    default: false
+  },
+  numShow: {
+    type: Boolean,
+    default: false
+  },
+  columnSort: {
+    type: Boolean,
+    default: false
+  },
+  searchInputShow: {
+    type: Boolean,
+    default: false
   }
 })
 
