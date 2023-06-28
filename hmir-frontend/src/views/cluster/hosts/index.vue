@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 09:47:34
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-28 10:05:06
+ * @LastEditTime: 2023-06-28 13:34:10
  * @Description:
 -->
 <template>
@@ -18,6 +18,9 @@
               <ClusterTableTitleRight refreshBtn columnShow numShow searchInputShow :tableColumn="tableColumn">
               </ClusterTableTitleRight>
             </template>
+            <template v-slot:expand="{ row }">
+              <expandBody :row="row"> </expandBody>
+            </template>
           </ClusterBodyTable>
         </el-tab-pane>
         <el-tab-pane label="Overall Performance">Overall Performance</el-tab-pane>
@@ -27,6 +30,7 @@
 </template>
 
 <script setup lang="ts">
+import expandBody from './components/expandBody.vue'
 import breadcrumb from '@/components/ClusterHeader/index.vue'
 import ClusterBodyTable from '@/components/ClusterBodyTable/index.vue'
 import hostTableTitleLeft from './components/hostTableTitleLeft.vue'
@@ -59,7 +63,8 @@ const tableData = ref([
     capacity: '18.2 TiB',
     hdds: 9,
     flash: 0,
-    nics: 5
+    nics: 5,
+    devices: []
   },
   {
     id: 'Linx2',
@@ -74,7 +79,8 @@ const tableData = ref([
     capacity: '18.2 TiB',
     hdds: 9,
     flash: 0,
-    nics: 5
+    nics: 5,
+    devices: []
   },
   {
     id: 'Linx3',
@@ -89,7 +95,8 @@ const tableData = ref([
     capacity: '18.2 TiB',
     hdds: 9,
     flash: 0,
-    nics: 5
+    nics: 5,
+    devices: []
   },
   {
     id: 'Linx4',
@@ -104,7 +111,8 @@ const tableData = ref([
     capacity: '18.2 TiB',
     hdds: 9,
     flash: 0,
-    nics: 5
+    nics: 5,
+    devices: []
   },
   {
     id: 'Linx5',
@@ -119,7 +127,8 @@ const tableData = ref([
     capacity: '18.2 TiB',
     hdds: 9,
     flash: 0,
-    nics: 5
+    nics: 5,
+    devices: []
   }
 ])
 
