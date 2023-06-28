@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 14:03:21
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-28 14:34:28
+ * @LastEditTime: 2023-06-28 15:08:36
  * @Description:
 -->
 <template>
@@ -21,8 +21,8 @@
     </el-row>
   </div>
   <el-table :data="props.tableData" :row-key="rowKey" ref="clusterBodyTable" border style="width: 100%"
-    @row-click="rowClick" @expand-change="expandChange" highlight-current-row>
-    <el-table-column type="expand">
+    @row-click="rowClick" @expand-change="expandChange" :highlight-current-row="highlightCurrentRow">
+    <el-table-column type="expand" v-if="expandShow">
       <template v-slot:default="props">
         <slot name="expand" v-bind:row="props.row"></slot>
       </template>
@@ -48,6 +48,14 @@ const props = defineProps({
     default () {
       return []
     }
+  },
+  highlightCurrentRow: {
+    type: Boolean,
+    default: false
+  },
+  expandShow: {
+    type: Boolean,
+    default: false
   }
 })
 

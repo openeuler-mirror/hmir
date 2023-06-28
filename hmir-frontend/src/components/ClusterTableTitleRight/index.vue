@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 17:24:16
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-27 16:50:09
+ * @LastEditTime: 2023-06-28 15:09:53
  * @Description:
 -->
 <template>
@@ -18,7 +18,7 @@
     </el-button>
     <template #dropdown>
       <el-dropdown-menu>
-        <el-dropdown-item v-for="item in props.tableColumn" :key="item.prop" :command="item.prop">
+        <el-dropdown-item v-for="item in tableColumn" :key="item.prop" :command="item.prop">
           <el-checkbox v-model="item.showColumn" :label="item.label" size="small" />
         </el-dropdown-item>
       </el-dropdown-menu>

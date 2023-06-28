@@ -2,15 +2,15 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-28 11:28:25
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-28 14:50:57
+ * @LastEditTime: 2023-06-28 15:24:12
  * @Description:
 -->
 <template>
-  <el-container :style="{ width: props.tableWidth }">
+  <el-container :style="{ width: tableWidth }">
     <el-main>
       <el-tabs type="card">
         <el-tab-pane label="Devices">
-          <Devices :row="props.row.devices"></Devices>
+          <Devices :row="row.devices"></Devices>
         </el-tab-pane>
         <el-tab-pane label="Physical Disks">Physical Disks</el-tab-pane>
         <el-tab-pane label="Daemons">Daemons</el-tab-pane>
@@ -24,7 +24,7 @@
 <script setup lang="ts">
 import Devices from './Devices.vue'
 
-const props = defineProps({
+defineProps({
   row: {
     type: Object,
     default () {
