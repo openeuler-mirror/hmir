@@ -2,15 +2,15 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 17:24:16
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-21 17:35:47
+ * @LastEditTime: 2023-06-27 16:50:09
  * @Description:
 -->
 <template>
   <el-divider direction="vertical" v-if="refreshBtn"/>
   <el-button type="primary" :icon="Refresh"  v-if="refreshBtn"/>
   <el-divider direction="vertical" v-if="columnShow" />
-  <el-dropdown style="display:inline;"  v-if="columnShow">
-    <el-button type="primary" trigger="click">
+  <el-dropdown style="display:inline;"  v-if="columnShow" trigger="click"  :hide-on-click="false">
+    <el-button type="primary">
       <el-icon>
         <Grid />
       </el-icon>
@@ -18,19 +18,17 @@
     </el-button>
     <template #dropdown>
       <el-dropdown-menu>
-        <el-dropdown-item>Action 1</el-dropdown-item>
-        <el-dropdown-item>Action 2</el-dropdown-item>
-        <el-dropdown-item>Action 3</el-dropdown-item>
-        <el-dropdown-item>Action 4</el-dropdown-item>
-        <el-dropdown-item>Action 5</el-dropdown-item>
+        <el-dropdown-item v-for="item in props.tableColumn" :key="item.prop" :command="item.prop">
+          <el-checkbox v-model="item.showColumn" :label="item.label" size="small" />
+        </el-dropdown-item>
       </el-dropdown-menu>
     </template>
   </el-dropdown>
   <el-divider direction="vertical" v-if="numShow"/>
   <el-input-number v-model="num" controls-position="right" @change="handleChange" :min="0" v-if="numShow"/>
   <el-divider direction="vertical" v-if="columnSort"/>
-  <el-dropdown style="display:inline;" @command="dropdownCommand" v-if="columnSort">
-    <el-button type="primary" trigger="click">
+  <el-dropdown style="display:inline;" @command="dropdownCommand" v-if="columnSort" trigger="click"  :hide-on-click="false">
+    <el-button type="primary">
       {{ hostname }}
       <el-icon class="el-icon--right"><arrow-down /></el-icon>
     </el-button>
@@ -62,6 +60,12 @@ const props = defineProps({
     type: Number,
     default () {
       return 1
+    }
+  },
+  tableColumn: {
+    type: Array<any>,
+    default () {
+      return []
     }
   },
   refreshBtn: {

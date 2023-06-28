@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 09:47:34
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-16 14:38:49
+ * @LastEditTime: 2023-06-27 16:41:08
  * @Description:
 -->
 <template>
@@ -15,7 +15,8 @@
               <hostTableTitleLeft :selectRow="selectRow"></hostTableTitleLeft>
             </template>
             <template v-slot:tableTitleRight>
-              <ClusterTableTitleRight></ClusterTableTitleRight>
+              <ClusterTableTitleRight refreshBtn columnShow numShow searchInputShow :tableColumn="tableColumn">
+              </ClusterTableTitleRight>
             </template>
           </ClusterBodyTable>
         </el-tab-pane>
@@ -44,127 +45,157 @@ const rowClick = (row: Object) => {
   selectRow.value = row
 }
 
-const tableData = ref([{
-  hostname: 'Linx1',
-  service: ['grafana:1', 'alertmanager:1'],
-  labels: '_admin',
-  status: '',
-  model: 'PowerEdge (PowerEdge R740)',
-  cpus: 2,
-  cores: 12,
-  totalMemory: '125.4 GiB',
-  capacity: '18.2 TiB',
-  hdds: 9,
-  flash: 0,
-  nics: 5
-}, {
-  hostname: 'Linx2',
-  service: ['grafana:1', 'alertmanager:1'],
-  labels: '_admin',
-  status: '',
-  model: 'PowerEdge (PowerEdge R740)',
-  cpus: 2,
-  cores: 12,
-  totalMemory: '125.4 GiB',
-  capacity: '18.2 TiB',
-  hdds: 9,
-  flash: 0,
-  nics: 5
-}, {
-  hostname: 'Linx3',
-  service: ['grafana:1', 'alertmanager:1'],
-  labels: '_admin',
-  status: '',
-  model: 'PowerEdge (PowerEdge R740)',
-  cpus: 2,
-  cores: 12,
-  totalMemory: '125.4 GiB',
-  capacity: '18.2 TiB',
-  hdds: 9,
-  flash: 0,
-  nics: 5
-}, {
-  hostname: 'Linx4',
-  service: ['grafana:1', 'alertmanager:1'],
-  labels: '_admin',
-  status: '',
-  model: 'PowerEdge (PowerEdge R740)',
-  cpus: 2,
-  cores: 12,
-  totalMemory: '125.4 GiB',
-  capacity: '18.2 TiB',
-  hdds: 9,
-  flash: 0,
-  nics: 5
-}, {
-  hostname: 'Linx5',
-  service: ['grafana:1', 'alertmanager:1'],
-  labels: '_admin',
-  status: '',
-  model: 'PowerEdge (PowerEdge R740)',
-  cpus: 2,
-  cores: 12,
-  totalMemory: '125.4 GiB',
-  capacity: '18.2 TiB',
-  hdds: 9,
-  flash: 0,
-  nics: 5
-}])
+const tableData = ref([
+  {
+    hostname: 'Linx1',
+    service: ['grafana:1', 'alertmanager:1'],
+    labels: '_admin',
+    status: '',
+    model: 'PowerEdge (PowerEdge R740)',
+    cpus: 2,
+    cores: 12,
+    totalMemory: '125.4 GiB',
+    capacity: '18.2 TiB',
+    hdds: 9,
+    flash: 0,
+    nics: 5
+  },
+  {
+    hostname: 'Linx2',
+    service: ['grafana:1', 'alertmanager:1'],
+    labels: '_admin',
+    status: '',
+    model: 'PowerEdge (PowerEdge R740)',
+    cpus: 2,
+    cores: 12,
+    totalMemory: '125.4 GiB',
+    capacity: '18.2 TiB',
+    hdds: 9,
+    flash: 0,
+    nics: 5
+  },
+  {
+    hostname: 'Linx3',
+    service: ['grafana:1', 'alertmanager:1'],
+    labels: '_admin',
+    status: '',
+    model: 'PowerEdge (PowerEdge R740)',
+    cpus: 2,
+    cores: 12,
+    totalMemory: '125.4 GiB',
+    capacity: '18.2 TiB',
+    hdds: 9,
+    flash: 0,
+    nics: 5
+  },
+  {
+    hostname: 'Linx4',
+    service: ['grafana:1', 'alertmanager:1'],
+    labels: '_admin',
+    status: '',
+    model: 'PowerEdge (PowerEdge R740)',
+    cpus: 2,
+    cores: 12,
+    totalMemory: '125.4 GiB',
+    capacity: '18.2 TiB',
+    hdds: 9,
+    flash: 0,
+    nics: 5
+  },
+  {
+    hostname: 'Linx5',
+    service: ['grafana:1', 'alertmanager:1'],
+    labels: '_admin',
+    status: '',
+    model: 'PowerEdge (PowerEdge R740)',
+    cpus: 2,
+    cores: 12,
+    totalMemory: '125.4 GiB',
+    capacity: '18.2 TiB',
+    hdds: 9,
+    flash: 0,
+    nics: 5
+  }
+])
 
-const tableColumn = ref([{
-  label: 'Hostname',
-  prop: 'hostname',
-  sortable: true
-}, {
-  label: 'Service Instances',
-  prop: 'service',
-  sortable: true
-}, {
-  label: 'Labels',
-  prop: 'labels',
-  sortable: true
-}, {
-  label: 'Status',
-  prop: 'status',
-  sortable: true
-}, {
-  label: 'Model',
-  prop: 'model',
-  sortable: true
-}, {
-  label: 'CPUs',
-  prop: 'cpus',
-  sortable: true
-}, {
-  label: 'Cores',
-  prop: 'cores',
-  sortable: true
-}, {
-  label: 'Total Memory',
-  prop: 'totalMemory',
-  sortable: true
-}, {
-  label: 'Raw Capacity',
-  prop: 'capacity',
-  sortable: true
-}, {
-  label: 'HDDs',
-  prop: 'hdds',
-  sortable: true
-}, {
-  label: 'Flash',
-  prop: 'flash',
-  sortable: true
-}, {
-  label: 'NICs',
-  prop: 'nics',
-  sortable: true
-}])
+const tableColumn = ref([
+  {
+    label: 'Hostname',
+    prop: 'hostname',
+    sortable: true,
+    showColumn: true
+  },
+  {
+    label: 'Service Instances',
+    prop: 'service',
+    sortable: true,
+    showColumn: true
+  },
+  {
+    label: 'Labels',
+    prop: 'labels',
+    sortable: true,
+    showColumn: true
+  },
+  {
+    label: 'Status',
+    prop: 'status',
+    sortable: true,
+    showColumn: true
+  },
+  {
+    label: 'Model',
+    prop: 'model',
+    sortable: true,
+    showColumn: true
+  },
+  {
+    label: 'CPUs',
+    prop: 'cpus',
+    sortable: true,
+    showColumn: true
+  },
+  {
+    label: 'Cores',
+    prop: 'cores',
+    sortable: true,
+    showColumn: true
+  },
+  {
+    label: 'Total Memory',
+    prop: 'totalMemory',
+    sortable: true,
+    showColumn: true
+  },
+  {
+    label: 'Raw Capacity',
+    prop: 'capacity',
+    sortable: true,
+    showColumn: true
+  },
+  {
+    label: 'HDDs',
+    prop: 'hdds',
+    sortable: true,
+    showColumn: true
+  },
+  {
+    label: 'Flash',
+    prop: 'flash',
+    sortable: true,
+    showColumn: true
+  },
+  {
+    label: 'NICs',
+    prop: 'nics',
+    sortable: true,
+    showColumn: true
+  }
+])
 
 onMounted(() => {
   breadcrumbTitle.value = store.get_defaultTitle(['Hosts'])
 })
-
 </script>
 
 <style lang="scss" scoped></style>
