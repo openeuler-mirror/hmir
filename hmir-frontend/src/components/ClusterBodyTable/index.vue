@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 14:03:21
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-28 11:19:17
+ * @LastEditTime: 2023-06-28 14:13:51
  * @Description:
 -->
 <template>
@@ -56,7 +56,8 @@ const filteredTableColumn = computed(() => {
 })
 
 const emit = defineEmits({
-  selectRowData: (data: Object) => true
+  selectRowData: (data: Object) => true,
+  tableBodyWidth: (data: string | undefined) => true
 })
 
 const clusterBodyTable = ref<InstanceType<typeof ElTable>>()
@@ -70,6 +71,8 @@ const rowKey = (row: any) => {
 }
 
 const expandChange = (row: any, expandedRows: any) => {
+  const width = clusterBodyTable.value?.bodyWidth
+  emit('tableBodyWidth', width)
   if (expandedRows.length !== 1) {
     expandedRows.forEach((itme: { id: any }) => {
       if (itme.id !== row.id) {

@@ -2,11 +2,11 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-28 11:28:25
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-28 13:42:46
+ * @LastEditTime: 2023-06-28 14:11:39
  * @Description:
 -->
 <template>
-  <el-container style="width: 75vw;">
+  <el-container :style="{ width: props.tableWidth }">
     <el-main>
       <el-tabs type="card">
         <el-tab-pane label="Devices">
@@ -29,6 +29,12 @@ const props = defineProps({
     type: Object,
     default () {
       return {}
+    }
+  },
+  tableWidth: {
+    type: String,
+    default () {
+      return ''
     }
   }
 })

@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 09:47:34
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-28 13:34:10
+ * @LastEditTime: 2023-06-28 14:08:57
  * @Description:
 -->
 <template>
@@ -10,7 +10,7 @@
     <template v-slot:breadcrumbBody>
       <el-tabs type="card">
         <el-tab-pane label="Hosts List">
-          <ClusterBodyTable @selectRowData="rowClick" :tableData="tableData" :tableColumn="tableColumn">
+          <ClusterBodyTable @selectRowData="rowClick" :tableData="tableData" :tableColumn="tableColumn" @tableBodyWidth="tableBodyWidth">
             <template v-slot:tableTitleLeft>
               <hostTableTitleLeft :selectRow="selectRow"></hostTableTitleLeft>
             </template>
@@ -19,7 +19,7 @@
               </ClusterTableTitleRight>
             </template>
             <template v-slot:expand="{ row }">
-              <expandBody :row="row"> </expandBody>
+              <expandBody :row="row" :tableWidth="tableWidth"> </expandBody>
             </template>
           </ClusterBodyTable>
         </el-tab-pane>
@@ -45,8 +45,14 @@ const breadcrumbTitle = ref()
 
 const selectRow = ref<Object>({})
 
+const tableWidth = ref<string | undefined>()
+
 const rowClick = (row: Object) => {
   selectRow.value = row
+}
+
+const tableBodyWidth = (width: string | undefined) => {
+  tableWidth.value = width
 }
 
 const tableData = ref([
