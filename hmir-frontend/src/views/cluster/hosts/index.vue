@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 09:47:34
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-28 14:08:57
+ * @LastEditTime: 2023-06-28 15:11:46
  * @Description:
 -->
 <template>
@@ -10,7 +10,8 @@
     <template v-slot:breadcrumbBody>
       <el-tabs type="card">
         <el-tab-pane label="Hosts List">
-          <ClusterBodyTable @selectRowData="rowClick" :tableData="tableData" :tableColumn="tableColumn" @tableBodyWidth="tableBodyWidth">
+          <ClusterBodyTable @selectRowData="rowClick" :tableData="tableData" :tableColumn="tableColumn"
+            @tableBodyWidth="tableBodyWidth" highlightCurrentRow expandShow>
             <template v-slot:tableTitleLeft>
               <hostTableTitleLeft :selectRow="selectRow"></hostTableTitleLeft>
             </template>
@@ -70,7 +71,30 @@ const tableData = ref([
     hdds: 9,
     flash: 0,
     nics: 5,
-    devices: []
+    devices: [
+      {
+        deviceId: 'DELL_PERC_H740P_Adp_006e84095bc3a3a8250071bfb7f098cd1',
+        stateOfHealth: 'Unknown',
+        lifeExpectancy: 'n/a',
+        predictionCreationDate: '',
+        deviceName: 'sda',
+        daemons: 'mon.Linx1'
+      }, {
+        deviceId: 'DELL_PERC_H740P_Adp_006e84095bc3a3a8250071bfb7f098cd2',
+        stateOfHealth: 'Unknown',
+        lifeExpectancy: 'n/a',
+        predictionCreationDate: '',
+        deviceName: 'sda',
+        daemons: 'mon.Linx1'
+      }, {
+        deviceId: 'DELL_PERC_H740P_Adp_006e84095bc3a3a8250071bfb7f098cd3',
+        stateOfHealth: 'Unknown',
+        lifeExpectancy: 'n/a',
+        predictionCreationDate: '',
+        deviceName: 'sda',
+        daemons: 'mon.Linx1'
+      }
+    ]
   },
   {
     id: 'Linx2',
@@ -102,7 +126,16 @@ const tableData = ref([
     hdds: 9,
     flash: 0,
     nics: 5,
-    devices: []
+    devices: [
+      {
+        deviceId: 'DELL_PERC_H740P_Adp_006e84095bc3a3a8250071bfb7f098cd3',
+        stateOfHealth: 'Unknown',
+        lifeExpectancy: 'n/a',
+        predictionCreationDate: '',
+        deviceName: 'sda',
+        daemons: 'mon.Linx3'
+      }
+    ]
   },
   {
     id: 'Linx4',
@@ -134,7 +167,16 @@ const tableData = ref([
     hdds: 9,
     flash: 0,
     nics: 5,
-    devices: []
+    devices: [
+      {
+        deviceId: 'DELL_PERC_H740P_Adp_006e84095bc3a3a8250071bfb7f098cd5',
+        stateOfHealth: 'Unknown',
+        lifeExpectancy: 'n/a',
+        predictionCreationDate: '',
+        deviceName: 'sda',
+        daemons: 'mon.Linx5'
+      }
+    ]
   }
 ])
 
