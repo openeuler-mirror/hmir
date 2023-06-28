@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 09:47:34
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-27 16:41:08
+ * @LastEditTime: 2023-06-28 10:05:06
  * @Description:
 -->
 <template>
@@ -47,6 +47,7 @@ const rowClick = (row: Object) => {
 
 const tableData = ref([
   {
+    id: 'Linx1',
     hostname: 'Linx1',
     service: ['grafana:1', 'alertmanager:1'],
     labels: '_admin',
@@ -61,6 +62,7 @@ const tableData = ref([
     nics: 5
   },
   {
+    id: 'Linx2',
     hostname: 'Linx2',
     service: ['grafana:1', 'alertmanager:1'],
     labels: '_admin',
@@ -75,6 +77,7 @@ const tableData = ref([
     nics: 5
   },
   {
+    id: 'Linx3',
     hostname: 'Linx3',
     service: ['grafana:1', 'alertmanager:1'],
     labels: '_admin',
@@ -89,6 +92,7 @@ const tableData = ref([
     nics: 5
   },
   {
+    id: 'Linx4',
     hostname: 'Linx4',
     service: ['grafana:1', 'alertmanager:1'],
     labels: '_admin',
@@ -103,6 +107,7 @@ const tableData = ref([
     nics: 5
   },
   {
+    id: 'Linx5',
     hostname: 'Linx5',
     service: ['grafana:1', 'alertmanager:1'],
     labels: '_admin',

@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 14:03:21
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-27 16:36:41
+ * @LastEditTime: 2023-06-28 11:19:17
  * @Description:
 -->
 <template>
@@ -20,13 +20,15 @@
       </el-col>
     </el-row>
   </div>
-  <el-table :data="props.tableData" :row-key="rowKey" ref="clusterBodyTable" border style="width: 100%" @row-click="rowClick" highlight-current-row>
+  <el-table :data="props.tableData" :row-key="rowKey" ref="clusterBodyTable" border style="width: 100%"
+    @row-click="rowClick" @expand-change="expandChange" highlight-current-row>
     <el-table-column type="expand">
       <template v-slot:default="props">
         <slot name="expand" v-bind:row="props.row"></slot>
       </template>
     </el-table-column>
-    <el-table-column v-for="item in filteredTableColumn"  :key="item.prop" :label="item.label" :prop="item.prop" :sortable="item.sortable"/>
+    <el-table-column v-for="item in filteredTableColumn" :key="item.prop" :label="item.label" :prop="item.prop"
+      :sortable="item.sortable" />
   </el-table>
 </template>
 
@@ -60,12 +62,21 @@ const emit = defineEmits({
 const clusterBodyTable = ref<InstanceType<typeof ElTable>>()
 
 const rowClick = (row: Object, column: any) => {
-  clusterBodyTable.value!.setCurrentRow(row)
   emit('selectRowData', row)
 }
 
 const rowKey = (row: any) => {
   return row.id || row[props.tableColumn[0].prop]
+}
+
+const expandChange = (row: any, expandedRows: any) => {
+  if (expandedRows.length !== 1) {
+    expandedRows.forEach((itme: { id: any }) => {
+      if (itme.id !== row.id) {
+        clusterBodyTable.value!.toggleRowExpansion(itme, false)
+      }
+    })
+  }
 }
 </script>
 
