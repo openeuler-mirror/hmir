@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 14:03:21
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-16 14:45:43
+ * @LastEditTime: 2023-06-27 16:36:41
  * @Description:
 -->
 <template>
@@ -26,12 +26,12 @@
         <slot name="expand" v-bind:row="props.row"></slot>
       </template>
     </el-table-column>
-    <el-table-column v-for="item in tableColumn" :key="item.prop" :label="item.label" :prop="item.prop" :sortable="item.sortable"/>
+    <el-table-column v-for="item in filteredTableColumn"  :key="item.prop" :label="item.label" :prop="item.prop" :sortable="item.sortable"/>
   </el-table>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import type { ElTable } from 'element-plus'
 
 const props = defineProps({
@@ -47,6 +47,10 @@ const props = defineProps({
       return []
     }
   }
+})
+
+const filteredTableColumn = computed(() => {
+  return props.tableColumn.filter(item => item.showColumn)
 })
 
 const emit = defineEmits({
