@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 09:47:34
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-28 15:11:46
+ * @LastEditTime: 2023-06-29 10:41:20
  * @Description:
 -->
 <template>
@@ -71,30 +71,37 @@ const tableData = ref([
     hdds: 9,
     flash: 0,
     nics: 5,
-    devices: [
-      {
-        deviceId: 'DELL_PERC_H740P_Adp_006e84095bc3a3a8250071bfb7f098cd1',
-        stateOfHealth: 'Unknown',
-        lifeExpectancy: 'n/a',
-        predictionCreationDate: '',
-        deviceName: 'sda',
-        daemons: 'mon.Linx1'
-      }, {
-        deviceId: 'DELL_PERC_H740P_Adp_006e84095bc3a3a8250071bfb7f098cd2',
-        stateOfHealth: 'Unknown',
-        lifeExpectancy: 'n/a',
-        predictionCreationDate: '',
-        deviceName: 'sda',
-        daemons: 'mon.Linx1'
-      }, {
-        deviceId: 'DELL_PERC_H740P_Adp_006e84095bc3a3a8250071bfb7f098cd3',
-        stateOfHealth: 'Unknown',
-        lifeExpectancy: 'n/a',
-        predictionCreationDate: '',
-        deviceName: 'sda',
-        daemons: 'mon.Linx1'
-      }
-    ]
+    devices: [{
+      deviceId: 'DELL_PERC_H740P_Adp_006e84095bc3a3a8250071bfb7f098cd1',
+      stateOfHealth: 'Unknown',
+      lifeExpectancy: 'n/a',
+      predictionCreationDate: '',
+      deviceName: 'sda',
+      daemons: 'mon.Linx1'
+    }, {
+      deviceId: 'DELL_PERC_H740P_Adp_006e84095bc3a3a8250071bfb7f098cd2',
+      stateOfHealth: 'Unknown',
+      lifeExpectancy: 'n/a',
+      predictionCreationDate: '',
+      deviceName: 'sda',
+      daemons: 'mon.Linx1'
+    }, {
+      deviceId: 'DELL_PERC_H740P_Adp_006e84095bc3a3a8250071bfb7f098cd3',
+      stateOfHealth: 'Unknown',
+      lifeExpectancy: 'n/a',
+      predictionCreationDate: '',
+      deviceName: 'sda',
+      daemons: 'mon.Linx1'
+    }],
+    physicalDisks: [{
+      devicePath:'Device path',
+      type:'Type',
+      available:'Available',
+      vendor:'Vendor',
+      model:'Model',
+      size:'Size',
+      osds:'OSDs'
+    }]
   },
   {
     id: 'Linx2',
@@ -110,7 +117,8 @@ const tableData = ref([
     hdds: 9,
     flash: 0,
     nics: 5,
-    devices: []
+    devices: [],
+    physicalDisks: []
   },
   {
     id: 'Linx3',
@@ -135,7 +143,8 @@ const tableData = ref([
         deviceName: 'sda',
         daemons: 'mon.Linx3'
       }
-    ]
+    ],
+    physicalDisks: []
   },
   {
     id: 'Linx4',
@@ -151,7 +160,8 @@ const tableData = ref([
     hdds: 9,
     flash: 0,
     nics: 5,
-    devices: []
+    devices: [],
+    physicalDisks: []
   },
   {
     id: 'Linx5',
@@ -176,7 +186,8 @@ const tableData = ref([
         deviceName: 'sda',
         daemons: 'mon.Linx5'
       }
-    ]
+    ],
+    physicalDisks: []
   }
 ])
 
