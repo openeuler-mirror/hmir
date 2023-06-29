@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2022-12-27 16:56:01
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-02-07 10:11:23
+ * @LastEditTime: 2023-06-29 10:10:52
  * @Description:
 -->
 <template>
@@ -45,10 +45,10 @@ const handleCommand = (command: string | number | object) => {
 }
 
 // 退出功能函数
-function logout () {
+function logout() {
   // 调用退出功能接口
   store.cmdlogout({ host: host.value })
-    .then(res => {
+    .then(() => {
       // 点击注销后跳转到登录页面
       router.push({ path: '/login' })
     })

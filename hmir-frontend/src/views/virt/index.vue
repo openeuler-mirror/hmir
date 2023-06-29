@@ -524,7 +524,6 @@ const handleClose = () => {
 }
 const openDialog = (val:string) => {
   createName.value = val
-  console.log(val)
   switch (val) {
     case 'createVm':
       dialogName.value = '创建新的虚拟机'
@@ -542,6 +541,8 @@ const openDialog = (val:string) => {
     case 'createNet':
       dialogName.value = '创建虚拟网络'
       dialogFlag.value.createNet = true
+      break
+    default:
       break
   }
   dialogVisible.value = true
@@ -750,6 +751,7 @@ const IPV6input = ref('')
 const IPV6PrefixInput = ref('')
 const IPV6StartInput = ref('')
 const IPV6EndInput = ref('')
+
 </script>
 
 <style lang="scss" scoped>

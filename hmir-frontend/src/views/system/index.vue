@@ -275,6 +275,7 @@ const data = ref({
 })
 // 处理延时
 const delayOption: any = ref()
+
 delayOption.value = [
   {
     options: [{
@@ -361,6 +362,7 @@ const changeName = () => {
 }
 // 处理detail的显示
 const systemData: any = ref({})
+
 onMounted(() => {
   api.cmd_sys_info({ host: userStore.host }).then((res: any) => {
     if (res[0] === 0) {
@@ -378,6 +380,7 @@ const systemDateValue = ref(new Date())
 const systemTimeValue = ref(new Date())
 const changeTime = () => {
   let str = ''
+
   str = getYMD(systemDateValue.value.toString()) + ' ' + getSFM(systemTimeValue.value.toString())
   data.value.timeDialog = false
   // console.log('设置时间', systemDateValue.value.getFullYear(), systemTimeValue.value)
@@ -392,6 +395,7 @@ const setTime = () => {
   nowTime.value = timeFormate()
 }
 const timer: any = ref()
+
 onMounted(() => {
   timer.value = setInterval(() => {
     setTime()
@@ -527,12 +531,14 @@ const clickChartNameHandler = (val: number) => {
       openChart.value = false
       console.log(4)
       break
+    default:
   }
 }
 const back = () => {
   data.value.contentShow = true
   openChart.value = false
 }
+
 </script>
 
 <style lang="scss" scoped>

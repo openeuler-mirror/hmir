@@ -1,8 +1,8 @@
 <!--
  * @Author: zhang_tianran dev17101@linx-info.com
  * @Date: 2023-06-14 19:16:38
- * @LastEditors: zhang_tianran dev17101@linx-info.com
- * @LastEditTime: 2023-06-14 19:17:22
+ * @LastEditors: zhang_tianran
+ * @LastEditTime: 2023-06-29 10:05:15
  * @FilePath: /hmir-frontend/src/views/ceph/dashBoard/index.vue
  * @Description: 仪表盘
 -->
@@ -96,10 +96,11 @@ const data = ref({
         textStyle: {
           color: '#000'
         },
-        formatter: function (name: any) {
+        formatter: function(name: any) {
           const data1 = data.value.chartData[0].series[0].data
           let total = 0
           let tarValue: any
+
           for (let i = 0, l = data1.length; i < l; i++) {
             total += data1[i].value
             if (data1[i].name === name) {
@@ -107,7 +108,8 @@ const data = ref({
             }
           }
           const p = ((tarValue / total) * 100).toFixed(2)
-          return name + '' + '' + p + '%'
+
+          return String(name) + '' + p + '%'
         }
       },
       series: [
@@ -299,10 +301,11 @@ const performance = ref([
       textStyle: {
         color: '#000'
       },
-      formatter: function (name: any) {
+      formatter: function(name: any) {
         const data1 = data.value.chartData[0].series[0].data
         let total = 0
         let tarValue: any
+
         for (let i = 0, l = data1.length; i < l; i++) {
           total += data1[i].value
           if (data1[i].name === name) {
@@ -310,7 +313,8 @@ const performance = ref([
           }
         }
         const p = ((tarValue / total) * 100).toFixed(2)
-        return name + '' + '' + p + '%'
+
+        return String(name) + '' + p + '%'
       }
     },
     series: [

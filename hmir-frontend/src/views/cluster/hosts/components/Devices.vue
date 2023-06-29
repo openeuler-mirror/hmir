@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-28 13:16:37
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-28 14:49:28
+ * @LastEditTime: 2023-06-29 09:54:06
  * @Description:
 -->
 <template>
@@ -21,7 +21,7 @@ import { ref, onMounted } from 'vue'
 const props = defineProps({
   row: {
     type: Array,
-    default () {
+    default() {
       return []
     }
   }

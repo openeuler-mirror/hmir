@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 17:24:16
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-28 15:09:53
+ * @LastEditTime: 2023-06-29 10:12:04
  * @Description:
 -->
 <template>
@@ -58,13 +58,13 @@ import { Refresh, Grid, ArrowDown, Search } from '@element-plus/icons-vue'
 const props = defineProps({
   num: {
     type: Number,
-    default () {
+    default() {
       return 1
     }
   },
   tableColumn: {
     type: Array<any>,
-    default () {
+    default() {
       return []
     }
   },

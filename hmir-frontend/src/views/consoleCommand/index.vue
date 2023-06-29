@@ -1,7 +1,14 @@
+<!--
+ * @Author: zhang_tianran
+ * @Date: 2023-05-17 18:16:11
+ * @LastEditors: zhang_tianran
+ * @LastEditTime: 2023-06-29 10:04:43
+ * @Description:
+-->
 <template>
   <div class="card">
     <span>HMIR控制台</span>
-    <el-button @click="refresh()" :loading="loading">刷新</el-button>
+    <el-button @click="refresh()" :loading="!!loading">刷新</el-button>
   </div>
   <div class="iframe" v-loading="loading">
     <iframe name="iframeMap" id="iframeMapViewComponent" :src="getPageUrl" width="100%" height="100%" frameborder="0"
@@ -27,7 +34,7 @@ const store = useUsersStore()
 const getPageUrl = ref<string>('')
 
 // 连接终端
-async function ttydStart () {
+async function ttydStart() {
   // 连接控制台
   ttydtMsg.value = await api.cmd_ttyd_start({ host: store.host })
   if (!ttydtMsg.value) {
@@ -40,16 +47,17 @@ async function ttydStart () {
 }
 
 // 断开终端
-async function ttydStop () {
+async function ttydStop() {
   // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
   const value = await api.cmd_ttyd_stop({ host: store.host })
+
   if (value) {
     ttydtMsg.value = false
   }
 }
 
 // 刷新终端
-function refresh () {
+function refresh() {
   ttydStart()
   loading.value = true
   ttydtMsg.value = false

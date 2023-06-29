@@ -182,9 +182,10 @@ const rules = reactive<FormRules>({
   ]
 })
 
-function login () {
+function login() {
   loading.value = true
-  const req = { host: loginData.ipAddress, port: +loginData.ipPort, username: loginData.username, password: loginData.password }
+  const req = { host: loginData.ipAddress, port: Number(loginData.ipPort), username: loginData.username, password: loginData.password }
+
   setTimeout(() => {
     store.cmdLogin(req)
       .then(() => {
@@ -202,11 +203,11 @@ function login () {
 }
 
 // 登录
-const submitForm = async (formEl: FormInstance | undefined) => {
+const submitForm = async(formEl: FormInstance | undefined) => {
   if (!formEl || loading.value) {
     return
   }
-  await formEl.validate((valid, fields) => {
+  await formEl.validate((valid) => {
     if (valid) {
       login()
     }
@@ -233,6 +234,7 @@ const userListAll = (value: Array<userList>, field: string) => {
     return []
   }
   const list: Array<string> = []
+
   for (const item of value) {
     list.push(item[field])
   }
@@ -244,7 +246,8 @@ const ipAddressQuery = (queryString: string, cb: any) => {
   let results: any = queryString
     ? ipAddressResults.value.filter(createFilter(queryString))
     : userInformation
-  if (!!queryString &&
+
+  if (Boolean(queryString) &&
     results.length === 1 &&
     results[0].value === queryString) {
     results = []
@@ -257,7 +260,8 @@ const ipPortQuery = (queryString: string, cb: any) => {
   let results: any = queryString
     ? ipPotrResults.value.filter(createFilter(queryString))
     : ipPotrResults.value
-  if (!!queryString &&
+
+  if (Boolean(queryString) &&
     results.length === 1 &&
     results[0].value === queryString) {
     results = []
@@ -270,7 +274,8 @@ const userQuery = (queryString: string, cb: any) => {
   let results: any = queryString
     ? userResults.value.filter(createFilter(queryString))
     : userInformation
-  if (!!queryString &&
+
+  if (Boolean(queryString) &&
     results.length === 1 &&
     results[0].value === queryString) {
     results = []
@@ -291,9 +296,10 @@ const createFilter = (queryString: string) => {
 
 // 过滤重复项
 const arrayFilter = (queryString: Array<string>) => {
-  queryString = [...new Set(queryString)]
+  const queryList = [...new Set(queryString)]
   const value: Array<RestaurantItem> = []
-  for (const item of queryString) {
+
+  for (const item of queryList) {
     value.push({ value: item })
   }
   return value

@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 15:28:36
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-14 16:29:58
+ * @LastEditTime: 2023-06-29 10:26:18
  * @Description:
 -->
 <template>
@@ -22,7 +22,7 @@ import serviceTable from '../serviceTable/index.vue'
 const props = defineProps({
   description: {
     type: Array<any>,
-    default () {
+    default() {
       return [{ value: '' }]
     }
   }

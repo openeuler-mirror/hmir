@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 15:29:38
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-15 15:17:02
+ * @LastEditTime: 2023-06-29 10:05:10
  * @Description:
 -->
 <template>
@@ -16,7 +16,7 @@ import { computed, ref, watch } from 'vue'
 const props = defineProps({
   selectRow: {
     type: Object,
-    default () {
+    default() {
       return {}
     }
   }

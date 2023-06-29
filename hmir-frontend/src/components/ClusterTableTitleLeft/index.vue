@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 16:19:55
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-15 16:00:40
+ * @LastEditTime: 2023-06-29 10:23:17
  * @Description:
 -->
 <template>
@@ -21,13 +21,14 @@
 import { onMounted, ref } from 'vue'
 
 const emit = defineEmits({
+  // eslint-disable-next-line no-unused-vars
   handleClick: (data: string) => true
 })
 
 const props = defineProps({
   dropdownList: {
     type: Array<any>,
-    default () {
+    default() {
       return [{
         command: '',
         value: ''
