@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-28 11:28:25
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-28 15:24:12
+ * @LastEditTime: 2023-06-29 14:15:06
  * @Description:
 -->
 <template>
@@ -12,8 +12,12 @@
         <el-tab-pane label="Devices">
           <Devices :row="row.devices"></Devices>
         </el-tab-pane>
-        <el-tab-pane label="Physical Disks">Physical Disks</el-tab-pane>
-        <el-tab-pane label="Daemons">Daemons</el-tab-pane>
+        <el-tab-pane label="Physical Disks">
+          <PhysicalDisks :row="row.physicalDisks"></PhysicalDisks>
+        </el-tab-pane>
+        <el-tab-pane label="Daemons">
+          <Daemons :row="row.daemons"></Daemons>
+        </el-tab-pane>
         <el-tab-pane label="Performance Details">Performance Details</el-tab-pane>
         <el-tab-pane label="Device health">Device health</el-tab-pane>
       </el-tabs>
@@ -23,17 +27,19 @@
 
 <script setup lang="ts">
 import Devices from './Devices.vue'
+import PhysicalDisks from './PhysicalDisks.vue'
+import Daemons from './Daemons.vue'
 
 defineProps({
   row: {
     type: Object,
-    default () {
+    default() {
       return {}
     }
   },
   tableWidth: {
     type: String,
-    default () {
+    default() {
       return ''
     }
   }
