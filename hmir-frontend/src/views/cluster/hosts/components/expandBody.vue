@@ -19,7 +19,7 @@
           <Daemons :row="row.daemons"></Daemons>
         </el-tab-pane>
         <el-tab-pane label="Performance Details">
-          <PerformanceDetails :row="row.PerformanceDetails"></PerformanceDetails>
+          <PerformanceDetails :selectTime="row.PerformanceDetails"></PerformanceDetails>
         </el-tab-pane>
         <el-tab-pane label="Device health">
           <DeviceHealth></DeviceHealth>
