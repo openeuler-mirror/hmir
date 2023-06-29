@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-28 11:28:25
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-29 14:18:45
+ * @LastEditTime: 2023-06-29 15:17:09
  * @Description:
 -->
 <template>
@@ -21,7 +21,9 @@
         <el-tab-pane label="Performance Details">
           <PerformanceDetails :row="row.PerformanceDetails"></PerformanceDetails>
         </el-tab-pane>
-        <el-tab-pane label="Device health">Device health</el-tab-pane>
+        <el-tab-pane label="Device health">
+          <DeviceHealth></DeviceHealth>
+        </el-tab-pane>
       </el-tabs>
     </el-main>
   </el-container>
@@ -32,6 +34,7 @@ import Devices from './Devices.vue'
 import PhysicalDisks from './PhysicalDisks.vue'
 import Daemons from './Daemons.vue'
 import PerformanceDetails from './PerformanceDetails.vue'
+import DeviceHealth from './DeviceHealth.vue'
 
 defineProps({
   row: {
