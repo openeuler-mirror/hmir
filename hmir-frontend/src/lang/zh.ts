@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-02-02 15:29:41
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-30 10:14:40
+ * @LastEditTime: 2023-06-30 15:19:38
  * @Description: 
  */
 
@@ -43,5 +43,6 @@ export default {
     cluster:'集群',
     hosts:'主机',
     PhysicalDisks:'物理磁盘',
-    Monitors:'监控'
+    Monitors:'监控',
+    OSDs:'OSDs'
 }
