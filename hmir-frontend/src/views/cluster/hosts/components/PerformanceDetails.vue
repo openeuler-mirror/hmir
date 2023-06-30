@@ -2,14 +2,14 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-28 13:29:20
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-29 14:52:50
+ * @LastEditTime: 2023-06-29 16:57:55
  * @Description:
 -->
 <template>
   <el-card>
     <template #header>
       <div>
-        <span style="margin-right:10px;">Physical Disks</span>
+        <span style="margin-right:10px;">Grafana Time Picker</span>
         <el-select v-model="selectValue" style="margin-right:10px;">
           <el-option
             v-for="item in options"
@@ -30,10 +30,10 @@
 import { ref, onMounted } from 'vue'
 
 const props = defineProps({
-  row: {
-    type: Array,
+  selectTime: {
+    type: String,
     default() {
-      return []
+      return ''
     }
   }
 })
@@ -84,7 +84,7 @@ const options = [
 ]
 
 onMounted(() => {
-  selectValue.value = props.row
+  selectValue.value = props.selectTime
 })
 </script>
 

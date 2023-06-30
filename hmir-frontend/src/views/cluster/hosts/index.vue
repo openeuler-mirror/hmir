@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 09:47:34
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-29 15:12:31
+ * @LastEditTime: 2023-06-29 16:58:57
  * @Description:
 -->
 <template>
@@ -24,7 +24,9 @@
             </template>
           </ClusterBodyTable>
         </el-tab-pane>
-        <el-tab-pane label="Overall Performance">Overall Performance</el-tab-pane>
+        <el-tab-pane label="Overall Performance">
+          <PerformanceDetails selectTime="last1hour"></PerformanceDetails>
+        </el-tab-pane>
       </el-tabs>
     </template>
   </breadcrumb>
@@ -36,6 +38,7 @@ import breadcrumb from '@/components/ClusterHeader/index.vue'
 import ClusterBodyTable from '@/components/ClusterBodyTable/index.vue'
 import hostTableTitleLeft from './components/hostTableTitleLeft.vue'
 import ClusterTableTitleRight from '@/components/ClusterTableTitleRight/index.vue'
+import PerformanceDetails from './components/PerformanceDetails.vue'
 import { onMounted, ref } from 'vue'
 import { hostsProcStore } from '@/store/modules/cluster/host'
 
