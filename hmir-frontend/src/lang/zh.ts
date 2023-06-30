@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-02-02 15:29:41
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-05-22 18:44:27
+ * @LastEditTime: 2023-06-30 10:14:40
  * @Description: 
  */
 
@@ -41,5 +41,6 @@ export default {
     logoutSuccess:'注销成功',
     logoutError:'注销失败,请联系管理员',
     cluster:'集群',
-    hosts:'主机'
+    hosts:'主机',
+    PhysicalDisks:'物理磁盘'
 }
