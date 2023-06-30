@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-30 11:04:56
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-30 11:22:51
+ * @LastEditTime: 2023-06-30 13:11:23
  * @Description:
 -->
 <template>
@@ -25,13 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { hostsProcStore } from '@/store/modules/cluster/host'
-
-// 引入store仓库
-const store = hostsProcStore()
-
-const breadcrumbTitle = ref()
+import { ref } from 'vue'
 
 const statusLabel = ref([{
   label: 'Cluster ID',
@@ -66,9 +60,6 @@ const statusData = ref({
   requiredMon:'kraken, luminous, mimic, osdmap-prune, nautilus, octopus, pacific, elector-pinging'
 })
 
-onMounted(() => {
-  breadcrumbTitle.value = store.get_defaultTitle(['Monitors'])
-})
 </script>
 
 <style lang="scss" scoped>
