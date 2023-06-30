@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 09:47:34
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-29 14:03:52
+ * @LastEditTime: 2023-06-29 15:12:31
  * @Description:
 -->
 <template>
@@ -110,7 +110,8 @@ const tableData = ref([
       cpuUsage: 3,
       memoryUsage:'52.7 MiB',
       daemonEvents:'No data available'
-    }]
+    }],
+    PerformanceDetails:'last1hour'
   },
   {
     id: 'Linx2',
@@ -127,7 +128,17 @@ const tableData = ref([
     flash: 0,
     nics: 5,
     devices: [],
-    physicalDisks: []
+    physicalDisks: [],
+    daemons:[{
+      daemonName:'alertmanager.Linx123',
+      version:'0.23.0',
+      status:'running',
+      lastRefreshed:'6 minutes ago',
+      cpuUsage: 3,
+      memoryUsage:'52.7 MiB',
+      daemonEvents:'No data available'
+    }],
+    PerformanceDetails:'last5min'
   },
   {
     id: 'Linx3',
@@ -153,7 +164,17 @@ const tableData = ref([
         daemons: 'mon.Linx3'
       }
     ],
-    physicalDisks: []
+    physicalDisks: [],
+    daemons:[{
+      daemonName:'alertmanager.Linx123',
+      version:'0.23.0',
+      status:'running',
+      lastRefreshed:'6 minutes ago',
+      cpuUsage: 3,
+      memoryUsage:'52.7 MiB',
+      daemonEvents:'No data available'
+    }],
+    PerformanceDetails:'last1hour'
   },
   {
     id: 'Linx4',
@@ -170,7 +191,17 @@ const tableData = ref([
     flash: 0,
     nics: 5,
     devices: [],
-    physicalDisks: []
+    physicalDisks: [],
+    daemons:[{
+      daemonName:'alertmanager.Linx123',
+      version:'0.23.0',
+      status:'running',
+      lastRefreshed:'6 minutes ago',
+      cpuUsage: 3,
+      memoryUsage:'52.7 MiB',
+      daemonEvents:'No data available'
+    }],
+    PerformanceDetails:'last1hour'
   },
   {
     id: 'Linx5',
@@ -196,7 +227,17 @@ const tableData = ref([
         daemons: 'mon.Linx5'
       }
     ],
-    physicalDisks: []
+    physicalDisks: [],
+    daemons:[{
+      daemonName:'alertmanager.Linx123',
+      version:'0.23.0',
+      status:'running',
+      lastRefreshed:'6 minutes ago',
+      cpuUsage: 3,
+      memoryUsage:'52.7 MiB',
+      daemonEvents:'No data available'
+    }],
+    PerformanceDetails:'last1hour'
   }
 ])
 
