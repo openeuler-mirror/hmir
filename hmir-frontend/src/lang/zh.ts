@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-02-02 15:29:41
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-30 15:19:38
+ * @LastEditTime: 2023-06-30 17:41:02
  * @Description: 
  */
 
@@ -44,5 +44,18 @@ export default {
     hosts:'主机',
     PhysicalDisks:'物理磁盘',
     Monitors:'监控',
-    OSDs:'OSDs'
+    OSDs:'OSDs',
+    type:'类型',
+    osdsId:'ID',
+    host:'主机',    
+    status:'状态',
+    deviceClass:'设备',
+    pgs:'PGs',
+    size:'大小',
+    flags:'Flags',
+    usage:'Usage',
+    readBytes:'读取字节',
+    writeBytes:'写入字节',
+    readOps:'读操作',
+    writeOps:'写操作'
 }

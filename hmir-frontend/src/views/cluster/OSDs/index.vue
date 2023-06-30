@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 09:47:34
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-30 15:44:54
+ * @LastEditTime: 2023-06-30 17:34:24
  * @Description:
 -->
 <template>
@@ -130,73 +130,73 @@ const tableData = ref([
 
 const tableColumn = ref([
   {
-    label: 'ID',
+    label: 'osdsId',
     prop: 'osdsId',
     sortable: true,
     showColumn: true
   },
   {
-    label: 'Host',
+    label: 'host',
     prop: 'host',
     sortable: true,
     showColumn: true
   },
   {
-    label: 'Status',
+    label: 'status',
     prop: 'status',
     sortable: true,
     showColumn: true
   },
   {
-    label: 'Device class',
+    label: 'deviceClass',
     prop: 'deviceClass',
     sortable: true,
     showColumn: true
   },
   {
-    label: 'PGs',
+    label: 'pgs',
     prop: 'pgs',
     sortable: true,
     showColumn: true
   },
   {
-    label: 'Size',
+    label: 'size',
     prop: 'size',
     sortable: true,
     showColumn: true
   },
   {
-    label: 'Flags',
+    label: 'flags',
     prop: 'flags',
     sortable: true,
     showColumn: true
   },
   {
-    label: 'Usage',
+    label: 'usage',
     prop: 'usage',
     sortable: true,
     showColumn: true
   },
   {
-    label: 'Read bytes',
+    label: 'readBytes',
     prop: 'readBytes',
     sortable: true,
     showColumn: true
   },
   {
-    label: 'Write bytes',
+    label: 'writeBytes',
     prop: 'writeBytes',
     sortable: true,
     showColumn: true
   },
   {
-    label: 'Read ops',
+    label: 'readOps',
     prop: 'readOps',
     sortable: true,
     showColumn: true
   },
   {
-    label: 'Write ops',
+    label: 'writeOps',
     prop: 'writeOps',
     sortable: true,
     showColumn: true
