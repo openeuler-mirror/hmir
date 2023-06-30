@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-28 13:29:16
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-29 09:54:19
+ * @LastEditTime: 2023-06-30 10:11:28
  * @Description:
 -->
 <template>
@@ -32,7 +32,7 @@ import ClusterTableTitleRight from '@/components/ClusterTableTitleRight/index.vu
 import { ref, onMounted } from 'vue'
 
 const props = defineProps({
-  row: {
+  physicalDiskData: {
     type: Array,
     default() {
       return []
@@ -92,7 +92,7 @@ const tableColumn = ref([{
 }])
 
 onMounted(() => {
-  tableData.value = props.row
+  tableData.value = props.physicalDiskData
 })
 </script>
 

@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-28 11:28:25
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-29 15:17:09
+ * @LastEditTime: 2023-06-30 10:11:56
  * @Description:
 -->
 <template>
@@ -13,7 +13,7 @@
           <Devices :row="row.devices"></Devices>
         </el-tab-pane>
         <el-tab-pane label="Physical Disks">
-          <PhysicalDisks :row="row.physicalDisks"></PhysicalDisks>
+          <PhysicalDisks :physicalDiskData="row.physicalDisks"></PhysicalDisks>
         </el-tab-pane>
         <el-tab-pane label="Daemons">
           <Daemons :row="row.daemons"></Daemons>
@@ -31,7 +31,7 @@
 
 <script setup lang="ts">
 import Devices from './Devices.vue'
-import PhysicalDisks from './PhysicalDisks.vue'
+import PhysicalDisks from '@/views/cluster/components/PhysicalDisks.vue'
 import Daemons from './Daemons.vue'
 import PerformanceDetails from './PerformanceDetails.vue'
 import DeviceHealth from './DeviceHealth.vue'
