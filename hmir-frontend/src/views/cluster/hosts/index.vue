@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 09:47:34
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-29 10:41:20
+ * @LastEditTime: 2023-06-29 14:03:52
  * @Description:
 -->
 <template>
@@ -101,6 +101,15 @@ const tableData = ref([
       model:'Model',
       size:'Size',
       osds:'OSDs'
+    }],
+    daemons:[{
+      daemonName:'alertmanager.Linx123',
+      version:'0.23.0',
+      status:'running',
+      lastRefreshed:'6 minutes ago',
+      cpuUsage: 3,
+      memoryUsage:'52.7 MiB',
+      daemonEvents:'No data available'
     }]
   },
   {
