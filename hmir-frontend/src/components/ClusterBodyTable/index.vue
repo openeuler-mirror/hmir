@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 14:03:21
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-29 10:24:29
+ * @LastEditTime: 2023-06-30 09:32:17
  * @Description:
 -->
 <template>
@@ -28,7 +28,12 @@
       </template>
     </el-table-column>
     <el-table-column v-for="item in filteredTableColumn" :key="item.prop" :label="item.label" :prop="item.prop"
-      :sortable="item.sortable" />
+      :sortable="item.sortable" >
+      <template v-slot:default="{ row }">
+        <el-progress :stroke-width="15" :percentage="row.cpuUsage" v-if="item.prop === 'cpuUsage'"/>
+        <div v-else>{{ row[item.prop] }}</div>
+      </template>
+    </el-table-column>
   </el-table>
 </template>
 
