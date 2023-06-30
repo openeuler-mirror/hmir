@@ -2,56 +2,57 @@
   <div id="menu">
     <el-menu ref="menuHeader" :default-active="handleValue" class="el-menu-vertical-demo-header" :collapse="isCollapse"
       @open="handleOpen" @close="handleClose" @select="handleSelect" router>
-          <template v-for="(item) in handleRouter">
-             <el-sub-menu v-if="item.children" :index="item.path" :key="item.name" :disabled="item.meta.disabled">
-                <template #title>
-                  <el-icon><component :is="item.meta.icon" style="width: 16px;height: 16px;"></component></el-icon>
-                {{ item.meta.title }}
-                </template>
-                <template v-for="secondLevel in item.children">
-                <el-sub-menu v-if="secondLevel.children" :index="secondLevel.path" :key="secondLevel.name" :disabled="secondLevel.meta.disabled">
-                  <template #title>
-                    <el-icon><component :is="secondLevel.meta.icon" style="width: 16px;height: 16px;"></component></el-icon>
-                  {{ secondLevel.meta.title }}
-                  </template>
-                  <el-menu-item
-                    v-for="threeLevel in secondLevel.children"
-                    :key="threeLevel.name"
-                    :index="threeLevel.path"
-                  >
-                    <template #title>
-                    <el-icon><component :is="threeLevel.meta.icon" style="width: 16px;height: 16px;"></component></el-icon>
-                  {{ threeLevel.meta.title }}
-                  </template>
-                  </el-menu-item>
-               </el-sub-menu>
-                <el-menu-item
-                  v-else
-                  :key="secondLevel.name + '1'"
-                  :index="secondLevel.path"
-                >
-                  <template #title>
-                  <el-icon><component :is="secondLevel.meta.icon" style="width: 16px;height: 16px;"></component></el-icon>
-                {{ secondLevel.meta.title }}
-                </template>
-                </el-menu-item>
-              </template>
-             </el-sub-menu>
-             <el-menu-item v-else :index="item.path" :key="item.name + '1'" :disabled="item.meta.disabled">
-                <el-icon>
-                  <component :is="item.meta.icon" style="width: 16px;height: 16px;"></component>
-                </el-icon>
-                <template #title>{{ item.meta.title }}</template>
-             </el-menu-item>
+      <template v-for="(item) in handleRouter">
+        <el-sub-menu v-if="item.children" :index="item.path" :key="item.name" :disabled="item.meta.disabled">
+          <template #title>
+            <el-icon>
+              <component :is="item.meta.icon" style="width: 16px;height: 16px;"></component>
+            </el-icon>
+            {{ item.meta.title }}
           </template>
-          <el-affix position="bottom" :offset="0" target="#menu" class="classFooter">
-            <el-menu-item index="console" class="classFooter">
-              <el-icon>
-                <component :is="'Setting'" style="width: 16px;height: 16px;"></component>
-              </el-icon>
-              <template #title>控制台</template>
+          <template v-for="secondLevel in item.children">
+            <el-sub-menu v-if="secondLevel.children" :index="secondLevel.path" :key="secondLevel.name"
+              :disabled="secondLevel.meta.disabled">
+              <template #title>
+                <el-icon>
+                  <component :is="secondLevel.meta.icon" style="width: 16px;height: 16px;"></component>
+                </el-icon>
+                {{ secondLevel.meta.title }}
+              </template>
+              <el-menu-item v-for="threeLevel in secondLevel.children" :key="threeLevel.name" :index="threeLevel.path">
+                <template #title>
+                  <el-icon>
+                    <component :is="threeLevel.meta.icon" style="width: 16px;height: 16px;"></component>
+                  </el-icon>
+                  {{ threeLevel.meta.title }}
+                </template>
+              </el-menu-item>
+            </el-sub-menu>
+            <el-menu-item v-else :key="secondLevel.name + '1'" :index="secondLevel.path">
+              <template #title>
+                <el-icon>
+                  <component :is="secondLevel.meta.icon" style="width: 16px;height: 16px;"></component>
+                </el-icon>
+                {{ secondLevel.meta.title }}
+              </template>
             </el-menu-item>
-          </el-affix>
+          </template>
+        </el-sub-menu>
+        <el-menu-item v-else :index="item.path" :key="item.name + '1'" :disabled="item.meta.disabled">
+          <el-icon>
+            <component :is="item.meta.icon" style="width: 16px;height: 16px;"></component>
+          </el-icon>
+          <template #title>{{ item.meta.title }}</template>
+        </el-menu-item>
+      </template>
+      <el-affix position="bottom" :offset="0" target="#menu" class="classFooter">
+        <el-menu-item index="console" class="classFooter">
+          <el-icon>
+            <component :is="'Setting'" style="width: 16px;height: 16px;"></component>
+          </el-icon>
+          <template #title>控制台</template>
+        </el-menu-item>
+      </el-affix>
     </el-menu>
   </div>
 </template>
