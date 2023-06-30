@@ -53,6 +53,12 @@ export const useRouterStore = defineStore('router', {
                     name: 'PhysicalDisks',
                     component: () => import('@/views/cluster/physicalDisks/index.vue'),
                     meta: { title: t('PhysicalDisks'), icon: 'Menu', disabled: false }
+                  },
+                  {
+                    path: '/clusterHealth/cluster/Monitors',
+                    name: 'Monitors',
+                    component: () => import('@/views/cluster/Monitors/index.vue'),
+                    meta: { title: t('Monitors'), icon: 'Menu', disabled: false }
                   }
                 ]
               },

@@ -43,5 +43,6 @@ export default {
     logoutError:'Logout failed. Please contact the administrator',
     cluster:'Cluster',
     hosts:'Hosts',
-    PhysicalDisks:'Physical Disks'
+    PhysicalDisks:'Physical Disks',
+    Monitors: 'Monitors'
 }

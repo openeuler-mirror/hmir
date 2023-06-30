@@ -42,5 +42,6 @@ export default {
     logoutError:'注销失败,请联系管理员',
     cluster:'集群',
     hosts:'主机',
-    PhysicalDisks:'物理磁盘'
+    PhysicalDisks:'物理磁盘',
+    Monitors:'监控'
 }
