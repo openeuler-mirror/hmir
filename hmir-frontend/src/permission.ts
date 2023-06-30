@@ -1,3 +1,10 @@
+/*
+ * @Author: zhang_tianran
+ * @Date: 2023-06-13 18:24:51
+ * @LastEditors: zhang_tianran
+ * @LastEditTime: 2023-06-30 14:42:49
+ * @Description: 
+ */
 import router from '@/router';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
@@ -35,7 +42,11 @@ router.beforeEach((to, from, next) => {
       //只有当服务页跳转到服务详情页才有效
     } else if ((to.path.includes('serviceDetail') && from.path === '/service')
       || (from.path.includes('/') && !!to.query)) {
-      next();
+      if (to.path.includes('/console')) {
+        next('/console');
+      } else {
+        next();
+      }
     } else {
       next('/404');
     }

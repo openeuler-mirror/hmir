@@ -132,7 +132,7 @@ export const useRouterStore = defineStore('router', {
       //判断是否添加了路由信息
       addRouter: false,
       //所有的路由信息
-      allRouter: ['/login', '/about', '/system', '/service', '/console', '/process']
+      allRouter: ['/login', '/about', '/system', '/service', '/console', '/process', '/clusterHealth', '/virtual']
     };
   },
   //计算属性
