@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-28 11:28:25
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-30 10:11:56
+ * @LastEditTime: 2023-06-30 15:14:22
  * @Description:
 -->
 <template>
@@ -33,7 +33,7 @@
 import Devices from './Devices.vue'
 import PhysicalDisks from '@/views/cluster/components/PhysicalDisks.vue'
 import Daemons from './Daemons.vue'
-import PerformanceDetails from './PerformanceDetails.vue'
+import PerformanceDetails from '../../components/PerformanceDetails.vue'
 import DeviceHealth from './DeviceHealth.vue'
 
 defineProps({

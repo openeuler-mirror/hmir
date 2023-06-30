@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-02-02 15:29:41
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-30 10:14:42
+ * @LastEditTime: 2023-06-30 15:19:35
  * @Description: 
  */
 
@@ -44,5 +44,6 @@ export default {
     cluster:'Cluster',
     hosts:'Hosts',
     PhysicalDisks:'Physical Disks',
-    Monitors: 'Monitors'
+    Monitors: 'Monitors',
+    OSDs:'OSDs'
 }
