@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-02-02 15:29:41
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-14 09:54:32
+ * @LastEditTime: 2023-06-30 10:14:42
  * @Description: 
  */
 
@@ -42,5 +42,6 @@ export default {
     logoutSuccess:'Logout Successfully',
     logoutError:'Logout failed. Please contact the administrator',
     cluster:'Cluster',
-    hosts:'Hosts'
+    hosts:'Hosts',
+    PhysicalDisks:'Physical Disks'
 }
