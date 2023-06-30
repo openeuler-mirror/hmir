@@ -8,16 +8,34 @@
                   <el-icon><component :is="item.meta.icon" style="width: 16px;height: 16px;"></component></el-icon>
                 {{ item.meta.title }}
                 </template>
+                <template v-for="secondLevel in item.children">
+                <el-sub-menu v-if="secondLevel.children" :index="secondLevel.path" :key="secondLevel.name" :disabled="secondLevel.meta.disabled">
+                  <template #title>
+                    <el-icon><component :is="secondLevel.meta.icon" style="width: 16px;height: 16px;"></component></el-icon>
+                  {{ secondLevel.meta.title }}
+                  </template>
+                  <el-menu-item
+                    v-for="threeLevel in secondLevel.children"
+                    :key="threeLevel.name"
+                    :index="threeLevel.path"
+                  >
+                    <template #title>
+                    <el-icon><component :is="threeLevel.meta.icon" style="width: 16px;height: 16px;"></component></el-icon>
+                  {{ threeLevel.meta.title }}
+                  </template>
+                  </el-menu-item>
+               </el-sub-menu>
                 <el-menu-item
-                  v-for="item2 in item.children"
-                  :key="item2.name"
-                  :index="item2.path"
+                  v-else
+                  :key="secondLevel.name + '1'"
+                  :index="secondLevel.path"
                 >
                   <template #title>
-                  <el-icon><component :is="item2.meta.icon" style="width: 16px;height: 16px;"></component></el-icon>
-                {{ item2.meta.title }}
+                  <el-icon><component :is="secondLevel.meta.icon" style="width: 16px;height: 16px;"></component></el-icon>
+                {{ secondLevel.meta.title }}
                 </template>
                 </el-menu-item>
+              </template>
              </el-sub-menu>
              <el-menu-item v-else :index="item.path" :key="item.name + '1'" :disabled="item.meta.disabled">
                 <el-icon>
@@ -57,6 +75,7 @@ const router = useRouter()
 // 进入后的初始页
 const handleValue = computed<string>(() => {
   const { meta, path } = router.currentRoute.value
+
   if (meta?.handleValue) {
     return meta.handleValue as string
   }
@@ -76,7 +95,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
 }
 
-function handleQuery () {
+function handleQuery() {
   handleRouter.value = routerStore.userouter
 }
 
