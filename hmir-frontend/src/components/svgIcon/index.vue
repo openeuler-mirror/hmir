@@ -1,3 +1,10 @@
+<!--
+ * @Author: zhang_tianran
+ * @Date: 2023-06-14 15:28:36
+ * @LastEditors: zhang_tianran
+ * @LastEditTime: 2023-06-29 10:27:49
+ * @Description:
+-->
 <template>
   <svg aria-hidden="true" class="svg-icon">
     <use :xlink:href="symbolId" :fill="color" />
@@ -23,6 +30,7 @@ const props = defineProps({
 })
 
 const symbolId = computed(() => `#${props.prefix}-${props.iconClass}`)
+
 </script>
 
 <style scoped>

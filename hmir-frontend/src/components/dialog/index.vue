@@ -1,8 +1,8 @@
 <!--
  * @Author: zhang_tianran dev17101@linx-info.com
  * @Date: 2023-05-18 19:49:09
- * @LastEditors: zhang_tianran dev17101@linx-info.com
- * @LastEditTime: 2023-06-14 19:03:12
+ * @LastEditors: zhang_tianran
+ * @LastEditTime: 2023-06-29 10:26:06
  * @FilePath: /hmir-frontend/src/components/dialog/index.vue
  * @Description: dialog组件
 -->
@@ -44,9 +44,9 @@
 import { reactive, toRefs, onBeforeMount, onBeforeUnmount, onMounted, onUnmounted, onUpdated, onBeforeUpdate } from 'vue'
 export default {
   name: '',
-  setup () {
-    const data = reactive({
-    })
+  setup() {
+    const data = reactive({})
+
     onBeforeMount(() => {
     })
     onMounted(() => {

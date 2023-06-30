@@ -53,7 +53,7 @@ const localeLang = ref({
 })
 
 // 菜单激活回调
-const handleSelect = (key: string, keyPath: string[]) => {
+const handleSelect = (key: string) => {
   if (key === 'processQuit') {
     processQuit()
   } else if (key === 'about') {
@@ -64,37 +64,39 @@ const handleSelect = (key: string, keyPath: string[]) => {
 }
 
 //  展开的回调
-const handleOpen = (key: string, keyPath: string[]) => {
+const handleOpen = () => {
   // 只要有一个菜单展开后将菜单展开的触发条件改为hover触发
   menuTrigger.value = 'hover'
 }
 
 // 收起的回调
-const handleClose = (key: string, keyPath: string[]) => {
+const handleClose = () => {
   // 所有菜单关闭后将菜单展开的触发条件改为click触发
   menuTrigger.value = 'click'
   // processQuit()
 }
 
 // 退出
-async function processQuit () {
+async function processQuit() {
   // 点击退出后关闭窗口
   api.cmd_quit()
 }
 
 // 关于窗口
-function openAboutWindow () {
+function openAboutWindow() {
   visible.value = true
 }
 
-function openSettingWindow () {
+function openSettingWindow() {
   settingVisible.value = true
 }
 
 const store = ref(useAppStore())
 // 修改国际化语言
-function localeChange () {
+
+function localeChange() {
   const lang = langselectData.value.radio
+
   locale.value = lang
   store.value.SET_LOCALE(lang)
   settingVisible.value = false

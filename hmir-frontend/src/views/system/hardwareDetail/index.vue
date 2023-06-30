@@ -53,6 +53,7 @@ const tableData = ref([] as Array <T>)
 // 调用父组建传过来的方法
 const emit = defineEmits(['handleDialog'])
 const props = defineProps(['systemData'])
+
 interface A {
   board_vendor: string,
   board_name: string,
@@ -68,17 +69,20 @@ const messageData = ref<A>({
   bios_date: '',
   model_name: ''
 })
-watch(() => props.systemData, (newValue:any, oldValue:any) => {
+
+watch(() => props.systemData, (newValue:any) => {
   messageData.value = newValue
 }, { deep: true })
 
 const goBack = () => {
   emit('handleDialog', 'hardware')
 }
+
 onMounted(() => {
   api.cmd_sys_pci_info({ host: userStore.host }).then((res: any) => {
     if (res[0] === 0) {
       const temp:any = JSON.parse(res[1])
+
       for (const key in temp) {
         tableData.value.push(temp[key])
       }

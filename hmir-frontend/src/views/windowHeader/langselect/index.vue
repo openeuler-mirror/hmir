@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-05-17 18:16:11
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-05-19 15:57:37
+ * @LastEditTime: 2023-06-29 09:59:23
  * @Description:
 -->
 
@@ -24,13 +24,14 @@ const props = defineProps({
   },
   localeLang: {
     type: Object,
-    default () {
+    default() {
       return {}
     }
   }
 })
 
 const radio = ref('zh_CN')
+
 defineExpose({ radio })
 
 onMounted(() => {

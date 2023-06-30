@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 10:10:06
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-14 16:25:56
+ * @LastEditTime: 2023-06-29 10:23:22
  * @Description:
 -->
 <template>
@@ -26,11 +26,12 @@ import { ArrowRight } from '@element-plus/icons-vue'
 const props = defineProps({
   breadcrumb: {
     type: Array<any>,
-    default () {
+    default() {
       return ['cluster']
     }
   }
 })
+
 </script>
 
 <style lang="scss" scoped>

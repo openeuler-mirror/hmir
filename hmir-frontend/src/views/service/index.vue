@@ -113,7 +113,7 @@ const timerData = ref({
 // });
 
 const handleClick = (tab: TabsPaneContext, event: Event) => {
-  // console.log(tab, event)
+  console.log(tab, event)
 }
 
 onMounted(() => {

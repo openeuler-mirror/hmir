@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 14:03:21
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-28 15:08:36
+ * @LastEditTime: 2023-06-29 10:24:29
  * @Description:
 -->
 <template>
@@ -39,13 +39,13 @@ import type { ElTable } from 'element-plus'
 const props = defineProps({
   tableData: {
     type: Array<Object>,
-    default () {
+    default() {
       return []
     }
   },
   tableColumn: {
     type: Array<any>,
-    default () {
+    default() {
       return []
     }
   },
@@ -64,13 +64,15 @@ const filteredTableColumn = computed(() => {
 })
 
 const emit = defineEmits({
-  selectRowData: (data: Object) => true,
-  tableBodyWidth: (data: string | undefined) => true
+  // eslint-disable-next-line no-unused-vars
+  selectRowData: (_data: Object) => true,
+  // eslint-disable-next-line no-unused-vars
+  tableBodyWidth: (_data: string | undefined) => true
 })
 
 const clusterBodyTable = ref<InstanceType<typeof ElTable>>()
 
-const rowClick = (row: Object, column: any) => {
+const rowClick = (row: Object) => {
   emit('selectRowData', row)
 }
 
@@ -80,6 +82,7 @@ const rowKey = (row: any) => {
 
 const expandChange = (row: any, expandedRows: any) => {
   let width = clusterBodyTable.value?.resizeState.width
+
   if (width) width -= 2
   emit('tableBodyWidth', width + 'px')
   if (expandedRows.length !== 1) {
@@ -90,6 +93,7 @@ const expandChange = (row: any, expandedRows: any) => {
     })
   }
 }
+
 </script>
 
 <style lang="scss" scoped>

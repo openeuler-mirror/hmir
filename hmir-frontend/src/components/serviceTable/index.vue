@@ -39,13 +39,13 @@ import router from '@/router'
 const props = defineProps({
   tableList: {
     type: Array,
-    default () {
+    default() {
       return []
     }
   },
   tableProp: {
     type: Array<any>,
-    default () {
+    default() {
       return []
     }
   }
@@ -59,7 +59,7 @@ const data = ref<any>([])
 
 // 获取对应的点击项数据
 const handleCurrentChange = (val: any | undefined) => {
-  return (event: Event) => {
+  return () => {
     // 跳转到服务详情页
     router.push({
       name: 'serviceDetail',
@@ -78,7 +78,7 @@ watch(() => props.tableList, value => {
   immediate: true
 })
 
-const Row = ({ rowData, rowIndex, cells, columns }) => {
+const Row = ({ cells }) => {
   return cells
 }
 
@@ -100,16 +100,19 @@ onMounted(() => {
       // 过滤转化为中文
       const stateFilter = (value: any) => {
         let state = value
+
         switch (value) {
           case 'Active':
             state = '激活'
             break
+          default:
         }
         return state
       }
-      return <div value={rowData.checked} onClick={handleCurrentChange(rowData)} style={{ width: '100%', height: '100%' }}>
+
+      return <button value={rowData.checked} onClick={handleCurrentChange(rowData)} style={{ width: '100%', height: '100%' }}>
         {stateFilter(rowData.active_state)}{rowData.sub_state ? `(${rowData.sub_state})` : ''}
-      </div>
+      </button>
     }
   })
 })

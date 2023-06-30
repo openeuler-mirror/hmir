@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-page-header :icon="null" @back="goBack">
+    <el-page-header @back="goBack">
       <template #title>
         服务
       </template>
