@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 14:03:21
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-28 14:13:51
+ * @LastEditTime: 2023-06-28 14:34:28
  * @Description:
 -->
 <template>
@@ -71,8 +71,9 @@ const rowKey = (row: any) => {
 }
 
 const expandChange = (row: any, expandedRows: any) => {
-  const width = clusterBodyTable.value?.bodyWidth
-  emit('tableBodyWidth', width)
+  let width = clusterBodyTable.value?.resizeState.width
+  if (width) width -= 2
+  emit('tableBodyWidth', width + 'px')
   if (expandedRows.length !== 1) {
     expandedRows.forEach((itme: { id: any }) => {
       if (itme.id !== row.id) {

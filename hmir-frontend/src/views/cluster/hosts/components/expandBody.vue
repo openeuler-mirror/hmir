@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-28 11:28:25
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-28 14:11:39
+ * @LastEditTime: 2023-06-28 14:50:57
  * @Description:
 -->
 <template>
@@ -40,4 +40,6 @@ const props = defineProps({
 })
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+
+</style>
