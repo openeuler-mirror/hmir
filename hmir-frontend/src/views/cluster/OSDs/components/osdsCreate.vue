@@ -40,7 +40,7 @@ const store = hostsProcStore()
 const breadcrumbTitle = ref()
 
 onMounted(() => {
-  breadcrumbTitle.value = store.get_defaultTitle(['OSDs', 'Create'])
+  breadcrumbTitle.value = store.get_defaultTitle(['OSDs', 'create'])
 })
 
 const breadcrumbClick = () => {

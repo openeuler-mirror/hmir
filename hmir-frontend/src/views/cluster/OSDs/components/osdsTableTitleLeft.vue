@@ -2,20 +2,20 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 15:29:38
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-03 10:43:48
+ * @LastEditTime: 2023-07-03 11:32:49
  * @Description:
 -->
 <template>
   <ClusterTableTitleLeft :dropdownList="dropdownArray" @handleClick="handleClick"></ClusterTableTitleLeft>
   <el-dropdown trigger="click" @command="dropdownCommand" style="margin-left:10px">
     <el-button type="primary">
-      Cluster-wide configuration<el-icon><arrow-down /></el-icon>
+      {{ t('clusterConfiguration') }}<el-icon><arrow-down /></el-icon>
     </el-button>
     <template #dropdown>
       <el-dropdown-menu>
-        <el-dropdown-item command="flags">Flags</el-dropdown-item>
-        <el-dropdown-item command="recoveryPriority">Recovery Priority</el-dropdown-item>
-        <el-dropdown-item command="pgScrub">PG scrub</el-dropdown-item>
+        <el-dropdown-item command="flags">{{ t('flags') }}</el-dropdown-item>
+        <el-dropdown-item command="recoveryPriority">{{ t('recoveryPriority') }}</el-dropdown-item>
+        <el-dropdown-item command="pgScrub">{{ t('pgScrub') }}</el-dropdown-item>
       </el-dropdown-menu>
     </template>
   </el-dropdown>
@@ -25,7 +25,9 @@
 import ClusterTableTitleLeft from '@/components/ClusterTableTitleLeft/index.vue'
 import { computed, ref, watch } from 'vue'
 import router from '@/router'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const props = defineProps({
   selectRow: {
     type: Object,
@@ -40,19 +42,19 @@ const selectRow = computed(() => {
 })
 
 const dropdownArray = ref([
-  { command: 'create', value: 'Create', disabled: false },
-  { command: 'edit', value: 'Edit', disabled: true },
-  { command: 'flags', value: 'Flags', disabled: true },
-  { command: 'scrub', value: 'Scrub', disabled: true },
-  { command: 'deepScrub', value: 'Deep Scrub', disabled: true },
-  { command: 'reweight', value: 'Reweight', disabled: true },
-  { command: 'markOut', value: 'Mark Out', disabled: true },
-  { command: 'markIn', value: 'Mark In', disabled: true },
-  { command: 'markDown', value: 'Mark Down', disabled: true },
-  { command: 'markLost', value: 'Mark Lost', disabled: true },
-  { command: 'purge', value: 'Purge', disabled: true },
-  { command: 'destroy', value: 'Destroy', disabled: true },
-  { command: 'delete', value: 'Delete', disabled: true }
+  { command: 'create', value: 'create', disabled: false },
+  { command: 'edit', value: 'edit', disabled: true },
+  { command: 'flags', value: 'flags', disabled: true },
+  { command: 'scrub', value: 'scrub', disabled: true },
+  { command: 'deepScrub', value: 'deepScrub', disabled: true },
+  { command: 'reweight', value: 'reweight', disabled: true },
+  { command: 'markOut', value: 'markOut', disabled: true },
+  { command: 'markIn', value: 'markIn', disabled: true },
+  { command: 'markDown', value: 'markDown', disabled: true },
+  { command: 'markLost', value: 'markLost', disabled: true },
+  { command: 'purge', value: 'purge', disabled: true },
+  { command: 'destroy', value: 'destroy', disabled: true },
+  { command: 'delete', value: 'delete', disabled: true }
 ])
 
 watch(selectRow, (value) => {
