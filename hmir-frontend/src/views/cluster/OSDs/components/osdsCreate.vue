@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-07-03 09:52:46
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-03 15:23:02
+ * @LastEditTime: 2023-07-03 15:32:23
  * @Description:
 -->
 <template>
@@ -43,50 +43,7 @@
               <template #title>
                 <el-link type="primary">Advanced Mode</el-link>
               </template>
-              <div style="padding:20px 40px;">
-                <el-row :gutter="30">
-                  <el-col :span="8">
-                    <div class="advancedBody">
-                      <span>Primary devices</span>
-                      <el-icon>
-                        <QuestionFilled />
-                      </el-icon>
-                    </div>
-                  </el-col>
-                  <el-col :span="16">
-                    <el-button><el-icon><Plus /></el-icon>Add</el-button>
-                  </el-col>
-                </el-row>
-                <h3>Shared devices</h3>
-                <el-divider />
-                <el-row :gutter="30">
-                  <el-col :span="8">
-                    <div class="advancedBody">
-                      <span>WAL devices</span>
-                      <el-icon>
-                        <QuestionFilled />
-                      </el-icon>
-                    </div>
-                  </el-col>
-                  <el-col :span="16">
-                    <el-button><el-icon><Plus /></el-icon>Add</el-button>
-                  </el-col>
-                </el-row>
-                <el-row :gutter="30" style="margin-top:10px;">
-                  <el-col :span="8">
-                    <div class="advancedBody">
-                      <span>DB devices</span>
-                      <el-icon>
-                        <QuestionFilled />
-                      </el-icon>
-                    </div>
-                  </el-col>
-                  <el-col :span="16">
-                    <el-button><el-icon><Plus /></el-icon>Add</el-button>
-                  </el-col>
-                </el-row>
-              </div>
-
+              <advancedMode></advancedMode>
             </el-collapse-item>
           </el-collapse>
           <el-collapse v-model="featuresActive" accordion>
@@ -114,6 +71,7 @@
 
 <script setup lang="ts">
 import breadcrumb from '@/components/ClusterHeader/index.vue'
+import advancedMode from './advancedMode.vue'
 import router from '@/router'
 import { ref, onMounted } from 'vue'
 import { hostsProcStore } from '@/store/modules/cluster/host'
@@ -161,15 +119,7 @@ const breadcrumbClick = () => {
   padding-right: 20px
 }
 
-.advancedBody{
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  span{
-    margin-right: 10px;
-  }
-}
-.el-radio-group{
+.el-radio-group {
   display: grid;
 }
 
