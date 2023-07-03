@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 16:19:55
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-29 10:23:17
+ * @LastEditTime: 2023-07-03 10:13:52
  * @Description:
 -->
 <template>
@@ -40,7 +40,9 @@ const props = defineProps({
 const dropdownText = ref('')
 
 const handleClick = (dropdownText: string) => {
-  emit('handleClick', dropdownText)
+  const selectCommand = props.dropdownList.find(item => item.value === dropdownText)?.command
+
+  emit('handleClick', selectCommand)
 }
 
 const dropdownCommand = (commandText: string) => {

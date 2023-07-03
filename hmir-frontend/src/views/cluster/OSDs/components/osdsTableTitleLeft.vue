@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 15:29:38
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-03 09:27:57
+ * @LastEditTime: 2023-07-03 10:43:48
  * @Description:
 -->
 <template>
@@ -24,6 +24,7 @@
 <script setup lang="ts">
 import ClusterTableTitleLeft from '@/components/ClusterTableTitleLeft/index.vue'
 import { computed, ref, watch } from 'vue'
+import router from '@/router'
 
 const props = defineProps({
   selectRow: {
@@ -39,7 +40,7 @@ const selectRow = computed(() => {
 })
 
 const dropdownArray = ref([
-  { command: 'create', value: 'create', disabled: false },
+  { command: 'create', value: 'Create', disabled: false },
   { command: 'edit', value: 'Edit', disabled: true },
   { command: 'flags', value: 'Flags', disabled: true },
   { command: 'scrub', value: 'Scrub', disabled: true },
@@ -66,14 +67,27 @@ watch(selectRow, (value) => {
       item.disabled = false
     })
   }
-}, { immediate:true })
+}, { immediate: true })
 
 const handleClick = (dropdownText: string) => {
   console.log(dropdownText)
+  switch (dropdownText) {
+    case 'create':
+      osdsCreate()
+      break
+    default:
+      break
+  }
 }
 
 const dropdownCommand = (commandText: string) => {
   console.log(commandText)
+}
+
+const osdsCreate = () => {
+  router.push({
+    name: 'OSDsCreate'
+  })
 }
 
 </script>
