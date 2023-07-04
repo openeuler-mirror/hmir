@@ -18,10 +18,7 @@ mod tests {
 
     #[feature(unix_chown)]
     use std::os::unix::fs;
-
     extern crate machine_uid;
-
-
 
 
     fn ceph_generate_key() -> String {
@@ -31,8 +28,6 @@ mod tests {
         let binding = String::from_utf8_lossy(&output.stdout);
         return binding.to_string();
     }
-
-
 
     async fn ceph_version_() -> Result<Output, std::io::Error> {
         let mut child = AsyncCommand::new("ceph").arg("--version").stdout(std::process::Stdio::piped()).spawn()?;
@@ -59,17 +54,11 @@ mod tests {
         let binding = String::from_utf8_lossy(&output.stdout);
         let binding = binding.trim();
         let str_vec: Vec<&str> = binding.split(",").collect();
-
         let items: Vec<u32> = str_vec
             .iter()
             .map(|s|s.parse::<u32>().unwrap())
             .collect();
-        println!("{:?}",items);
-        // .iter()
-            // .filter_map(|s| s.parse().ok())
-            // .collect();
-        return (0,0);
-        // return (items[0],items[1]);
+        return (items[0],items[1]);
     }
 
     async fn deploy_daemon(daemon_type : String) {
@@ -108,13 +97,13 @@ mod tests {
         let mut file_path = temp_dir.clone();
         file_path.push(format!("{}{}","ceph-tmp",gernerate_random_letters()));
         let mut file =File::create(&file_path)?;
-        fs::fchown(&file, Some(uid), Some(gid))?;
-        file.write(content.as_ref());
+        file.write_all(content.as_ref());
         file.flush();
+        fs::fchown(&file, Some(uid), Some(gid))?;
         Ok(file)
     }
 
-    fn create_initial_keys() {
+    fn create_initial_keys() ->(String,String,String,std::io::Result<File>,std::io::Result<File>) {
         let mon_key = ceph_generate_key();
         let admin_key = ceph_generate_key();
         let mgr_key = ceph_generate_key();
@@ -140,7 +129,10 @@ mod tests {
         let admin_keyring_context = format!("[client.admin]\n\tkey =  + {} + \n",admin_key);
         let admin_keyring = write_tmp(&admin_keyring_context,uid,gid);
         let bootstrap_keyring = write_tmp(&keyring, uid, gid);
+
+        (mon_key,mgr_key,admin_key,bootstrap_keyring,admin_keyring)
     }
+
 
     fn create_initial_monmap() {
 
@@ -149,15 +141,15 @@ mod tests {
     fn ceph_bootstrap() {
         let CEPH_CONFIG_PATH = "/etc/ceph/ceph.conf";
         let (uid, gid) = extract_uid_gid();
-        create_initial_keys()
+        let  (mon_key,mgr_key,admin_key,bootstrap_keyring,admin_keyring) = create_initial_keys();
+
     }
 
 
     #[tokio::test]
     async fn create_ceph_cluster() {
 
-        extract_uid_gid();
-        // ceph_bootstrap();
+        ceph_bootstrap();
     }
 
 }
