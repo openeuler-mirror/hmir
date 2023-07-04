@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-07-04 16:24:39
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-04 16:30:56
+ * @LastEditTime: 2023-07-04 17:03:33
  * @Description:
 -->
 <template>
@@ -35,11 +35,11 @@ const emit = defineEmits({
 })
 
 const cancel = () => {
-  emit('cancel', 'flagsDialog', false)
+  emit('cancel', 'pgScrub', false)
 }
 
 const submit = () => {
-  emit('cancel', 'flagsDialog', false)
+  emit('cancel', 'pgScrub', false)
 }
 
 </script>

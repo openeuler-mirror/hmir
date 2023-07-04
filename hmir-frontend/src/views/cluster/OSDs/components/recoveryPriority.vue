@@ -35,11 +35,11 @@ const emit = defineEmits({
 })
 
 const cancel = () => {
-  emit('cancel', 'flagsDialog', false)
+  emit('cancel', 'recoveryPriority', false)
 }
 
 const submit = () => {
-  emit('cancel', 'flagsDialog', false)
+  emit('cancel', 'recoveryPriority', false)
 }
 
 </script>
