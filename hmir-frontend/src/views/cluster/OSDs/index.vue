@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 09:47:34
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-30 17:34:24
+ * @LastEditTime: 2023-07-03 09:28:49
  * @Description:
 -->
 <template>
@@ -32,7 +32,7 @@
 <script setup lang="ts">
 import breadcrumb from '@/components/ClusterHeader/index.vue'
 import ClusterBodyTable from '@/components/ClusterBodyTable/index.vue'
-import hostTableTitleLeft from './components/hostTableTitleLeft.vue'
+import hostTableTitleLeft from './components/osdsTableTitleLeft.vue'
 import ClusterTableTitleRight from '@/components/ClusterTableTitleRight/index.vue'
 import PerformanceDetails from '../components/PerformanceDetails.vue'
 import { onMounted, ref } from 'vue'
