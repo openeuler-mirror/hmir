@@ -57,10 +57,13 @@ mod tests {
             .output()
             .expect("failed to execute process");
         let binding = String::from_utf8_lossy(&output.stdout);
+        let binding = binding.trim();
         let str_vec: Vec<&str> = binding.split(",").collect();
 
-
-        let items: Vec<u32> = str_vec.iter().map(|s|s.parse::<u32>().unwrap()).collect();
+        let items: Vec<u32> = str_vec
+            .iter()
+            .map(|s|s.parse::<u32>().unwrap())
+            .collect();
         println!("{:?}",items);
         // .iter()
             // .filter_map(|s| s.parse().ok())
