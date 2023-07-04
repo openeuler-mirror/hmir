@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 10:10:06
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-03 10:23:26
+ * @LastEditTime: 2023-07-03 11:27:48
  * @Description:
 -->
 <template>
@@ -11,8 +11,8 @@
       <el-header>
         <el-breadcrumb :separator-icon="ArrowRight">
           <el-breadcrumb-item v-for="(item, index) of breadcrumb" :key="item">
-            <el-link type="primary" v-if="index > 0 && (index + 1) !== breadcrumb.length" @click="linkClick(item)">{{ item }}</el-link>
-            <span v-else>{{ item }}</span>
+            <el-link type="primary" v-if="index > 0 && (index + 1) !== breadcrumb.length" @click="linkClick(item)">{{ t(item) }}</el-link>
+            <span v-else>{{ t(item) }}</span>
           </el-breadcrumb-item>
         </el-breadcrumb>
       </el-header>
@@ -25,7 +25,11 @@
 
 <script setup lang="ts">
 import { ArrowRight } from '@element-plus/icons-vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 // import { ref } from 'vue'
+
 defineProps({
   breadcrumb: {
     type: Array<any>,

@@ -2,16 +2,16 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 16:19:55
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-03 10:13:52
+ * @LastEditTime: 2023-07-03 11:33:51
  * @Description:
 -->
 <template>
   <el-dropdown split-button type="primary" @click="handleClick(dropdownText)" @command="dropdownCommand" trigger="click">
-    <span>{{ dropdownText }}</span>
+    <span>{{ t(dropdownText) }}</span>
     <template #dropdown>
       <el-dropdown-menu>
         <el-dropdown-item v-for="item in props.dropdownList" :key="item.command" :command="item.command"
-          :disabled="item.disabled" :class="{'is-disabled':item.disabled }">{{ item.value }}</el-dropdown-item>
+          :disabled="item.disabled" :class="{ 'is-disabled': item.disabled }">{{ t(item.value) }}</el-dropdown-item>
       </el-dropdown-menu>
     </template>
   </el-dropdown>
@@ -19,6 +19,9 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const emit = defineEmits({
   // eslint-disable-next-line no-unused-vars
@@ -63,9 +66,9 @@ onMounted(() => {
   color: var(--el-dropdown-menuItem-hover-color);
 }
 
-:deep(.is-disabled){
+:deep(.is-disabled) {
   color: var(--el-text-color-disabled) !important;
-  background-color:transparent !important;
+  background-color: transparent !important;
 }
 
 :deep(.el-button-group) {
