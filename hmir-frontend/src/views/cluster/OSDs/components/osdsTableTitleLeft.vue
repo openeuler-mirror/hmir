@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 15:29:38
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-03 11:32:49
+ * @LastEditTime: 2023-07-04 16:11:48
  * @Description:
 -->
 <template>
@@ -19,10 +19,12 @@
       </el-dropdown-menu>
     </template>
   </el-dropdown>
+  <flagsDialog :dialogVisible="flagsDialogVisible" @cancel="dialogFlagsClose"></flagsDialog>
 </template>
 
 <script setup lang="ts">
 import ClusterTableTitleLeft from '@/components/ClusterTableTitleLeft/index.vue'
+import flagsDialog from './flagsDialog.vue'
 import { computed, ref, watch } from 'vue'
 import router from '@/router'
 import { useI18n } from 'vue-i18n'
@@ -36,6 +38,8 @@ const props = defineProps({
     }
   }
 })
+
+const flagsDialogVisible = ref(false)
 
 const selectRow = computed(() => {
   return props.selectRow
@@ -84,6 +88,13 @@ const handleClick = (dropdownText: string) => {
 
 const dropdownCommand = (commandText: string) => {
   console.log(commandText)
+  switch (commandText) {
+    case 'flags':
+      open_OSD_Flags()
+      break
+    default:
+      break
+  }
 }
 
 const osdsCreate = () => {
@@ -92,8 +103,14 @@ const osdsCreate = () => {
   })
 }
 
+const open_OSD_Flags = () => {
+  flagsDialogVisible.value = true
+}
+
+const dialogFlagsClose = (type: string, value: boolean) => {
+  flagsDialogVisible.value = value
+}
+
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
