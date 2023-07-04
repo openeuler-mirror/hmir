@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-02-02 15:29:41
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-30 15:19:35
+ * @LastEditTime: 2023-06-30 17:40:26
  * @Description: 
  */
 
@@ -45,5 +45,18 @@ export default {
     hosts:'Hosts',
     PhysicalDisks:'Physical Disks',
     Monitors: 'Monitors',
-    OSDs:'OSDs'
+    OSDs:'OSDs',
+    type:'Type',
+    osdsId:'ID',
+    host:'Host',
+    status:'Status',
+    deviceClass:'Device class',
+    pgs:'PGs',
+    size:'Size',
+    flags:'Flags',
+    usage:'Usage',
+    readBytes:'Read bytes',
+    writeBytes:'Write bytes',
+    readOps:'Read ops',
+    writeOps:'Write ops'
 }

@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 14:03:21
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-30 09:32:17
+ * @LastEditTime: 2023-06-30 17:41:56
  * @Description:
 -->
 <template>
@@ -27,7 +27,7 @@
         <slot name="expand" v-bind:row="props.row"></slot>
       </template>
     </el-table-column>
-    <el-table-column v-for="item in filteredTableColumn" :key="item.prop" :label="item.label" :prop="item.prop"
+    <el-table-column v-for="item in filteredTableColumn" :key="item.prop" :label="t(item.label)" :prop="item.prop"
       :sortable="item.sortable" >
       <template v-slot:default="{ row }">
         <el-progress :stroke-width="15" :percentage="row.cpuUsage" v-if="item.prop === 'cpuUsage'"/>
@@ -40,7 +40,9 @@
 <script lang="ts" setup>
 import { ref, computed } from 'vue'
 import type { ElTable } from 'element-plus'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const props = defineProps({
   tableData: {
     type: Array<Object>,
@@ -86,9 +88,10 @@ const rowKey = (row: any) => {
 }
 
 const expandChange = (row: any, expandedRows: any) => {
-  let width = clusterBodyTable.value?.resizeState.width
+  let width = Number(clusterBodyTable.value?.bodyWidth.replace('px', ''))
 
-  if (width) width -= 2
+  if (width) width -= 16
+
   emit('tableBodyWidth', width + 'px')
   if (expandedRows.length !== 1) {
     expandedRows.forEach((itme: { id: any }) => {
