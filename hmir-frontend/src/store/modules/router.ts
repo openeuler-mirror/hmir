@@ -113,7 +113,7 @@ export const useRouterStore = defineStore('router', {
             path: '/process',
             name: 'process',
             component: () => import('@/views/process/index.vue'),
-            meta: { title:t('process'), icon: 'Menu', disabled: false },
+            meta: { title: t('process'), icon: 'Menu', disabled: false },
           },
           {
             path: '/virtual',
@@ -133,6 +133,12 @@ export const useRouterStore = defineStore('router', {
             component: () => import('@/views/consoleCommand/index.vue'),
             meta: { title: t('console'), icon: 'Setting', disabled: false }
           },
+          {
+            path: '/clusterHealth/cluster/OSDs/create',
+            name: 'OSDsCreate',
+            component: () => import('@/views/cluster/OSDs/components/osdsCreate.vue'),
+            meta: { title: t('OSDs'), icon: 'Menu', disabled: false },
+          },
         ]
       }],
       //判断是否添加了路由信息
@@ -144,7 +150,7 @@ export const useRouterStore = defineStore('router', {
   //计算属性
   getters: {
     userouter: state => {
-      return state.router?.[0].children.filter(item => item.name !== 'console' && item.name !== 'serviceDetail')
+      return state.router?.[0].children.filter(item => !['console', 'serviceDetail', 'OSDsCreate'].includes(item.name))
     }
   },
   //异步同步函数
