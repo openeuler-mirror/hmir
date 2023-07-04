@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-07-03 09:52:46
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-03 15:32:23
+ * @LastEditTime: 2023-07-04 11:28:55
  * @Description:
 -->
 <template>
@@ -51,13 +51,14 @@
               <template #title>
                 <el-link type="primary">Features</el-link>
               </template>
-              <el-checkbox v-model="featuresCheckbox" label="Encryption" size="large" />
+              <el-checkbox v-model="featuresCheckbox" label="Encryption" size="large"
+                :disabled="activeName !== 'deployment'" />
             </el-collapse-item>
           </el-collapse>
         </div>
         <el-divider />
         <div class="cardBtn">
-          <el-button>
+          <el-button @click="breadcrumbClick">
             Cancel
           </el-button>
           <el-button type="danger">
@@ -73,7 +74,7 @@
 import breadcrumb from '@/components/ClusterHeader/index.vue'
 import advancedMode from './advancedMode.vue'
 import router from '@/router'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { hostsProcStore } from '@/store/modules/cluster/host'
 
 const store = hostsProcStore()
@@ -82,11 +83,22 @@ const breadcrumbTitle = ref()
 
 const activeName = ref('deployment')
 
+const activeMap = new Map<string, string>([
+  ['deployment', 'advancedMode'],
+  ['advancedMode', 'deployment']
+])
+
 const featuresActive = ref('features')
 
 const deploymentSelect = ref('')
 
 const featuresCheckbox = ref(false)
+
+watch(activeName, (value, oldValue) => {
+  if (!value) {
+    activeName.value = activeMap.get(oldValue as string) as string
+  }
+})
 
 onMounted(() => {
   breadcrumbTitle.value = store.get_defaultTitle(['OSDs', 'create'])
