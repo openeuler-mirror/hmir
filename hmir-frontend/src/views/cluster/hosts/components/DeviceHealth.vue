@@ -13,8 +13,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 
-// eslint-disable-next-line no-unused-vars
-const props = defineProps({
+defineProps({
   row: {
     type: Array,
     default() {
