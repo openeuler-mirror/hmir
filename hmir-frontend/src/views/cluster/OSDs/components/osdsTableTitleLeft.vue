@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 15:29:38
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-04 16:20:39
+ * @LastEditTime: 2023-07-04 16:27:01
  * @Description:
 -->
 <template>
@@ -21,12 +21,14 @@
   </el-dropdown>
   <flagsDialog :dialogVisible="flagsDialogVisible" @cancel="dialogFlagsClose"></flagsDialog>
   <recoveryPriority :dialogVisible="priorityDialogVisible" @cancel="dialogPriorityClose"></recoveryPriority>
+  <PG_scrub :dialogVisible="flagsDialogVisible" @cancel="dialogScrubClose"></PG_scrub>
 </template>
 
 <script setup lang="ts">
 import ClusterTableTitleLeft from '@/components/ClusterTableTitleLeft/index.vue'
 import flagsDialog from './flagsDialog.vue'
 import recoveryPriority from './recoveryPriority.vue'
+import PG_scrub from './PG_scrub.vue'
 import { computed, ref, watch } from 'vue'
 import router from '@/router'
 import { useI18n } from 'vue-i18n'
@@ -99,6 +101,9 @@ const dropdownCommand = (commandText: string) => {
     case 'recoveryPriority':
       open_Priority()
       break
+    case 'pgScrub':
+      open_Scrub()
+      break
     default:
       break
   }
@@ -123,6 +128,14 @@ const open_Priority = () => {
 }
 
 const dialogPriorityClose = (type: string, value: boolean) => {
+  flagsDialogVisible.value = value
+}
+
+const open_Scrub = () => {
+  flagsDialogVisible.value = true
+}
+
+const dialogScrubClose = (type: string, value: boolean) => {
   flagsDialogVisible.value = value
 }
 
