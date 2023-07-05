@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-07-04 16:17:40
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-05 14:00:48
+ * @LastEditTime: 2023-07-05 14:18:20
  * @Description:
 -->
 <template>
@@ -14,17 +14,54 @@
     <el-form-item prop="priority">
       <el-checkbox v-model="ruleForm.customize" label="Customize priority values"></el-checkbox>
     </el-form-item>
-    <el-form-item label="Max Backfills" prop="maxBackfills">
-      <el-input-number v-model="ruleForm.maxBackfills" :min="0" :disabled="!ruleForm.customize" controls-position="right" />
+    <el-form-item prop="maxBackfills">
+      <template #label>
+        <div class="formLabel">
+          <div>Max Backfills1</div>
+          <el-tooltip content="Maximum number of concurrent local and remote backfills or recoveries per OSD"
+            placement="bottom" effect="light" trigger="click">
+            <el-icon>
+              <QuestionFilled />
+            </el-icon>
+          </el-tooltip>
+        </div>
+      </template>
+      <el-input-number v-model="ruleForm.maxBackfills" :min="0" :disabled="!ruleForm.customize"
+        controls-position="right" />
     </el-form-item>
     <el-form-item label="Recovery Max Active" prop="recoveryMaxActive">
-      <el-input-number v-model="ruleForm.recoveryMaxActive" :min="0" :disabled="!ruleForm.customize" controls-position="right" />
+      <template #label>
+        <div class="formLabel">
+          <div>Recovery Max Active</div>
+          <el-tooltip content="Number of simultaneous active recovery operations per OSD (overrides _ssd and _hdd if non-zero)"
+            placement="bottom" effect="light" trigger="click">
+            <el-icon>
+              <QuestionFilled />
+            </el-icon>
+          </el-tooltip>
+        </div>
+      </template>
+      <el-input-number v-model="ruleForm.recoveryMaxActive" :min="0" :disabled="!ruleForm.customize"
+        controls-position="right" />
     </el-form-item>
     <el-form-item label="Recovery Max Single Start" prop="recoveryMaxSingleStart">
-      <el-input-number v-model="ruleForm.recoveryMaxSingleStart" :min="0" :disabled="!ruleForm.customize" controls-position="right" />
+      <el-input-number v-model="ruleForm.recoveryMaxSingleStart" :min="0" :disabled="!ruleForm.customize"
+        controls-position="right" />
     </el-form-item>
     <el-form-item label="Recovery Sleep" prop="recoverySleep">
-      <el-input-number v-model="ruleForm.recoverySleep" :min="0" :disabled="!ruleForm.customize" controls-position="right" />
+      <template #label>
+        <div class="formLabel">
+          <div>Recovery Sleep</div>
+          <el-tooltip content="Time in seconds to sleep before next recovery or backfill op"
+            placement="bottom" effect="light" trigger="click">
+            <el-icon>
+              <QuestionFilled />
+            </el-icon>
+          </el-tooltip>
+        </div>
+      </template>
+      <el-input-number v-model="ruleForm.recoverySleep" :min="0" :disabled="!ruleForm.customize"
+        controls-position="right" />
     </el-form-item>
   </el-form>
 </template>
@@ -94,7 +131,7 @@ const rules = ref<any>({
   recoveryMaxSingleStart: [
     { required: true, validator: checkNumber, trigger: 'blur' }
   ],
-  recoverySleep : [
+  recoverySleep: [
     { required: true, validator: checkNumber, trigger: 'blur' }
   ]
 })
@@ -107,7 +144,15 @@ const submit = () => {
 </script>
 
 <style lang="scss" scoped>
-.el-input-number{
+.el-input-number {
   width: 100%;
+}
+
+.formLabel {
+  display: flex;
+  align-items: center;
+  div:nth-child(1) {
+    margin-right: 5px;
+  }
 }
 </style>
