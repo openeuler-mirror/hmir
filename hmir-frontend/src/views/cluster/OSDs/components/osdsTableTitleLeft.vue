@@ -89,14 +89,14 @@ const handleClick = (dropdownText: string) => {
 
 const dropdownCommand = (commandText: string) => {
   osdsType.value = commandText
-  dialogChange(commandText, true)
+  dialogChange(true)
 }
 
 const osdsCreate = () => {
   router.push('/clusterHealth/cluster/OSDs/create')
 }
 
-const dialogChange = (type: string, value: boolean) => {
+const dialogChange = (value: boolean) => {
   dialogVisible.value = value
 }
 

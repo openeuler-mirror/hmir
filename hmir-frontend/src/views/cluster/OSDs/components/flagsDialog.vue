@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-07-04 15:40:49
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-05 11:15:51
+ * @LastEditTime: 2023-07-05 11:21:08
  * @Description:
 -->
 <template>
@@ -100,6 +100,16 @@ const flagsList = ref([{
 }])
 
 const checkList = ref(['Bitwise Sort', 'Purged Snapdirs', 'Recovery Deletes', 'PG Log Hard Limit'])
+
+const emit = defineEmits({
+  // eslint-disable-next-line no-unused-vars
+  cancel: (_data: boolean) => true
+})
+
+// eslint-disable-next-line no-unused-vars
+const submit = () => {
+  emit('cancel', false)
+}
 
 </script>
 

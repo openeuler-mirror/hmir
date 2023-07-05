@@ -2,21 +2,11 @@
  * @Author: zhang_tianran
  * @Date: 2023-07-04 16:24:39
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-04 17:03:33
+ * @LastEditTime: 2023-07-05 11:25:39
  * @Description:
 -->
 <template>
-  <el-dialog :model-value="dialogVisible" title="Edit PG scrub options" width="30%" @closed="cancel">
-    <span>This is a message</span>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="cancel">Cancel</el-button>
-        <el-button type="primary" @click="submit">
-          Confirm
-        </el-button>
-      </span>
-    </template>
-  </el-dialog>
+  <span>Edit PG scrub options</span>
 </template>
 
 <script setup lang="ts">
@@ -31,15 +21,12 @@ defineProps({
 
 const emit = defineEmits({
   // eslint-disable-next-line no-unused-vars
-  cancel: (_type: string, _data: boolean) => true
+  cancel: (_data: boolean) => true
 })
 
-const cancel = () => {
-  emit('cancel', 'pgScrub', false)
-}
-
+// eslint-disable-next-line no-unused-vars
 const submit = () => {
-  emit('cancel', 'pgScrub', false)
+  emit('cancel', false)
 }
 
 </script>
