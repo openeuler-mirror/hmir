@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 15:29:38
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-04 16:11:48
+ * @LastEditTime: 2023-07-04 16:20:39
  * @Description:
 -->
 <template>
@@ -20,11 +20,13 @@
     </template>
   </el-dropdown>
   <flagsDialog :dialogVisible="flagsDialogVisible" @cancel="dialogFlagsClose"></flagsDialog>
+  <recoveryPriority :dialogVisible="priorityDialogVisible" @cancel="dialogPriorityClose"></recoveryPriority>
 </template>
 
 <script setup lang="ts">
 import ClusterTableTitleLeft from '@/components/ClusterTableTitleLeft/index.vue'
 import flagsDialog from './flagsDialog.vue'
+import recoveryPriority from './recoveryPriority.vue'
 import { computed, ref, watch } from 'vue'
 import router from '@/router'
 import { useI18n } from 'vue-i18n'
@@ -40,6 +42,8 @@ const props = defineProps({
 })
 
 const flagsDialogVisible = ref(false)
+
+const priorityDialogVisible = ref(false)
 
 const selectRow = computed(() => {
   return props.selectRow
@@ -92,6 +96,9 @@ const dropdownCommand = (commandText: string) => {
     case 'flags':
       open_OSD_Flags()
       break
+    case 'recoveryPriority':
+      open_Priority()
+      break
     default:
       break
   }
@@ -108,6 +115,14 @@ const open_OSD_Flags = () => {
 }
 
 const dialogFlagsClose = (type: string, value: boolean) => {
+  flagsDialogVisible.value = value
+}
+
+const open_Priority = () => {
+  flagsDialogVisible.value = true
+}
+
+const dialogPriorityClose = (type: string, value: boolean) => {
   flagsDialogVisible.value = value
 }
 
