@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 15:29:38
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-04 17:07:15
+ * @LastEditTime: 2023-07-04 18:03:00
  * @Description:
 -->
 <template>
@@ -19,16 +19,12 @@
       </el-dropdown-menu>
     </template>
   </el-dropdown>
-  <flagsDialog :dialogVisible="flagsDialogVisible" @cancel="dialogChange"></flagsDialog>
-  <recoveryPriority :dialogVisible="priorityDialogVisible" @cancel="dialogChange"></recoveryPriority>
-  <PG_scrub :dialogVisible="scrubDialogVisible" @cancel="dialogChange"></PG_scrub>
+  <osdsDialog :dialogVisible="dialogVisible" :osdsType="osdsType" @cancel="dialogChange"></osdsDialog>
 </template>
 
 <script setup lang="ts">
 import ClusterTableTitleLeft from '@/components/ClusterTableTitleLeft/index.vue'
-import flagsDialog from './flagsDialog.vue'
-import recoveryPriority from './recoveryPriority.vue'
-import PG_scrub from './PG_scrub.vue'
+import osdsDialog from './osdsDialog.vue'
 import { computed, ref, watch } from 'vue'
 import router from '@/router'
 import { useI18n } from 'vue-i18n'
@@ -43,17 +39,9 @@ const props = defineProps({
   }
 })
 
-const flagsDialogVisible = ref(false)
+const osdsType = ref('')
 
-const priorityDialogVisible = ref(false)
-
-const scrubDialogVisible = ref(false)
-
-const dialogMap = new Map([
-  ['flags', flagsDialogVisible],
-  ['recoveryPriority', priorityDialogVisible],
-  ['pgScrub', scrubDialogVisible]
-])
+const dialogVisible = ref(false)
 
 const selectRow = computed(() => {
   return props.selectRow
@@ -100,6 +88,7 @@ const handleClick = (dropdownText: string) => {
 }
 
 const dropdownCommand = (commandText: string) => {
+  osdsType.value = commandText
   dialogChange(commandText, true)
 }
 
@@ -108,9 +97,7 @@ const osdsCreate = () => {
 }
 
 const dialogChange = (type: string, value: boolean) => {
-  const dialogValue = dialogMap.get(type) as any
-
-  dialogValue.value = value
+  dialogVisible.value = value
 }
 
 </script>
