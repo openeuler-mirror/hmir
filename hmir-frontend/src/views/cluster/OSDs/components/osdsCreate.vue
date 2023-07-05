@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-07-03 09:52:46
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-04 11:28:55
+ * @LastEditTime: 2023-07-05 13:47:50
  * @Description:
 -->
 <template>
@@ -105,9 +105,7 @@ onMounted(() => {
 })
 
 const breadcrumbClick = () => {
-  router.push({
-    name: 'OSDs'
-  })
+  router.push('/clusterHealth/cluster/OSDs')
 }
 
 </script>
