@@ -2,21 +2,11 @@
  * @Author: zhang_tianran
  * @Date: 2023-07-04 16:17:40
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-04 16:21:49
+ * @LastEditTime: 2023-07-05 11:23:04
  * @Description:
 -->
 <template>
-  <el-dialog :model-value="dialogVisible" title="OSD Recovery Priority" width="30%" @closed="cancel">
-    <span>This is a message</span>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="cancel">Cancel</el-button>
-        <el-button type="primary" @click="submit">
-          Confirm
-        </el-button>
-      </span>
-    </template>
-  </el-dialog>
+  <span>OSD Recovery Priority</span>
 </template>
 
 <script setup lang="ts">
@@ -31,15 +21,12 @@ defineProps({
 
 const emit = defineEmits({
   // eslint-disable-next-line no-unused-vars
-  cancel: (_type: string, _data: boolean) => true
+  cancel: (_data: boolean) => true
 })
 
-const cancel = () => {
-  emit('cancel', 'recoveryPriority', false)
-}
-
+// eslint-disable-next-line no-unused-vars
 const submit = () => {
-  emit('cancel', 'recoveryPriority', false)
+  emit('cancel', false)
 }
 
 </script>
