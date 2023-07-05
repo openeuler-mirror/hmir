@@ -2,25 +2,23 @@
  * @Author: zhang_tianran
  * @Date: 2023-07-04 15:40:49
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-04 16:10:36
+ * @LastEditTime: 2023-07-05 11:15:51
  * @Description:
 -->
 <template>
-  <el-dialog :model-value="dialogVisible" title="Cluster-wide OSD Flags" width="30%" @closed="cancel">
-    <span>This is a message</span>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="cancel">Cancel</el-button>
-        <el-button type="primary" @click="submit">
-          Confirm
-        </el-button>
-      </span>
+  <el-checkbox-group v-model="checkList">
+    <template v-for="(item, index) in flagsList" :key="item.titleText">
+      <el-divider v-if="index !== 0"/>
+      <el-checkbox  :disabled="item.disabled" :label="item.id">
+        <h3>{{ item.titleText }}</h3>
+        <div>{{ item.annotation }}</div>
+      </el-checkbox>
     </template>
-  </el-dialog>
+  </el-checkbox-group>
 </template>
 
 <script setup lang="ts">
-// import { ref } from 'vue'
+import { ref } from 'vue'
 
 defineProps({
   dialogVisible: {
@@ -29,18 +27,79 @@ defineProps({
   }
 })
 
-const emit = defineEmits({
-  // eslint-disable-next-line no-unused-vars
-  cancel: (_type: string, _data: boolean) => true
-})
+const flagsList = ref([{
+  id:'No In',
+  titleText:'No In',
+  annotation:'OSDs that were previously marked out will not be marked back in when they start',
+  disabled:false
+}, {
+  id:'No Out',
+  titleText:'No Out',
+  annotation:'OSDs will not automatically be marked out after the configured interval',
+  disabled:false
+}, {
+  id:'No Up',
+  titleText:'No Up',
+  annotation:'OSDs are not allowed to start',
+  disabled:false
+}, {
+  id:'No Down',
+  titleText:'No Down',
+  annotation:'OSD failure reports are being ignored, such that the monitors will not mark OSDs down',
+  disabled:false
+}, {
+  id:'Pause',
+  titleText:'Pause',
+  annotation:'Pauses reads and writes',
+  disabled:false
+}, {
+  id:'No Scrub',
+  titleText:'No Scrub',
+  annotation:'Scrubbing is disabled',
+  disabled:false
+}, {
+  id:'No Deep Scrub',
+  titleText:'No Deep Scrub',
+  annotation:'Deep Scrubbing is disabled',
+  disabled:false
+}, {
+  id:'No Backfill',
+  titleText:'No Backfill',
+  annotation:'Backfilling of PGs is suspended',
+  disabled:false
+}, {
+  id:'No Rebalance',
+  titleText:'No Rebalance',
+  annotation:'OSD will choose not to backfill unless PG is also degraded',
+  disabled:false
+}, {
+  id:'No Recover',
+  titleText:'No Recover',
+  annotation:'Recovery of PGs is suspended',
+  disabled:false
+}, {
+  id:'Bitwise Sort',
+  titleText:'Bitwise Sort',
+  annotation:'Use bitwise sort',
+  disabled:true
+}, {
+  id:'Purged Snapdirs',
+  titleText:'Purged Snapdirs',
+  annotation:'OSDs have converted snapsets',
+  disabled:true
+}, {
+  id:'Recovery Deletes',
+  titleText:'Recovery Deletes',
+  annotation:'Deletes performed during recovery instead of peering',
+  disabled:true
+}, {
+  id:'PG Log Hard Limit',
+  titleText:'PG Log Hard Limit',
+  annotation:'Puts a hard limit on pg log length',
+  disabled:true
+}])
 
-const cancel = () => {
-  emit('cancel', 'flags', false)
-}
-
-const submit = () => {
-  emit('cancel', 'flags', false)
-}
+const checkList = ref(['Bitwise Sort', 'Purged Snapdirs', 'Recovery Deletes', 'PG Log Hard Limit'])
 
 </script>
 
