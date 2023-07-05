@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-07-04 16:17:40
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-05 13:44:59
+ * @LastEditTime: 2023-07-05 14:00:48
  * @Description:
 -->
 <template>
@@ -15,16 +15,16 @@
       <el-checkbox v-model="ruleForm.customize" label="Customize priority values"></el-checkbox>
     </el-form-item>
     <el-form-item label="Max Backfills" prop="maxBackfills">
-      <el-input-number v-model="ruleForm.maxBackfills" :min="0" controls-position="right" />
+      <el-input-number v-model="ruleForm.maxBackfills" :min="0" :disabled="!ruleForm.customize" controls-position="right" />
     </el-form-item>
     <el-form-item label="Recovery Max Active" prop="recoveryMaxActive">
-      <el-input-number v-model="ruleForm.recoveryMaxActive" :min="0" controls-position="right" />
+      <el-input-number v-model="ruleForm.recoveryMaxActive" :min="0" :disabled="!ruleForm.customize" controls-position="right" />
     </el-form-item>
     <el-form-item label="Recovery Max Single Start" prop="recoveryMaxSingleStart">
-      <el-input-number v-model="ruleForm.recoveryMaxSingleStart" :min="0" controls-position="right" />
+      <el-input-number v-model="ruleForm.recoveryMaxSingleStart" :min="0" :disabled="!ruleForm.customize" controls-position="right" />
     </el-form-item>
     <el-form-item label="Recovery Sleep" prop="recoverySleep">
-      <el-input-number v-model="ruleForm.recoverySleep" :min="0" controls-position="right" />
+      <el-input-number v-model="ruleForm.recoverySleep" :min="0" :disabled="!ruleForm.customize" controls-position="right" />
     </el-form-item>
   </el-form>
 </template>
@@ -32,6 +32,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { FormInstance } from 'element-plus'
+import { isNumber } from '@/utils/utils'
 interface RuleForm {
   priority: string
   customize: boolean
@@ -70,7 +71,7 @@ const checkNumber = (rule: any, value: any, callback: any) => {
   if (value === '') {
     callback(new Error('不能为空'))
   }
-  if (value && Number(value) >= 0) {
+  if (isNumber(value)) {
     callback()
   } else {
     callback(new Error('请输入大于0的数字'))
