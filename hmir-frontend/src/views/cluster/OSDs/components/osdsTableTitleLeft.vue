@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 15:29:38
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-04 16:27:01
+ * @LastEditTime: 2023-07-04 17:07:15
  * @Description:
 -->
 <template>
@@ -19,9 +19,9 @@
       </el-dropdown-menu>
     </template>
   </el-dropdown>
-  <flagsDialog :dialogVisible="flagsDialogVisible" @cancel="dialogFlagsClose"></flagsDialog>
-  <recoveryPriority :dialogVisible="priorityDialogVisible" @cancel="dialogPriorityClose"></recoveryPriority>
-  <PG_scrub :dialogVisible="flagsDialogVisible" @cancel="dialogScrubClose"></PG_scrub>
+  <flagsDialog :dialogVisible="flagsDialogVisible" @cancel="dialogChange"></flagsDialog>
+  <recoveryPriority :dialogVisible="priorityDialogVisible" @cancel="dialogChange"></recoveryPriority>
+  <PG_scrub :dialogVisible="scrubDialogVisible" @cancel="dialogChange"></PG_scrub>
 </template>
 
 <script setup lang="ts">
@@ -46,6 +46,14 @@ const props = defineProps({
 const flagsDialogVisible = ref(false)
 
 const priorityDialogVisible = ref(false)
+
+const scrubDialogVisible = ref(false)
+
+const dialogMap = new Map([
+  ['flags', flagsDialogVisible],
+  ['recoveryPriority', priorityDialogVisible],
+  ['pgScrub', scrubDialogVisible]
+])
 
 const selectRow = computed(() => {
   return props.selectRow
@@ -82,7 +90,6 @@ watch(selectRow, (value) => {
 }, { immediate: true })
 
 const handleClick = (dropdownText: string) => {
-  console.log(dropdownText)
   switch (dropdownText) {
     case 'create':
       osdsCreate()
@@ -93,50 +100,17 @@ const handleClick = (dropdownText: string) => {
 }
 
 const dropdownCommand = (commandText: string) => {
-  console.log(commandText)
-  switch (commandText) {
-    case 'flags':
-      open_OSD_Flags()
-      break
-    case 'recoveryPriority':
-      open_Priority()
-      break
-    case 'pgScrub':
-      open_Scrub()
-      break
-    default:
-      break
-  }
+  dialogChange(commandText, true)
 }
 
 const osdsCreate = () => {
-  router.push({
-    name: 'OSDsCreate'
-  })
+  router.push('/clusterHealth/cluster/OSDs/create')
 }
 
-const open_OSD_Flags = () => {
-  flagsDialogVisible.value = true
-}
+const dialogChange = (type: string, value: boolean) => {
+  const dialogValue = dialogMap.get(type) as any
 
-const dialogFlagsClose = (type: string, value: boolean) => {
-  flagsDialogVisible.value = value
-}
-
-const open_Priority = () => {
-  flagsDialogVisible.value = true
-}
-
-const dialogPriorityClose = (type: string, value: boolean) => {
-  flagsDialogVisible.value = value
-}
-
-const open_Scrub = () => {
-  flagsDialogVisible.value = true
-}
-
-const dialogScrubClose = (type: string, value: boolean) => {
-  flagsDialogVisible.value = value
+  dialogValue.value = value
 }
 
 </script>
