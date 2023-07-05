@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-07-04 16:24:39
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-05 16:47:14
+ * @LastEditTime: 2023-07-05 16:52:28
  * @Description:
 -->
 <template>
@@ -306,5 +306,9 @@ const submit = () => {
 h3 {
   margin-top: 0;
   margin-bottom: 0;
+}
+
+.el-icon{
+  cursor: pointer;
 }
 </style>
