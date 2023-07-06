@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-07-06 09:54:38
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-06 10:09:11
+ * @LastEditTime: 2023-07-06 11:02:08
  * @Description:
 -->
 <template>
@@ -78,10 +78,5 @@ const submit = () => {
 <style lang="scss" scoped>
 .dialog-footer button:first-child {
   margin-right: 10px;
-}
-
-:deep(.el-dialog){
-  max-height:70%;
-  overflow: auto;
 }
 </style>
