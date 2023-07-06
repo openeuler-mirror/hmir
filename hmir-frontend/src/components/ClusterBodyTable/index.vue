@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 14:03:21
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-30 17:41:56
+ * @LastEditTime: 2023-07-06 09:27:18
  * @Description:
 -->
 <template>
@@ -20,18 +20,18 @@
       </el-col>
     </el-row>
   </div>
-  <el-table :data="props.tableData" :row-key="rowKey" ref="clusterBodyTable" border style="width: 100%"
-    @row-click="rowClick" @expand-change="expandChange" :highlight-current-row="highlightCurrentRow">
+  <el-table :data="tableData" :row-key="rowKey" ref="clusterBodyTable" border style="width: 100%" @row-click="rowClick"
+    @expand-change="expandChange" :highlight-current-row="highlightCurrentRow">
     <el-table-column type="expand" v-if="expandShow">
-      <template v-slot:default="props">
-        <slot name="expand" v-bind:row="props.row"></slot>
+      <template #default="{ row }">
+        <slot name="expand" v-bind:row="row"></slot>
       </template>
     </el-table-column>
     <el-table-column v-for="item in filteredTableColumn" :key="item.prop" :label="t(item.label)" :prop="item.prop"
-      :sortable="item.sortable" >
-      <template v-slot:default="{ row }">
-        <el-progress :stroke-width="15" :percentage="row.cpuUsage" v-if="item.prop === 'cpuUsage'"/>
-        <div v-else>{{ row[item.prop] }}</div>
+      :sortable="item.sortable" :show-overflow-tooltip="item.showTooltip">
+      <template #default="{ row }">
+        <el-progress :stroke-width="15" :percentage="row.cpuUsage" v-if="item.prop === 'cpuUsage'" />
+        <div v-else>{{ item.formatter ? item.formatter(row) : row[item.prop] }}</div>
       </template>
     </el-table-column>
   </el-table>

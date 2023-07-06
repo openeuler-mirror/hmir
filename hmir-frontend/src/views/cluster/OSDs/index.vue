@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 09:47:34
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-03 09:28:49
+ * @LastEditTime: 2023-07-06 09:28:55
  * @Description:
 -->
 <template>
@@ -145,7 +145,11 @@ const tableColumn = ref([
     label: 'status',
     prop: 'status',
     sortable: true,
-    showColumn: true
+    showColumn: true,
+    formatter(row: any) {
+      return row.status.join()
+    },
+    showTooltip: true
   },
   {
     label: 'deviceClass',
@@ -163,7 +167,8 @@ const tableColumn = ref([
     label: 'size',
     prop: 'size',
     sortable: true,
-    showColumn: true
+    showColumn: true,
+    showTooltip: true
   },
   {
     label: 'flags',
