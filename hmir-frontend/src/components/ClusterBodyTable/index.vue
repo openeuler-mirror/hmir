@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 14:03:21
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-06 09:27:18
+ * @LastEditTime: 2023-07-06 14:33:20
  * @Description:
 -->
 <template>
@@ -30,8 +30,9 @@
     <el-table-column v-for="item in filteredTableColumn" :key="item.prop" :label="t(item.label)" :prop="item.prop"
       :sortable="item.sortable" :show-overflow-tooltip="item.showTooltip">
       <template #default="{ row }">
-        <el-progress :stroke-width="15" :percentage="row.cpuUsage" v-if="item.prop === 'cpuUsage'" />
-        <div v-else>{{ item.formatter ? item.formatter(row) : row[item.prop] }}</div>
+        <el-progress v-if="item.type === 'progress'" :stroke-width="15" :percentage="row[item.prop]" />
+        <el-link v-else-if="item.type === 'link'" type="primary" @click="lineClick(row, item)">{{ tableValue(row, item) }}</el-link>
+        <div v-else>{{ tableValue(row, item) }}</div>
       </template>
     </el-table-column>
   </el-table>
@@ -100,6 +101,16 @@ const expandChange = (row: any, expandedRows: any) => {
       }
     })
   }
+}
+
+// eslint-disable-next-line no-unused-vars
+const tableValue = (row: { [x: string]: any }, item: { formatter: (arg0: any) => any; prop: string | number }) => {
+  return item.formatter ? item.formatter(row) : row[item.prop]
+}
+
+// eslint-disable-next-line no-unused-vars
+const lineClick = (row: any, item: { linkClick: (arg0: any, arg1: any) => void }) => {
+  item?.linkClick(row, item)
 }
 
 </script>
