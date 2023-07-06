@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-02-02 15:29:41
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-03 11:34:01
+ * @LastEditTime: 2023-07-06 15:46:24
  * @Description: 
  */
 
@@ -73,5 +73,9 @@ export default {
     destroy: 'Destroy',
     clusterConfiguration: 'Cluster-wide configuration',
     recoveryPriority: 'Recovery Priority',
-    pgScrub: 'PG scrub'
+    pgScrub: 'PG scrub',
+    PerformanceCounters: 'Performance Counters',
+    Name: 'Name',
+    description:'Description',
+    value:'Value'
 }

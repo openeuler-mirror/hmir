@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-30 11:38:34
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-30 13:09:37
+ * @LastEditTime: 2023-07-06 15:12:44
  * @Description:
 -->
 <template>
@@ -23,6 +23,7 @@
 <script setup lang="ts">
 import ClusterBodyTable from '@/components/ClusterBodyTable/index.vue'
 import ClusterTableTitleRight from '@/components/ClusterTableTitleRight/index.vue'
+import router from '@/router'
 import { ref, onMounted } from 'vue'
 
 const props = defineProps({
@@ -46,7 +47,16 @@ const tableColumn = ref([{
   label: 'Name',
   prop: 'name',
   sortable: true,
-  showColumn: true
+  showColumn: true,
+  type:'link',
+  linkClick(row: any) {
+    router.push({
+      name: 'PerformanceCounters',
+      params: {
+        hostName: row.name
+      }
+    })
+  }
 },
 {
   label: 'Rank',

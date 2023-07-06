@@ -69,7 +69,8 @@ const tableColumn = ref([{
   label: 'CPU Usage',
   prop: 'cpuUsage',
   sortable: true,
-  showColumn: true
+  showColumn: true,
+  type: 'progress'
 },
 {
   label: 'Memory Usage',

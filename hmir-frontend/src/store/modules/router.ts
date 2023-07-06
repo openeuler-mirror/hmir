@@ -139,6 +139,12 @@ export const useRouterStore = defineStore('router', {
             component: () => import('@/views/cluster/OSDs/components/osdsCreate.vue'),
             meta: { title: t('OSDs'), icon: 'Menu', disabled: false },
           },
+          {
+            path: '/clusterHealth/cluster/Monitors/PerformanceCounters/:hostName(.*)',
+            name: 'PerformanceCounters',
+            component: () => import('@/views/cluster/Monitors/components/PerformanceCounters.vue'),
+            meta: { title: t('PerformanceCounters'), icon: 'Menu', disabled: false },
+          },
         ]
       }],
       //判断是否添加了路由信息
@@ -150,7 +156,7 @@ export const useRouterStore = defineStore('router', {
   //计算属性
   getters: {
     userouter: state => {
-      return state.router?.[0].children.filter(item => !['console', 'serviceDetail', 'OSDsCreate'].includes(item.name))
+      return state.router?.[0].children.filter(item => !['console', 'serviceDetail', 'OSDsCreate', 'PerformanceCounters'].includes(item.name))
     }
   },
   //异步同步函数
