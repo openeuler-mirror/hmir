@@ -2,12 +2,12 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 15:29:38
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-06 10:01:01
+ * @LastEditTime: 2023-07-06 13:48:09
  * @Description:
 -->
 <template>
   <ClusterTableTitleLeft :dropdownList="dropdownArray" @handleClick="handleClick"></ClusterTableTitleLeft>
-  <hostDialog :dialogVisible="dialogVisible" :hostType="hostType" @cancel="dialogChange"></hostDialog>
+  <hostDialog :dialogVisible="dialogVisible" :hostType="hostType" :selectRow="selectRow" @cancel="dialogChange"></hostDialog>
 </template>
 
 <script setup lang="ts">
@@ -44,7 +44,8 @@ const handleClick = (dropdownText: string) => {
   hostType.value = dropdownText
   switch (dropdownText) {
     case 'add':
-      hostAdd()
+    case 'edit':
+      openDialog()
       break
     default:
       break
@@ -69,7 +70,7 @@ const dialogChange = (value: boolean) => {
   dialogVisible.value = value
 }
 
-const hostAdd = () => {
+const openDialog = () => {
   dialogChange(true)
 }
 
