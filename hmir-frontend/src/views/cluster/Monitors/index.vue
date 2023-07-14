@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-30 10:33:53
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-30 13:25:06
+ * @LastEditTime: 2023-07-07 15:10:58
  * @Description:
 -->
 <template>
@@ -42,7 +42,7 @@ const notInQuorumData = ref([{
 }])
 
 const inQuorumData = ref([{
-  name: 'Linx123',
+  name: 'Linx124',
   rank: '0',
   publicAddress: '172.30.24.123:6789/0'
 }])

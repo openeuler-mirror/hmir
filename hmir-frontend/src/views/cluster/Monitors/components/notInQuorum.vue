@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-30 13:19:31
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-30 13:44:26
+ * @LastEditTime: 2023-07-06 16:07:42
  * @Description:
 -->
 <template>
@@ -24,6 +24,7 @@
 import ClusterBodyTable from '@/components/ClusterBodyTable/index.vue'
 import ClusterTableTitleRight from '@/components/ClusterTableTitleRight/index.vue'
 import { ref, onMounted } from 'vue'
+import router from '@/router'
 
 const props = defineProps({
   notInQuorumData: {
@@ -46,7 +47,16 @@ const tableColumn = ref([{
   label: 'Name',
   prop: 'name',
   sortable: true,
-  showColumn: true
+  showColumn: true,
+  type:'link',
+  linkClick(row: any) {
+    router.push({
+      name: 'PerformanceCounters',
+      params: {
+        hostName: row.name
+      }
+    })
+  }
 },
 {
   label: 'Rank',
