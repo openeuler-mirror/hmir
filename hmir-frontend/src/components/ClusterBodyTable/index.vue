@@ -36,9 +36,17 @@
       </template>
     </el-table-column>
   </el-table>
+  <div v-if="paginationShow">
+    <slot name="Pagination">
+      <Pagination :total="total" :disabled="PaginationDisabled" :background="background" :small="small"
+        :hideOnSinglePage="hideOnSinglePage" @handleSizeChange="handleSizeChange"
+        @handleCurrentChange="handleCurrentChange"></Pagination>
+    </slot>
+  </div>
 </template>
 
 <script lang="ts" setup>
+import Pagination from '@/components/Pagination/index.vue'
 import { ref, computed } from 'vue'
 import type { ElTable } from 'element-plus'
 import { useI18n } from 'vue-i18n'
@@ -64,6 +72,30 @@ const props = defineProps({
   expandShow: {
     type: Boolean,
     default: false
+  },
+  paginationShow: {
+    type: Boolean,
+    default: false
+  },
+  total: {
+    type: Number,
+    default: 0
+  },
+  PaginationDisabled: {
+    type: Boolean,
+    default: false
+  },
+  background: {
+    type: Boolean,
+    default: false
+  },
+  small: {
+    type: Boolean,
+    default: false
+  },
+  hideOnSinglePage: {
+    type: Boolean,
+    default: true
   }
 })
 
@@ -75,7 +107,11 @@ const emit = defineEmits({
   // eslint-disable-next-line no-unused-vars
   selectRowData: (_data: Object) => true,
   // eslint-disable-next-line no-unused-vars
-  tableBodyWidth: (_data: string | undefined) => true
+  tableBodyWidth: (_data: string | undefined) => true,
+  // eslint-disable-next-line no-unused-vars
+  handleSizeChange: (_val: number) => true,
+  // eslint-disable-next-line no-unused-vars
+  handleCurrentChange: (_val: number) => true
 })
 
 const clusterBodyTable = ref<InstanceType<typeof ElTable>>()
@@ -111,6 +147,14 @@ const tableValue = (row: { [x: string]: any }, item: { formatter: (arg0: any) =>
 // eslint-disable-next-line no-unused-vars
 const lineClick = (row: any, item: { linkClick: (arg0: any, arg1: any) => void }) => {
   item?.linkClick(row, item)
+}
+
+const handleSizeChange = (val: number) => {
+  emit('handleSizeChange', val)
+}
+
+const handleCurrentChange = (val: number) => {
+  emit('handleCurrentChange', val)
 }
 
 </script>
