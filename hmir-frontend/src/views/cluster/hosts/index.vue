@@ -2,14 +2,14 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 09:47:34
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-06 09:34:22
+ * @LastEditTime: 2023-07-27 13:56:45
  * @Description:
 -->
 <template>
   <breadcrumb :breadcrumb="breadcrumbTitle">
     <template v-slot:breadcrumbBody>
       <el-tabs type="card">
-        <el-tab-pane label="Hosts List">
+        <el-tab-pane :label="t('hostsList')">
           <ClusterBodyTable @selectRowData="rowClick" :tableData="tableData" :tableColumn="tableColumn"
             @tableBodyWidth="tableBodyWidth" highlightCurrentRow expandShow>
             <template v-slot:tableTitleLeft>
@@ -24,7 +24,7 @@
             </template>
           </ClusterBodyTable>
         </el-tab-pane>
-        <el-tab-pane label="Overall Performance">
+        <el-tab-pane :label="t('overallPerformance')">
           <PerformanceDetails selectTime="last1hour"></PerformanceDetails>
         </el-tab-pane>
       </el-tabs>
@@ -41,7 +41,9 @@ import ClusterTableTitleRight from '@/components/ClusterTableTitleRight/index.vu
 import PerformanceDetails from '../components/PerformanceDetails.vue'
 import { onMounted, ref } from 'vue'
 import { hostsProcStore } from '@/store/modules/cluster/host'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 // 引入store仓库
 const store = hostsProcStore()
 
@@ -246,13 +248,13 @@ const tableData = ref([
 
 const tableColumn = ref([
   {
-    label: 'Hostname',
+    label: 'hostname',
     prop: 'hostname',
     sortable: true,
     showColumn: true
   },
   {
-    label: 'Service Instances',
+    label: 'service',
     prop: 'service',
     sortable: true,
     showColumn: true,
@@ -262,61 +264,61 @@ const tableColumn = ref([
     showTooltip: true
   },
   {
-    label: 'Labels',
+    label: 'labels',
     prop: 'labels',
     sortable: true,
     showColumn: true
   },
   {
-    label: 'Status',
+    label: 'status',
     prop: 'status',
     sortable: true,
     showColumn: true
   },
   {
-    label: 'Model',
+    label: 'model',
     prop: 'model',
     sortable: true,
     showColumn: true
   },
   {
-    label: 'CPUs',
+    label: 'cpus',
     prop: 'cpus',
     sortable: true,
     showColumn: true
   },
   {
-    label: 'Cores',
+    label: 'cores',
     prop: 'cores',
     sortable: true,
     showColumn: true
   },
   {
-    label: 'Total Memory',
+    label: 'totalMemory',
     prop: 'totalMemory',
     sortable: true,
     showColumn: true
   },
   {
-    label: 'Raw Capacity',
+    label: 'capacity',
     prop: 'capacity',
     sortable: true,
     showColumn: true
   },
   {
-    label: 'HDDs',
+    label: 'hdds',
     prop: 'hdds',
     sortable: true,
     showColumn: true
   },
   {
-    label: 'Flash',
+    label: 'flash',
     prop: 'flash',
     sortable: true,
     showColumn: true
   },
   {
-    label: 'NICs',
+    label: 'nics',
     prop: 'nics',
     sortable: true,
     showColumn: true
@@ -324,7 +326,7 @@ const tableColumn = ref([
 ])
 
 onMounted(() => {
-  breadcrumbTitle.value = store.get_defaultTitle(['Hosts'])
+  breadcrumbTitle.value = store.get_defaultTitle(['hosts'])
 })
 </script>
 
