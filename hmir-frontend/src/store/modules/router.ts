@@ -43,7 +43,7 @@ export const useRouterStore = defineStore('router', {
                 redirect: '/cluster/hosts',
                 children: [
                   {
-                    path: '/clusterHealth/cluster/hosts',
+                    path: '/clusterHealth/cluster/Hosts',
                     name: 'hosts',
                     component: () => import('@/views/cluster/hosts/index.vue'),
                     meta: { title: t('hosts'), icon: 'Menu', disabled: false }
@@ -140,9 +140,9 @@ export const useRouterStore = defineStore('router', {
             meta: { title: t('OSDs'), icon: 'Menu', disabled: false },
           },
           {
-            path: '/clusterHealth/cluster/Monitors/PerformanceCounters/:hostName(.*)',
+            path: '/clusterHealth/cluster/Monitors/PerformanceCounters',
             name: 'PerformanceCounters',
-            component: () => import('@/views/cluster/Monitors/components/PerformanceCounters.vue'),
+            component: () => import('@/components/PerformanceCounters/index.vue'),
             meta: { title: t('PerformanceCounters'), icon: 'Menu', disabled: false },
           },
         ]
