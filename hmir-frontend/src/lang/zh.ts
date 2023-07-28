@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-02-02 15:29:41
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-27 14:18:02
+ * @LastEditTime: 2023-07-27 16:32:41
  * @Description: 
  */
 
@@ -92,5 +92,8 @@ export default {
     devices: '设备',
     daemons: '守护进程',
     performanceDetails: '性能详细信息',
-    deviceHealth: '设备健康状态'
+    deviceHealth: '设备健康状态',
+    rank: '等级',
+    publicAddress: '公共地址',
+    openSessions: '开放会话'
 }

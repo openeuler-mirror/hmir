@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 09:47:34
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-27 13:56:45
+ * @LastEditTime: 2023-07-27 17:41:39
  * @Description:
 -->
 <template>
@@ -11,7 +11,7 @@
       <el-tabs type="card">
         <el-tab-pane :label="t('hostsList')">
           <ClusterBodyTable @selectRowData="rowClick" :tableData="tableData" :tableColumn="tableColumn"
-            @tableBodyWidth="tableBodyWidth" highlightCurrentRow expandShow>
+            @tableBodyWidth="tableBodyWidth" highlightCurrentRow expandShow paginationShow>
             <template v-slot:tableTitleLeft>
               <hostTableTitleLeft :selectRow="selectRow"></hostTableTitleLeft>
             </template>
@@ -20,7 +20,7 @@
               </ClusterTableTitleRight>
             </template>
             <template v-slot:expand="{ row }">
-              <expandBody :row="row" :tableWidth="tableWidth"> </expandBody>
+              <expandBody :row="row" :tableWidth="tableWidth"></expandBody>
             </template>
           </ClusterBodyTable>
         </el-tab-pane>
@@ -39,10 +39,10 @@ import ClusterBodyTable from '@/components/ClusterBodyTable/index.vue'
 import hostTableTitleLeft from './components/hostTableTitleLeft.vue'
 import ClusterTableTitleRight from '@/components/ClusterTableTitleRight/index.vue'
 import PerformanceDetails from '../components/PerformanceDetails.vue'
+import router from '@/router'
 import { onMounted, ref } from 'vue'
 import { hostsProcStore } from '@/store/modules/cluster/host'
 import { useI18n } from 'vue-i18n'
-
 const { t } = useI18n()
 // 引入store仓库
 const store = hostsProcStore()
@@ -258,10 +258,20 @@ const tableColumn = ref([
     prop: 'service',
     sortable: true,
     showColumn: true,
-    formatter(row: any) {
-      return row.service.join()
+    type: 'linkList',
+    formatter(_row: any, value: any) {
+      return value
     },
-    showTooltip: true
+    linkClick(_row: any, _column: any, value: any) {
+      router.push({
+        name: 'PerformanceCounters',
+        query: {
+          requestValue: value,
+          title: 'hosts',
+          path: '/clusterHealth/cluster/Hosts'
+        }
+      })
+    }
   },
   {
     label: 'labels',
