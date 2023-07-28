@@ -96,5 +96,6 @@ export default {
     deviceHealth: 'Device health',
     rank: 'Rank',
     publicAddress: 'Public Address',
-    openSessions: 'Open Sessions'
+    openSessions: 'Open Sessions',
+    Configuration: 'Configuration'
 }
