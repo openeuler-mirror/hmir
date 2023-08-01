@@ -2,13 +2,13 @@
  * @Author: zhang_tianran
  * @Date: 2023-07-04 16:24:39
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-05 16:47:14
+ * @LastEditTime: 2023-07-05 17:03:13
  * @Description:
 -->
 <template>
   <div>
     <el-form ref="ruleFormRef" :model="ruleForm" label-width="250px" class="demo-ruleForm" :size="formSize" status-icon>
-      <template v-for="item in pgScrubFromList" :key="item">
+      <template v-for="(item, index) in pgScrubFromList" :key="item">
         <h2 v-if="item.type === 'title'">{{ item.title }}</h2>
         <el-form-item v-else prop="priority">
           <template #label>
@@ -28,6 +28,7 @@
           <el-input-number v-if="item.type === 'input'" v-model="ruleForm[item.prop]" :min="0"
             controls-position="right" />
         </el-form-item>
+        <el-divider v-if="index !== pgScrubFromList.length - 1 && index !== 11 && item.type !== 'title'"/>
       </template>
     </el-form>
     <div style="text-align:right;padding-right:30px;" v-if="advancedShow">
@@ -306,5 +307,9 @@ const submit = () => {
 h3 {
   margin-top: 0;
   margin-bottom: 0;
+}
+
+.el-icon{
+  cursor: pointer;
 }
 </style>
