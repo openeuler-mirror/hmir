@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-07-06 14:50:54
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-06 15:43:41
+ * @LastEditTime: 2023-07-07 15:54:24
  * @Description:
 -->
 <template>
@@ -16,9 +16,11 @@
         </template>
         <ClusterBodyTable @selectRowData="rowClick" :tableData="tableData" :tableColumn="tableColumn">
           <template v-slot:tableTitleRight>
-            <ClusterTableTitleRight refreshBtn columnShow numShow searchInputShow :tableColumn="tableColumn"></ClusterTableTitleRight>
+            <ClusterTableTitleRight refreshBtn columnShow numShow searchInputShow :tableColumn="tableColumn">
+            </ClusterTableTitleRight>
           </template>
         </ClusterBodyTable>
+        <Pagination></Pagination>
       </el-card>
     </template>
   </breadcrumb>
@@ -28,6 +30,7 @@
 import breadcrumb from '@/components/ClusterHeader/index.vue'
 import ClusterBodyTable from '@/components/ClusterBodyTable/index.vue'
 import ClusterTableTitleRight from '@/components/ClusterTableTitleRight/index.vue'
+import Pagination from '@/components/Pagination/index.vue'
 import router from '@/router'
 import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
@@ -80,6 +83,4 @@ onMounted(() => {
 })
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
