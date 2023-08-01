@@ -7,7 +7,7 @@
 -->
 <template>
   <div>
-    <el-form ref="ruleFormRef" :model="ruleForm" label-width="250px" class="demo-ruleForm" :size="formSize" status-icon>
+    <el-form ref="ruleFormRef" :model="ruleForm" label-width="250px" :size="formSize" status-icon>
       <template v-for="(item, index) in pgScrubFromList" :key="item">
         <h2 v-if="item.type === 'title'">{{ item.title }}</h2>
         <el-form-item v-else prop="priority">

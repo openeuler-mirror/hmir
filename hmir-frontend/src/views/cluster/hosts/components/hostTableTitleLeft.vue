@@ -2,15 +2,17 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 15:29:38
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-29 10:05:10
+ * @LastEditTime: 2023-07-06 10:01:01
  * @Description:
 -->
 <template>
   <ClusterTableTitleLeft :dropdownList="dropdownArray" @handleClick="handleClick"></ClusterTableTitleLeft>
+  <hostDialog :dialogVisible="dialogVisible" :hostType="hostType" @cancel="dialogChange"></hostDialog>
 </template>
 
 <script setup lang="ts">
 import ClusterTableTitleLeft from '@/components/ClusterTableTitleLeft/index.vue'
+import hostDialog from './hostDialog.vue'
 import { computed, ref, watch } from 'vue'
 
 const props = defineProps({
@@ -34,8 +36,19 @@ const dropdownArray = ref([
   { command: 'enterMaintenance', value: 'Enter Maintenance', disabled: true }
 ])
 
+const dialogVisible = ref(false)
+
+const hostType = ref('')
+
 const handleClick = (dropdownText: string) => {
-  console.log(dropdownText)
+  hostType.value = dropdownText
+  switch (dropdownText) {
+    case 'add':
+      hostAdd()
+      break
+    default:
+      break
+  }
 }
 
 watch(selectRow, (value) => {
@@ -51,6 +64,14 @@ watch(selectRow, (value) => {
     })
   }
 })
+
+const dialogChange = (value: boolean) => {
+  dialogVisible.value = value
+}
+
+const hostAdd = () => {
+  dialogChange(true)
+}
 
 </script>
 
