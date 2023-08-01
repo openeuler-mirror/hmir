@@ -2,11 +2,11 @@
  * @Author: zhang_tianran
  * @Date: 2023-07-04 17:14:21
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-05 11:04:41
+ * @LastEditTime: 2023-07-27 15:41:03
  * @Description
 -->
 <template>
-  <el-dialog  :model-value="dialogVisible" destroy-on-close :title="dialogTitle" width="35%" @closed="cancel">
+  <el-dialog  :model-value="dialogVisible" destroy-on-close :title="dialogTitle" width="35%" @closed="cancel" draggable>
     <component style="max-height:55vh;overflow: auto;" ref="dialogBody" :is="currentComponent" @cancel="cancel"></component>
     <template #footer>
       <span class="dialog-footer">
