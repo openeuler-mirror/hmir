@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 14:03:21
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-06 14:33:20
+ * @LastEditTime: 2023-07-27 15:31:28
  * @Description:
 -->
 <template>
@@ -27,12 +27,17 @@
         <slot name="expand" v-bind:row="row"></slot>
       </template>
     </el-table-column>
-    <el-table-column v-for="item in filteredTableColumn" :key="item.prop" :label="t(item.label)" :prop="item.prop"
-      :sortable="item.sortable" :show-overflow-tooltip="item.showTooltip">
+    <el-table-column v-for="column in filteredTableColumn" :key="column.prop" :label="t(column.label)" :prop="column.prop"
+      :sortable="column.sortable" :show-overflow-tooltip="column.showTooltip" :width="column.width">
       <template #default="{ row }">
-        <el-progress v-if="item.type === 'progress'" :stroke-width="15" :percentage="row[item.prop]" />
-        <el-link v-else-if="item.type === 'link'" type="primary" @click="lineClick(row, item)">{{ tableValue(row, item) }}</el-link>
-        <div v-else>{{ tableValue(row, item) }}</div>
+        <el-progress v-if="column.type === 'progress'" :stroke-width="15" :percentage="row[column.prop]" />
+        <el-link v-else-if="column.type === 'link'" type="primary" @click="lineClick(row, column)">{{ tableValue(row,
+          column) }}</el-link>
+        <template v-else-if="column.type === 'linkList'">
+          <el-link v-for="linkItem in row[column.prop]" :key="linkItem" type="primary"
+            @click="lineClick(row, column, linkItem)">{{ tableLinkListValue(row, column, linkItem) }}</el-link>
+        </template>
+        <div v-else>{{ tableValue(row, column) }}</div>
       </template>
     </el-table-column>
   </el-table>
@@ -140,13 +145,18 @@ const expandChange = (row: any, expandedRows: any) => {
 }
 
 // eslint-disable-next-line no-unused-vars
-const tableValue = (row: { [x: string]: any }, item: { formatter: (arg0: any) => any; prop: string | number }) => {
-  return item.formatter ? item.formatter(row) : row[item.prop]
+const tableValue = (row: { [x: string]: any }, column: { formatter: (arg0: any) => any; prop: string | number }) => {
+  return column.formatter ? column.formatter(row) : row[column.prop]
 }
 
 // eslint-disable-next-line no-unused-vars
-const lineClick = (row: any, item: { linkClick: (arg0: any, arg1: any) => void }) => {
-  item?.linkClick(row, item)
+const tableLinkListValue = (row: { [x: string]: any }, column: { formatter: (arg0: any, value: any) => any; prop: string | number }, value: any) => {
+  return column.formatter ? column.formatter(row, value) : value
+}
+
+// eslint-disable-next-line no-unused-vars
+const lineClick = (row: any, column: { linkClick: (arg0: any, arg1: any, value: any) => void }, value: any = null) => {
+  column?.linkClick(row, column, value)
 }
 
 const handleSizeChange = (val: number) => {
