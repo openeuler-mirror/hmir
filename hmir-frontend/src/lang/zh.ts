@@ -95,5 +95,6 @@ export default {
     deviceHealth: '设备健康状态',
     rank: '等级',
     publicAddress: '公共地址',
-    openSessions: '开放会话'
+    openSessions: '开放会话',
+    Configuration: '配置'
 }

@@ -65,6 +65,12 @@ export const useRouterStore = defineStore('router', {
                     name: 'OSDs',
                     component: () => import('@/views/cluster/OSDs/index.vue'),
                     meta: { title: t('OSDs'), icon: 'Menu', disabled: false }
+                  },
+                  {
+                    path: '/clusterHealth/cluster/Configuration',
+                    name: 'Configuration',
+                    component: () => import('@/views/cluster/Configuration/index.vue'),
+                    meta: { title: t('Configuration'), icon: 'Menu', disabled: false }
                   }
                 ]
               },
