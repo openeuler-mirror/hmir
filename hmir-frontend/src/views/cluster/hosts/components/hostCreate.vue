@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-07-04 16:24:39
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-06 10:52:05
+ * @LastEditTime: 2023-07-06 13:30:17
  * @Description:
 -->
 <template>
@@ -10,28 +10,27 @@
     <el-form-item prop="priority">
       <template #label>
         <div style="width: 100%;text-align: end;">
-          <span>Hostname</span>
-          <el-tooltip
-            :content="`Network address
-                192.168.0.1
-                Labels
-                There are no labels.
-                Maintenance Mode
-                To add multiple hosts at once, you can enter:
-                a comma-separated list of hostnames (e.g.: example-01,example-02,example-03),
-                a range expression (e.g.: example-[01-03].ceph),
-                a comma separated range expression (e.g.: example-[01-05].lab.com,example2-[1-4].lab.com,example3-[001-006].lab.com)`"
-            placement="bottom" effect="light" trigger="click">
+          <span style="margin-right:5px;">Hostname</span>
+          <el-tooltip placement="bottom" effect="light" trigger="click">
             <el-icon>
               <QuestionFilled />
             </el-icon>
+            <template #content>
+              <span>To add multiple hosts at once, you can enter:</span>
+              <ul>
+                <li>a comma-separated list of hostnames (e.g.: example-01,example-02,example-03),</li>
+                <li>a range expression (e.g.: example-[01-03].ceph),</li>
+                <li>a comma separated range expression (e.g.:
+                  example-[01-05].lab.com,example2-[1-4].lab.com,example3-[001-006].lab.com)</li>
+              </ul>
+            </template>
           </el-tooltip>
         </div>
       </template>
       <el-input v-model="ruleForm.hostName" />
     </el-form-item>
     <el-form-item prop="networkAddress" label="Network address">
-      <el-input v-model="ruleForm.hostName" />
+      <el-input v-model="ruleForm.networkAddress" />
     </el-form-item>
     <el-form-item prop="labels" label="Labels">
       <el-select v-model="ruleForm.labels" multiple collapse-tags collapse-tags-tooltip filterable style="width: 100%">
