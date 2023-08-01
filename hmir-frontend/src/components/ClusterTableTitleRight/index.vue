@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 17:24:16
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-29 10:12:04
+ * @LastEditTime: 2023-07-27 14:08:01
  * @Description:
 -->
 <template>
@@ -19,7 +19,7 @@
     <template #dropdown>
       <el-dropdown-menu>
         <el-dropdown-item v-for="item in tableColumn" :key="item.prop" :command="item.prop">
-          <el-checkbox v-model="item.showColumn" :label="item.label" size="small" />
+          <el-checkbox v-model="item.showColumn" :label="t(item.label)" size="small" />
         </el-dropdown-item>
       </el-dropdown-menu>
     </template>
@@ -54,7 +54,9 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { Refresh, Grid, ArrowDown, Search } from '@element-plus/icons-vue'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const props = defineProps({
   num: {
     type: Number,
