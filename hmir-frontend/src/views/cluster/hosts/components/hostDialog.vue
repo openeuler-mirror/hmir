@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-07-06 09:54:38
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-06 11:02:08
+ * @LastEditTime: 2023-07-06 13:49:44
  * @Description:
 -->
 <template>
@@ -22,6 +22,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import hostCreate from './hostCreate.vue'
+import hostEdit from './hostEdit.vue'
 
 const porps = defineProps({
   dialogVisible: {
@@ -31,25 +32,37 @@ const porps = defineProps({
   hostType: {
     type: String,
     default: ''
+  },
+  selectRow: {
+    type: Object,
+    default() {
+      return {}
+    }
   }
 })
 
 const dialogBody = ref()
 
 const componentMap = new Map<string, any>([
-  ['add', hostCreate]
+  ['add', hostCreate],
+  ['edit', hostEdit]
 ])
 
-const dialogTitleMap = new Map<string, string>([
-  ['add', 'Add Host']
+const dialogTitleMap = new Map<string, Function>([
+  ['add', () => 'Add Host'],
+  ['edit', () => 'Edit Host: ' + porps.selectRow.hostname]
 ])
 
 const btnShowMap = new Map<string, string>([
-  ['add', 'Add Host']
+  ['add', 'Add Host'],
+  ['edit', 'Edit Host']
 ])
 
 const dialogTitle = computed(() => {
-  return dialogTitleMap.get(porps.hostType)
+  if (!porps.hostType) return ''
+  const getTitle = dialogTitleMap.get(porps.hostType) as Function
+
+  return getTitle()
 })
 
 const btnShow = computed(() => {
