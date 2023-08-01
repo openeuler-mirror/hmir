@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 09:47:34
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-30 15:10:01
+ * @LastEditTime: 2023-07-06 09:34:22
  * @Description:
 -->
 <template>
@@ -255,7 +255,11 @@ const tableColumn = ref([
     label: 'Service Instances',
     prop: 'service',
     sortable: true,
-    showColumn: true
+    showColumn: true,
+    formatter(row: any) {
+      return row.service.join()
+    },
+    showTooltip: true
   },
   {
     label: 'Labels',
