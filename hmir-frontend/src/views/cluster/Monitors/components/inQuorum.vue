@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-30 11:38:34
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-06 15:12:44
+ * @LastEditTime: 2023-07-27 17:45:52
  * @Description:
 -->
 <template>
@@ -52,26 +52,28 @@ const tableColumn = ref([{
   linkClick(row: any) {
     router.push({
       name: 'PerformanceCounters',
-      params: {
-        hostName: row.name
+      query: {
+        requestValue: 'mon.' + row.name,
+        title: 'Monitors',
+        path: '/clusterHealth/cluster/Monitors'
       }
     })
   }
 },
 {
-  label: 'Rank',
+  label: 'rank',
   prop: 'rank',
   sortable: true,
   showColumn: true
 },
 {
-  label: 'Public Address',
+  label: 'publicAddress',
   prop: 'publicAddress',
   sortable: true,
   showColumn: true
 },
 {
-  label: 'Open Sessions',
+  label: 'openSessions',
   prop: 'openSessions',
   sortable: true,
   showColumn: true

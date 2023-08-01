@@ -93,5 +93,8 @@ export default {
     devices: 'Devices',
     daemons: 'Daemons',
     performanceDetails: 'Performance Details',
-    deviceHealth: 'Device health'
+    deviceHealth: 'Device health',
+    rank: 'Rank',
+    publicAddress: 'Public Address',
+    openSessions: 'Open Sessions'
 }
