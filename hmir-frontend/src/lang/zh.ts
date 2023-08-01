@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-02-02 15:29:41
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-06 15:44:49
+ * @LastEditTime: 2023-07-27 14:18:02
  * @Description: 
  */
 
@@ -76,5 +76,21 @@ export default {
     PerformanceCounters: '性能计数器',
     Name: '名称',
     description: '描述',
-    value:'值'
+    value: '值',
+    hostsList: '主机列表',
+    overallPerformance: '整体性能',
+    hostname: '主机名称',
+    labels: '标签',
+    model: '模式',
+    cpus: 'CPUs',
+    cores: '处理器核心',
+    totalMemory: '总内存',
+    capacity: '原始容量',
+    hdds: '硬盘驱动器',
+    flash: '闪存',
+    nics: '网络接口卡',
+    devices: '设备',
+    daemons: '守护进程',
+    performanceDetails: '性能详细信息',
+    deviceHealth: '设备健康状态'
 }

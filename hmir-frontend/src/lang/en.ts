@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-02-02 15:29:41
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-06 15:46:24
+ * @LastEditTime: 2023-07-27 14:03:00
  * @Description: 
  */
 
@@ -77,5 +77,21 @@ export default {
     PerformanceCounters: 'Performance Counters',
     Name: 'Name',
     description:'Description',
-    value:'Value'
+    value: 'Value',
+    hostsList: 'Hosts List',
+    overallPerformance: 'Overall Performance',
+    hostname: 'Hostname',
+    labels: 'Labels',
+    model: 'Model',
+    cpus: 'CPUs',
+    cores: 'Cores',
+    totalMemory: 'Total Memory',
+    capacity: 'Raw Capacity',
+    hdds: 'HDDs',
+    flash: 'Flash',
+    nics: 'NICs',
+    devices: 'Devices',
+    daemons: 'Daemons',
+    performanceDetails: 'Performance Details',
+    deviceHealth: 'Device health'
 }

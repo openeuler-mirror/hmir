@@ -42,43 +42,43 @@ const selectValue = ref()
 
 const options = [
   {
-    label: 'Last 5 minutes ',
+    label: 'Last 5 minutes',
     value: 'last5min'
   },
   {
-    label: 'Last 15 minutes ',
+    label: 'Last 15 minutes',
     value: 'last15min'
   },
   {
-    label: 'Last 30 minutes ',
+    label: 'Last 30 minutes',
     value: 'last30min'
   },
   {
-    label: 'Last 1 hour (Default) ',
+    label: 'Last 1 hour (Default)',
     value: 'last1hour'
   },
   {
-    label: 'Last 3 hours ',
+    label: 'Last 3 hours',
     value: 'last3hour'
   },
   {
-    label: 'Last 6 hours ',
+    label: 'Last 6 hours',
     value: 'last6hour'
   },
   {
-    label: 'Last 12 hour ',
+    label: 'Last 12 hour',
     value: 'last12hour'
   },
   {
-    label: 'Last 24 hours ',
+    label: 'Last 24 hours',
     value: 'last24hour'
   },
   {
-    label: 'Yesterday ',
+    label: 'Yesterday',
     value: 'yesterday'
   },
   {
-    label: 'Today so far ',
+    label: 'Today so far',
     value: 'todaySoFar'
   }
 ]
