@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 14:03:21
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-27 15:31:28
+ * @LastEditTime: 2023-07-28 09:04:49
  * @Description:
 -->
 <template>
@@ -31,11 +31,12 @@
       :sortable="column.sortable" :show-overflow-tooltip="column.showTooltip" :width="column.width">
       <template #default="{ row }">
         <el-progress v-if="column.type === 'progress'" :stroke-width="15" :percentage="row[column.prop]" />
-        <el-link v-else-if="column.type === 'link'" type="primary" @click="lineClick(row, column)">{{ tableValue(row,
-          column) }}</el-link>
+        <el-link v-else-if="column.type === 'link'" type="primary" @click="lineClick(row, column)">{{ tableValue(row, column) }}</el-link>
         <template v-else-if="column.type === 'linkList'">
-          <el-link v-for="linkItem in row[column.prop]" :key="linkItem" type="primary"
-            @click="lineClick(row, column, linkItem)">{{ tableLinkListValue(row, column, linkItem) }}</el-link>
+          <template v-for="(linkItem, index) in row[column.prop]" :key="linkItem">
+            <el-link type="primary" @click="lineClick(row, column, linkItem)">{{ tableLinkListValue(row, column, linkItem) }}</el-link>
+            <el-divider v-if="index !== row[column.prop].length - 1" direction="vertical" />
+          </template>
         </template>
         <div v-else>{{ tableValue(row, column) }}</div>
       </template>
