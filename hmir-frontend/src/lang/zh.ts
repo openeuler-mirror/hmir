@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-02-02 15:29:41
  * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-03 11:33:57
+ * @LastEditTime: 2023-07-06 15:44:49
  * @Description: 
  */
 
@@ -72,5 +72,9 @@ export default {
     destroy: '销毁',
     clusterConfiguration: '集群配置',
     recoveryPriority: '恢复优先级',
-    pgScrub: 'PG scrub'
+    pgScrub: 'PG scrub',
+    PerformanceCounters: '性能计数器',
+    Name: '名称',
+    description: '描述',
+    value:'值'
 }
