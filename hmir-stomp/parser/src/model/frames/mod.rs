@@ -53,9 +53,8 @@ pub mod client {
             "Initiates a STOMP session.",
             CONNECT|STOMP,
             Client,
-            host: Host,
             accept_version: AcceptVersion,
-            (heartbeat: HeartBeat: (||HeartBeatValue::new(HeartBeatIntervalls::new(0,0))):"(0,0)",login: Login, passcode: Passcode),
+            (host:Host, heartbeat: HeartBeat: (||HeartBeatValue::new(HeartBeatIntervalls::new(0,0))):"(0,0)",login: Login, passcode: Passcode),
             "See [CONNECT Frame](https://stomp.github.io/stomp-specification-1.2.html#CONNECT_or_STOMP_Frame)."
         ),
         (
