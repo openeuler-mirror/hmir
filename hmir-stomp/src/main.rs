@@ -1,7 +1,14 @@
+mod stomp;
+
 use tokio::io;
 use tokio::io::{AsyncBufReadExt, AsyncReadExt, BufReader};
 use tokio::net::{TcpListener, TcpStream};
 use tokio::sync::mpsc::unbounded_channel as channel;
+
+use std::convert::TryFrom;
+
+use parser::client::ClientFrame;
+use parser::headers::HeaderValue;
 
 const BUFFER_SIZE: usize = 4096;
 
@@ -23,6 +30,13 @@ async fn stomp_server(listener: TcpListener) -> anyhow::Result<()>
     }
 }
 
+
+fn stomp_debug(frame : & Vec<u8>)
+{
+    println!("{}",String::from_utf8_lossy(frame));
+}
+
+
 //一个客户端连接
 async fn handle_connection(mut stream: TcpStream) -> anyhow::Result<(),Box<dyn std::error::Error>>  {
 
@@ -40,7 +54,16 @@ async fn handle_connection(mut stream: TcpStream) -> anyhow::Result<(),Box<dyn s
                 break;
             } ,
             Ok(n) => {//读取到数据，对数据进行处理
-
+                let frame_buffer = Vec::from(&buffer[0..n]);
+                stomp_debug(&frame_buffer);
+                let frame =  ClientFrame::try_from(frame_buffer);
+                // if let Ok(ClientFrame::Send(f)) = frame {
+                //
+                // } else if let Ok(ClientFrame::Connect(f)) = frame {
+                //     println!("{}",f);
+                // } else {
+                //     println!("---------");
+                // }
             }
             Err(ref e) if e.kind() == io::ErrorKind::WouldBlock => {
                 //
@@ -50,10 +73,46 @@ async fn handle_connection(mut stream: TcpStream) -> anyhow::Result<(),Box<dyn s
                 return Err(e.into());
             }
         }
-
     }
 
     Ok(())
 }
 
 
+mod test {
+
+    use super::*;
+
+    #[test]
+    fn stomp_connect_frame_test() {
+        let message = b"CONNECT\n\
+                accept-version:1.2\n\
+                heart-beat:0,5000\n\
+                \n\
+                \x00"
+            .to_vec();
+
+        if let Ok(ClientFrame::Connect(frame)) = ClientFrame::try_from(message) {
+            // println!("{}",frame);
+        } else {
+            panic!("Send Frame not parsed correctly");
+        }
+    }
+
+    #[test]
+    fn stomp_connect_frame_with_host() {
+        let message = b"CONNECT\n\
+                accept-version:1.2\n\
+                host:stomp.github.org\n\
+                heart-beat:0,5000\n\
+                \n\
+                \x00"
+            .to_vec();
+
+        if let Ok(ClientFrame::Connect(frame)) = ClientFrame::try_from(message) {
+            println!("{:?}",frame);
+        } else {
+            panic!("Send Frame not parsed correctly");
+        }
+    }
+}
