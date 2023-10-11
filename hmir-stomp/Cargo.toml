@@ -7,8 +7,12 @@ edition = "2021"
 
 [dependencies]
 tokio = { version = "1.28.0" , features =["full"]}
+tokio-rustls = "0.24.1"
+rustls = "0.21.1"
+rustls-pemfile = "1.0.2"
+
 anyhow = "1.0.66"
 log4rs = "1.2.0"
 log = "0.4.17"
-stomp-parser = "0.5.0"
-stomp-rs ="0.0.8"
+
+parser = { path = "./parser"}
