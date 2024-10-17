@@ -1,0 +1,11 @@
+[package]
+name = "hmir-webserver"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+axum = { version="0.7" }
+tokio = { version = "1.0", features = ["full"] }
+serde = { version = "1.0.147", features = ["derive"] }
+
+hmir-ws-client-mgr = {path="../hmir-ws-client-mgr"}
