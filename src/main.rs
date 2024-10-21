@@ -96,12 +96,14 @@ macro_rules! hmir_exit {
     };
 }
 
+const LOG_FILE :&str  = "/etc/hmir/log4rs.yaml";
+
 fn log_init()
 {
-    let log = log4rs::init_file("/etc/hmir/log4rs.yaml", Default::default());
+    let log = log4rs::init_file(LOG_FILE, Default::default());
     match log {
         Err(e) => {
-            println!("Err for init log : {}", e);
+            println!("Err for init log : {} => {}",e,LOG_FILE);
             process::exit(1);
         }
         _ => ()
