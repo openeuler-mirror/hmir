@@ -959,7 +959,7 @@ read_open_session_response(struct ipmi_rs * rsp, int offset)
  * param offset [in] tells us where the rakp2 payload starts
  * param auth_alg [in] describes the authentication algorithm was agreed upon in
  *       the open session request/response phase.  We need to know that here so
- *       that we know how many bytes (if any) to read fromt the packet.
+ *       that we know how many bytes (if any) to read from the packet.
  *
  * returns 0 on success, 1 on error
  */
