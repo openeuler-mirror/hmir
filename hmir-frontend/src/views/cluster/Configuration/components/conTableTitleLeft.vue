@@ -1,18 +1,18 @@
 <!--
  * @Author: zhang_tianran
  * @Date: 2023-06-14 15:29:38
- * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-31 10:32:04
+ * @LastEditors: Z&N dev17101@linx-info.com
+ * @LastEditTime: 2024-10-23 16:00:17
  * @Description:
 -->
 <template>
   <ClusterTableTitleLeft :dropdownList="dropdownArray" @handleClick="handleClick"></ClusterTableTitleLeft>
-  <hostDialog :dialogVisible="dialogVisible" :hostType="hostType" :selectRow="selectRow" @cancel="dialogChange"></hostDialog>
+  <ConfigDialog :dialogVisible="dialogVisible" :configType="configType" :selectRow="selectRow" @cancel="dialogChange"></ConfigDialog>
 </template>
 
 <script setup lang="ts">
 import ClusterTableTitleLeft from '@/components/ClusterTableTitleLeft/index.vue'
-import hostDialog from './hostDialog.vue'
+import ConfigDialog from './configDialog.vue'
 import { computed, ref, watch } from 'vue'
 
 const props = defineProps({
@@ -38,10 +38,10 @@ const dropdownArray = ref([
 
 const dialogVisible = ref(false)
 
-const hostType = ref('')
+const configType = ref('')
 
 const handleClick = (dropdownText: string) => {
-  hostType.value = dropdownText
+  configType.value = dropdownText
   switch (dropdownText) {
     case 'add':
     case 'edit':

@@ -8,8 +8,10 @@ use hmir_errno::errno;
 use crate::ws_client::RequestClient;
 
 use hmir_protocol::systemd;
+use serde::Serialize;
 
 impl RequestClient {
+
 
     fn _svr_get_unit(&self,cmd: &str) -> (usize,String) {
 

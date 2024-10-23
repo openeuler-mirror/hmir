@@ -85,7 +85,9 @@ use jsonrpsee::ws_server::{RpcModule};
 use std::sync::{Mutex};
 use hmir_hash::HashWrap;
 use hmir_errno::errno;
-use std::{thread, time};
+// use std::{thread, time};
+use tokio::time::{sleep, Duration};
+
 use std::path::Path;
 use std::ffi::OsStr;
 
@@ -217,10 +219,10 @@ fn get_unit_list_by_pattern(states: Vec<&str>, patterns: Vec<&str>) -> String {
 pub fn init_services_mg()  {
     tokio::task::spawn(async{
         //运行在一个不阻塞的线程
-        let sec = time::Duration::from_millis(1000);
+        let sec = Duration::from_secs(1);
         loop {
             update_all_svr();
-            thread::sleep(sec);
+            sleep(sec).await;
         }
     });
 }
