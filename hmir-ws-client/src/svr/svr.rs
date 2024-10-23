@@ -13,24 +13,6 @@ use serde::Serialize;
 impl RequestClient {
 
 
-    fn test<'a,T:Serialize + serde::Deserialize<'a>+std::hash::Hash+ std::cmp::Eq,P : Serialize + serde::Deserialize<'a>>(&self,cmd: &str) -> (usize,String) {
-
-        client_check!(self.client);
-
-        let token = self.token.clone();
-        let (state,service) = self.runtime.block_on(async{
-            let response: Result<String, _> = self.client.request(cmd, rpc_params![token]).await;
-            match response {
-                Ok(result) => {
-                    let p: HashWrap::<T,P> = serde_json::from_str(result.as_str()).unwrap();
-                    return (p.code(),serde_json::to_string(&p.result).unwrap());
-                },
-                _ => { return (errno::HMIR_ERR_COMM,"".to_string())}
-            };
-        });
-        return (state,service);
-    }
-
     fn _svr_get_unit(&self,cmd: &str) -> (usize,String) {
 
         client_check!(self.client);
