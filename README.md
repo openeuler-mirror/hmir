@@ -29,6 +29,27 @@ sudo ./hmir --host 127.0.0.1 --port 8080
 3. 监听地址: 127.0.0.1:8080地址
 4. 可通过 ws://127.0.0.1:8080 发送websocket请求
 
+5. 测试命令
+
+```
+{
+   "jsonrpc":"2.0",
+   "id":1,
+   "method":"pam-auth",
+   "params":["username","password"]
+}
+```
+
+
+```
+{
+   "jsonrpc":"2.0",
+   "id":1,
+   "method":"ceph-df",
+   "params":""
+}
+```
+
 #### 参与贡献
 
 1.  Fork 本仓库
