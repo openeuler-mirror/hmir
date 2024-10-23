@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 15:29:38
  * @LastEditors: Z&N dev17101@linx-info.com
- * @LastEditTime: 2024-10-23 14:02:50
+ * @LastEditTime: 2024-10-23 15:26:50
  * @Description:
 -->
 <template>
@@ -36,10 +36,10 @@ const dropdownArray = ref([
 
 const dialogVisible = ref(false)
 
-const hostType = ref('')
+const configType = ref('')
 
 const handleClick = (dropdownText: string) => {
-  hostType.value = dropdownText
+  configType.value = dropdownText
   switch (dropdownText) {
     case 'add':
     case 'edit':
