@@ -16,6 +16,7 @@
     "axios": "^1.2.1",
     "echarts": "^5.4.1",
     "element-plus": "^2.2.27",
+    "mxgraph": "^4.2.2",
     "normalize.css": "^8.0.1",
     "nprogress": "^0.2.0",
     "pinia": "^2.0.28",
