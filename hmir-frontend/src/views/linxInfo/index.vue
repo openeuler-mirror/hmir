@@ -2,7 +2,7 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-10-23 16:37:13
  * @LastEditors: Z&N dev17101@linx-info.com
- * @LastEditTime: 2024-10-23 17:39:02
+ * @LastEditTime: 2024-10-23 18:02:22
  * @FilePath: /hmir-frontend/src/views/linxInfo/index.vue
  * @Description:
 -->
@@ -16,5 +16,7 @@
 </script>
 
 <style lang="scss" scoped>
-
+iframe {
+  height: calc(100vh - 35px);
+}
 </style>
