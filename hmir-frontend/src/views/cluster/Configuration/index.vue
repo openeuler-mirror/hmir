@@ -1,8 +1,8 @@
 <!--
  * @Author: zhang_tianran
  * @Date: 2023-07-28 10:21:33
- * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-08-04 09:49:12
+ * @LastEditors: Z&N dev17101@linx-info.com
+ * @LastEditTime: 2024-10-23 14:21:47
  * @Description:
 -->
 <template>
@@ -11,7 +11,7 @@
       <ClusterBodyTable @selectRowData="rowClick" :tableData="tableData" :tableColumn="tableColumn"
         @tableBodyWidth="tableBodyWidth" highlightCurrentRow>
         <template v-slot:tableTitleLeft>
-          <hostTableTitleLeft :selectRow="selectRow"></hostTableTitleLeft>
+          <ConfigTableTitleLeft :selectRow="selectRow"></ConfigTableTitleLeft>
         </template>
         <template v-slot:tableTitleRight>
           <ClusterTableTitleRight refreshBtn columnShow numShow searchInputShow :tableColumn="tableColumn">
@@ -23,10 +23,10 @@
 </template>
 
 <script setup lang="ts">
-import breadcrumb from '@/components/ClusterHeader/index.vue'
 import ClusterBodyTable from '@/components/ClusterBodyTable/index.vue'
-import hostTableTitleLeft from './components/hostTableTitleLeft.vue'
 import ClusterTableTitleRight from '@/components/ClusterTableTitleRight/index.vue'
+import breadcrumb from '@/components/ClusterHeader/index.vue'
+import ConfigTableTitleLeft from './components/conTableTitleLeft.vue'
 import { onMounted, ref } from 'vue'
 import { hostsProcStore } from '@/store/modules/cluster/host'
 
