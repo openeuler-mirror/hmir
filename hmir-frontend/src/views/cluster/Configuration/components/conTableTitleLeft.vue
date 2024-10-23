@@ -2,15 +2,17 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 15:29:38
  * @LastEditors: Z&N dev17101@linx-info.com
- * @LastEditTime: 2024-10-23 15:26:50
+ * @LastEditTime: 2024-10-23 16:00:17
  * @Description:
 -->
 <template>
   <ClusterTableTitleLeft :dropdownList="dropdownArray" @handleClick="handleClick"></ClusterTableTitleLeft>
+  <ConfigDialog :dialogVisible="dialogVisible" :configType="configType" :selectRow="selectRow" @cancel="dialogChange"></ConfigDialog>
 </template>
 
 <script setup lang="ts">
 import ClusterTableTitleLeft from '@/components/ClusterTableTitleLeft/index.vue'
+import ConfigDialog from './configDialog.vue'
 import { computed, ref, watch } from 'vue'
 
 const props = defineProps({
