@@ -1,8 +1,9 @@
 <!--
- * @Author: zhang_tianran
- * @Date: 2023-07-06 09:54:38
+ * @Author: Z&N dev17101@linx-info.com
+ * @Date: 2024-10-23 15:21:38
  * @LastEditors: Z&N dev17101@linx-info.com
- * @LastEditTime: 2024-10-23 15:26:47
+ * @LastEditTime: 2024-10-23 15:50:12
+ * @FilePath: /hmir-frontend/src/views/cluster/Configuration/components/configDialog copy.vue
  * @Description:
 -->
 <template>
@@ -12,7 +13,7 @@
       <span class="dialog-footer">
         <el-button @click="cancel">Cancel</el-button>
         <el-button type="primary" @click="submit">
-          提交
+          {{ btnShow }}
         </el-button>
       </span>
     </template>
@@ -20,14 +21,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue'
+import ConfigCreate from './configCreate.vue'
+import ConfigEdit from './configEdit.vue'
 
- defineProps({
+const porps = defineProps({
   dialogVisible: {
     type: Boolean,
     default: false
   },
-  hostType: {
+  configType: {
     type: String,
     default: ''
   },
@@ -41,9 +44,35 @@ import { ref } from 'vue';
 
 const dialogBody = ref()
 
-const dialogTitle = ref(' 配置')
+const componentMap = new Map<string, any>([
+  ['add', ConfigCreate],
+  ['edit', ConfigEdit]
+])
 
-const currentComponent = ref()
+const dialogTitleMap = new Map<string, Function>([
+  ['add', () => 'Add Configuration'],
+  ['edit', () => 'Edit Configuration: ' + porps.selectRow.configName]
+])
+
+const btnShowMap = new Map<string, string>([
+  ['add', 'Add Configuration'],
+  ['edit', 'Edit Configuration']
+])
+
+const dialogTitle = computed(() => {
+  if (!porps.configType) return ''
+  const getTitle = dialogTitleMap.get(porps.configType) as Function
+
+  return getTitle()
+})
+
+const btnShow = computed(() => {
+  return btnShowMap.get(porps.configType)
+})
+
+const currentComponent = computed(() => {
+  return componentMap.get(porps.configType)
+})
 
 const emit = defineEmits({
   cancel: (_data: boolean) => true
