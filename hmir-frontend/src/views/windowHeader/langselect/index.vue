@@ -1,8 +1,8 @@
 <!--
  * @Author: zhang_tianran
  * @Date: 2023-05-17 18:16:11
- * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-29 09:59:23
+ * @LastEditors: Z&N dev17101@linx-info.com
+ * @LastEditTime: 2024-10-23 17:26:50
  * @Description:
 -->
 
@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 import { ElRadio, ElRadioGroup } from 'element-plus'
-import { ref, onMounted, defineExpose } from 'vue'
+import { ref, onMounted } from 'vue'
 
 const props = defineProps({
   locale: {
