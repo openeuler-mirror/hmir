@@ -24,7 +24,9 @@ use nix::libc;
 use std::ffi::CStr;
 use hmir_protocol::proc;
 use sysinfo::{System, SystemExt};
-use std::{thread, time};
+// use std::{thread, time};
+use tokio::time::{sleep, Duration};
+
 use std::sync::{Mutex};
 
 
@@ -120,10 +122,10 @@ fn update_process_all()
 pub fn init_proc_mg()  {
     tokio::task::spawn(async{
         //运行在一个不阻塞的线程
-        let sec = time::Duration::from_millis(1000);
+        let sec = Duration::from_secs(1);
         loop {
             update_process_all();
-            thread::sleep(sec);
+            sleep(sec).await;
         }
     });
 }
