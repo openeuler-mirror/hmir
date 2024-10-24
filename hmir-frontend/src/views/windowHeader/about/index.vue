@@ -2,7 +2,7 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-10-23 09:38:36
  * @LastEditors: Z&N dev17101@linx-info.com
- * @LastEditTime: 2024-10-24 16:47:08
+ * @LastEditTime: 2024-10-24 18:38:17
  * @FilePath: /hmir-frontend/src/views/windowHeader/about/index.vue
  * @Description:
 -->
@@ -18,7 +18,10 @@
 <script setup lang="ts">
 import router from '@/router'
 
+const emits = defineEmits(['gotoLinInfo'])
+
 function gotoLinxInfo() {
+  emits('gotoLinInfo')
   router.push({ path: '/linxInfo' })
 }
 </script>
