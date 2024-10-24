@@ -1,0 +1,13 @@
+[package]
+name = "hmir-psutil"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+psutil = "3.2.1"
+lazy_static = "1.4.0"
+serde = { version = "1.0.147", features = ["derive"] }
+
+[[test]]
+name = "integration"
+path = "tests/cpu_test.rs"

@@ -10,6 +10,9 @@ mod user;
 mod ceph;
 
 #[cfg(target_os = "linux")]
+mod psutil;
+
+#[cfg(target_os = "linux")]
 mod proc;
 #[cfg(target_os = "linux")]
 mod ipmi;
@@ -234,6 +237,7 @@ async fn run_ws_server(ip: &str, port: &str) -> anyhow::Result<(SocketAddr, WsSe
         ceph::ceph::register_method(&mut module)?;
         virt::register_method(&mut module)?;
         sys::register_method(&mut module)?;
+        psutil::psutil::register_method(&mut module)?;
     }
 
 
