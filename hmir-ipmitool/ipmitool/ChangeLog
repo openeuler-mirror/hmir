@@ -443,7 +443,7 @@ version 1.8.16 2015-11-22
 	* ID:354 - uint8_t >= 0 is always true, don't test it
 	* ID:355 - Fix Enumeration value not handled in ipmi_get_event_desc()
 	* ID:355 - Fix ``ISO C forbids omitting the middle term of a ?: expression''
-	* ID:355 - Fix ``obsolete use of designated initializer with ¿:¿'' warning
+	* ID:355 - Fix ``obsolete use of designated initializer with :'' warning
 	* ID:355 - Fix comparison of unsigned expression
 	* ID:355 - Fix compiler warnings
 	* ID:355 - Fix compiler warnings in dimm_spd.c
@@ -567,7 +567,7 @@ version 1.8.14 2014-05-05
 	* ID: 48 - Remove hard-coded FRU inventory access length restriction
 	* ID: 276 - HPM.1 upgrade combined patch
 	* ID: 90 - Add options to chassis bootparam set bootflag
-	* ID: 292 -Properly handle plugin non-zero target adddress with -t
+	* ID: 292 -Properly handle plugin non-zero target address with -t
 	* Numerous Fixes based on running Coverity
 	* Use TIOCFLUSH if TCFLSH is missing to get the serial plugin building on
 	  Hurd.
@@ -1178,7 +1178,7 @@ version 1.5.6
 	* Fix SEL event decoding for generic events
 	* Handle empty SEL gracefully when doing "sel list"
 	* Fix sdr handling of sensors that do not return a reading
-	* Fix for CSV display of sensor readings/units from Fredrik Öhrn
+	* Fix for CSV display of sensor readings/units from Fredrik hrn
 
 version 1.5.5
 	* Add -U option for setting LAN username
