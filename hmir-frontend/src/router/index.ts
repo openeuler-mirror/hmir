@@ -1,3 +1,11 @@
+/*
+ * @Author: Z&N dev17101@linx-info.com
+ * @Date: 2024-10-23 09:38:36
+ * @LastEditors: Z&N dev17101@linx-info.com
+ * @LastEditTime: 2024-10-23 17:22:02
+ * @FilePath: /hmir-frontend/src/router/index.ts
+ * @Description:
+ */
 import { createRouter, createWebHashHistory } from 'vue-router';
 import useRouterStoreHook from '@/store/modules/router';
 import cmdServiceStoreHook from '@/store/modules/service';
@@ -18,6 +26,11 @@ export const constantRoutes = [
     path: '/about',
     name: 'about',
     component: () => import('@/views/windowHeader/about/index.vue'),
+  },
+  {
+    path: '/linxInfo',
+    name: 'linxInfo',
+    component: () => import('@/views/linxInfo/index.vue'),
   }
 ];
 

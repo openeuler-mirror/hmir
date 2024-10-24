@@ -1,8 +1,8 @@
 /*
  * @Author: zhang_tianran
  * @Date: 2023-06-13 18:24:51
- * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-30 14:42:49
+ * @LastEditors: Z&N dev17101@linx-info.com
+ * @LastEditTime: 2024-10-23 17:15:56
  * @Description: 
  */
 import router from '@/router';
@@ -10,12 +10,12 @@ import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 import { RouteRecordRaw } from 'vue-router';
 import useRouterStoreHook from '@/store/modules/router';
-import Cache from '@/utils/cache/index'
+import Cache from '@/utils/cache/index' 
 // 进度条
 NProgress.configure({ showSpinner: false });
 
 // 白名单路由
-const whiteList = ['/login', '/about', '/404'];
+const whiteList = ['/login', '/about', '/404', '/linxInfo'];
 
 const useRouterStore = useRouterStoreHook()
 
