@@ -398,7 +398,7 @@ fi
 - ID: 48 - Remove hard-coded FRU inventory access length restriction
 - ID: 276 - HPM.1 upgrade combined patch
 - ID: 90 - Add options to chassis bootparam set bootflag
-- ID: 292 -Properly handle plugin non-zero target adddress with -t
+- ID: 292 -Properly handle plugin non-zero target address with -t
 - Numerous Fixes based on running Coverity
 - Use TIOCFLUSH if TCFLSH is missing to get the serial plugin building on
   Hurd.
