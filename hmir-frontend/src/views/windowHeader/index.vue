@@ -21,26 +21,21 @@
       <div class="flex-grow" />
     </el-menu>
   </div>
-  <s3-layer v-model="visible" :title="t('HMIRsystem')">
-    <about :minimizable="true" :maximizable="true" :closable="true"></about>
-  </s3-layer>
-  <s3-layer v-model="settingVisible" :title="t('HMIRsystem')" @yes="localeChange" :btn="t('determine')">
-    <langselect ref="langselectData" :locale="locale" :localeLang="localeLang" @gotoLinInfo="gotoLinInfo"> </langselect>
-  </s3-layer>
-
+  <Dialog ref="DialogRef"></Dialog>
 </template>
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
 import about from '@/views/windowHeader/about/index.vue'
 import langselect from '@/views/windowHeader/langselect/index.vue'
+import Dialog from '@/components/Dialog/defauleDialog.vue'
+import { ref, watch, markRaw } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import api from '@/api'
 import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/store/modules/app'
 import ElMessage from '@/utils/message'
 
-// about页面
-const visible = ref(false)
+const DialogRef = ref()
+
 const settingVisible = ref(false)
 const { locale, t } = useI18n()
 // 引入路由
@@ -99,18 +94,20 @@ async function processQuit() {
 
 // 关于窗口
 function openAboutWindow() {
-  visible.value = true
+  DialogRef.value.openDialog({
+    title: t('HMIRsystem'),
+    width: 600,
+    component: markRaw(about)
+  })
 }
 
 function openSettingWindow() {
   settingVisible.value = true
-}
-
-/**
- * @description: 跳转公司页前应该先关闭弹窗
- */
-function gotoLinInfo() {
-  settingVisible.value = false
+  DialogRef.value.openDialog({
+    title: t('HMIRsystem'),
+    width: 600,
+    component: markRaw(langselect)
+  })
 }
 
 const store = ref(useAppStore())
