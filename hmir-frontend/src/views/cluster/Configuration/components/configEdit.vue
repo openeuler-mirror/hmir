@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-07-04 16:24:39
  * @LastEditors: Z&N dev17101@linx-info.com
- * @LastEditTime: 2024-10-23 15:44:32
+ * @LastEditTime: 2024-10-25 10:25:47
  * @Description:
 -->
 <template>
@@ -30,6 +30,7 @@ defineProps({
 })
 
 const emit = defineEmits({
+  // eslint-disable-next-line no-unused-vars
   cancel: (_data: boolean) => true
 })
 

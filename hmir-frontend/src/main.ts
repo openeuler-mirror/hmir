@@ -1,8 +1,8 @@
 /*
  * @Author: duanwujie88 dev17001@linx-info.com
  * @Date: 2023-02-02 14:20:40
- * @LastEditors: duanwujie88 dev17001@linx-info.com
- * @LastEditTime: 2023-02-02 17:14:57
+ * @LastEditors: Z&N dev17101@linx-info.com
+ * @LastEditTime: 2024-10-25 17:48:51
  * @FilePath: /hmir-frontend/src/main.ts
  * @Description: hmir-front
  */
@@ -39,10 +39,8 @@ import App from "./App.vue";
 import * as ElementPlusIconsVue from '@element-plus/icons-vue';
 import { deBounce } from './directive/index';
 import { setupStore } from '@/store';
-import { s3Layer } from 'vue3-layer';
 import 'virtual:svg-icons-register';
 import '@/permission';
-import 'vue3-layer/dist/s3Layer.css';
 import 'normalize.css/normalize.css';
 import 'element-plus/dist/index.css';
 import "./style.css";
@@ -60,7 +58,6 @@ app.use(ElementPlus,{
   il8n: (key: any,value: any) => t(key,value)
 }).use(router)
 app.config.globalProperties.$echarts = echarts
-app.component('s3-layer', s3Layer);
 app.mount('#app')
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component)
