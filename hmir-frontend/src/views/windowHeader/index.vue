@@ -15,6 +15,9 @@
         <template #title>{{ t('setting') }}</template>
         <el-menu-item index="setting" class="el-menu-item-height">{{ t('SwitchingLang') }}</el-menu-item>
       </el-sub-menu>
+      <el-menu-item index="3" :popper-offset="0"  v-if="routerPath === '/linxInfo'">
+        <template #title>{{ t('返回系统') }}</template>
+      </el-menu-item>
       <div class="flex-grow" />
     </el-menu>
   </div>
@@ -27,20 +30,30 @@
 
 </template>
 <script setup lang="ts">
-import { ref } from 'vue'
-// import { useRouter } from 'vue-router'
+import { ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import about from '@/views/windowHeader/about/index.vue'
 import langselect from '@/views/windowHeader/langselect/index.vue'
 import api from '@/api'
 import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/store/modules/app'
 import ElMessage from '@/utils/message'
+
 // about页面
 const visible = ref(false)
 const settingVisible = ref(false)
 const { locale, t } = useI18n()
 // 引入路由
-// const router = useRouter()
+const router = useRouter()
+const route = useRoute()
+
+const routerPath = ref('')
+
+watch(route,
+  (newValue) => {
+    routerPath.value = newValue.path
+  }
+)
 
 const langselectData = ref()
 
@@ -60,6 +73,8 @@ const handleSelect = (key: string) => {
     openAboutWindow()
   } else if (key === 'setting') {
     openSettingWindow()
+  } else if (key === '3') {
+    gotoLoginRoute()
   }
 }
 
@@ -101,6 +116,10 @@ function localeChange() {
   store.value.SET_LOCALE(lang)
   settingVisible.value = false
   ElMessage.success(t('success'))
+}
+
+function gotoLoginRoute() {
+  router.push('/login')
 }
 
 </script>
