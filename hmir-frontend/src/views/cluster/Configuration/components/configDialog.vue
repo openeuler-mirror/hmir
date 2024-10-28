@@ -2,7 +2,7 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-10-23 15:21:38
  * @LastEditors: Z&N dev17101@linx-info.com
- * @LastEditTime: 2024-10-23 15:50:12
+ * @LastEditTime: 2024-10-25 10:25:45
  * @FilePath: /hmir-frontend/src/views/cluster/Configuration/components/configDialog copy.vue
  * @Description:
 -->
@@ -75,6 +75,7 @@ const currentComponent = computed(() => {
 })
 
 const emit = defineEmits({
+  // eslint-disable-next-line no-unused-vars
   cancel: (_data: boolean) => true
 })
 
