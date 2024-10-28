@@ -2,7 +2,7 @@
  * @Author: xhliu
  * @Date: 2024-08-01 11:06:06
  * @LastEditors: Z&N dev17101@linx-info.com
- * @LastEditTime: 2024-10-25 16:43:15
+ * @LastEditTime: 2024-10-25 17:28:10
  * @Description:
  * Copyright (C) 2016-2024 - Beijing Linx Software Corp.
  */
@@ -12,14 +12,14 @@ type DoneFn = (cancel?: boolean) => void
 
 export type DialogBeforeCloseFn = (done: DoneFn) => void
 
-interface DialogInfoInstance {
+export interface DialogInfoInstance {
   title: string,
   width: string | number,
-  height: string | number,
+  height?: string | number,
   component: Comment | null,
-  beforeClose: DialogBeforeCloseFn,
-  componentData: Object,
-  componentEvent: Object
+  beforeClose?: DialogBeforeCloseFn,
+  componentData?: Object,
+  componentEvent?: Object
 }
 
 const DefaultDialogInfo: DialogInfoInstance = {
@@ -32,6 +32,6 @@ const DefaultDialogInfo: DialogInfoInstance = {
   componentEvent: {}
 }
 
-export function getDefaultDialogInfo() {
-  return deepCopy(DefaultDialogInfo)
+export function getDefaultDialogInfo(): DialogInfoInstance {
+  return deepCopy(DefaultDialogInfo)  as DialogInfoInstance
 }
