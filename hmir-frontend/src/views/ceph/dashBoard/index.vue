@@ -1,8 +1,8 @@
 <!--
  * @Author: zhang_tianran dev17101@linx-info.com
  * @Date: 2023-06-14 19:16:38
- * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-29 10:05:15
+ * @LastEditors: Z&N dev17101@linx-info.com
+ * @LastEditTime: 2024-10-28 10:31:08
  * @FilePath: /hmir-frontend/src/views/ceph/dashBoard/index.vue
  * @Description: 仪表盘
 -->
@@ -12,41 +12,49 @@
         <el-col :span="24">
           <Title name="状态" />
         </el-col>
-        <el-col :span="24">
-          <Card class="status-box" v-for="(e, i) in data.statusData" :key="i">
+      </el-row>
+      <el-row :gutter="20">
+          <el-col :span="6" v-for="(e, i) in data.statusData" :key="i">
+            <Card class="status-box">
             <template v-slot:content>
-              <Status :statusData=e />
+              <Status :statusData="e" />
             </template>
           </Card>
-        </el-col>
-        <el-col :span="24">
+          </el-col>
+      </el-row>
+
+      <el-row>
           <Title name="容量" />
-        </el-col>
-        <el-col :span="24" style="display:flex">
-          <Card class="capacity-box" v-for="(e, i) in 4" :key="i">
+        </el-row>
+        <el-row :gutter="20">
+        <el-col :span="6" v-for="(e, i) in 4" :key="i">
+          <Card class="capacity-box">
             <template v-slot:content>
               <Echarts :chartData=data.chartData[i]></Echarts>
             </template>
           </Card>
         </el-col>
-        <el-col :span="24">
+      </el-row>
+
+        <el-row>
           <Title name="性能" />
-        </el-col>
-        <el-col :span="24">
-          <div style="display: flex;">
-            <Card class="performance-box" v-for="(e, i) in performance" :key="i">
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="6"  v-for="(e, i) in performance" :key="i">
+            <Card class="performance-box">
               <template v-slot:content>
                 <Echarts :chartData=e></Echarts>
               </template>
             </Card>
-            <Card class="performance-box" v-for="(e, i) in performanceData" :key="i">
+          </el-col>
+          <el-col :span="6"  v-for="(e, i) in performanceData" :key="i">
+            <Card class="performance-box">
               <template v-slot:content>
                 <Status :statusData=e></Status>
               </template>
             </Card>
-          </div>
-        </el-col>
-      </el-row>
+          </el-col>
+        </el-row>
     </div>
   </template>
 
@@ -406,35 +414,26 @@ const performanceData = ref([
   <style lang="scss" scoped>
   .main {
     width: 100%;
-    height: 100%;
-    min-width: 1000px;
 
     .status-box {
       border-radius: 4px;
       background: #f5f5f5;
-      width: 24%;
-      float: left;
-      height: 108px;
-      margin-right: 1%;
-      margin-bottom: 1%;
+      margin-bottom: 16px;
+      height: 200px;
     }
 
     .capacity-box {
-      width: 24%;
+      width: 100%;
       border-radius: 4px;
       height: 200px;
-      margin-right: 1%;
-      margin-bottom: 1%;
       background: #f5f5f5;
+      margin-bottom: 16px;
     }
 
     .performance-box {
-      width: 24%;
       border-radius: 4px;
       height: 200px;
       background: #f5f5f5;
-      margin-right: 1%;
-      margin-bottom: 1%;
     }
 
     .title-margin {
