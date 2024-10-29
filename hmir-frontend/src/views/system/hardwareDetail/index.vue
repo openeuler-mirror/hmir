@@ -2,18 +2,18 @@
   <div class="hardwareDetail">
     <el-page-header title="返回" class="back" @back="goBack" content="硬件信息">
     </el-page-header>
-    <el-descriptions title="系统信息">
+    <el-descriptions title="系统信息" border>
     <el-descriptions-item label="类型">桌面</el-descriptions-item>
-    <el-descriptions-item label="BIOS">{{ messageData.board_vendor }}</el-descriptions-item>
-    <el-descriptions-item label="名称">{{ messageData.board_name }}</el-descriptions-item>
-    <el-descriptions-item label="BIOS版本">{{ messageData.bios_version}}</el-descriptions-item>
-    <el-descriptions-item label="版本">{{ messageData.board_name }}</el-descriptions-item>
-    <el-descriptions-item label="BOIS日期">{{ messageData.bios_date.split('/')[2] +'-'+  messageData.bios_date.split('/')[0]  +'-'+ messageData.bios_date.split('/')[1]}}</el-descriptions-item>
-    <el-descriptions-item label="CPU">{{ messageData.model_name }}</el-descriptions-item>
+    <el-descriptions-item label="BIOS">{{ messageData.board_vendor || '-' }}</el-descriptions-item>
+    <el-descriptions-item label="名称">{{ messageData.board_name || '-' }}</el-descriptions-item>
+    <el-descriptions-item label="BIOS版本">{{ messageData.bios_version || '-'}}</el-descriptions-item>
+    <el-descriptions-item label="版本">{{ messageData.board_name || '-' }}</el-descriptions-item>
+    <el-descriptions-item label="BOIS日期">{{ biosDate}}</el-descriptions-item>
+    <el-descriptions-item label="CPU">{{ messageData.model_name || '-' }}</el-descriptions-item>
 </el-descriptions>
  <el-table
       :data="tableData"
-      style="width: 100%">
+      style="width: 100%;margin-top:30px;">
       <el-table-column
         prop="cls"
         label="等级"
@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 import api from '@/api'
 import useUserStore from '@/store/modules/user'
 const userStore = useUserStore()
@@ -68,6 +68,11 @@ const messageData = ref<A>({
   bios_version: '',
   bios_date: '',
   model_name: ''
+})
+
+const biosDate = computed(() => {
+  return '-'
+  // return messageData.bios_date.split('/')[2] +'-'+  messageData.bios_date.split('/')[0]  +'-'+ messageData.bios_date.split('/')[1]
 })
 
 watch(() => props.systemData, (newValue:any) => {
