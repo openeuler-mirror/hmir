@@ -1,6 +1,6 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginFormRef" :model="loginData" class="login-form" label-position="left" :rules="rules"
+    <el-form ref="loginFormRef" :model="loginData" class="login-form" label-position="left" :rules="rules" size="large"
       @keyup.enter="submitForm(loginFormRef)">
       <div class="title-container">
         <h1 class="title">HMIR</h1>
@@ -12,7 +12,7 @@
             <Location />
           </el-icon>
         </span>
-        <el-autocomplete v-model.trim="loginData.ipAddress" :fetch-suggestions="ipAddressQuery" clearable class=""
+        <el-autocomplete v-model.trim="loginData.ipAddress" :fetch-suggestions="ipAddressQuery" class="ipAddressAutocomplete"
           :placeholder="t('ipAddress')" highlight-first-item @select="handleSelect">
           <template #default="{ item }">
             <div v-if="!loginData.ipAddress">
@@ -30,7 +30,7 @@
         <span class="ipPort-container">
         </span>
         <el-autocomplete v-model.trim="loginData.ipPort" :fetch-suggestions="ipPortQuery" :trigger-on-focus="false"
-          clearable class="ipPortAutocomplete" :placeholder="t('port')" highlight-first-item @select="handleSelect">
+         class="ipPortAutocomplete" :placeholder="t('port')" highlight-first-item @select="handleSelect">
         </el-autocomplete>
       </el-form-item>
 
@@ -40,7 +40,7 @@
             <User />
           </el-icon>
         </span>
-        <el-autocomplete v-model.trim="loginData.username" :fetch-suggestions="userQuery" clearable class=""
+        <el-autocomplete v-model.trim="loginData.username" :fetch-suggestions="userQuery" class="usernameAutocomplete"
           :placeholder="t('inputUserName')" highlight-first-item @select="handleSelect">
           <template #default="{ item }">
             <div v-if="!loginData.username">
@@ -60,12 +60,12 @@
             <Lock />
           </el-icon>
         </span>
-        <el-input ref="passwordRef" v-model="loginData.password" :placeholder="t('inputPwd')" name="password" clearable
+        <el-input ref="passwordRef" class="password-input" v-model="loginData.password" :placeholder="t('inputPwd')" name="password"
           type="password" show-password />
       </el-form-item>
 
       <el-config-provider :message="config">
-        <el-button size="default" type="primary" style="width: 100%; margin-bottom: 30px; margin-top: 10px;"
+        <el-button type="primary" style="width: 100%; margin-bottom: 30px; margin-top: 10px;"
           @click="submitForm(loginFormRef)" :loading="loading" v-deBounce>
            {{ t('login') }}
         </el-button>
@@ -350,8 +350,11 @@ $cursor: #fff;
 
   .el-input {
     display: inline-block;
-    height: 36px;
-    width: 85%;
+    height: 46px;
+
+    input::placeholder{
+      color: #889aa4;
+    }
 
     .el-input__wrapper {
       padding: 0;
@@ -363,7 +366,7 @@ $cursor: #fff;
         border: 0px;
         border-radius: 0px;
         color: $light_gray;
-        height: 36px;
+        height: 46px;
         caret-color: $cursor;
 
         &:-webkit-autofill {
@@ -390,17 +393,9 @@ $cursor: #fff;
     color: #454545;
   }
 
-  .copyright {
-    width: 100%;
-    position: absolute;
-    bottom: 0;
-    font-size: 12px;
-    text-align: center;
-    color: #cccccc;
-  }
 
   .ipPortAutocomplete {
-    width: 76% !important;
+    width: 60% !important;
   }
 }
 </style>
@@ -417,6 +412,9 @@ $light_gray: #eee;
   overflow: hidden;
   user-select: none;
   -moz-user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   .ipAddress {
     width: 360px;
@@ -438,7 +436,7 @@ $light_gray: #eee;
     position: relative;
     width: 520px;
     max-width: 100%;
-    padding: 160px 35px 0;
+    padding: 30px;
     margin: 0 auto;
     overflow: hidden;
   }
@@ -468,9 +466,21 @@ $light_gray: #eee;
     text-align: center;
   }
 
-  :deep(.el-autocomplete) {
-    width: 86%;
-  }
+ .password-input {
+  width: 86%;
+ }
+
+ :deep(.el-form-item__content) {
+
+  .usernameAutocomplete,
+.ipAddressAutocomplete {
+  width: 80%;
+}
+.ipPortAutocomplete {
+  width: 50%;
+}
+
+ }
 
   .ipPort-container {
     padding: 7px 10px 3px 10px;
