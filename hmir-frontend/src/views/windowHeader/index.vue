@@ -15,13 +15,13 @@
         <template #title>{{ t('setting') }}</template>
         <el-menu-item index="setting" class="el-menu-item-height">{{ t('SwitchingLang') }}</el-menu-item>
       </el-sub-menu>
-      <el-menu-item index="3" :popper-offset="0"  v-if="routerPath === '/linxInfo'">
+      <el-menu-item index="3" :popper-offset="0" v-if="routerPath === '/linxInfo'">
         <template #title>{{ t('返回系统') }}</template>
       </el-menu-item>
       <div class="flex-grow" />
     </el-menu>
   </div>
-  <Dialog ref="DialogRef"></Dialog>
+  <Dialog ref="DialogRef" />
 </template>
 <script setup lang="ts">
 import about from '@/views/windowHeader/about/index.vue'
@@ -31,13 +31,12 @@ import { ref, watch, markRaw } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import api from '@/api'
 import { useI18n } from 'vue-i18n'
-import { useAppStore } from '@/store/modules/app'
-import ElMessage from '@/utils/message'
 
 const DialogRef = ref()
 
 const settingVisible = ref(false)
-const { locale, t } = useI18n()
+
+const {  t } = useI18n()
 // 引入路由
 const router = useRouter()
 const route = useRoute()
@@ -50,15 +49,8 @@ watch(route,
   }
 )
 
-const langselectData = ref()
-
 // 下拉框通过什么触发
 const menuTrigger = ref<any>('click')
-
-const localeLang = ref({
-  english: () => t('english'),
-  chinese: () => t('chinese')
-})
 
 // 菜单激活回调
 const handleSelect = (key: string) => {
@@ -105,21 +97,9 @@ function openSettingWindow() {
   settingVisible.value = true
   DialogRef.value.openDialog({
     title: t('HMIRsystem'),
-    width: 600,
+    width: 500,
     component: markRaw(langselect)
   })
-}
-
-const store = ref(useAppStore())
-// 修改国际化语言
-
-function localeChange() {
-  const lang = langselectData.value.radio
-
-  locale.value = lang
-  store.value.SET_LOCALE(lang)
-  settingVisible.value = false
-  ElMessage.success(t('success'))
 }
 
 function gotoLoginRoute() {
