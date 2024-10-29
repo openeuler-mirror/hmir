@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-07-05 13:56:50
  * @LastEditors: Z&N dev17101@linx-info.com
- * @LastEditTime: 2024-10-29 16:16:45
+ * @LastEditTime: 2024-10-29 16:39:36
  * @Description: 
  */
 
@@ -22,7 +22,7 @@ export function isNumber(value: string): boolean {
  * 销毁 disconnect()
  * @param {*} dom 添加对dom节点的监听
  */
-export function addResizeObserver(dom, callback) {
+export function addResizeObserver(dom: any, callback?: Function) {
   let resizeObserver = new ResizeObserver(entries => {
     for (const entry of entries) {
       callback?.(entry)

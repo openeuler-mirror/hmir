@@ -36,7 +36,7 @@ const DialogRef = ref()
 
 const settingVisible = ref(false)
 
-const {  t } = useI18n()
+const { t } = useI18n()
 // 引入路由
 const router = useRouter()
 const route = useRoute()
@@ -52,17 +52,23 @@ watch(route,
 // 下拉框通过什么触发
 const menuTrigger = ref<any>('click')
 
+/**
+ * @description: 菜单激活回调map数据
+ */
+const headerHandleMap = new Map([
+  // 退出
+  ['processQuit', processQuit],
+  // 关于
+  ['about', openAboutWindow],
+  // 设置语言
+  ['setting', openSettingWindow],
+  // 跳转到公司信息
+  ['3', gotoLoginRoute]
+])
+
 // 菜单激活回调
 const handleSelect = (key: string) => {
-  if (key === 'processQuit') {
-    processQuit()
-  } else if (key === 'about') {
-    openAboutWindow()
-  } else if (key === 'setting') {
-    openSettingWindow()
-  } else if (key === '3') {
-    gotoLoginRoute()
-  }
+  headerHandleMap.get(key)?.()
 }
 
 //  展开的回调
