@@ -118,7 +118,7 @@ install -D -m555 ./target/%{rust_musl_target}/release/stratovirt %{buildroot}%{_
 - Delete -static-pie for musl
 
 * Fri Sep  1 2023 Yan Wang <wangyan122@huawei.com> - 2.2.0-14
-- Diable VIRTIO_F_ACCESS_PLATFORM feature in vsock
+- Disable VIRTIO_F_ACCESS_PLATFORM feature in vsock
 
 * Sat Mar 11 2023 liuxiangdong <liuxiangdong5@huawei.com> - 2.2.0-13
 - add -static-pie for musl
