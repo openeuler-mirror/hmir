@@ -140,7 +140,7 @@ impl std::ops::Deref for StompVersions {
 pub enum AckType {
     /// The client need not send Acks. Messages are assumed received as soon as sent.
     Auto,
-    /// Client must send Ack frames. Ack frames are cummulative, acknowledging also all previous messages.
+    /// Client must send Ack frames. Ack frames are cumulative, acknowledging also all previous messages.
     Client,
     /// Client must send Ack frames. Ack frames are individual, acknowledging only the specified message.
     ClientIndividual,

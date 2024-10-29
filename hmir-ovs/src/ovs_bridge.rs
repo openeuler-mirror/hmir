@@ -1,7 +1,7 @@
 use serde::{Serialize};
 use super::ovs_port::*;
 
-// ovs bridge definiton
+// ovs bridge definition
 #[derive(Debug, Clone,Serialize)]
 pub struct OvsBridge{
     pub name : String,
