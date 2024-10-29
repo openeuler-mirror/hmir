@@ -2,7 +2,7 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-10-23 09:38:36
  * @LastEditors: Z&N dev17101@linx-info.com
- * @LastEditTime: 2024-10-29 14:50:04
+ * @LastEditTime: 2024-10-29 15:46:26
  * @FilePath: /hmir-frontend/src/views/windowHeader/about/index.vue
  * @Description:
 -->
@@ -20,12 +20,15 @@
 <script setup lang="ts">
 import DialogBody from '@/components/DialogBody/index.vue'
 import router from '@/router'
+import { inject } from 'vue'
 
-const emits = defineEmits(['gotoLinInfo'])
+const closeDialog = inject('closeDialog') as Function
 
 function gotoLinxInfo() {
-  emits('gotoLinInfo')
-  router.push({ path: '/linxInfo' })
+  closeDialog()
+  setTimeout(() => {
+    router.push({ path: '/linxInfo' })
+  }, 100)
 }
 </script>
 
