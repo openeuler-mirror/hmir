@@ -88,7 +88,7 @@ async function processQuit() {
 function openAboutWindow() {
   DialogRef.value.openDialog({
     title: t('HMIRsystem'),
-    width: 600,
+    width: 400,
     component: markRaw(about)
   })
 }
