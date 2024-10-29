@@ -82,6 +82,8 @@ import { useRouter } from 'vue-router'
 import { useUsersStore } from '@/store/modules/user'
 import Cache from '@/utils/cache/index'
 import { useI18n } from 'vue-i18n'
+import * as REGEX from '@/constant/regex'
+
 
 const { t } = useI18n()
 
@@ -130,7 +132,7 @@ const loginData = reactive({
 const checkipAddress = (rule: any, value: any, callback: any) => {
   if (value === '') {
     callback(new Error(t('requireIPaddress')))
-  } else if (!/([1-9]?\d|1\d{2}|2[0-4]\d|25[0-5])(\.([1-9]?\d|1\d{2}|2[0-4]\d|25[0-5])){3}$/.test(value)) {
+  } else if (!REGEX.IP.test(value)) {
     callback(new Error(t('legalIP')))
   } else {
     callback()
@@ -141,7 +143,7 @@ const checkipAddress = (rule: any, value: any, callback: any) => {
 const checkipPort = (rule: any, value: any, callback: any) => {
   if (value === '') {
     callback(new Error(t('requireIPport')))
-  } else if (!/^([0-9]|[1-9]\d|[1-9]\d{2}|[1-9]\d{3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/.test(value)) {
+  } else if (!REGEX.PORT.test(value)) {
     callback(new Error(t('inputVoildPort')))
   } else {
     callback()
