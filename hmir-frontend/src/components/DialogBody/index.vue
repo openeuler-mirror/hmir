@@ -1,8 +1,8 @@
 <!--
  * @Author: 72 5134364+dwdaw1323@user.noreply.gitee.com
  * @Date: 2024-10-28 16:20:30
- * @LastEditors: 72 5134364+dwdaw1323@user.noreply.gitee.com
- * @LastEditTime: 2024-10-28 17:51:48
+ * @LastEditors: Z&N dev17101@linx-info.com
+ * @LastEditTime: 2024-10-29 13:49:32
  * @FilePath: /hmir-frontend/src/components/DialogBody/index.vue
  * @Description:
 -->
@@ -95,6 +95,12 @@ defineExpose({
 <style lang="scss" scoped>
 .el-main{
   padding-bottom: 0;
+}
+
+.el-footer {
+  height: auto;
+  display: flex;
+  justify-content: flex-end;
 }
 </style>
 
