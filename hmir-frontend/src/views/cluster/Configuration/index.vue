@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-07-28 10:21:33
  * @LastEditors: Z&N dev17101@linx-info.com
- * @LastEditTime: 2024-10-23 14:21:47
+ * @LastEditTime: 2024-10-29 17:04:50
  * @Description:
 -->
 <template>
@@ -17,12 +17,16 @@
           <ClusterTableTitleRight refreshBtn columnShow numShow searchInputShow :tableColumn="tableColumn">
           </ClusterTableTitleRight>
         </template>
+        <template #expand="{ row }">
+              <expandBody :row="row" :tableWidth="tableWidth"></expandBody>
+            </template>
       </ClusterBodyTable>
     </template>
   </breadcrumb>
 </template>
 
 <script setup lang="ts">
+import expandBody from './components/expandBody.vue'
 import ClusterBodyTable from '@/components/ClusterBodyTable/index.vue'
 import ClusterTableTitleRight from '@/components/ClusterTableTitleRight/index.vue'
 import breadcrumb from '@/components/ClusterHeader/index.vue'
