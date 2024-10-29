@@ -1,8 +1,8 @@
 /*
  * @Author: zhang_tianran
  * @Date: 2023-02-02 15:29:41
- * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-27 16:32:41
+ * @LastEditors: 72 5134364+dwdaw1323@user.noreply.gitee.com
+ * @LastEditTime: 2024-10-29 09:16:08
  * @Description: 
  */
 
@@ -96,5 +96,8 @@ export default {
     rank: '等级',
     publicAddress: '公共地址',
     openSessions: '开放会话',
-    Configuration: '配置'
+    Configuration: '配置',
+    close: '关闭',
+    cancel: '取消',
+    confirm: '确定'
 }
