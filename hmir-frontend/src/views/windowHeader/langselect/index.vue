@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-05-17 18:16:11
  * @LastEditors: Z&N dev17101@linx-info.com
- * @LastEditTime: 2024-10-29 14:25:49
+ * @LastEditTime: 2024-10-29 14:40:46
  * @Description:
 -->
 
@@ -24,10 +24,11 @@ import { ref, onMounted, inject } from 'vue'
 import { useAppStore } from '@/store/modules/app'
 import ElMessage from '@/utils/message'
 import { useI18n } from 'vue-i18n'
+import Cache from '@/utils/cache/index'
 
 const closeDialog = inject('closeDialog') as Function
 
-const { locale, t } = useI18n()
+const { t } = useI18n()
 
 const localeLang = ref({
   english: () => t('english'),
@@ -42,7 +43,6 @@ const store = ref(useAppStore())
 function localeChange() {
   const lang = radio.value
 
-  locale.value = lang
   store.value.SET_LOCALE(lang)
   ElMessage.success(t('success'))
 
@@ -52,7 +52,7 @@ function localeChange() {
 defineExpose({ radio })
 
 onMounted(() => {
-  radio.value = locale.value
+  radio.value = Cache.getIl8nLang()
 })
 </script>
 
