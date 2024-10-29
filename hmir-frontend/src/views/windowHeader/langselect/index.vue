@@ -2,42 +2,58 @@
  * @Author: zhang_tianran
  * @Date: 2023-05-17 18:16:11
  * @LastEditors: Z&N dev17101@linx-info.com
- * @LastEditTime: 2024-10-23 17:26:50
+ * @LastEditTime: 2024-10-29 14:25:49
  * @Description:
 -->
 
 <template>
-  <el-radio-group v-model="radio" class="ml-4" >
-    <el-radio label="zh_CN" size="large">{{ props.localeLang.chinese() }}</el-radio>
-    <el-radio label="en_US" size="large">{{ props.localeLang.english()  }}</el-radio>
-  </el-radio-group>
+  <DialogBody @dialogSubmit="localeChange">
+    <div style="height: 50px;">
+      <el-radio-group v-model="radio">
+        <el-radio label="zh_CN" size="large">{{ localeLang.chinese() }}</el-radio>
+        <el-radio label="en_US" size="large">{{ localeLang.english()  }}</el-radio>
+      </el-radio-group>
+    </div>
+  </DialogBody>
 </template>
 
 <script setup lang="ts">
+import DialogBody from '@/components/DialogBody/index.vue'
 import { ElRadio, ElRadioGroup } from 'element-plus'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, inject } from 'vue'
+import { useAppStore } from '@/store/modules/app'
+import ElMessage from '@/utils/message'
+import { useI18n } from 'vue-i18n'
 
-const props = defineProps({
-  locale: {
-    type: String,
-    default: 'zh_CN'
-  },
-  localeLang: {
-    type: Object,
-    default() {
-      return {}
-    }
-  }
+const closeDialog = inject('closeDialog') as Function
+
+const { locale, t } = useI18n()
+
+const localeLang = ref({
+  english: () => t('english'),
+  chinese: () => t('chinese')
 })
 
 const radio = ref('zh_CN')
 
+const store = ref(useAppStore())
+// 修改国际化语言
+
+function localeChange() {
+  const lang = radio.value
+
+  locale.value = lang
+  store.value.SET_LOCALE(lang)
+  ElMessage.success(t('success'))
+
+  closeDialog()
+}
+
 defineExpose({ radio })
 
 onMounted(() => {
-  radio.value = props.locale
+  radio.value = locale.value
 })
-
 </script>
 
 <style lang="scss" scoped>
