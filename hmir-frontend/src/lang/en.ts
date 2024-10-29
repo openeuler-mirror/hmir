@@ -1,8 +1,8 @@
 /*
  * @Author: zhang_tianran
  * @Date: 2023-02-02 15:29:41
- * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-27 14:03:00
+ * @LastEditors: 72 5134364+dwdaw1323@user.noreply.gitee.com
+ * @LastEditTime: 2024-10-29 09:16:06
  * @Description: 
  */
 
@@ -97,5 +97,8 @@ export default {
     rank: 'Rank',
     publicAddress: 'Public Address',
     openSessions: 'Open Sessions',
-    Configuration: 'Configuration'
+    Configuration: 'Configuration',
+    close: 'Close',
+    cancel: 'Cancel',
+    confirm: 'Confirm'
 }

@@ -2,7 +2,7 @@
  * @Author: xhliu
  * @Date: 2023-10-09 15:07:33
  * @LastEditors: Z&N dev17101@linx-info.com
- * @LastEditTime: 2024-10-25 16:43:17
+ * @LastEditTime: 2024-10-29 13:35:39
  * @Description:
 -->
 <template>
@@ -37,7 +37,7 @@
 <script setup lang="ts">
 import { ref, provide } from 'vue'
 import { DialogBeforeCloseFn } from './dialogPublic'
-import { definePropType } from 'element-plus/es/utils'
+import { definePropType } from '@/utils/vue/props/index'
 import { i18n } from '@/lang/index'
 
 const { t } = i18n.global
@@ -56,7 +56,7 @@ defineProps({
     default: (done) => done()
   },
   height: {
-    type: [String],
+    type: [String, Number],
     default: 'auto'
   },
   appendToBody: {
