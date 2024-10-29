@@ -1,8 +1,8 @@
 /*
  * @Author: duanwujie88 dev17001@linx-info.com
  * @Date: 2023-02-02 14:20:40
- * @LastEditors: Z&N dev17101@linx-info.com
- * @LastEditTime: 2024-10-25 17:48:51
+ * @LastEditors: 72 5134364+dwdaw1323@user.noreply.gitee.com
+ * @LastEditTime: 2024-10-29 09:01:52
  * @FilePath: /hmir-frontend/src/main.ts
  * @Description: hmir-front
  */
@@ -33,7 +33,7 @@
  */
 
 import { createApp } from "vue";
-import ElementPlus from 'element-plus';
+import ElementPlus, { ConfigProviderProps } from 'element-plus';
 import router from "./router";
 import App from "./App.vue";
 import * as ElementPlusIconsVue from '@element-plus/icons-vue';
@@ -55,7 +55,7 @@ app.directive('deBounce', deBounce);
 setupStore(app);
 setupI18n(app);
 app.use(ElementPlus,{
-  il8n: (key: any,value: any) => t(key,value)
+  il8n: (plugin:any, options?: Partial<ConfigProviderProps> | undefined) => t(plugin,options)
 }).use(router)
 app.config.globalProperties.$echarts = echarts
 app.mount('#app')
