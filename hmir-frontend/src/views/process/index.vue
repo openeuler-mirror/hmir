@@ -1,8 +1,8 @@
 <!--
  * @Author: zhang_tianran dev17101@linx-info.com
  * @Date: 2023-05-18 19:46:26
- * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-29 10:03:13
+ * @LastEditors: chen523554 dev17201@linx-info.com
+ * @LastEditTime: 2024-10-29 18:15:58
  * @FilePath: /hmir-frontend/src/views/process/index.vue
  * @Description: 进程页面
 -->
@@ -40,6 +40,7 @@
 import { storeToRefs } from 'pinia'
 import { useProcStore } from '@/store/modules/proc'
 import { onMounted, nextTick, ref } from 'vue'
+import * as REGEX from '@/constant/regex'
 
 // 表格数据接口
 interface ITable {
@@ -92,10 +93,7 @@ const sortHandle = (res: any) => {
 const compare = (propertyName: string, sort: string) => {
 // 判断是否为数字
   function isNumberV(val: any) {
-    const regPos = /^\d+(\.\d+)?$/ // 非负浮点数
-    const regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/ // 负浮点数
-
-    if (regPos.test(val) || regNeg.test(val)) {
+    if (REGEX.NON_NEGATIVE_FLOAT.test(val) || REGEX.NEGATIVE_FLOAT.test(val)) {
       return true
     }
     return false
