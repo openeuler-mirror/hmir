@@ -221,7 +221,7 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>
 
 mod test {
 
-    
+    use super::*;
 
     #[test]
     fn test_register_observer_it_worked()

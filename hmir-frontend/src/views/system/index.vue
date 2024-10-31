@@ -4,11 +4,15 @@
     class="content"
   >
     <div class="dev">
-      <el-form
-        label-width="120px"
-        :model="systemData"
+      <div class="dev-title">
+        系统信息
+      </div>
+      <el-descriptions
+        border
+        :column="1"
+        size="large"
       >
-        <el-form-item label="硬件">
+        <el-descriptions-item label="硬件">
           <el-link
             type="primary"
             @click="handleDialog('hardware')"
@@ -17,23 +21,23 @@
               '未知'
             }}
           </el-link>
-        </el-form-item>
-        <el-form-item label="资产标签">
+        </el-descriptions-item>
+        <el-descriptions-item label="资产标签">
           <div class="detail-Box">
             {{ systemData.chassis_serial ? systemData.chassis_serial : '未知' }}
           </div>
-        </el-form-item>
-        <el-form-item label="机器编码">
+        </el-descriptions-item>
+        <el-descriptions-item label="机器编码">
           <div class="detail-Box">
             {{ systemData.machine_id ? systemData.machine_id : '未知' }}
           </div>
-        </el-form-item>
-        <el-form-item label="操作系统">
+        </el-descriptions-item>
+        <el-descriptions-item label="操作系统">
           <div class="detail-Box">
             {{ systemData.os_release ? systemData.os_release : '未知' }}
           </div>
-        </el-form-item>
-        <el-form-item label="主机名">
+        </el-descriptions-item>
+        <el-descriptions-item label="主机名">
           <div class="detail-Box">
             <el-link
               type="primary"
@@ -43,8 +47,8 @@
                 systemData.hostname : '未知' }}
             </el-link>
           </div>
-        </el-form-item>
-        <el-form-item label="域">
+        </el-descriptions-item>
+        <el-descriptions-item label="域">
           <div class="detail-Box">
             <el-link
               type="primary"
@@ -53,8 +57,8 @@
               加入域
             </el-link>
           </div>
-        </el-form-item>
-        <el-form-item label="系统时间">
+        </el-descriptions-item>
+        <el-descriptions-item label="系统时间">
           <div class="detail-Box">
             <el-link
               type="primary"
@@ -63,8 +67,8 @@
               {{ nowTime }}
             </el-link>
           </div>
-        </el-form-item>
-        <el-form-item label="电源选项">
+        </el-descriptions-item>
+        <el-descriptions-item label="电源选项">
           <el-select
             v-model="data.sourceValue"
             placeholder="重启"
@@ -77,8 +81,8 @@
               :value="item.value"
             />
           </el-select>
-        </el-form-item>
-      </el-form>
+        </el-descriptions-item>
+      </el-descriptions>
     </div>
     <div class="charts">
       <div
@@ -95,7 +99,10 @@
               chartName[i].name }}
           </el-link>
         </div>
-        <Echarts :chart-data="data.chartData[i]" />
+        <Echarts
+          :chart-data="data.chartData[i]"
+          :height="280"
+        />
       </div>
     </div>
     <!-- 主机名的对话框 -->
@@ -719,8 +726,13 @@ const back = () => {
     width: 25%;
     min-width: 420px;
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    flex-direction: column;
+    justify-content: flex-start;
+
+    &-title {
+      font-size: 30px;
+      padding: 20px 0 40px;
+    }
 
     .left {
       width: 35%;
@@ -759,7 +771,7 @@ const back = () => {
 
     .chart-box {
       width: 100%;
-      height: 130px;
+      height: 200px;
       // background: teal;
       margin-bottom: 25px;
       margin-right: 10px;
@@ -787,5 +799,9 @@ const back = () => {
 
 .el-form-item{
   margin-bottom: 0;
+}
+
+:deep(.el-descriptions) {
+  width: 100%;
 }
 </style>
