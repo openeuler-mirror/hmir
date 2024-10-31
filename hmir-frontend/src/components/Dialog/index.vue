@@ -2,36 +2,36 @@
  * @Author: xhliu
  * @Date: 2023-10-09 15:07:33
  * @LastEditors: Z&N dev17101@linx-info.com
- * @LastEditTime: 2024-10-29 13:35:39
+ * @LastEditTime: 2024-10-31 10:41:28
  * @Description:
 -->
 <template>
-    <el-dialog
-      :id="dialogId"
-      v-model="dialogVisible"
-      :title="t(title)"
-      :width="width"
-      :style="{
-        height
-      }"
-      :close-on-click-modal="false"
-      :draggable="false"
-      :before-close="beforeClose"
-      :append-to-body="appendToBody"
-      align-center
-      destroy-on-close
-      class="dialog_componets"
-      :show-close="showClose"
-      :close-on-press-escape="showClose"
-    >
+  <el-dialog
+    :id="dialogId"
+    v-model="dialogVisible"
+    :title="t(title)"
+    :width="width"
+    :style="{
+      height
+    }"
+    :close-on-click-modal="false"
+    :draggable="false"
+    :before-close="beforeClose"
+    :append-to-body="appendToBody"
+    align-center
+    destroy-on-close
+    class="dialog_componets"
+    :show-close="showClose"
+    :close-on-press-escape="showClose"
+  >
     <slot />
-      <template
-        v-if="$slots.footer"
-        #footer
-      >
-        <slot name="footer" />
-      </template>
-    </el-dialog>
+    <template
+      v-if="$slots.footer"
+      #footer
+    >
+      <slot name="footer" />
+    </template>
+  </el-dialog>
 </template>
 
 <script setup lang="ts">

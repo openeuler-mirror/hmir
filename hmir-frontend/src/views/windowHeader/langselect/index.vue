@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-05-17 18:16:11
  * @LastEditors: Z&N dev17101@linx-info.com
- * @LastEditTime: 2024-10-29 14:40:46
+ * @LastEditTime: 2024-10-31 10:28:45
  * @Description:
 -->
 
@@ -10,8 +10,18 @@
   <DialogBody @dialogSubmit="localeChange">
     <div style="height: 50px;">
       <el-radio-group v-model="radio">
-        <el-radio label="zh_CN" size="large">{{ localeLang.chinese() }}</el-radio>
-        <el-radio label="en_US" size="large">{{ localeLang.english()  }}</el-radio>
+        <el-radio
+          label="zh_CN"
+          size="large"
+        >
+          {{ localeLang.chinese() }}
+        </el-radio>
+        <el-radio
+          label="en_US"
+          size="large"
+        >
+          {{ localeLang.english() }}
+        </el-radio>
       </el-radio-group>
     </div>
   </DialogBody>
