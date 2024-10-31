@@ -496,7 +496,7 @@ impl OvsClient{
         //let mut socket = UnixStream::connect(&self.target)?;     
         socket.write_all(msg.to_string().as_bytes())
         .map_err(
-            |e| OvsError::new(OvsErrorType::ConnectionError, "Faild to send request data").detail(&e.to_string())
+            |e| OvsError::new(OvsErrorType::ConnectionError, "Failed to send request data").detail(&e.to_string())
         )?;
         
         let _ = socket.flush();
@@ -519,13 +519,13 @@ impl OvsClient{
         let resp_json: serde_json::Value = (
             serde_json::from_str(resp_str.as_str())
             .map_err(
-                |_| OvsError::new(OvsErrorType::InvalidResponseJson, "Faild to parse response data")
+                |_| OvsError::new(OvsErrorType::InvalidResponseJson, "Failed to parse response data")
             )
         )?;
 
         match resp_json["result"][0].as_object(){
             None => {
-                return Err(OvsError::new(OvsErrorType::InvalidResponse, "Faild to parse response data"))
+                return Err(OvsError::new(OvsErrorType::InvalidResponse, "Failed to parse response data"))
             },
             Some(result) => {
                 if result.contains_key("error"){
