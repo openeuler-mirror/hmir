@@ -6,12 +6,25 @@
  * @Description:
 -->
 <template>
-  <el-dropdown split-button type="primary" @click="handleClick(dropdownText)" @command="dropdownCommand" trigger="click">
+  <el-dropdown
+    split-button
+    type="primary"
+    trigger="click"
+    @click="handleClick(dropdownText)"
+    @command="dropdownCommand"
+  >
     <span>{{ t(dropdownText) }}</span>
     <template #dropdown>
       <el-dropdown-menu>
-        <el-dropdown-item v-for="item in props.dropdownList" :key="item.command" :command="item.command"
-          :disabled="item.disabled" :class="{ 'is-disabled': item.disabled }">{{ t(item.value) }}</el-dropdown-item>
+        <el-dropdown-item
+          v-for="item in props.dropdownList"
+          :key="item.command"
+          :command="item.command"
+          :disabled="item.disabled"
+          :class="{ 'is-disabled': item.disabled }"
+        >
+          {{ t(item.value) }}
+        </el-dropdown-item>
       </el-dropdown-menu>
     </template>
   </el-dropdown>

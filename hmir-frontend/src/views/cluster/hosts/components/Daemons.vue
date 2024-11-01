@@ -6,13 +6,26 @@
  * @Description:
 -->
 <template>
-  <ClusterBodyTable @selectRowData="rowClick" :tableData="tableData" :tableColumn="tableColumn">
-    <template v-slot:tableTitleLeft>
-      <ClusterTableTitleLeft :dropdownList="dropdownArray" @handleClick="handleClick"></ClusterTableTitleLeft>
+  <ClusterBodyTable
+    :table-data="tableData"
+    :table-column="tableColumn"
+    @selectRowData="rowClick"
+  >
+    <template #tableTitleLeft>
+      <ClusterTableTitleLeft
+        :dropdown-list="dropdownArray"
+        @handleClick="handleClick"
+      />
     </template>
-    <template v-slot:tableTitleRight>
-      <ClusterTableTitleRight refreshBtn columnShow numShow columnSort searchInputShow :tableColumn="tableColumn">
-      </ClusterTableTitleRight>
+    <template #tableTitleRight>
+      <ClusterTableTitleRight
+        refresh-btn
+        column-show
+        num-show
+        column-sort
+        search-input-show
+        :table-column="tableColumn"
+      />
     </template>
   </ClusterBodyTable>
 </template>

@@ -7,14 +7,14 @@
 -->
 <template>
   <breadcrumb :breadcrumb="breadcrumbTitle">
-    <template v-slot:breadcrumbBody>
+    <template #breadcrumbBody>
       <el-row :gutter="20">
         <el-col :span="8">
-          <MonitorsStatus></MonitorsStatus>
+          <MonitorsStatus />
         </el-col>
         <el-col :span="16">
-          <inQuorum :inQuorumData="inQuorumData"></inQuorum>
-          <notInQuorum :notInQuorumData="notInQuorumData"></notInQuorum>
+          <inQuorum :in-quorum-data="inQuorumData" />
+          <notInQuorum :not-in-quorum-data="notInQuorumData" />
         </el-col>
       </el-row>
     </template>

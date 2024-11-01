@@ -6,17 +6,25 @@
  * @Description:
 -->
 <template>
-  <breadcrumb :breadcrumb="breadcrumbTitle" @linkClick="breadcrumbClick">
-    <template v-slot:breadcrumbBody>
+  <breadcrumb
+    :breadcrumb="breadcrumbTitle"
+    @linkClick="breadcrumbClick"
+  >
+    <template #breadcrumbBody>
       <el-card>
         <template #header>
           <span>Create OSDs</span>
         </template>
         <div class="cardBody">
-          <el-collapse v-model="activeName" accordion>
+          <el-collapse
+            v-model="activeName"
+            accordion
+          >
             <el-collapse-item name="deployment">
               <template #title>
-                <el-link type="primary">Deployment Options</el-link>
+                <el-link type="primary">
+                  Deployment Options
+                </el-link>
               </template>
               <el-radio-group v-model="deploymentSelect">
                 <el-radio label="capacity">
@@ -41,18 +49,33 @@
             </el-collapse-item>
             <el-collapse-item name="advancedMode">
               <template #title>
-                <el-link type="primary">Advanced Mode</el-link>
+                <el-link type="primary">
+                  Advanced Mode
+                </el-link>
               </template>
-              <advancedMode></advancedMode>
+              <advancedMode />
             </el-collapse-item>
           </el-collapse>
-          <el-collapse v-model="featuresActive" accordion>
-            <el-collapse-item title="Consistency" name="features" disabled>
+          <el-collapse
+            v-model="featuresActive"
+            accordion
+          >
+            <el-collapse-item
+              title="Consistency"
+              name="features"
+              disabled
+            >
               <template #title>
-                <el-link type="primary">Features</el-link>
+                <el-link type="primary">
+                  Features
+                </el-link>
               </template>
-              <el-checkbox v-model="featuresCheckbox" label="Encryption" size="large"
-                :disabled="activeName !== 'deployment'" />
+              <el-checkbox
+                v-model="featuresCheckbox"
+                label="Encryption"
+                size="large"
+                :disabled="activeName !== 'deployment'"
+              />
             </el-collapse-item>
           </el-collapse>
         </div>

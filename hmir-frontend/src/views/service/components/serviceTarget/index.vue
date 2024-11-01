@@ -1,6 +1,6 @@
 <template>
   <div>
-    <serviceCollapse :description="description"></serviceCollapse>
+    <serviceCollapse :description="description" />
   </div>
 </template>
 

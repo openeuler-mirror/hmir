@@ -1,8 +1,8 @@
 <!--
  * @Author: zhang_tianran
  * @Date: 2023-06-30 11:04:56
- * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-30 13:11:23
+ * @LastEditors: Z&N
+ * @LastEditTime: 2024-11-01 16:56:47
  * @Description:
 -->
 <template>
@@ -10,17 +10,22 @@
     <template #header>
       <span>Status</span>
     </template>
-    <template v-for="item in statusLabel" :key="item.label">
+    <div
+      v-for="item in statusLabel"
+      :key="item.label"
+    >
       <el-divider />
       <el-row>
         <el-col :span="8">
           <span class="statusAttribute">{{ item.label }}</span>
         </el-col>
         <el-col :span="16">
-          <div style="width:100%">{{ statusData[item.prop] }}</div>
+          <div style="width:100%">
+            {{ statusData[item.prop] }}
+          </div>
         </el-col>
       </el-row>
-    </template>
+    </div>
   </el-card>
 </template>
 

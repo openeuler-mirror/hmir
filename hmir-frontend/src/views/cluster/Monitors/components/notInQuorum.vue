@@ -12,9 +12,18 @@
         <span>Not In Quorum</span>
       </div>
     </template>
-    <ClusterBodyTable @selectRowData="rowClick" :tableData="tableData" :tableColumn="tableColumn">
-      <template v-slot:tableTitleRight>
-        <ClusterTableTitleRight columnShow numShow columnSort :tableColumn="tableColumn"></ClusterTableTitleRight>
+    <ClusterBodyTable
+      :table-data="tableData"
+      :table-column="tableColumn"
+      @selectRowData="rowClick"
+    >
+      <template #tableTitleRight>
+        <ClusterTableTitleRight
+          column-show
+          num-show
+          column-sort
+          :table-column="tableColumn"
+        />
       </template>
     </ClusterBodyTable>
   </el-card>

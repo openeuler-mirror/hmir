@@ -6,45 +6,110 @@
  * @Description:
 -->
 <template>
-  <el-divider direction="vertical" v-if="refreshBtn"/>
-  <el-button type="primary" :icon="Refresh"  v-if="refreshBtn"/>
-  <el-divider direction="vertical" v-if="columnShow" />
-  <el-dropdown style="display:inline;"  v-if="columnShow" trigger="click"  :hide-on-click="false">
+  <el-divider
+    v-if="refreshBtn"
+    direction="vertical"
+  />
+  <el-button
+    v-if="refreshBtn"
+    type="primary"
+    :icon="Refresh"
+  />
+  <el-divider
+    v-if="columnShow"
+    direction="vertical"
+  />
+  <el-dropdown
+    v-if="columnShow"
+    style="display:inline;"
+    trigger="click"
+    :hide-on-click="false"
+  >
     <el-button type="primary">
       <el-icon>
         <Grid />
       </el-icon>
-      <el-icon class="el-icon--right"><arrow-down /></el-icon>
+      <el-icon class="el-icon--right">
+        <arrow-down />
+      </el-icon>
     </el-button>
     <template #dropdown>
       <el-dropdown-menu>
-        <el-dropdown-item v-for="item in tableColumn" :key="item.prop" :command="item.prop">
-          <el-checkbox v-model="item.showColumn" :label="t(item.label)" size="small" />
+        <el-dropdown-item
+          v-for="item in tableColumn"
+          :key="item.prop"
+          :command="item.prop"
+        >
+          <el-checkbox
+            v-model="item.showColumn"
+            :label="t(item.label)"
+            size="small"
+          />
         </el-dropdown-item>
       </el-dropdown-menu>
     </template>
   </el-dropdown>
-  <el-divider direction="vertical" v-if="numShow"/>
-  <el-input-number v-model="num" controls-position="right" @change="handleChange" :min="0" v-if="numShow"/>
-  <el-divider direction="vertical" v-if="columnSort"/>
-  <el-dropdown style="display:inline;" @command="dropdownCommand" v-if="columnSort" trigger="click"  :hide-on-click="false">
+  <el-divider
+    v-if="numShow"
+    direction="vertical"
+  />
+  <el-input-number
+    v-if="numShow"
+    v-model="num"
+    controls-position="right"
+    :min="0"
+    @change="handleChange"
+  />
+  <el-divider
+    v-if="columnSort"
+    direction="vertical"
+  />
+  <el-dropdown
+    v-if="columnSort"
+    style="display:inline;"
+    trigger="click"
+    :hide-on-click="false"
+    @command="dropdownCommand"
+  >
     <el-button type="primary">
       {{ hostname }}
-      <el-icon class="el-icon--right"><arrow-down /></el-icon>
+      <el-icon class="el-icon--right">
+        <arrow-down />
+      </el-icon>
     </el-button>
     <template #dropdown>
       <el-dropdown-menu>
-        <el-dropdown-item command="Hostname">Hostname</el-dropdown-item>
-        <el-dropdown-item command="Type">Type</el-dropdown-item>
-        <el-dropdown-item command="Available">Available</el-dropdown-item>
-        <el-dropdown-item command="Vendor">Vendor</el-dropdown-item>
-        <el-dropdown-item command="Model">Model</el-dropdown-item>
-        <el-dropdown-item command="Size">Size</el-dropdown-item>
+        <el-dropdown-item command="Hostname">
+          Hostname
+        </el-dropdown-item>
+        <el-dropdown-item command="Type">
+          Type
+        </el-dropdown-item>
+        <el-dropdown-item command="Available">
+          Available
+        </el-dropdown-item>
+        <el-dropdown-item command="Vendor">
+          Vendor
+        </el-dropdown-item>
+        <el-dropdown-item command="Model">
+          Model
+        </el-dropdown-item>
+        <el-dropdown-item command="Size">
+          Size
+        </el-dropdown-item>
       </el-dropdown-menu>
     </template>
   </el-dropdown>
-  <el-divider direction="vertical" v-if="searchInputShow"/>
-  <el-input v-model="inputValue" clearable style="width:auto;" v-if="searchInputShow">
+  <el-divider
+    v-if="searchInputShow"
+    direction="vertical"
+  />
+  <el-input
+    v-if="searchInputShow"
+    v-model="inputValue"
+    clearable
+    style="width:auto;"
+  >
     <template #prepend>
       <el-button :icon="Search" />
     </template>

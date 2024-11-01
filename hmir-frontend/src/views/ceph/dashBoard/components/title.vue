@@ -7,7 +7,9 @@
  * @Description: 仪表盘页面的title
 -->
 <template>
-  <div class="title">{{ name }}</div>
+  <div class="title">
+    {{ name }}
+  </div>
 </template>
 
 <script setup lang="ts">

@@ -35,7 +35,10 @@
         <el-button><el-icon><Plus /></el-icon>Add</el-button>
       </el-col>
     </el-row>
-    <el-row :gutter="30" style="margin-top:10px;">
+    <el-row
+      :gutter="30"
+      style="margin-top:10px;"
+    >
       <el-col :span="8">
         <div class="advancedBody">
           <span>DB devices</span>

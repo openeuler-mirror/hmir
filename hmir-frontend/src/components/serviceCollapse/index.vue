@@ -7,9 +7,20 @@
 -->
 <template>
   <div class="demo-collapse">
-    <el-collapse v-model="activeName" accordion>
-      <el-collapse-item v-for="item of description" :key="item.value" :title="item.value" :name="item.value">
-        <serviceTable :tableList="item.tableList" :tableProp="item.tableProp"></serviceTable>
+    <el-collapse
+      v-model="activeName"
+      accordion
+    >
+      <el-collapse-item
+        v-for="item of description"
+        :key="item.value"
+        :title="item.value"
+        :name="item.value"
+      >
+        <serviceTable
+          :table-list="item.tableList"
+          :table-prop="item.tableProp"
+        />
       </el-collapse-item>
     </el-collapse>
   </div>

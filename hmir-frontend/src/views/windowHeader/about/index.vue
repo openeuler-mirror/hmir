@@ -2,15 +2,23 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-10-23 09:38:36
  * @LastEditors: Z&N dev17101@linx-info.com
- * @LastEditTime: 2024-10-29 15:46:26
+ * @LastEditTime: 2024-11-01 09:00:30
  * @FilePath: /hmir-frontend/src/views/windowHeader/about/index.vue
  * @Description:
 -->
 <template>
-  <DialogBody :confirmShow="false" closeText="close">
+  <DialogBody
+    :confirm-show="false"
+    close-text="close"
+  >
     <div style="margin-bottom: 20px;">
       <div>软件版本: V1.0.0</div>
-      <div>技术支持: <a  @click="gotoLinxInfo" style="cursor: pointer;">北京凝思软件股份有限公司</a></div>
+      <div>
+        技术支持: <a
+          style="cursor: pointer;"
+          @click="gotoLinxInfo"
+        >北京凝思软件股份有限公司</a>
+      </div>
       <div>贡献列表: 段武杰、张雨、刘兴海、徐常凯</div>
       <div> 开源协议: MulanPSL-2.0</div>
     </div>

@@ -22,13 +22,26 @@
               {{ serviceDetail?.active_state }}
             </span>
             {{ serviceDetail?.load_state ? `(${serviceDetail?.load_state})` : '' }}
-            <el-button plain class="buttonClass">停止</el-button>
-            <el-dropdown split-button @command="handleCommand" @click="handleClick">
+            <el-button
+              plain
+              class="buttonClass"
+            >
+              停止
+            </el-button>
+            <el-dropdown
+              split-button
+              @command="handleCommand"
+              @click="handleClick"
+            >
               {{ stateValue }}
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item command="重启">重启</el-dropdown-item>
-                  <el-dropdown-item command="重载">重载</el-dropdown-item>
+                  <el-dropdown-item command="重启">
+                    重启
+                  </el-dropdown-item>
+                  <el-dropdown-item command="重载">
+                    重载
+                  </el-dropdown-item>
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
@@ -44,39 +57,87 @@
         <el-divider />
 
         <el-descriptions :column="1">
-          <el-descriptions-item label="要求" v-if="(serviceDetail?.requires?.length !== 0)">
-            <el-link type="primary" v-for="item of serviceDetail?.requires" :key="item" @click="toServiceDetail(item)"
-              :disabled="store.is_service_disabled(item)">
+          <el-descriptions-item
+            v-if="(serviceDetail?.requires?.length !== 0)"
+            label="要求"
+          >
+            <el-link
+              v-for="item of serviceDetail?.requires"
+              :key="item"
+              type="primary"
+              :disabled="store.is_service_disabled(item)"
+              @click="toServiceDetail(item)"
+            >
               {{ item }}
             </el-link>
           </el-descriptions-item>
-          <el-descriptions-item label="要求的" v-if="(serviceDetail?.wants?.length !== 0)">
-            <el-link type="primary" v-for="item of serviceDetail?.wants" :key="item" @click="toServiceDetail(item)"
-              :disabled="store.is_service_disabled(item)">
+          <el-descriptions-item
+            v-if="(serviceDetail?.wants?.length !== 0)"
+            label="要求的"
+          >
+            <el-link
+              v-for="item of serviceDetail?.wants"
+              :key="item"
+              type="primary"
+              :disabled="store.is_service_disabled(item)"
+              @click="toServiceDetail(item)"
+            >
               {{ item }}
             </el-link>
           </el-descriptions-item>
-          <el-descriptions-item label="需要于" v-if="(serviceDetail?.wantedby?.length !== 0)">
-            <el-link type="primary" v-for="item of serviceDetail?.wantedby" :key="item" @click="toServiceDetail(item)"
-              :disabled="store.is_service_disabled(item)">
+          <el-descriptions-item
+            v-if="(serviceDetail?.wantedby?.length !== 0)"
+            label="需要于"
+          >
+            <el-link
+              v-for="item of serviceDetail?.wantedby"
+              :key="item"
+              type="primary"
+              :disabled="store.is_service_disabled(item)"
+              @click="toServiceDetail(item)"
+            >
               {{ item }}
             </el-link>
           </el-descriptions-item>
-          <el-descriptions-item label="冲突" v-if="(serviceDetail?.conflicts?.length !== 0)">
-            <el-link type="primary" v-for="item of serviceDetail?.conflicts" :key="item" @click="toServiceDetail(item)"
-              :disabled="store.is_service_disabled(item)">
+          <el-descriptions-item
+            v-if="(serviceDetail?.conflicts?.length !== 0)"
+            label="冲突"
+          >
+            <el-link
+              v-for="item of serviceDetail?.conflicts"
+              :key="item"
+              type="primary"
+              :disabled="store.is_service_disabled(item)"
+              @click="toServiceDetail(item)"
+            >
               {{ item }}
             </el-link>
           </el-descriptions-item>
-          <el-descriptions-item label="之前" v-if="(serviceDetail?.before?.length !== 0)">
-            <el-link type="primary" v-for="item of serviceDetail?.before" :key="item" @click="toServiceDetail(item)"
-              :disabled="store.is_service_disabled(item)">
+          <el-descriptions-item
+            v-if="(serviceDetail?.before?.length !== 0)"
+            label="之前"
+          >
+            <el-link
+              v-for="item of serviceDetail?.before"
+              :key="item"
+              type="primary"
+              :disabled="store.is_service_disabled(item)"
+              @click="toServiceDetail(item)"
+            >
               {{ item }}
             </el-link>
           </el-descriptions-item>
-          <el-descriptions-item label="后" v-if="(serviceDetail?.after?.length !== 0)">
-            <el-link type="primary" v-for="item of serviceDetail?.after" :key="item" @click="toServiceDetail(item)"
-              :disabled="store.is_service_disabled(item)">
+          <el-descriptions-item
+            v-if="(serviceDetail?.after?.length !== 0)"
+            label="后"
+          >
+            <el-link
+              v-for="item of serviceDetail?.after"
+              :key="item"
+              type="primary"
+              :disabled="store.is_service_disabled(item)"
+              @click="toServiceDetail(item)"
+            >
               {{ item }}
             </el-link>
           </el-descriptions-item>

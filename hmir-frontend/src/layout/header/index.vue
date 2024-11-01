@@ -8,7 +8,10 @@
 <template>
   <div class="headerClass">
     <div class="userClass">
-      <el-dropdown trigger="click" @command="handleCommand">
+      <el-dropdown
+        trigger="click"
+        @command="handleCommand"
+      >
         <el-button class="el-dropdown-link">
           <el-icon>
             <User />
@@ -17,7 +20,9 @@
         </el-button>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item command="logout">注销</el-dropdown-item>
+            <el-dropdown-item command="logout">
+              注销
+            </el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>

@@ -7,19 +7,32 @@
 -->
 <template>
   <breadcrumb :breadcrumb="breadcrumbTitle">
-    <template v-slot:breadcrumbBody>
-      <ClusterBodyTable @selectRowData="rowClick" :tableData="tableData" :tableColumn="tableColumn"
-        @tableBodyWidth="tableBodyWidth" highlightCurrentRow>
-        <template v-slot:tableTitleLeft>
-          <ConfigTableTitleLeft :selectRow="selectRow"></ConfigTableTitleLeft>
+    <template #breadcrumbBody>
+      <ClusterBodyTable
+        :table-data="tableData"
+        :table-column="tableColumn"
+        highlight-current-row
+        @selectRowData="rowClick"
+        @tableBodyWidth="tableBodyWidth"
+      >
+        <template #tableTitleLeft>
+          <ConfigTableTitleLeft :select-row="selectRow" />
         </template>
-        <template v-slot:tableTitleRight>
-          <ClusterTableTitleRight refreshBtn columnShow numShow searchInputShow :tableColumn="tableColumn">
-          </ClusterTableTitleRight>
+        <template #tableTitleRight>
+          <ClusterTableTitleRight
+            refresh-btn
+            column-show
+            num-show
+            search-input-show
+            :table-column="tableColumn"
+          />
         </template>
         <template #expand="{ row }">
-              <expandBody :row="row" :tableWidth="tableWidth"></expandBody>
-            </template>
+          <expandBody
+            :row="row"
+            :table-width="tableWidth"
+          />
+        </template>
       </ClusterBodyTable>
     </template>
   </breadcrumb>

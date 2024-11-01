@@ -1,39 +1,61 @@
 <template>
   <div class="hardwareDetail">
-    <el-page-header title="返回" class="back" @back="goBack" content="硬件信息">
-    </el-page-header>
-    <el-descriptions title="系统信息" border>
-    <el-descriptions-item label="类型">桌面</el-descriptions-item>
-    <el-descriptions-item label="BIOS">{{ messageData.board_vendor || '-' }}</el-descriptions-item>
-    <el-descriptions-item label="名称">{{ messageData.board_name || '-' }}</el-descriptions-item>
-    <el-descriptions-item label="BIOS版本">{{ messageData.bios_version || '-'}}</el-descriptions-item>
-    <el-descriptions-item label="版本">{{ messageData.board_name || '-' }}</el-descriptions-item>
-    <el-descriptions-item label="BOIS日期">{{ biosDate}}</el-descriptions-item>
-    <el-descriptions-item label="CPU">{{ messageData.model_name || '-' }}</el-descriptions-item>
-</el-descriptions>
- <el-table
+    <el-page-header
+      title="返回"
+      class="back"
+      content="硬件信息"
+      @back="goBack"
+    />
+    <el-descriptions
+      title="系统信息"
+      border
+    >
+      <el-descriptions-item label="类型">
+        桌面
+      </el-descriptions-item>
+      <el-descriptions-item label="BIOS">
+        {{ messageData.board_vendor || '-' }}
+      </el-descriptions-item>
+      <el-descriptions-item label="名称">
+        {{ messageData.board_name || '-' }}
+      </el-descriptions-item>
+      <el-descriptions-item label="BIOS版本">
+        {{ messageData.bios_version || '-' }}
+      </el-descriptions-item>
+      <el-descriptions-item label="版本">
+        {{ messageData.board_name || '-' }}
+      </el-descriptions-item>
+      <el-descriptions-item label="BOIS日期">
+        {{ biosDate }}
+      </el-descriptions-item>
+      <el-descriptions-item label="CPU">
+        {{ messageData.model_name || '-' }}
+      </el-descriptions-item>
+    </el-descriptions>
+    <el-table
       :data="tableData"
-      style="width: 100%;margin-top:30px;">
+      style="width: 100%;margin-top:30px;"
+    >
       <el-table-column
         prop="cls"
         label="等级"
-        width="180">
-      </el-table-column>
+        width="180"
+      />
       <el-table-column
         prop="model"
-        label="型号">
-      </el-table-column>
+        label="型号"
+      />
       <el-table-column
         prop="vendor"
         label="厂商"
-         width="180">
-      </el-table-column>
+        width="180"
+      />
       <el-table-column
         prop="slot"
         label="插槽"
-         width="180">
-      </el-table-column>
-  </el-table>
+        width="180"
+      />
+    </el-table>
   </div>
 </template>
 

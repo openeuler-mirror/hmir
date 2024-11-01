@@ -1,22 +1,68 @@
 <template>
   <div class="header">
-    <el-menu class="el-menu-demo" mode="horizontal" :ellipsis="false" active-text-color="#000" background-color="#fff"
-      text-color="#000" :menu-trigger="menuTrigger" unique-opened @open="handleOpen" @close="handleClose"
-      @select="handleSelect">
-      <el-sub-menu index="0" :popper-offset="0">
-        <template #title>{{ t('file') }}</template>
-        <el-menu-item index="processQuit" class="el-menu-item-height">{{ t('exit') }}</el-menu-item>
+    <el-menu
+      class="el-menu-demo"
+      mode="horizontal"
+      :ellipsis="false"
+      active-text-color="#000"
+      background-color="#fff"
+      text-color="#000"
+      :menu-trigger="menuTrigger"
+      unique-opened
+      @open="handleOpen"
+      @close="handleClose"
+      @select="handleSelect"
+    >
+      <el-sub-menu
+        index="0"
+        :popper-offset="0"
+      >
+        <template #title>
+          {{ t('file') }}
+        </template>
+        <el-menu-item
+          index="processQuit"
+          class="el-menu-item-height"
+        >
+          {{ t('exit') }}
+        </el-menu-item>
       </el-sub-menu>
-      <el-sub-menu index="1" :popper-offset="0">
-        <template #title>{{ t('help') }}</template>
-        <el-menu-item index="about" class="el-menu-item-height">{{ t('about') }}</el-menu-item>
+      <el-sub-menu
+        index="1"
+        :popper-offset="0"
+      >
+        <template #title>
+          {{ t('help') }}
+        </template>
+        <el-menu-item
+          index="about"
+          class="el-menu-item-height"
+        >
+          {{ t('about') }}
+        </el-menu-item>
       </el-sub-menu>
-      <el-sub-menu index="2" :popper-offset="0">
-        <template #title>{{ t('setting') }}</template>
-        <el-menu-item index="setting" class="el-menu-item-height">{{ t('SwitchingLang') }}</el-menu-item>
+      <el-sub-menu
+        index="2"
+        :popper-offset="0"
+      >
+        <template #title>
+          {{ t('setting') }}
+        </template>
+        <el-menu-item
+          index="setting"
+          class="el-menu-item-height"
+        >
+          {{ t('SwitchingLang') }}
+        </el-menu-item>
       </el-sub-menu>
-      <el-menu-item index="3" :popper-offset="0" v-if="routerPath === '/linxInfo'">
-        <template #title>{{ t('返回系统') }}</template>
+      <el-menu-item
+        v-if="routerPath === '/linxInfo'"
+        index="3"
+        :popper-offset="0"
+      >
+        <template #title>
+          {{ t('返回系统') }}
+        </template>
       </el-menu-item>
       <div class="flex-grow" />
     </el-menu>

@@ -1,22 +1,42 @@
 <!--
  * @Author: zhang_tianran
  * @Date: 2023-07-04 16:24:39
- * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-05 17:03:13
+ * @LastEditors: Z&N
+ * @LastEditTime: 2024-11-01 16:55:36
  * @Description:
 -->
 <template>
   <div>
-    <el-form ref="ruleFormRef" :model="ruleForm" label-width="250px" :size="formSize" status-icon>
-      <template v-for="(item, index) in pgScrubFromList" :key="item">
-        <h2 v-if="item.type === 'title'">{{ item.title }}</h2>
-        <el-form-item v-else prop="priority">
+    <el-form
+      ref="ruleFormRef"
+      :model="ruleForm"
+      label-width="250px"
+      :size="formSize"
+      status-icon
+    >
+      <div
+        v-for="(item, index) in pgScrubFromList"
+        :key="item.type + index"
+      >
+        <h2 v-if="item.type === 'title'">
+          {{ item.title }}
+        </h2>
+        <el-form-item
+          v-else
+          prop="priority"
+        >
           <template #label>
             <div style="width: 100%;">
               <h3>{{ item.title }}</h3>
               <div v-if="item.description">
                 <span style="margin-right: 5px;">{{ item.description }}</span>
-                <el-tooltip v-if="item.tooltip" :content="item.tooltip" placement="bottom" effect="light" trigger="click">
+                <el-tooltip
+                  v-if="item.tooltip"
+                  :content="item.tooltip"
+                  placement="bottom"
+                  effect="light"
+                  trigger="click"
+                >
                   <el-icon>
                     <QuestionFilled />
                   </el-icon>
@@ -24,15 +44,30 @@
               </div>
             </div>
           </template>
-          <el-checkbox v-if="item.type === 'checkbox'" v-model="ruleForm[item.prop]"></el-checkbox>
-          <el-input-number v-if="item.type === 'input'" v-model="ruleForm[item.prop]" :min="0"
-            controls-position="right" />
+          <el-checkbox
+            v-if="item.type === 'checkbox'"
+            v-model="ruleForm[item.prop]"
+          />
+          <el-input-number
+            v-if="item.type === 'input'"
+            v-model="ruleForm[item.prop]"
+            :min="0"
+            controls-position="right"
+          />
         </el-form-item>
-        <el-divider v-if="index !== pgScrubFromList.length - 1 && index !== 11 && item.type !== 'title'"/>
-      </template>
+        <el-divider v-if="index !== pgScrubFromList.length - 1 && index !== 11 && item.type !== 'title'" />
+      </div>
     </el-form>
-    <div style="text-align:right;padding-right:30px;" v-if="advancedShow">
-      <el-link type="primary" @click="advancedOptionShow">Advanced...</el-link>
+    <div
+      v-if="advancedShow"
+      style="text-align:right;padding-right:30px;"
+    >
+      <el-link
+        type="primary"
+        @click="advancedOptionShow"
+      >
+        Advanced...
+      </el-link>
     </div>
   </div>
 </template>

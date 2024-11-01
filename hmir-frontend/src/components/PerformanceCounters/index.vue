@@ -6,21 +6,33 @@
  * @Description:
 -->
 <template>
-  <breadcrumb :breadcrumb="breadcrumbTitle" @linkClick="breadcrumbClick">
-    <template v-slot:breadcrumbBody>
+  <breadcrumb
+    :breadcrumb="breadcrumbTitle"
+    @linkClick="breadcrumbClick"
+  >
+    <template #breadcrumbBody>
       <el-card>
         <template #header>
           <div>
             <span>{{ title }}</span>
           </div>
         </template>
-        <ClusterBodyTable @selectRowData="rowClick" :tableData="tableData" :tableColumn="tableColumn">
-          <template v-slot:tableTitleRight>
-            <ClusterTableTitleRight refreshBtn columnShow numShow searchInputShow :tableColumn="tableColumn">
-            </ClusterTableTitleRight>
+        <ClusterBodyTable
+          :table-data="tableData"
+          :table-column="tableColumn"
+          @selectRowData="rowClick"
+        >
+          <template #tableTitleRight>
+            <ClusterTableTitleRight
+              refresh-btn
+              column-show
+              num-show
+              search-input-show
+              :table-column="tableColumn"
+            />
           </template>
         </ClusterBodyTable>
-        <Pagination></Pagination>
+        <Pagination />
       </el-card>
     </template>
   </breadcrumb>

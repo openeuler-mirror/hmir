@@ -7,16 +7,38 @@
  * @Description:
 -->
 <template>
-  <el-container v-loading="loading" @keyup.enter="submit" @submit.prevent>
+  <el-container
+    v-loading="loading"
+    @keyup.enter="submit"
+    @submit.prevent
+  >
     <el-main>
       <slot />
     </el-main>
 
-    <el-footer v-if="footerShow" style="margin-bottom: 25px">
+    <el-footer
+      v-if="footerShow"
+      style="margin-bottom: 25px"
+    >
       <slot name="footer">
-        <el-button v-if="closeShow" type="info" size="large" @click="closeDialogCallback">{{ $t(closeText) }}</el-button>
-        <el-button v-if="confirmShow" type="primary" size="large" :disabled="isDisSubmitBtn" @click="submit">{{
-          $t(confirmText) }}</el-button>
+        <el-button
+          v-if="closeShow"
+          type="info"
+          size="large"
+          @click="closeDialogCallback"
+        >
+          {{ $t(closeText) }}
+        </el-button>
+        <el-button
+          v-if="confirmShow"
+          type="primary"
+          size="large"
+          :disabled="isDisSubmitBtn"
+          @click="submit"
+        >
+          {{
+            $t(confirmText) }}
+        </el-button>
       </slot>
     </el-footer>
   </el-container>

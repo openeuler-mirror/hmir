@@ -10,19 +10,19 @@
     <el-main>
       <el-tabs type="card">
         <el-tab-pane :label="t('devices')">
-          <Devices :row="row.devices"></Devices>
+          <Devices :row="row.devices" />
         </el-tab-pane>
         <el-tab-pane :label="t('PhysicalDisks')">
-          <PhysicalDisks :physicalDiskData="row.physicalDisks"></PhysicalDisks>
+          <PhysicalDisks :physical-disk-data="row.physicalDisks" />
         </el-tab-pane>
         <el-tab-pane :label="t('daemons')">
-          <Daemons :row="row.daemons"></Daemons>
+          <Daemons :row="row.daemons" />
         </el-tab-pane>
         <el-tab-pane :label="t('performanceDetails')">
-          <PerformanceDetails :selectTime="row.PerformanceDetails"></PerformanceDetails>
+          <PerformanceDetails :select-time="row.PerformanceDetails" />
         </el-tab-pane>
         <el-tab-pane :label="t('deviceHealth')">
-          <DeviceHealth></DeviceHealth>
+          <DeviceHealth />
         </el-tab-pane>
       </el-tabs>
     </el-main>

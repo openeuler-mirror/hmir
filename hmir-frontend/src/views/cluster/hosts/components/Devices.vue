@@ -6,9 +6,18 @@
  * @Description:
 -->
 <template>
-  <ClusterBodyTable @selectRowData="rowClick" :tableData="tableData" :tableColumn="tableColumn">
-    <template v-slot:tableTitleRight>
-      <ClusterTableTitleRight columnShow numShow searchInputShow :tableColumn="tableColumn"></ClusterTableTitleRight>
+  <ClusterBodyTable
+    :table-data="tableData"
+    :table-column="tableColumn"
+    @selectRowData="rowClick"
+  >
+    <template #tableTitleRight>
+      <ClusterTableTitleRight
+        column-show
+        num-show
+        search-input-show
+        :table-column="tableColumn"
+      />
     </template>
   </ClusterBodyTable>
 </template>

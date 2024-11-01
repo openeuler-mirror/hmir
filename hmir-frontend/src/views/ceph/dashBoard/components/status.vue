@@ -7,12 +7,17 @@
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
-  <el-card shadow="hover" class="card-box">
+  <el-card
+    shadow="hover"
+    class="card-box"
+  >
     <template #header>
-      <div class="statusName">{{ statusData.name }}</div>
+      <div class="statusName">
+        {{ statusData.name }}
+      </div>
     </template>
     <div class="statusContent">
-      {{statusData.content}}
+      {{ statusData.content }}
     </div>
   </el-card>
 </template>

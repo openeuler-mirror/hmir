@@ -8,11 +8,28 @@
 <template>
   <div class="card">
     <span>HMIR控制台</span>
-    <el-button @click="refresh()" :loading="!!loading">刷新</el-button>
+    <el-button
+      :loading="!!loading"
+      @click="refresh()"
+    >
+      刷新
+    </el-button>
   </div>
-  <div class="iframe" v-loading="loading">
-    <iframe name="iframeMap" id="iframeMapViewComponent" :src="getPageUrl" width="100%" height="100%" frameborder="0"
-      scrolling="yes" ref="iframeDom" v-if="ttydtMsg"></iframe>
+  <div
+    v-loading="loading"
+    class="iframe"
+  >
+    <iframe
+      id="iframeMapViewComponent"
+      v-if="ttydtMsg"
+      ref="iframeDom"
+      name="iframeMap"
+      :src="getPageUrl"
+      width="100%"
+      height="100%"
+      frameborder="0"
+      scrolling="yes"
+    />
   </div>
 </template>
 
