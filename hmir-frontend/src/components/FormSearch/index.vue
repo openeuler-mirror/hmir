@@ -189,4 +189,7 @@ function searchLabelChange(value) {
 </script>
 
 <style lang="scss" scoped>
+:deep(.el-form-item) {
+  margin: 0;
+}
 </style>
