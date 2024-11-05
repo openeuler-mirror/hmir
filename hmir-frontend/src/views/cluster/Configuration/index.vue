@@ -45,10 +45,10 @@ import ClusterTableTitleRight from '@/components/ClusterTableTitleRight/index.vu
 import breadcrumb from '@/components/ClusterHeader/index.vue'
 import ConfigTableTitleLeft from './components/conTableTitleLeft.vue'
 import { onMounted, ref } from 'vue'
-import { hostsProcStore } from '@/store/modules/cluster/host'
+import { hostsHostStore } from '@/store/modules/cluster/host'
 
 // 引入store仓库
-const store = hostsProcStore()
+const store = hostsHostStore()
 
 const breadcrumbTitle = ref()
 
