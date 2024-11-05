@@ -292,9 +292,9 @@ const ipAddressQuery = (queryString: string, cb: any) => {
     ? ipAddressResults.value.filter(createFilter(queryString))
     : userInformation
 
-  if (Boolean(queryString) &&
-    results.length === 1 &&
-    results[0].value === queryString) {
+  if (Boolean(queryString)
+    && results.length === 1
+    && results[0].value === queryString) {
     results = []
   }
   // call callback function to return suggestions
@@ -306,9 +306,9 @@ const ipPortQuery = (queryString: string, cb: any) => {
     ? ipPotrResults.value.filter(createFilter(queryString))
     : ipPotrResults.value
 
-  if (Boolean(queryString) &&
-    results.length === 1 &&
-    results[0].value === queryString) {
+  if (Boolean(queryString)
+    && results.length === 1
+    && results[0].value === queryString) {
     results = []
   }
   // call callback function to return suggestions
@@ -320,9 +320,9 @@ const userQuery = (queryString: string, cb: any) => {
     ? userResults.value.filter(createFilter(queryString))
     : userInformation
 
-  if (Boolean(queryString) &&
-    results.length === 1 &&
-    results[0].value === queryString) {
+  if (Boolean(queryString)
+    && results.length === 1
+    && results[0].value === queryString) {
     results = []
   }
   // call callback function to return suggestions
