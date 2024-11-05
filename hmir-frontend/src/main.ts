@@ -1,8 +1,8 @@
 /*
  * @Author: duanwujie88 dev17001@linx-info.com
  * @Date: 2023-02-02 14:20:40
- * @LastEditors: 72 5134364+dwdaw1323@user.noreply.gitee.com
- * @LastEditTime: 2024-10-29 09:01:52
+ * @LastEditors: Z&N
+ * @LastEditTime: 2024-11-05 15:41:30
  * @FilePath: /hmir-frontend/src/main.ts
  * @Description: hmir-front
  */
@@ -54,10 +54,15 @@ app.directive('deBounce', deBounce);
 //全局挂载
 setupStore(app);
 setupI18n(app);
-app.use(ElementPlus,{
-  il8n: (plugin:any, options?: Partial<ConfigProviderProps> | undefined) => t(plugin,options)
+app.use(ElementPlus, {
+  il8n: (plugin: any, options?: Partial<ConfigProviderProps> | undefined) => t(plugin, options)
 }).use(router)
+
 app.config.globalProperties.$echarts = echarts
+
+Object.defineProperty(window, '$vueApp', {
+  value: 'app'
+})
 app.mount('#app')
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component)
