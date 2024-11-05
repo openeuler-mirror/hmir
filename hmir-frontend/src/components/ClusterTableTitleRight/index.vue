@@ -1,8 +1,8 @@
 <!--
  * @Author: zhang_tianran
  * @Date: 2023-06-14 17:24:16
- * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-27 14:08:01
+ * @LastEditors: Z&N
+ * @LastEditTime: 2024-11-05 15:17:10
  * @Description:
 -->
 <template>
@@ -104,21 +104,16 @@
     v-if="searchInputShow"
     direction="vertical"
   />
-  <el-input
+  <FormSearch
     v-if="searchInputShow"
     v-model="inputValue"
-    clearable
-    style="width:auto;"
-  >
-    <template #prepend>
-      <el-button :icon="Search" />
-    </template>
-  </el-input>
+  />
 </template>
 
 <script setup lang="ts">
+import FormSearch from '../FormSearch/index.vue'
 import { onMounted, ref } from 'vue'
-import { Refresh, Grid, ArrowDown, Search } from '@element-plus/icons-vue'
+import { Refresh, Grid, ArrowDown } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
@@ -159,7 +154,7 @@ const props = defineProps({
 
 const num = ref(1)
 
-const inputValue = ref('')
+const inputValue = ref([])
 
 const hostname = ref('Hostname')
 
