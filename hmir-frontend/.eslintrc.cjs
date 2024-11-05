@@ -224,7 +224,7 @@ module.exports = {
     'one-var': [2, {
       initialized: 'never'
     }], // 连续声明
-    'operator-linebreak': [2, 'after', {
+    'operator-linebreak': [2, 'before', {
       overrides: {
         '?': 'before',
         ':': 'before'
