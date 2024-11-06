@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-05-17 18:16:11
  * @LastEditors: Z&N
- * @LastEditTime: 2024-11-06 13:20:05
+ * @LastEditTime: 2024-11-06 13:27:04
  * @Description:
 -->
 
@@ -139,7 +139,7 @@ import ComFlexSpace from '@/components/ComFlexSpace/index.vue'
 import DialogBody from '@/components/DialogBody/index.vue'
 import { deepCopy } from '@/utils/clone'
 import { ref, onMounted, inject } from 'vue'
-import { getDefaultSearchInfo, SEARCH_TYPE_INPUT, SEARCH_TYPE_SELECT, SEARCH_TYPE_TREE } from './formSearchUtils'
+import { getDefaultSearchInfo, SEARCH_TYPE_INPUT, SEARCH_TYPE_SELECT, SEARCH_TYPE_TREE } from '../formSearchUtils'
 
 const closeDialog = inject('closeDialog')
 
