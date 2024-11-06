@@ -2,8 +2,8 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-11-05 13:25:56
  * @LastEditors: Z&N
- * @LastEditTime: 2024-11-05 15:08:07
- * @FilePath: /hmir-frontend/src/components/FormSearch/formSearchUtils.js
+ * @LastEditTime: 2024-11-06 14:25:32
+ * @FilePath: /hmir-frontend/src/components/FormSearch/formSearchUtils.ts
  * @Description:
  */
 import { deepCopy } from '@/utils/clone'
@@ -79,12 +79,28 @@ export const SEARCH_TYPE_SELECT = 'select'
  */
 export const SEARCH_TYPE_TREE = 'treeSelect'
 
-export const defaultSearchInfo = {
+export interface defaultSearchInfoFace {
+  searchLabel: number | string,
+  searchType: number,
+  searchInputName: number | string
+}
+
+export const defaultSearchInfo: defaultSearchInfoFace = {
   searchLabel: '',
   searchType: SEARCH_OPTION_FUZZY,
   searchInputName: ''
 }
 
-export function getDefaultSearchInfo() {
-  return deepCopy(defaultSearchInfo)
+export function getDefaultSearchInfo(): defaultSearchInfoFace {
+  return deepCopy(defaultSearchInfo) as defaultSearchInfoFace
+}
+
+/**
+ * @description: 用于获取当前选中项对应label值
+ * @param {string} value 当前选中值
+ * @param {Array} options 下拉列表数据
+ * @return {string}
+ */
+export function getOptionLabel(value: string | number, options: any): string {
+  return options.find(item => item.value === value)?.label ?? value
 }
