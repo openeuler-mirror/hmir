@@ -7,7 +7,7 @@
       inline
       size="large"
     >
-      <ComFlexSpace>
+      <ComFlexSpace ref="formComFlexSpaceRef">
         <el-form-item
           v-if="!isAdvanceSearch"
           :label="$t('queryFields')"
@@ -149,10 +149,12 @@ import Dialog from '@/components/Dialog/defauleDialog.vue'
 import AdvancedQueryDialog from './advancedQueryDialog.vue'
 import { Search } from '@element-plus/icons-vue'
 import { defineSearchTypeOptions, getDefaultSearchInfo, SEARCH_TYPE_INPUT, SEARCH_TYPE_SELECT, SEARCH_TYPE_TREE } from './formSearchUtils'
-import { ref, computed, markRaw } from 'vue'
+import { ref, computed, markRaw, nextTick, onMounted } from 'vue'
 import { deepCopy } from '@/utils/clone'
 
 const DialogRef = ref()
+
+const formComFlexSpaceRef = ref()
 
 const props = defineProps({
   modelValue: {
@@ -240,10 +242,17 @@ function openAdvancedSearcch() {
       searchLabelOptions: props.searchLabelOptions
     },
     componentEvent: {
-      saveSearchList: (value) => { searchInfoList.value = value }
+      saveSearchList: (value) => {
+        searchInfoList.value = value
+        nextTick(() => formComFlexSpaceRef.value.updateChildrenDom(false))
+      }
     }
   })
 }
+
+onMounted(() => {
+  nextTick(formComFlexSpaceRef.value.updateChildrenDom)
+})
 </script>
 
 <style lang="scss" scoped>
