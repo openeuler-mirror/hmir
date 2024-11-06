@@ -3,9 +3,15 @@
 -->
 <template>
   <div class="search-box">
-    <el-form inline>
+    <el-form
+      inline
+      size="large"
+    >
       <ComFlexSpace>
-        <el-form-item :label="$t('queryFields')">
+        <el-form-item
+          v-if="!isAdvanceSearch"
+          :label="$t('queryFields')"
+        >
           <el-select
             v-model="searchInfo.searchLabel"
             :placeholder="$t('pleaseSelect')"
@@ -22,7 +28,10 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item :label="$t('queryMethod')">
+        <el-form-item
+          v-if="!isAdvanceSearch"
+          :label="$t('queryMethod')"
+        >
           <el-select
             v-model="searchInfo.searchType"
             :placeholder="$t('pleaseSelect')"
@@ -38,8 +47,28 @@
           </el-select>
         </el-form-item>
 
+        <el-form-item
+          v-if="isAdvanceSearch"
+          :label="$t('高级查询')"
+        >
+          <div class="tagDiv">
+            <ComFlexSpace>
+              <el-tag
+                v-for="(item, index) in searchInfoList"
+                :key="index"
+                closable
+              >
+                {{ item }}
+              </el-tag>
+            </ComFlexSpace>
+          </div>
+        </el-form-item>
+
         <div>
-          <el-form-item :label="$t('queryContent')">
+          <el-form-item
+            v-if="!isAdvanceSearch"
+            :label="$t('queryContent')"
+          >
             <el-input
               v-if="searchValueOptionsShowType ===SEARCH_TYPE_INPUT"
               v-model="searchInfo.searchInputName"
@@ -175,6 +204,8 @@ const searchInfoList = computed({
 
 const searchInfo = computed(() => searchInfoList.value[0] ?? {})
 
+const isAdvanceSearch = computed(() => searchInfoList.value.length > 1)
+
 /**
  * @description: 查询方式下拉默认数据，深拷贝避免直接修改props的值
  */
@@ -207,6 +238,9 @@ function openAdvancedSearcch() {
       searchInfoList: searchInfoList.value,
       searchTypeDataOptions: searchTypeDataOptions.value,
       searchLabelOptions: props.searchLabelOptions
+    },
+    componentEvent: {
+      saveSearchList: (value) => { searchInfoList.value = value }
     }
   })
 }
@@ -215,5 +249,15 @@ function openAdvancedSearcch() {
 <style lang="scss" scoped>
 :deep(.el-form-item) {
   margin: 0;
+}
+
+.tagDiv {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+  padding: 5px 10px;
+  max-width: calc(100% - 70px);
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
 }
 </style>
