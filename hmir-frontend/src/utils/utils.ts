@@ -1,8 +1,8 @@
 /*
  * @Author: zhang_tianran
  * @Date: 2023-07-05 13:56:50
- * @LastEditors: Z&N dev17101@linx-info.com
- * @LastEditTime: 2024-10-29 16:39:36
+ * @LastEditors: Z&N
+ * @LastEditTime: 2024-11-06 13:42:57
  * @Description: 
  */
 
@@ -30,4 +30,23 @@ export function addResizeObserver(dom: any, callback?: Function) {
   })
   resizeObserver.observe(dom)
   return resizeObserver
+}
+
+/**
+ * @description: 解析传入数据并返回css样式能够使用的数据
+ * @param {[String, Number]} str
+ * @return {String}
+ */
+export function parseElementSize(str: number | string): string | null {
+  if (typeof str === 'number') {
+    return `${str}px`
+  }
+  if (typeof str === 'string') {
+    if (!isNaN(str as any)) {
+      return `${str}px`
+    } else {
+      return str
+    }
+  }
+  return null
 }
