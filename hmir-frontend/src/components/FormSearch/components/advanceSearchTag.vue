@@ -2,7 +2,7 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-11-06 14:00:39
  * @LastEditors: Z&N
- * @LastEditTime: 2024-11-06 14:25:37
+ * @LastEditTime: 2024-11-06 14:39:10
  * @FilePath: /hmir-frontend/src/components/FormSearch/components/advanceSearchTag.vue
  * @Description:
 -->
@@ -11,7 +11,7 @@
     closable
     @close="closeTag"
   >
-    <span> {{ getOptionLabel(searchInfo.searchLabel,searchLabelOptions) }}({{ getOptionLabel(searchInfo.searchType,searchTypeOptions) }}): {{ getOptionLabel(searchInfo.searchInputName, searchValueOptions) }}</span>
+    <span>{{ getOptionLabel(searchInfo.searchLabel,searchLabelOptions) }}({{ getOptionLabel(searchInfo.searchType,searchTypeOptions) }}): {{ getOptionLabel(searchInfo.searchInputName, searchValueOptions) }}</span>
   </el-tag>
 </template>
 
