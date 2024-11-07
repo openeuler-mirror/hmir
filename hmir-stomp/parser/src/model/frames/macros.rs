@@ -208,7 +208,7 @@ macro_rules! frames {
 
             #[doc = "The `" $group_name "Frame` enum contains a variant for each frame that the "$group_name:lower" can send."]
             #[doc = ""]
-            #[doc = "The `try_from(bytes: Vec<u8>)` method, provided via an implementaton of `TryFrom<Vec<u8>>`, is the recommended way to obtain a Frame from a received message."]
+            #[doc = "The `try_from(bytes: Vec<u8>)` method, provided via an implementation of `TryFrom<Vec<u8>>`, is the recommended way to obtain a Frame from a received message."]
             pub enum [<$group_name Frame>] {
                 $(
                     $(#[doc=$comment])?

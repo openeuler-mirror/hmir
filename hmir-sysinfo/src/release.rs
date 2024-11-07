@@ -58,7 +58,7 @@ pub struct OsInfo {
     ///
     /// **IE:** `Ubuntu`
     pub name:               String,
-    /// The name of this release, with th eversion stirng.
+    /// The name of this release, with th eversion string.
     ///
     /// **IE:** `Ubuntu 18.04 LTS`
     pub pretty_name:        String,
