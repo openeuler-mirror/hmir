@@ -2,7 +2,7 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-11-05 10:02:31
  * @LastEditors: Z&N
- * @LastEditTime: 2024-11-06 14:40:55
+ * @LastEditTime: 2024-11-06 15:16:05
  * @FilePath: /hmir-frontend/src/components/FormSearch/index.vue
  * @Description:
 -->
@@ -27,6 +27,7 @@
                 :search-type-options="searchTypeOptions"
                 :search-value-options="searchValueOptions"
                 :tag-key="index"
+                @closeTag="closeTag"
               />
             </ComFlexSpace>
           </div>
@@ -168,6 +169,14 @@ function openAdvancedSearcch() {
       }
     }
   })
+}
+
+/**
+ * @description: 关闭不需要的搜索条件
+ * @param {Number} index 对应下标
+ */
+function closeTag(index) {
+  searchInfoList.value.splice(index, 1)
 }
 
 onMounted(() => {
