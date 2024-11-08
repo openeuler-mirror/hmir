@@ -7,9 +7,20 @@
  * @Description:
 -->
 <template>
-  <div v-loading="loading" style="height: calc(100vh - 35px);width: 100%;">
-    <iframe ref="iframeRef" name="iframeMap" id="linxInfo" src="https://www.linx-info.com/" width="100%" height="100%" frameborder="0"
-      scrolling="yes"></iframe>
+  <div
+    v-loading="loading"
+    style="height: calc(100vh - 35px);width: 100%;"
+  >
+    <iframe
+      id="linxInfo"
+      ref="iframeRef"
+      name="iframeMap"
+      src="https://www.linx-info.com/"
+      width="100%"
+      height="100%"
+      frameborder="0"
+      scrolling="yes"
+    />
   </div>
 </template>
 

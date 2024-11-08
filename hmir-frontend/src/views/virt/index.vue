@@ -1,467 +1,941 @@
 <template>
   <div>
-    <el-card v-show="!isOpenDetail" class="box-card" shadow="hover" @click="openDetail('pool')">
+    <el-card
+      v-show="!isOpenDetail"
+      class="box-card"
+      shadow="hover"
+      @click="openDetail('pool')"
+    >
       <slot>
-          <div class="clearfix">
+        <div class="clearfix">
           <div class="card">
-              <div>
-                <svg-icon icon-class='wangluoxitong'></svg-icon>
-                <span>    0 Storage pools</span></div>
-              <div>
-                <svg-icon icon-class='arrow-circle-down-1'></svg-icon> 0  |
-                <svg-icon icon-class='arrow-circle-down'></svg-icon>  0
-              </div>
+            <div>
+              <svg-icon icon-class="wangluoxitong" />
+              <span>    0 Storage pools</span>
             </div>
-         </div>
+            <div>
+              <svg-icon icon-class="arrow-circle-down-1" /> 0  |
+              <svg-icon icon-class="arrow-circle-down" />  0
+            </div>
+          </div>
+        </div>
       </slot>
     </el-card>
-    <el-card v-show="!isOpenDetail" class="box-card" shadow="hover" @click="openDetail('net')" >
+    <el-card
+      v-show="!isOpenDetail"
+      class="box-card"
+      shadow="hover"
+      @click="openDetail('net')"
+    >
       <slot>
-          <div class="clearfix">
-            <div class="card">
-              <div>
-                <svg-icon icon-class='zy_wangluo'></svg-icon>
-                <span>   0 网络</span></div>
-              <div>
-                <svg-icon icon-class='arrow-circle-down-1'></svg-icon> 0  |
-                <svg-icon icon-class='arrow-circle-down'></svg-icon>  0
-              </div>
+        <div class="clearfix">
+          <div class="card">
+            <div>
+              <svg-icon icon-class="zy_wangluo" />
+              <span>   0 网络</span>
             </div>
-         </div>
+            <div>
+              <svg-icon icon-class="arrow-circle-down-1" /> 0  |
+              <svg-icon icon-class="arrow-circle-down" />  0
+            </div>
+          </div>
+        </div>
       </slot>
     </el-card>
-    <el-card v-show="!isOpenDetail" class="box-card" shadow="never">
+    <el-card
+      v-show="!isOpenDetail"
+      class="box-card"
+      shadow="never"
+    >
       <div class="vm-title">
-        <div class="vm-name">虚拟机</div>
-        <div class="vm-search"><el-input v-model="searchInput" placeholder="根据名称过滤"></el-input></div>
+        <div class="vm-name">
+          虚拟机
+        </div>
+        <div class="vm-search">
+          <el-input
+            v-model="searchInput"
+            placeholder="根据名称过滤"
+          />
+        </div>
         <div class="vm-button">
-          <el-button @click="openDialog('createVm')" plain>创建虚拟机</el-button>
-          <el-button @click="openDialog('importVm')" plain>导入VM</el-button>
+          <el-button
+            plain
+            @click="openDialog('createVm')"
+          >
+            创建虚拟机
+          </el-button>
+          <el-button
+            plain
+            @click="openDialog('importVm')"
+          >
+            导入VM
+          </el-button>
         </div>
       </div>
       <div>
         <el-table
-      empty-text ="该主机上没有定义或运行虚拟机"
-      :data="vmTableData"
-      style="width: 100%">
-      <el-table-column
-        prop="date"
-        label="名称"
-        width="180">
-      </el-table-column>
-      <el-table-column
-        prop="address"
-        label="连接">
-      </el-table-column>
-      <el-table-column
-        prop="address"
-        label="状态">
-      </el-table-column>
-    </el-table>
+          empty-text="该主机上没有定义或运行虚拟机"
+          :data="vmTableData"
+          style="width: 100%"
+        >
+          <el-table-column
+            prop="date"
+            label="名称"
+            width="180"
+          />
+          <el-table-column
+            prop="address"
+            label="连接"
+          />
+          <el-table-column
+            prop="address"
+            label="状态"
+          />
+        </el-table>
       </div>
     </el-card>
-    <el-card v-show="isOpenDetail" class="box-card" shadow="never">
+    <el-card
+      v-show="isOpenDetail"
+      class="box-card"
+      shadow="never"
+    >
       <div class="detail-back">
-        <div @click="backVm" class="back-virt">虚拟机</div>
-        <div><svg-icon icon-class='arrow-_1'></svg-icon></div>
+        <div
+          class="back-virt"
+          @click="backVm"
+        >
+          虚拟机
+        </div>
+        <div><svg-icon icon-class="arrow-_1" /></div>
         <div>{{ detailName }}</div>
       </div>
     </el-card>
-    <el-card v-show="isOpenDetail" class="box-card" shadow="always">
+    <el-card
+      v-show="isOpenDetail"
+      class="box-card"
+      shadow="always"
+    >
       <div class="vm-pool">
-        <div class="vm-pool-name">{{ detailName }}</div>
-        <div v-if="isPool" class="vm-pool-button"><el-button @click="openDialog('createPool')" plain>创建存储池</el-button></div>
-        <div v-if="isNet" class="vm-pool-button"><el-button @click="openDialog('createNet')" plain>创建虚拟网络</el-button></div>
+        <div class="vm-pool-name">
+          {{ detailName }}
+        </div>
+        <div
+          v-if="isPool"
+          class="vm-pool-button"
+        >
+          <el-button
+            plain
+            @click="openDialog('createPool')"
+          >
+            创建存储池
+          </el-button>
+        </div>
+        <div
+          v-if="isNet"
+          class="vm-pool-button"
+        >
+          <el-button
+            plain
+            @click="openDialog('createNet')"
+          >
+            创建虚拟网络
+          </el-button>
+        </div>
       </div>
       <div>
         <el-table
-        empty-text ="没有在这个主机上定义储存池"
-        v-show="isPool"
-      :data="poolTableData"
-      style="width: 100%">
-      <el-table-column
-        prop="date"
-        label="名称"
-        width="180">
-      </el-table-column>
-      <el-table-column
-        prop="name"
-        label="大小"
-        width="180">
-      </el-table-column>
-      <el-table-column
-        prop="address"
-        label="连接">
-      </el-table-column>
-      <el-table-column
-        prop="address"
-        label="状态">
-      </el-table-column>
+          v-show="isPool"
+          empty-text="没有在这个主机上定义储存池"
+          :data="poolTableData"
+          style="width: 100%"
+        >
+          <el-table-column
+            prop="date"
+            label="名称"
+            width="180"
+          />
+          <el-table-column
+            prop="name"
+            label="大小"
+            width="180"
+          />
+          <el-table-column
+            prop="address"
+            label="连接"
+          />
+          <el-table-column
+            prop="address"
+            label="状态"
+          />
         </el-table>
 
-    <el-table
-    empty-text ="没有在这个主机上定义网络"
-     v-show="isNet"
-      :data="netTableData"
-      style="width: 100%">
-      <el-table-column
-        prop="date"
-        label="名称"
-        width="180">
-      </el-table-column>
-      <el-table-column
-        prop="name"
-        label="设备"
-        width="180">
-      </el-table-column>
-      <el-table-column
-        prop="name"
-        label="连接"
-        width="180">
-      </el-table-column>
-      <el-table-column
-        prop="address"
-        label="转发模式">
-      </el-table-column>
-      <el-table-column
-        prop="address"
-        label="状态">
-      </el-table-column>
-    </el-table>
+        <el-table
+          v-show="isNet"
+          empty-text="没有在这个主机上定义网络"
+          :data="netTableData"
+          style="width: 100%"
+        >
+          <el-table-column
+            prop="date"
+            label="名称"
+            width="180"
+          />
+          <el-table-column
+            prop="name"
+            label="设备"
+            width="180"
+          />
+          <el-table-column
+            prop="name"
+            label="连接"
+            width="180"
+          />
+          <el-table-column
+            prop="address"
+            label="转发模式"
+          />
+          <el-table-column
+            prop="address"
+            label="状态"
+          />
+        </el-table>
       </div>
     </el-card>
-  <el-dialog
-    :title="dialogName"
-    v-model="dialogVisible"
-    width="30%"
-    style="min-width:430px;"
-    :before-close="handleClose">
-    <slot>
-      <div v-show="dialogFlag.createVm">
-        <div class="vm-detail"><div class="vm-detail-name">名称</div><div class="message-right"><el-input v-model="createVmInput" placeholder="唯一名称"></el-input></div></div>
-        <div class="vm-detail"><div class="vm-detail-name">连接</div><div class="message-right">
-          <el-radio v-model="createVmRadio" label="1">系统</el-radio>
-          <el-radio v-model="createVmRadio" label="2">会话</el-radio>
-        </div></div>
-        <div class="vm-detail"><div class="vm-detail-name">安装类型</div><div class="message-right">
-          <el-select v-model="createVmValue" placeholder="请选择" style="width:100%">
-          <el-option
-            v-for="item in [{value:1, label:'下载一个OS'},{value:2, label:'本地安装介质'},{value:3, label:'URL'}]"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-        </div></div>
-        <div class="vm-detail"><div class="vm-detail-name">操作系统</div><div class="message-right">
-          <el-select v-model="createVmValue" placeholder="选择一个操作系统" style="width:100%">
-          <el-option
-            v-for="item in [{value:1, label:'下载一个OS'},{value:2, label:'本地安装介质'},{value:3, label:'URL'}]"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-        </div></div>
-        <div class="vm-detail"><div class="vm-detail-name">存储</div><div class="message-right">
-          <el-select v-model="createVmValue" placeholder="创建新卷" style="width:100%">
-          <el-option
-            v-for="item in [{value:1, label:'创建新卷'},{value:2, label:'没有存储'},{value:3, label:'Storage Pools'}]"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-        </div></div>
-        <div class="vm-detail"><div class="vm-detail-name">大小</div><div class="message-right" style="display: flex;">
-          <div style="width:10%;min-width: 40px;"><el-input v-model="containInput" placeholder=" "></el-input></div>
-          <div style="width:20%;min-width: 85px;">
-            <el-select v-model="containValue" placeholder=" " style="width:100%">
-            <el-option
-              v-for="item in [{value:1, label:'MiB'},{value:2, label:'GiB'}]"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-          </div>
-        </div></div>
-        <div class="vm-detail"><div class="vm-detail-name">内存</div><div class="message-right" style="display: flex;">
-          <div style="width:80%"><el-slider
-            v-model="memoryValue"
-            :min="0"
-            :max="125"
-            :show-input="true"
-            >
-          </el-slider></div>
-          <div style="display: flex; width:20%" >
-            <!-- <div style="width:10%;min-width: 50px;"><el-input v-model="memoryValue" placeholder=" "></el-input></div> -->
-            <div>
-             <el-select v-model="memorySelect" placeholder=" ">
-             <el-option
-              style="width:40%;min-width: 50px;"
-              v-for="item in [{value:1, label:'MiB'},{value:2, label:'GiB'}]"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
+    <el-dialog
+      v-model="dialogVisible"
+      :title="dialogName"
+      width="30%"
+      style="min-width:430px;"
+      :before-close="handleClose"
+    >
+      <slot>
+        <div v-show="dialogFlag.createVm">
+          <div class="vm-detail">
+            <div class="vm-detail-name">
+              名称
+            </div><div class="message-right">
+              <el-input
+                v-model="createVmInput"
+                placeholder="唯一名称"
+              />
             </div>
           </div>
-        </div></div>
-        <div class="vm-detail"><div class="vm-detail-name"></div><div class="message-right">
-          <el-tooltip class="item" effect="dark" content="所选操作系统不支持无人值守安装" placement="top">
-            <el-checkbox v-model="noBodyChecked" disabled>执行无人值守安装</el-checkbox>
-          </el-tooltip>
-        </div></div>
-        <div class="vm-detail"><div class="vm-detail-name"></div><div class="message-right">
-          <el-checkbox v-model="restartNowChecked">立即启动VM</el-checkbox>
-        </div></div>
-      </div>
-
-      <div v-show="dialogFlag.importVm">
-        <div class="vm-detail"><div class="vm-detail-name">名称</div><div class="message-right"><el-input v-model="importVmInput" placeholder="唯一名称"></el-input></div></div>
-        <div class="vm-detail"><div class="vm-detail-name">连接</div><div class="message-right">
-          <el-radio v-model="importVmRadio" label="1">系统</el-radio>
-          <el-radio v-model="importVmRadio" label="2">会话</el-radio>
-        </div></div>
-        <div class="vm-detail"><div class="vm-detail-name">Installation Source</div><div class="message-right">
-          <el-select v-model="MirrorValue" placeholder="主机文件上存在的磁盘镜像" :clearable="true" style="width: 100%;">
-          <el-option
-            v-for="item in MirrorOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-        </div></div>
-        <div class="vm-detail"><div class="vm-detail-name">操作系统</div><div class="message-right">
-          <el-select v-model="OSValue" placeholder="选择一个操作系统" :clearable="true" style="width: 100%;">
-          <el-option
-            v-for="item in OSoptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-        </div></div>
-        <div class="vm-detail"><div class="vm-detail-name">内存</div><div class="message-right" style="display: flex;">
-          <div style="width:80%"><el-slider
-            v-model="importMemoryValue"
-            :min="0"
-            :max="125"
-            :show-input="true"
-            >
-          </el-slider></div>
-          <div style="display: flex; width:20%" >
-            <!-- <div style="width:10%;min-width: 50px;"><el-input v-model="importMemoryValue" placeholder=" "></el-input></div> -->
-            <div>
-             <el-select v-model="importMemorySelect" placeholder=" ">
-             <el-option
-              style="width:40%;min-width: 50px;"
-              v-for="item in [{value:1, label:'MiB'},{value:2, label:'GiB'}]"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
+          <div class="vm-detail">
+            <div class="vm-detail-name">
+              连接
+            </div><div class="message-right">
+              <el-radio
+                v-model="createVmRadio"
+                label="1"
+              >
+                系统
+              </el-radio>
+              <el-radio
+                v-model="createVmRadio"
+                label="2"
+              >
+                会话
+              </el-radio>
             </div>
           </div>
-        </div></div>
-        <div class="vm-detail"><div class="vm-detail-name"></div><div class="message-right">
-          <el-checkbox v-model="importRestartChecked">立即启动VM</el-checkbox>
-        </div></div>
-      </div>
+          <div class="vm-detail">
+            <div class="vm-detail-name">
+              安装类型
+            </div><div class="message-right">
+              <el-select
+                v-model="createVmValue"
+                placeholder="请选择"
+                style="width:100%"
+              >
+                <el-option
+                  v-for="item in [{value:1, label:'下载一个OS'},{value:2, label:'本地安装介质'},{value:3, label:'URL'}]"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </div>
+          </div>
+          <div class="vm-detail">
+            <div class="vm-detail-name">
+              操作系统
+            </div><div class="message-right">
+              <el-select
+                v-model="createVmValue"
+                placeholder="选择一个操作系统"
+                style="width:100%"
+              >
+                <el-option
+                  v-for="item in [{value:1, label:'下载一个OS'},{value:2, label:'本地安装介质'},{value:3, label:'URL'}]"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </div>
+          </div>
+          <div class="vm-detail">
+            <div class="vm-detail-name">
+              存储
+            </div><div class="message-right">
+              <el-select
+                v-model="createVmValue"
+                placeholder="创建新卷"
+                style="width:100%"
+              >
+                <el-option
+                  v-for="item in [{value:1, label:'创建新卷'},{value:2, label:'没有存储'},{value:3, label:'Storage Pools'}]"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </div>
+          </div>
+          <div class="vm-detail">
+            <div class="vm-detail-name">
+              大小
+            </div><div
+              class="message-right"
+              style="display: flex;"
+            >
+              <div style="width:10%;min-width: 40px;">
+                <el-input
+                  v-model="containInput"
+                  placeholder=" "
+                />
+              </div>
+              <div style="width:20%;min-width: 85px;">
+                <el-select
+                  v-model="containValue"
+                  placeholder=" "
+                  style="width:100%"
+                >
+                  <el-option
+                    v-for="item in [{value:1, label:'MiB'},{value:2, label:'GiB'}]"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
+              </div>
+            </div>
+          </div>
+          <div class="vm-detail">
+            <div class="vm-detail-name">
+              内存
+            </div><div
+              class="message-right"
+              style="display: flex;"
+            >
+              <div style="width:80%">
+                <el-slider
+                  v-model="memoryValue"
+                  :min="0"
+                  :max="125"
+                  :show-input="true"
+                />
+              </div>
+              <div style="display: flex; width:20%">
+                <!-- <div style="width:10%;min-width: 50px;"><el-input v-model="memoryValue" placeholder=" "></el-input></div> -->
+                <div>
+                  <el-select
+                    v-model="memorySelect"
+                    placeholder=" "
+                  >
+                    <el-option
+                      v-for="item in [{value:1, label:'MiB'},{value:2, label:'GiB'}]"
+                      :key="item.value"
+                      style="width:40%;min-width: 50px;"
+                      :label="item.label"
+                      :value="item.value"
+                    />
+                  </el-select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="vm-detail">
+            <div class="vm-detail-name" /><div class="message-right">
+              <el-tooltip
+                class="item"
+                effect="dark"
+                content="所选操作系统不支持无人值守安装"
+                placement="top"
+              >
+                <el-checkbox
+                  v-model="noBodyChecked"
+                  disabled
+                >
+                  执行无人值守安装
+                </el-checkbox>
+              </el-tooltip>
+            </div>
+          </div>
+          <div class="vm-detail">
+            <div class="vm-detail-name" /><div class="message-right">
+              <el-checkbox v-model="restartNowChecked">
+                立即启动VM
+              </el-checkbox>
+            </div>
+          </div>
+        </div>
 
-      <div v-show="dialogFlag.createPool">
-        <div class="vm-detail"><div class="vm-detail-name">连接</div><div class="message-right">
-          <el-radio v-model="createPoolRadio" label="1">系统</el-radio>
-          <el-radio v-model="createPoolRadio" label="2">会话</el-radio>
-        </div></div>
-        <div class="vm-detail"><div class="vm-detail-name">名称</div><div class="message-right">
-          <el-input v-model="createPoolInput" placeholder="存储池名"></el-input>
-        </div></div>
-        <div class="vm-detail"><div class="vm-detail-name">类型</div><div class="message-right">
-          <el-select v-model="PoolValue" placeholder="" :clearable="true" style="width: 100%;">
-          <el-option
-            v-for="item in PoolOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-          </el-select>
-        </div></div>
-        <div v-show="PoolValue === 5 ? false : PoolValue === 6 ? false : true" class="vm-detail"><div class="vm-detail-name">目标路径</div><div class="message-right">
-          <el-select v-model="fileSysValue" placeholder="主机文件系统上的路径" :clearable="true" style="width: 100%;">
-          <el-option
-            v-for="item in fileSysOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-        </div></div>
-        <!-- 选择PoolOptions的第2、3、6个value时出现 -->
-        <div v-show="PoolValue === 2 ? true : PoolValue === 3 ? true : PoolValue === 6 ? true : false" class="vm-detail"><div class="vm-detail-name">主机</div><div class="message-right">
-          <el-input v-model="no235HostInput" placeholder="主机名"></el-input>
-        </div></div>
-        <!-- 选择PoolOptions的第2个value时出现 -->
-        <div v-show="PoolValue === 2" class="vm-detail"><div class="vm-detail-name">源路径</div><div class="message-right">
-          <el-input v-model="no2CatalogueInput" placeholder="服务器上的目录被导出"></el-input>
-        </div></div>
-        <!-- 选择PoolOptions的第3个value时出现 -->
-        <div v-show="PoolValue === 3" class="vm-detail"><div class="vm-detail-name">源路径</div><div class="message-right">
-          <el-input v-model="no3CatalogueInput" placeholder="iSCSI目标IQN"></el-input>
-        </div></div>
+        <div v-show="dialogFlag.importVm">
+          <div class="vm-detail">
+            <div class="vm-detail-name">
+              名称
+            </div><div class="message-right">
+              <el-input
+                v-model="importVmInput"
+                placeholder="唯一名称"
+              />
+            </div>
+          </div>
+          <div class="vm-detail">
+            <div class="vm-detail-name">
+              连接
+            </div><div class="message-right">
+              <el-radio
+                v-model="importVmRadio"
+                label="1"
+              >
+                系统
+              </el-radio>
+              <el-radio
+                v-model="importVmRadio"
+                label="2"
+              >
+                会话
+              </el-radio>
+            </div>
+          </div>
+          <div class="vm-detail">
+            <div class="vm-detail-name">
+              Installation Source
+            </div><div class="message-right">
+              <el-select
+                v-model="MirrorValue"
+                placeholder="主机文件上存在的磁盘镜像"
+                :clearable="true"
+                style="width: 100%;"
+              >
+                <el-option
+                  v-for="item in MirrorOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </div>
+          </div>
+          <div class="vm-detail">
+            <div class="vm-detail-name">
+              操作系统
+            </div><div class="message-right">
+              <el-select
+                v-model="OSValue"
+                placeholder="选择一个操作系统"
+                :clearable="true"
+                style="width: 100%;"
+              >
+                <el-option
+                  v-for="item in OSoptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </div>
+          </div>
+          <div class="vm-detail">
+            <div class="vm-detail-name">
+              内存
+            </div><div
+              class="message-right"
+              style="display: flex;"
+            >
+              <div style="width:80%">
+                <el-slider
+                  v-model="importMemoryValue"
+                  :min="0"
+                  :max="125"
+                  :show-input="true"
+                />
+              </div>
+              <div style="display: flex; width:20%">
+                <!-- <div style="width:10%;min-width: 50px;"><el-input v-model="importMemoryValue" placeholder=" "></el-input></div> -->
+                <div>
+                  <el-select
+                    v-model="importMemorySelect"
+                    placeholder=" "
+                  >
+                    <el-option
+                      v-for="item in [{value:1, label:'MiB'},{value:2, label:'GiB'}]"
+                      :key="item.value"
+                      style="width:40%;min-width: 50px;"
+                      :label="item.label"
+                      :value="item.value"
+                    />
+                  </el-select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="vm-detail">
+            <div class="vm-detail-name" /><div class="message-right">
+              <el-checkbox v-model="importRestartChecked">
+                立即启动VM
+              </el-checkbox>
+            </div>
+          </div>
+        </div>
+
+        <div v-show="dialogFlag.createPool">
+          <div class="vm-detail">
+            <div class="vm-detail-name">
+              连接
+            </div><div class="message-right">
+              <el-radio
+                v-model="createPoolRadio"
+                label="1"
+              >
+                系统
+              </el-radio>
+              <el-radio
+                v-model="createPoolRadio"
+                label="2"
+              >
+                会话
+              </el-radio>
+            </div>
+          </div>
+          <div class="vm-detail">
+            <div class="vm-detail-name">
+              名称
+            </div><div class="message-right">
+              <el-input
+                v-model="createPoolInput"
+                placeholder="存储池名"
+              />
+            </div>
+          </div>
+          <div class="vm-detail">
+            <div class="vm-detail-name">
+              类型
+            </div><div class="message-right">
+              <el-select
+                v-model="PoolValue"
+                placeholder=""
+                :clearable="true"
+                style="width: 100%;"
+              >
+                <el-option
+                  v-for="item in PoolOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </div>
+          </div>
+          <div
+            v-show="PoolValue === 5 ? false : PoolValue === 6 ? false : true"
+            class="vm-detail"
+          >
+            <div class="vm-detail-name">
+              目标路径
+            </div><div class="message-right">
+              <el-select
+                v-model="fileSysValue"
+                placeholder="主机文件系统上的路径"
+                :clearable="true"
+                style="width: 100%;"
+              >
+                <el-option
+                  v-for="item in fileSysOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </div>
+          </div>
+          <!-- 选择PoolOptions的第2、3、6个value时出现 -->
+          <div
+            v-show="PoolValue === 2 ? true : PoolValue === 3 ? true : PoolValue === 6 ? true : false"
+            class="vm-detail"
+          >
+            <div class="vm-detail-name">
+              主机
+            </div><div class="message-right">
+              <el-input
+                v-model="no235HostInput"
+                placeholder="主机名"
+              />
+            </div>
+          </div>
+          <!-- 选择PoolOptions的第2个value时出现 -->
+          <div
+            v-show="PoolValue === 2"
+            class="vm-detail"
+          >
+            <div class="vm-detail-name">
+              源路径
+            </div><div class="message-right">
+              <el-input
+                v-model="no2CatalogueInput"
+                placeholder="服务器上的目录被导出"
+              />
+            </div>
+          </div>
+          <!-- 选择PoolOptions的第3个value时出现 -->
+          <div
+            v-show="PoolValue === 3"
+            class="vm-detail"
+          >
+            <div class="vm-detail-name">
+              源路径
+            </div><div class="message-right">
+              <el-input
+                v-model="no3CatalogueInput"
+                placeholder="iSCSI目标IQN"
+              />
+            </div>
+          </div>
           <!-- 选择PoolOptions的第4个value时出现 -->
-        <div v-show="PoolValue === 4" class="vm-detail"><div class="vm-detail-name">源路径</div><div class="message-right" style="display: flex;">
-          <div style="width: 60px;min-width: 183px;">
-            <el-select v-model="no4FileValue" placeholder="主机上的物理磁盘设备" :clearable="true" style="width: 100%;">
-            <el-option
-              v-for="item in no4FileOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-            </el-select>
-          </div>
-          <div style="display: flex;">
-            <div style="line-height: 30px;min-width: 43px;">格式化</div>
-            <div style="width:60%;">
-              <el-select v-model="formatValue" placeholder="" style="width: 100%;">
-            <el-option
-              v-for="item in [{value: 1, label:'dos'},{value: 2, label:'dvh'},{value: 3, label:'gpt'},{value: 4, label:'mac'}]"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-            </el-select>
-            </div>
-          </div>
-        </div></div>
-         <!-- 选择PoolOptions的第5个value时出现 -->
-         <div v-show="PoolValue === 5 ? true : false" class="vm-detail"><div class="vm-detail-name">主机</div><div class="message-right">
-          <el-input v-model="no5VolumeGroupInput" placeholder="卷组名称"></el-input>
-        </div></div>
-        <!-- 选择PoolOptions的第6个value时出现 -->
-        <div v-show="PoolValue === 6 ? true : false" class="vm-detail"><div class="vm-detail-name">源路径</div><div class="message-right">
-          <el-input v-model="no6SourceInput" placeholder="iSCSI目标IQN"></el-input>
-        </div></div>
-        <div v-show="PoolValue === 6 ? true : false" class="vm-detail"><div class="vm-detail-name">启动器</div><div class="message-right">
-          <el-input v-model="no6StartInput" placeholder="iSCI initiator INQ"></el-input>
-        </div></div>
-        <div class="vm-detail"><div class="vm-detail-name">启动</div><div class="message-right">
-          <el-checkbox v-model="poolRestartChecked">在主机引导时启动池</el-checkbox>
-        </div></div>
-      </div>
-
-      <div v-show="dialogFlag.createNet" style="line-height: 30px;">
-        <div class="vm-detail"><div class="vm-detail-name">连接</div><div class="message-right">system</div></div>
-        <div class="vm-detail"><div class="vm-detail-name">名称</div><div class="message-right">
-          <el-input v-model="uniqueNameInput" placeholder="唯一的网络名称"></el-input>
-        </div></div>
-        <div class="vm-detail"><div class="vm-detail-name">转发模式</div><div class="message-right">
-          <el-select v-model="transmitValue" placeholder="" :clearable="true" style="width: 100%;">
-          <el-option
-            v-for="item in [{value: 1,label: 'NTA'},{value: 2,label: '打开'},{value: 3,label: '无(隔离的网络)'}]"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-        </div></div>
-        <div class="vm-detail" v-show="transmitValue === 1 ? true : false"><div class="vm-detail-name">设备</div><div class="message-right">
-          <el-select v-model="equipmentValue" placeholder="请选择" style="width: 100%;">
-          <el-option-group
-            v-for="group in equipmentOptions"
-            :key="group.label"
-            :label="group.label">
-            <el-option
-              v-for="item in group.options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-option-group>
-        </el-select>
-        </div></div>
-        <div class="vm-detail"><div class="vm-detail-name">IP配置</div><div class="message-right">
-          <el-select v-model="ipConfigValue" placeholder="" :clearable="true" style="width: 100%;">
-          <el-option
-            v-for="item in [{value: 1,label: '仅IPV4'},{value: 2,label: '仅IPV6'},{value: 3,label: 'IPV4和IPV6'}]"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-          </el-select>
-        </div></div>
-        <!-- ipv4 -->
-        <div v-show = "ipConfigValue === 2 ? false : true">
-          <div class="vm-detail"><div class="vm-detail-name"></div><div class="message-right">
-          <div style="display: flex;justify-content: space-between;">
-            <div>IPV4网络</div>
-            <div><el-input v-model="IPV4input" placeholder=" "></el-input></div>
-          </div>
-        </div></div>
-        <div class="vm-detail"><div class="vm-detail-name"></div><div class="message-right">
-          <div style="display: flex; justify-content: space-between;">
-            <div>掩码或前缀长度</div>
-            <div><el-input v-model="IPV4PrefixInput" placeholder=" "></el-input></div>
-          </div>
-        </div></div>
-        <div class="vm-detail"><div class="vm-detail-name"></div><div class="message-right">
-          <el-checkbox v-model="ipv4Checked">设置dhcp范围</el-checkbox>
-        </div></div>
-        <div class="vm-detail" v-show="ipv4Checked"><div class="vm-detail-name"></div><div class="message-right">
-          <div style="display: flex;">
-             <div style="display: flex;">
-                <div style="min-width: 35px;">启动</div>
-                <div><el-input v-model="IPV4StartInput" placeholder=" "></el-input></div>
+          <div
+            v-show="PoolValue === 4"
+            class="vm-detail"
+          >
+            <div class="vm-detail-name">
+              源路径
+            </div><div
+              class="message-right"
+              style="display: flex;"
+            >
+              <div style="width: 60px;min-width: 183px;">
+                <el-select
+                  v-model="no4FileValue"
+                  placeholder="主机上的物理磁盘设备"
+                  :clearable="true"
+                  style="width: 100%;"
+                >
+                  <el-option
+                    v-for="item in no4FileOptions"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
               </div>
               <div style="display: flex;">
-                <div style="min-width: 35px;">结束</div>
-                <div><el-input v-model="IPV4EndInput" placeholder=" "></el-input></div>
+                <div style="line-height: 30px;min-width: 43px;">
+                  格式化
+                </div>
+                <div style="width:60%;">
+                  <el-select
+                    v-model="formatValue"
+                    placeholder=""
+                    style="width: 100%;"
+                  >
+                    <el-option
+                      v-for="item in [{value: 1, label:'dos'},{value: 2, label:'dvh'},{value: 3, label:'gpt'},{value: 4, label:'mac'}]"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    />
+                  </el-select>
+                </div>
               </div>
+            </div>
           </div>
-        </div></div>
+          <!-- 选择PoolOptions的第5个value时出现 -->
+          <div
+            v-show="PoolValue === 5 ? true : false"
+            class="vm-detail"
+          >
+            <div class="vm-detail-name">
+              主机
+            </div><div class="message-right">
+              <el-input
+                v-model="no5VolumeGroupInput"
+                placeholder="卷组名称"
+              />
+            </div>
+          </div>
+          <!-- 选择PoolOptions的第6个value时出现 -->
+          <div
+            v-show="PoolValue === 6 ? true : false"
+            class="vm-detail"
+          >
+            <div class="vm-detail-name">
+              源路径
+            </div><div class="message-right">
+              <el-input
+                v-model="no6SourceInput"
+                placeholder="iSCSI目标IQN"
+              />
+            </div>
+          </div>
+          <div
+            v-show="PoolValue === 6 ? true : false"
+            class="vm-detail"
+          >
+            <div class="vm-detail-name">
+              启动器
+            </div><div class="message-right">
+              <el-input
+                v-model="no6StartInput"
+                placeholder="iSCI initiator INQ"
+              />
+            </div>
+          </div>
+          <div class="vm-detail">
+            <div class="vm-detail-name">
+              启动
+            </div><div class="message-right">
+              <el-checkbox v-model="poolRestartChecked">
+                在主机引导时启动池
+              </el-checkbox>
+            </div>
+          </div>
         </div>
-        <!-- ipv6 -->
-        <div v-show="ipConfigValue === 1 ? false : true">
-          <div class="vm-detail"><div class="vm-detail-name"></div><div class="message-right">
-          <div style="display: flex; justify-content: space-between;">
-            <div>IPV6网络</div>
-            <div><el-input v-model="IPV6input" placeholder=" "></el-input></div>
+
+        <div
+          v-show="dialogFlag.createNet"
+          style="line-height: 30px;"
+        >
+          <div class="vm-detail">
+            <div class="vm-detail-name">
+              连接
+            </div><div class="message-right">
+              system
+            </div>
           </div>
-        </div></div>
-        <div class="vm-detail"><div class="vm-detail-name"></div><div class="message-right">
-          <div style="display: flex; justify-content: space-between;">
-            <div>前缀长度</div>
-            <div><el-input v-model="IPV6PrefixInput" placeholder=" "></el-input></div>
+          <div class="vm-detail">
+            <div class="vm-detail-name">
+              名称
+            </div><div class="message-right">
+              <el-input
+                v-model="uniqueNameInput"
+                placeholder="唯一的网络名称"
+              />
+            </div>
           </div>
-        </div></div>
-        <div class="vm-detail"><div class="vm-detail-name"></div><div class="message-right">
-          <el-checkbox v-model="ipv6Checked">设置dhcp范围</el-checkbox>
-        </div></div>
-        <div class="vm-detail" v-show="ipv6Checked"><div class="vm-detail-name"></div><div class="message-right">
-          <div style="display: flex;">
-             <div style="display: flex;width: 50%;">
-                <div style="min-width: 35px;">启动</div>
-                <div><el-input v-model="IPV6StartInput" placeholder=" "></el-input></div>
+          <div class="vm-detail">
+            <div class="vm-detail-name">
+              转发模式
+            </div><div class="message-right">
+              <el-select
+                v-model="transmitValue"
+                placeholder=""
+                :clearable="true"
+                style="width: 100%;"
+              >
+                <el-option
+                  v-for="item in [{value: 1,label: 'NTA'},{value: 2,label: '打开'},{value: 3,label: '无(隔离的网络)'}]"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </div>
+          </div>
+          <div
+            v-show="transmitValue === 1 ? true : false"
+            class="vm-detail"
+          >
+            <div class="vm-detail-name">
+              设备
+            </div><div class="message-right">
+              <el-select
+                v-model="equipmentValue"
+                placeholder="请选择"
+                style="width: 100%;"
+              >
+                <el-option-group
+                  v-for="group in equipmentOptions"
+                  :key="group.label"
+                  :label="group.label"
+                >
+                  <el-option
+                    v-for="item in group.options"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-option-group>
+              </el-select>
+            </div>
+          </div>
+          <div class="vm-detail">
+            <div class="vm-detail-name">
+              IP配置
+            </div><div class="message-right">
+              <el-select
+                v-model="ipConfigValue"
+                placeholder=""
+                :clearable="true"
+                style="width: 100%;"
+              >
+                <el-option
+                  v-for="item in [{value: 1,label: '仅IPV4'},{value: 2,label: '仅IPV6'},{value: 3,label: 'IPV4和IPV6'}]"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </div>
+          </div>
+          <!-- ipv4 -->
+          <div v-show="ipConfigValue === 2 ? false : true">
+            <div class="vm-detail">
+              <div class="vm-detail-name" /><div class="message-right">
+                <div style="display: flex;justify-content: space-between;">
+                  <div>IPV4网络</div>
+                  <div>
+                    <el-input
+                      v-model="IPV4input"
+                      placeholder=" "
+                    />
+                  </div>
+                </div>
               </div>
-              <div style="display: flex; width: 50%;">
-                <div style="min-width: 35px;">结束</div>
-                <div><el-input v-model="IPV6EndInput" placeholder=" "></el-input></div>
+            </div>
+            <div class="vm-detail">
+              <div class="vm-detail-name" /><div class="message-right">
+                <div style="display: flex; justify-content: space-between;">
+                  <div>掩码或前缀长度</div>
+                  <div>
+                    <el-input
+                      v-model="IPV4PrefixInput"
+                      placeholder=" "
+                    />
+                  </div>
+                </div>
               </div>
+            </div>
+            <div class="vm-detail">
+              <div class="vm-detail-name" /><div class="message-right">
+                <el-checkbox v-model="ipv4Checked">
+                  设置dhcp范围
+                </el-checkbox>
+              </div>
+            </div>
+            <div
+              v-show="ipv4Checked"
+              class="vm-detail"
+            >
+              <div class="vm-detail-name" /><div class="message-right">
+                <div style="display: flex;">
+                  <div style="display: flex;">
+                    <div style="min-width: 35px;">
+                      启动
+                    </div>
+                    <div>
+                      <el-input
+                        v-model="IPV4StartInput"
+                        placeholder=" "
+                      />
+                    </div>
+                  </div>
+                  <div style="display: flex;">
+                    <div style="min-width: 35px;">
+                      结束
+                    </div>
+                    <div>
+                      <el-input
+                        v-model="IPV4EndInput"
+                        placeholder=" "
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div></div>
+          <!-- ipv6 -->
+          <div v-show="ipConfigValue === 1 ? false : true">
+            <div class="vm-detail">
+              <div class="vm-detail-name" /><div class="message-right">
+                <div style="display: flex; justify-content: space-between;">
+                  <div>IPV6网络</div>
+                  <div>
+                    <el-input
+                      v-model="IPV6input"
+                      placeholder=" "
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="vm-detail">
+              <div class="vm-detail-name" /><div class="message-right">
+                <div style="display: flex; justify-content: space-between;">
+                  <div>前缀长度</div>
+                  <div>
+                    <el-input
+                      v-model="IPV6PrefixInput"
+                      placeholder=" "
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="vm-detail">
+              <div class="vm-detail-name" /><div class="message-right">
+                <el-checkbox v-model="ipv6Checked">
+                  设置dhcp范围
+                </el-checkbox>
+              </div>
+            </div>
+            <div
+              v-show="ipv6Checked"
+              class="vm-detail"
+            >
+              <div class="vm-detail-name" /><div class="message-right">
+                <div style="display: flex;">
+                  <div style="display: flex;width: 50%;">
+                    <div style="min-width: 35px;">
+                      启动
+                    </div>
+                    <div>
+                      <el-input
+                        v-model="IPV6StartInput"
+                        placeholder=" "
+                      />
+                    </div>
+                  </div>
+                  <div style="display: flex; width: 50%;">
+                    <div style="min-width: 35px;">
+                      结束
+                    </div>
+                    <div>
+                      <el-input
+                        v-model="IPV6EndInput"
+                        placeholder=" "
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </slot>
-    <template #footer>
-      <el-button @click="handleClose">取 消</el-button>
-      <el-button type="primary" @click="finishCreat(createName)">{{ buttonName ? '创建' : '导入' }}</el-button>
-    </template>
-  </el-dialog>
+      </slot>
+      <template #footer>
+        <el-button @click="handleClose">
+          取 消
+        </el-button>
+        <el-button
+          type="primary"
+          @click="finishCreat(createName)"
+        >
+          {{ buttonName ? '创建' : '导入' }}
+        </el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 

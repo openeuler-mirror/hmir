@@ -2,17 +2,17 @@
   <div class="common-layout">
     <el-container>
       <el-header class="layoutHeader">
-        <Header></Header>
+        <Header />
       </el-header>
       <el-container class="layoutBody">
         <el-aside width="200px">
-          <Aside></Aside>
+          <Aside />
         </el-aside>
         <el-container class="layoutMain">
           <el-main>
             <router-view />
           </el-main>
-          <el-footer></el-footer>
+          <el-footer />
         </el-container>
       </el-container>
     </el-container>

@@ -12,13 +12,30 @@
     </el-table> -->
     <el-auto-resizer>
       <template #default="{ height, width }">
-        <el-table-v2 :columns="columns" :data="data" :width="width" :height="height" fixed :v-scrollbar-size="13">
-          <template #row="props">
-            <Row v-bind="props" />
+        <el-table-v2
+          :columns="columns"
+          :data="data"
+          :width="width"
+          :height="height"
+          fixed
+          :v-scrollbar-size="13"
+        >
+          <template #row="rowProps">
+            <Row v-bind="rowProps" />
           </template>
-          <template #overlay v-if="false">
-            <div class="el-loading-mask" style="display: flex; align-items: center; justify-content: center">
-              <el-icon class="is-loading" color="var(--el-color-primary)" :size="26">
+          <template
+            v-if="false"
+            #overlay
+          >
+            <div
+              class="el-loading-mask"
+              style="display: flex; align-items: center; justify-content: center"
+            >
+              <el-icon
+                class="is-loading"
+                color="var(--el-color-primary)"
+                :size="26"
+              >
                 <loading-icon />
               </el-icon>
             </div>

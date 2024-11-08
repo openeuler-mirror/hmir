@@ -7,10 +7,19 @@
 -->
 
 <template>
-  <el-pagination v-model:current-page="currentPage" v-model:page-size="defaultPageSize" :page-sizes="[10, 20, 50, 100]"
-    :small="small" :disabled="disabled" :background="background" :hide-on-single-page="hideOnSinglePage"
-    layout="total, sizes, prev, pager, next, jumper" :total="total" @size-change="handleSizeChange"
-    @current-change="handleCurrentChange" />
+  <el-pagination
+    v-model:current-page="currentPage"
+    v-model:page-size="defaultPageSize"
+    :page-sizes="[10, 20, 50, 100]"
+    :small="small"
+    :disabled="disabled"
+    :background="background"
+    :hide-on-single-page="hideOnSinglePage"
+    layout="total, sizes, prev, pager, next, jumper"
+    :total="total"
+    @size-change="handleSizeChange"
+    @current-change="handleCurrentChange"
+  />
 </template>
 
 <script setup lang="ts">

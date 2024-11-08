@@ -7,22 +7,32 @@
 -->
 <template>
   <breadcrumb :breadcrumb="breadcrumbTitle">
-    <template v-slot:breadcrumbBody>
+    <template #breadcrumbBody>
       <el-tabs type="card">
         <el-tab-pane label="OSDs List">
-          <ClusterBodyTable @selectRowData="rowClick" :tableData="tableData" :tableColumn="tableColumn"
-            @tableBodyWidth="tableBodyWidth" highlightCurrentRow>
-            <template v-slot:tableTitleLeft>
-              <hostTableTitleLeft :selectRow="selectRow"></hostTableTitleLeft>
+          <ClusterBodyTable
+            :table-data="tableData"
+            :table-column="tableColumn"
+            highlight-current-row
+            @selectRowData="rowClick"
+            @tableBodyWidth="tableBodyWidth"
+          >
+            <template #tableTitleLeft>
+              <hostTableTitleLeft :select-row="selectRow" />
             </template>
-            <template v-slot:tableTitleRight>
-              <ClusterTableTitleRight refreshBtn columnShow numShow searchInputShow :tableColumn="tableColumn">
-              </ClusterTableTitleRight>
+            <template #tableTitleRight>
+              <ClusterTableTitleRight
+                refresh-btn
+                column-show
+                num-show
+                search-input-show
+                :table-column="tableColumn"
+              />
             </template>
           </ClusterBodyTable>
         </el-tab-pane>
         <el-tab-pane label="Overall Performance">
-          <PerformanceDetails selectTime="last1hour"></PerformanceDetails>
+          <PerformanceDetails select-time="last1hour" />
         </el-tab-pane>
       </el-tabs>
     </template>

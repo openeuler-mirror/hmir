@@ -6,8 +6,14 @@
  * @Description:
 -->
 <template>
-  <svg aria-hidden="true" class="svg-icon">
-    <use :xlink:href="symbolId" :fill="color" />
+  <svg
+    aria-hidden="true"
+    class="svg-icon"
+  >
+    <use
+      :xlink:href="symbolId"
+      :fill="color"
+    />
   </svg>
 </template>
 

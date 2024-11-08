@@ -6,12 +6,22 @@
  * @Description:
 -->
 <template>
-  <el-form ref="ruleFormRef" :model="ruleForm" label-width="150px" :size="formSize" status-icon>
+  <el-form
+    ref="ruleFormRef"
+    :model="ruleForm"
+    label-width="150px"
+    :size="formSize"
+    status-icon
+  >
     <el-form-item prop="priority">
       <template #label>
         <div style="width: 100%;text-align: end;">
           <span style="margin-right:5px;">Hostname</span>
-          <el-tooltip placement="bottom" effect="light" trigger="click">
+          <el-tooltip
+            placement="bottom"
+            effect="light"
+            trigger="click"
+          >
             <el-icon>
               <QuestionFilled />
             </el-icon>
@@ -20,8 +30,10 @@
               <ul>
                 <li>a comma-separated list of hostnames (e.g.: example-01,example-02,example-03),</li>
                 <li>a range expression (e.g.: example-[01-03].ceph),</li>
-                <li>a comma separated range expression (e.g.:
-                  example-[01-05].lab.com,example2-[1-4].lab.com,example3-[001-006].lab.com)</li>
+                <li>
+                  a comma separated range expression (e.g.:
+                  example-[01-05].lab.com,example2-[1-4].lab.com,example3-[001-006].lab.com)
+                </li>
               </ul>
             </template>
           </el-tooltip>
@@ -29,16 +41,36 @@
       </template>
       <el-input v-model="ruleForm.hostName" />
     </el-form-item>
-    <el-form-item prop="networkAddress" label="Network address">
+    <el-form-item
+      prop="networkAddress"
+      label="Network address"
+    >
       <el-input v-model="ruleForm.networkAddress" />
     </el-form-item>
-    <el-form-item prop="labels" label="Labels">
-      <el-select v-model="ruleForm.labels" multiple collapse-tags collapse-tags-tooltip filterable style="width: 100%">
-        <el-option v-for="item in labelsOptions" :key="item.value" :label="item.label" :value="item.value" />
+    <el-form-item
+      prop="labels"
+      label="Labels"
+    >
+      <el-select
+        v-model="ruleForm.labels"
+        multiple
+        collapse-tags
+        collapse-tags-tooltip
+        filterable
+        style="width: 100%"
+      >
+        <el-option
+          v-for="item in labelsOptions"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
       </el-select>
     </el-form-item>
     <el-form-item prop="maintenanceMode">
-      <el-checkbox v-model="ruleForm.maintenanceMode">Maintenance Mode</el-checkbox>
+      <el-checkbox v-model="ruleForm.maintenanceMode">
+        Maintenance Mode
+      </el-checkbox>
     </el-form-item>
   </el-form>
 </template>

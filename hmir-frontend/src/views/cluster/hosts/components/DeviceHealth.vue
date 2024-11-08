@@ -6,8 +6,13 @@
  * @Description:
 -->
 <template>
-  <el-alert title="Information" type="info" description="No SMART data available."
-    show-icon  :closable="false" />
+  <el-alert
+    title="Information"
+    type="info"
+    description="No SMART data available."
+    show-icon
+    :closable="false"
+  />
 </template>
 
 <script setup lang="ts">

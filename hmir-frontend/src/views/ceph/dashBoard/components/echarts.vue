@@ -7,12 +7,11 @@
  * @Description: echart小组件
 -->
 <template>
-    <div
-    :id= chartData.id
+  <div
+    :id="chartData.id"
     :style="height ? 'height:'+height+'px': 'height:200px'"
     class="chart-box"
-    >
-    </div>
+  />
 </template>
 
 <script setup lang="ts">

@@ -1,19 +1,25 @@
 <!--
  * @Author: zhang_tianran
  * @Date: 2023-07-04 15:40:49
- * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-05 11:21:08
+ * @LastEditors: Z&N
+ * @LastEditTime: 2024-11-01 16:54:05
  * @Description:
 -->
 <template>
   <el-checkbox-group v-model="checkList">
-    <template v-for="(item, index) in flagsList" :key="item.titleText">
-      <el-divider v-if="index !== 0"/>
-      <el-checkbox  :disabled="item.disabled" :label="item.id">
+    <div
+      v-for="(item, index) in flagsList"
+      :key="item.titleText"
+    >
+      <el-divider v-if="index !== 0" />
+      <el-checkbox
+        :disabled="item.disabled"
+        :label="item.id"
+      >
         <h3>{{ item.titleText }}</h3>
         <div>{{ item.annotation }}</div>
       </el-checkbox>
-    </template>
+    </div>
   </el-checkbox-group>
 </template>
 

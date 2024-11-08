@@ -7,25 +7,40 @@
 -->
 <template>
   <breadcrumb :breadcrumb="breadcrumbTitle">
-    <template v-slot:breadcrumbBody>
+    <template #breadcrumbBody>
       <el-tabs type="card">
         <el-tab-pane :label="t('hostsList')">
-          <ClusterBodyTable @selectRowData="rowClick" :tableData="tableData" :tableColumn="tableColumn"
-            @tableBodyWidth="tableBodyWidth" highlightCurrentRow expandShow paginationShow>
-            <template v-slot:tableTitleLeft>
-              <hostTableTitleLeft :selectRow="selectRow"></hostTableTitleLeft>
+          <ClusterBodyTable
+            :table-data="tableData"
+            :table-column="tableColumn"
+            highlight-current-row
+            expand-show
+            pagination-show
+            @selectRowData="rowClick"
+            @tableBodyWidth="tableBodyWidth"
+          >
+            <template #tableTitleLeft>
+              <hostTableTitleLeft :select-row="selectRow" />
             </template>
-            <template v-slot:tableTitleRight>
-              <ClusterTableTitleRight refreshBtn columnShow numShow searchInputShow :tableColumn="tableColumn">
-              </ClusterTableTitleRight>
+            <template #tableTitleRight>
+              <ClusterTableTitleRight
+                refresh-btn
+                column-show
+                num-show
+                search-input-show
+                :table-column="tableColumn"
+              />
             </template>
-            <template v-slot:expand="{ row }">
-              <expandBody :row="row" :tableWidth="tableWidth"></expandBody>
+            <template #expand="{ row }">
+              <expandBody
+                :row="row"
+                :table-width="tableWidth"
+              />
             </template>
           </ClusterBodyTable>
         </el-tab-pane>
         <el-tab-pane :label="t('overallPerformance')">
-          <PerformanceDetails selectTime="last1hour"></PerformanceDetails>
+          <PerformanceDetails select-time="last1hour" />
         </el-tab-pane>
       </el-tabs>
     </template>

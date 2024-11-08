@@ -7,9 +7,9 @@
  * @Description: 仪表盘卡片背景
 -->
 <template>
-    <div class="card">
-    <slot name="content"></slot>
-    </div>
+  <div class="card">
+    <slot name="content" />
+  </div>
 </template>
 
 <script setup lang="ts">

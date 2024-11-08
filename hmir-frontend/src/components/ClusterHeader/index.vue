@@ -10,14 +10,23 @@
     <el-container>
       <el-header>
         <el-breadcrumb :separator-icon="ArrowRight">
-          <el-breadcrumb-item v-for="(item, index) of breadcrumb" :key="item">
-            <el-link type="primary" v-if="index > 0 && (index + 1) !== breadcrumb.length" @click="linkClick(item)">{{ t(item) }}</el-link>
+          <el-breadcrumb-item
+            v-for="(item, index) of breadcrumb"
+            :key="item"
+          >
+            <el-link
+              v-if="index > 0 && (index + 1) !== breadcrumb.length"
+              type="primary"
+              @click="linkClick(item)"
+            >
+              {{ t(item) }}
+            </el-link>
             <span v-else>{{ t(item) }}</span>
           </el-breadcrumb-item>
         </el-breadcrumb>
       </el-header>
       <el-main>
-        <slot name="breadcrumbBody"></slot>
+        <slot name="breadcrumbBody" />
       </el-main>
     </el-container>
   </div>

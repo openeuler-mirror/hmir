@@ -1,19 +1,37 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginFormRef" :model="loginData" class="login-form" label-position="left" :rules="rules" size="large"
-      @keyup.enter="submitForm(loginFormRef)">
+    <el-form
+      ref="loginFormRef"
+      :model="loginData"
+      class="login-form"
+      label-position="left"
+      :rules="rules"
+      size="large"
+      @keyup.enter="submitForm(loginFormRef)"
+    >
       <div class="title-container">
-        <h1 class="title">HMIR</h1>
+        <h1 class="title">
+          HMIR
+        </h1>
       </div>
 
-      <el-form-item prop="ipAddress" class="ipAddress">
+      <el-form-item
+        prop="ipAddress"
+        class="ipAddress"
+      >
         <span class="svg-container">
           <el-icon>
             <Location />
           </el-icon>
         </span>
-        <el-autocomplete v-model.trim="loginData.ipAddress" :fetch-suggestions="ipAddressQuery" class="ipAddressAutocomplete"
-          :placeholder="t('ipAddress')" highlight-first-item @select="handleSelect">
+        <el-autocomplete
+          v-model.trim="loginData.ipAddress"
+          :fetch-suggestions="ipAddressQuery"
+          class="ipAddressAutocomplete"
+          :placeholder="t('ipAddress')"
+          highlight-first-item
+          @select="handleSelect"
+        >
           <template #default="{ item }">
             <div v-if="!loginData.ipAddress">
               <div>{{ item.host }}:{{ item.port }}</div>
@@ -26,12 +44,20 @@
         </el-autocomplete>
       </el-form-item>
 
-      <el-form-item prop="ipPort" class="ipPort">
-        <span class="ipPort-container">
-        </span>
-        <el-autocomplete v-model.trim="loginData.ipPort" :fetch-suggestions="ipPortQuery" :trigger-on-focus="false"
-         class="ipPortAutocomplete" :placeholder="t('port')" highlight-first-item @select="handleSelect">
-        </el-autocomplete>
+      <el-form-item
+        prop="ipPort"
+        class="ipPort"
+      >
+        <span class="ipPort-container" />
+        <el-autocomplete
+          v-model.trim="loginData.ipPort"
+          :fetch-suggestions="ipPortQuery"
+          :trigger-on-focus="false"
+          class="ipPortAutocomplete"
+          :placeholder="t('port')"
+          highlight-first-item
+          @select="handleSelect"
+        />
       </el-form-item>
 
       <el-form-item prop="username">
@@ -40,8 +66,14 @@
             <User />
           </el-icon>
         </span>
-        <el-autocomplete v-model.trim="loginData.username" :fetch-suggestions="userQuery" class="usernameAutocomplete"
-          :placeholder="t('inputUserName')" highlight-first-item @select="handleSelect">
+        <el-autocomplete
+          v-model.trim="loginData.username"
+          :fetch-suggestions="userQuery"
+          class="usernameAutocomplete"
+          :placeholder="t('inputUserName')"
+          highlight-first-item
+          @select="handleSelect"
+        >
           <template #default="{ item }">
             <div v-if="!loginData.username">
               <div>{{ item.host }}:{{ item.port }}</div>
@@ -60,14 +92,26 @@
             <Lock />
           </el-icon>
         </span>
-        <el-input ref="passwordRef" class="password-input" v-model="loginData.password" :placeholder="t('inputPwd')" name="password"
-          type="password" show-password />
+        <el-input
+          ref="passwordRef"
+          v-model="loginData.password"
+          class="password-input"
+          :placeholder="t('inputPwd')"
+          name="password"
+          type="password"
+          show-password
+        />
       </el-form-item>
 
       <el-config-provider :message="config">
-        <el-button type="primary" style="width: 100%; margin-bottom: 30px; margin-top: 10px;"
-          @click="submitForm(loginFormRef)" :loading="loading" v-deBounce>
-           {{ t('login') }}
+        <el-button
+          v-deBounce
+          type="primary"
+          style="width: 100%; margin-bottom: 30px; margin-top: 10px;"
+          :loading="loading"
+          @click="submitForm(loginFormRef)"
+        >
+          {{ t('login') }}
         </el-button>
       </el-config-provider>
     </el-form>
@@ -83,7 +127,6 @@ import { useUsersStore } from '@/store/modules/user'
 import Cache from '@/utils/cache/index'
 import { useI18n } from 'vue-i18n'
 import * as REGEX from '@/constant/regex'
-
 
 const { t } = useI18n()
 
@@ -394,7 +437,6 @@ $cursor: #fff;
     border-radius: 5px;
     color: #454545;
   }
-
 
   .ipPortAutocomplete {
     width: 60% !important;

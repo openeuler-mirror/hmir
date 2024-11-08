@@ -8,31 +8,85 @@
 -->
 <template>
   <div>
-      <el-table
-       :data="data.pageData"
-       :key="String(data.tableKey)"
-       :fit="true"
-       height="750"
-        @sort-change=sortHandle
-        >
-          <el-table-column prop="pid" label="进程号" sortable="custom" />
-          <el-table-column prop="user" label="用户名" sortable="custom" />
-          <el-table-column prop="priority" label="优先级" sortable="custom" />
-          <el-table-column prop="nice" label="NICE值" sortable="custom" />
-          <el-table-column prop="virt" label="VIRT" sortable="custom" />
-          <el-table-column prop="res" label="RES" sortable="custom" />
-          <el-table-column prop="shr" label="SHR" sortable="custom" />
-          <el-table-column prop="state" label="进程状态" sortable="custom" />
-          <el-table-column prop="cpu_usage" label="CPU(%)" sortable="custom" />
-          <el-table-column prop="mem_usage" label="MEM(%)" sortable="custom" />
-          <el-table-column prop="time" label="TIME+" sortable="custom" />
-          <el-table-column prop="command" label="COMMAND" :min-width="100" sortable="custom" />
-      </el-table>
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-          :current-page="data.currentPage" :page-sizes="[10, 20, 30, 50]" :page-size="data.pageSize"
-          :total="data.pageTotal" layout="total, sizes, prev, pager, next, jumper"
-          style="margin-top: 12px;display: flex;justify-content: center;">
-      </el-pagination>
+    <el-table
+      :key="String(data.tableKey)"
+      :data="data.pageData"
+      :fit="true"
+      height="750"
+      @sort-change="sortHandle"
+    >
+      <el-table-column
+        prop="pid"
+        label="进程号"
+        sortable="custom"
+      />
+      <el-table-column
+        prop="user"
+        label="用户名"
+        sortable="custom"
+      />
+      <el-table-column
+        prop="priority"
+        label="优先级"
+        sortable="custom"
+      />
+      <el-table-column
+        prop="nice"
+        label="NICE值"
+        sortable="custom"
+      />
+      <el-table-column
+        prop="virt"
+        label="VIRT"
+        sortable="custom"
+      />
+      <el-table-column
+        prop="res"
+        label="RES"
+        sortable="custom"
+      />
+      <el-table-column
+        prop="shr"
+        label="SHR"
+        sortable="custom"
+      />
+      <el-table-column
+        prop="state"
+        label="进程状态"
+        sortable="custom"
+      />
+      <el-table-column
+        prop="cpu_usage"
+        label="CPU(%)"
+        sortable="custom"
+      />
+      <el-table-column
+        prop="mem_usage"
+        label="MEM(%)"
+        sortable="custom"
+      />
+      <el-table-column
+        prop="time"
+        label="TIME+"
+        sortable="custom"
+      />
+      <el-table-column
+        prop="command"
+        label="COMMAND"
+        :min-width="100"
+        sortable="custom"
+      />
+    </el-table>
+    <el-pagination
+      :current-page="data.currentPage"
+      :page-sizes="[10, 20, 30, 50]"
+      :page-size="data.pageSize"
+      :total="data.pageTotal"
+      layout="total, sizes, prev, pager, next, jumper"
+      style="margin-top: 12px;display: flex;justify-content: center;"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
   </div>
 </template>
 

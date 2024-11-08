@@ -7,56 +7,72 @@
  * @Description: 仪表盘
 -->
 <template>
-    <div class="main">
-      <el-row>
-        <el-col :span="24">
-          <Title name="状态" />
-        </el-col>
-      </el-row>
-      <el-row :gutter="20">
-          <el-col :span="6" v-for="(e, i) in data.statusData" :key="i">
-            <Card class="status-box">
-            <template v-slot:content>
-              <Status :statusData="e" />
-            </template>
-          </Card>
-          </el-col>
-      </el-row>
+  <div class="main">
+    <el-row>
+      <el-col :span="24">
+        <Title name="状态" />
+      </el-col>
+    </el-row>
+    <el-row :gutter="20">
+      <el-col
+        v-for="(e, i) in data.statusData"
+        :key="i"
+        :span="6"
+      >
+        <Card class="status-box">
+          <template #content>
+            <Status :status-data="e" />
+          </template>
+        </Card>
+      </el-col>
+    </el-row>
 
-      <el-row>
-          <Title name="容量" />
-        </el-row>
-        <el-row :gutter="20">
-        <el-col :span="6" v-for="(e, i) in 4" :key="i">
-          <Card class="capacity-box">
-            <template v-slot:content>
-              <Echarts :chartData=data.chartData[i]></Echarts>
-            </template>
-          </Card>
-        </el-col>
-      </el-row>
+    <el-row>
+      <Title name="容量" />
+    </el-row>
+    <el-row :gutter="20">
+      <el-col
+        v-for="(e, i) in 4"
+        :key="i"
+        :span="6"
+      >
+        <Card class="capacity-box">
+          <template #content>
+            <Echarts :chart-data="data.chartData[i]" />
+          </template>
+        </Card>
+      </el-col>
+    </el-row>
 
-        <el-row>
-          <Title name="性能" />
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="6"  v-for="(e, i) in performance" :key="i">
-            <Card class="performance-box">
-              <template v-slot:content>
-                <Echarts :chartData=e></Echarts>
-              </template>
-            </Card>
-          </el-col>
-          <el-col :span="6"  v-for="(e, i) in performanceData" :key="i">
-            <Card class="performance-box">
-              <template v-slot:content>
-                <Status :statusData=e></Status>
-              </template>
-            </Card>
-          </el-col>
-        </el-row>
-    </div>
-  </template>
+    <el-row>
+      <Title name="性能" />
+    </el-row>
+    <el-row :gutter="20">
+      <el-col
+        v-for="(e, i) in performance"
+        :key="i"
+        :span="6"
+      >
+        <Card class="performance-box">
+          <template #content>
+            <Echarts :chart-data="e" />
+          </template>
+        </Card>
+      </el-col>
+      <el-col
+        v-for="(e, i) in performanceData"
+        :key="i"
+        :span="6"
+      >
+        <Card class="performance-box">
+          <template #content>
+            <Status :status-data="e" />
+          </template>
+        </Card>
+      </el-col>
+    </el-row>
+  </div>
+</template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'

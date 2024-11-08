@@ -10,7 +10,10 @@
     <template #header>
       <div>
         <span style="margin-right:10px;">Grafana Time Picker</span>
-        <el-select v-model="selectValue" style="margin-right:10px;">
+        <el-select
+          v-model="selectValue"
+          style="margin-right:10px;"
+        >
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -22,7 +25,10 @@
         <el-button><el-icon><InfoFilled /></el-icon></el-button>
       </div>
     </template>
-    <el-empty description="localhost 拒绝了我们的连接请求。" image="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABIAQMAAABvIyEEAAAABlBMVEUAAABTU1OoaSf/AAAAAXRSTlMAQObYZgAAAENJREFUeF7tzbEJACEQRNGBLeAasBCza2lLEGx0CxFGG9hBMDDxRy/72O9FMnIFapGylsu1fgoBdkXfUHLrQgdfrlJN1BdYBjQQm3UAAAAASUVORK5CYII="/>
+    <el-empty
+      description="localhost 拒绝了我们的连接请求。"
+      image="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABIAQMAAABvIyEEAAAABlBMVEUAAABTU1OoaSf/AAAAAXRSTlMAQObYZgAAAENJREFUeF7tzbEJACEQRNGBLeAasBCza2lLEGx0CxFGG9hBMDDxRy/72O9FMnIFapGylsu1fgoBdkXfUHLrQgdfrlJN1BdYBjQQm3UAAAAASUVORK5CYII="
+    />
   </el-card>
 </template>
 

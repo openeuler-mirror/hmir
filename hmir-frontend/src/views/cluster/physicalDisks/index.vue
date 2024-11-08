@@ -7,11 +7,10 @@
 -->
 <template>
   <breadcrumb :breadcrumb="breadcrumbTitle">
-    <template v-slot:breadcrumbBody>
-      <PhysicalDisks :physicalDiskData="tableData"></PhysicalDisks>
+    <template #breadcrumbBody>
+      <PhysicalDisks :physical-disk-data="tableData" />
     </template>
   </breadcrumb>
-
 </template>
 
 <script setup lang="ts">

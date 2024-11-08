@@ -7,12 +7,26 @@
  * @Description:
 -->
 <template>
-  <el-dialog  :model-value="dialogVisible" destroy-on-close :title="dialogTitle" width="35%" @closed="cancel">
-    <component style="max-height:55vh;overflow: auto;" ref="dialogBody" :is="currentComponent" @cancel="cancel"></component>
+  <el-dialog
+    :model-value="dialogVisible"
+    destroy-on-close
+    :title="dialogTitle"
+    width="35%"
+    @closed="cancel"
+  >
+    <component
+      :is="currentComponent"
+      ref="dialogBody"
+      style="max-height:55vh;overflow: auto;"
+      @cancel="cancel"
+    />
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="cancel">Cancel</el-button>
-        <el-button type="primary" @click="submit">
+        <el-button
+          type="primary"
+          @click="submit"
+        >
           {{ btnShow }}
         </el-button>
       </span>

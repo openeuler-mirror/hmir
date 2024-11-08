@@ -6,20 +6,37 @@
  * @Description:
 -->
 <template>
-  <ClusterTableTitleLeft :dropdownList="dropdownArray" @handleClick="handleClick"></ClusterTableTitleLeft>
-  <el-dropdown trigger="click" @command="dropdownCommand" style="margin-left:10px">
+  <ClusterTableTitleLeft
+    :dropdown-list="dropdownArray"
+    @handleClick="handleClick"
+  />
+  <el-dropdown
+    trigger="click"
+    style="margin-left:10px"
+    @command="dropdownCommand"
+  >
     <el-button type="primary">
       {{ t('clusterConfiguration') }}<el-icon><arrow-down /></el-icon>
     </el-button>
     <template #dropdown>
       <el-dropdown-menu>
-        <el-dropdown-item command="flags">{{ t('flags') }}</el-dropdown-item>
-        <el-dropdown-item command="recoveryPriority">{{ t('recoveryPriority') }}</el-dropdown-item>
-        <el-dropdown-item command="pgScrub">{{ t('pgScrub') }}</el-dropdown-item>
+        <el-dropdown-item command="flags">
+          {{ t('flags') }}
+        </el-dropdown-item>
+        <el-dropdown-item command="recoveryPriority">
+          {{ t('recoveryPriority') }}
+        </el-dropdown-item>
+        <el-dropdown-item command="pgScrub">
+          {{ t('pgScrub') }}
+        </el-dropdown-item>
       </el-dropdown-menu>
     </template>
   </el-dropdown>
-  <osdsDialog :dialogVisible="dialogVisible" :osdsType="osdsType" @cancel="dialogChange"></osdsDialog>
+  <osdsDialog
+    :dialog-visible="dialogVisible"
+    :osds-type="osdsType"
+    @cancel="dialogChange"
+  />
 </template>
 
 <script setup lang="ts">

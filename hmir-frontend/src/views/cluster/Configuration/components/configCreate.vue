@@ -6,20 +6,49 @@
  * @Description:
 -->
 <template>
-  <el-form ref="ruleFormRef" :model="ruleForm" label-width="150px" :size="formSize" status-icon>
-    <el-form-item prop="configName" labe="Config Name">
+  <el-form
+    ref="ruleFormRef"
+    :model="ruleForm"
+    label-width="150px"
+    :size="formSize"
+    status-icon
+  >
+    <el-form-item
+      prop="configName"
+      labe="Config Name"
+    >
       <el-input v-model="ruleForm.configName" />
     </el-form-item>
-    <el-form-item prop="networkAddress" label="Network address">
+    <el-form-item
+      prop="networkAddress"
+      label="Network address"
+    >
       <el-input v-model="ruleForm.networkAddress" />
     </el-form-item>
-    <el-form-item prop="labels" label="Labels">
-      <el-select v-model="ruleForm.labels" multiple collapse-tags collapse-tags-tooltip filterable style="width: 100%">
-        <el-option v-for="item in labelsOptions" :key="item.value" :label="item.label" :value="item.value" />
+    <el-form-item
+      prop="labels"
+      label="Labels"
+    >
+      <el-select
+        v-model="ruleForm.labels"
+        multiple
+        collapse-tags
+        collapse-tags-tooltip
+        filterable
+        style="width: 100%"
+      >
+        <el-option
+          v-for="item in labelsOptions"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
       </el-select>
     </el-form-item>
     <el-form-item prop="maintenanceMode">
-      <el-checkbox v-model="ruleForm.maintenanceMode">Maintenance Mode</el-checkbox>
+      <el-checkbox v-model="ruleForm.maintenanceMode">
+        Maintenance Mode
+      </el-checkbox>
     </el-form-item>
   </el-form>
 </template>

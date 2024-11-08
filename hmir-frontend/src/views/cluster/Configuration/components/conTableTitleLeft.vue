@@ -6,8 +6,16 @@
  * @Description:
 -->
 <template>
-  <ClusterTableTitleLeft :dropdownList="dropdownArray" @handleClick="handleClick"></ClusterTableTitleLeft>
-  <ConfigDialog :dialogVisible="dialogVisible" :configType="configType" :selectRow="selectRow" @cancel="dialogChange"></ConfigDialog>
+  <ClusterTableTitleLeft
+    :dropdown-list="dropdownArray"
+    @handleClick="handleClick"
+  />
+  <ConfigDialog
+    :dialog-visible="dialogVisible"
+    :config-type="configType"
+    :select-row="selectRow"
+    @cancel="dialogChange"
+  />
 </template>
 
 <script setup lang="ts">

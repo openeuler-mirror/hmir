@@ -12,15 +12,29 @@
         <span>Physical Disks</span>
       </div>
     </template>
-    <ClusterBodyTable @selectRowData="rowClick" :tableData="tableData" :tableColumn="tableColumn">
-      <template v-slot:tableTitleLeft>
-        <el-button type="danger" plain disabled>
+    <ClusterBodyTable
+      :table-data="tableData"
+      :table-column="tableColumn"
+      @selectRowData="rowClick"
+    >
+      <template #tableTitleLeft>
+        <el-button
+          type="danger"
+          plain
+          disabled
+        >
           <el-icon><View /></el-icon>
           <span style="padding-left: 3px;">Identify</span>
         </el-button>
       </template>
-      <template v-slot:tableTitleRight>
-        <ClusterTableTitleRight refreshBtn columnShow numShow columnSort :tableColumn="tableColumn"></ClusterTableTitleRight>
+      <template #tableTitleRight>
+        <ClusterTableTitleRight
+          refresh-btn
+          column-show
+          num-show
+          column-sort
+          :table-column="tableColumn"
+        />
       </template>
     </ClusterBodyTable>
   </el-card>
