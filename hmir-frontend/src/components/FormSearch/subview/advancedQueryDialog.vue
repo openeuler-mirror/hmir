@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-05-17 18:16:11
  * @LastEditors: Z&N
- * @LastEditTime: 2024-11-06 09:43:32
+ * @LastEditTime: 2024-11-06 13:20:05
  * @Description:
 -->
 
@@ -69,7 +69,7 @@
             :style="{ width: inputWidth }"
           >
             <el-option
-              v-for="optionItem in searchTypeDataOptions"
+              v-for="optionItem in searchTypeOptions"
               v-show="optionItem.show"
               :key="optionItem.value"
               :label="$t(optionItem.label)"
@@ -94,7 +94,7 @@
             style="width: 220px"
           >
             <el-option
-              v-for="optionItem in searchValueOptionSelect"
+              v-for="optionItem in searchValueOptions"
               :key="optionItem.value"
               :label="$t(optionItem.label)"
               :value="optionItem.value"
@@ -106,7 +106,7 @@
             v-model="item.searchInputName"
             filterable
             default-expand-all
-            :data="searchValueOptionSelect"
+            :data="searchValueOptions"
             style="width: 220px"
             :placeholder="$t('pleaseSelect')"
             :node-key="treeNodeKey"
@@ -150,7 +150,7 @@ const props = defineProps({
     type: Array,
     required: true
   },
-  searchTypeDataOptions: {
+  searchTypeOptions: {
     type: Array,
     required: true
   },
