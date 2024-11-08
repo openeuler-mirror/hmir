@@ -41,7 +41,7 @@
         <div>
           <el-form-item :label="$t('queryContent')">
             <el-input
-              v-if="searchValueOptionsShowType === 'input'"
+              v-if="searchValueOptionsShowType ===SEARCH_TYPE_INPUT"
               v-model="searchInfo.searchInputName"
               style="width: 220px"
               :placeholder="$t('pleaseInputContent')"
@@ -49,7 +49,7 @@
               @keyup.enter.stop="searchList"
             />
             <el-select
-              v-if="searchValueOptionsShowType === 'select'"
+              v-if="searchValueOptionsShowType ===SEARCH_TYPE_SELECT"
               v-model="searchInfo.searchInputName"
               :placeholder="$t('pleaseSelect')"
               style="width: 220px"
@@ -63,7 +63,7 @@
               />
             </el-select>
             <el-tree-select
-              v-if="searchValueOptionsShowType === 'treeSelect'"
+              v-if="searchValueOptionsShowType === SEARCH_TYPE_TREE"
               v-model="searchInfo.searchInputName"
               filterable
               default-expand-all
@@ -110,7 +110,9 @@
 <script setup>
 import ComFlexSpace from '@/components/ComFlexSpace/index.vue'
 import { Search } from '@element-plus/icons-vue'
+import { defineSearchTypeOptions, SEARCH_OPTION_FUZZY, SEARCH_TYPE_INPUT, SEARCH_TYPE_SELECT, SEARCH_TYPE_TREE } from './formSearchUtils'
 import { ref } from 'vue'
+import { deepCopy } from '@/utils/clone'
 
 defineProps({
   inputWidth: {
@@ -127,33 +129,7 @@ defineProps({
   searchTypeOptions: {
     type: Array,
     default() {
-      return [
-        {
-          label: 'fuzzyMatching',
-          value: 0,
-          show: true
-        },
-        {
-          label: 'accurateMatching',
-          value: 1,
-          show: true
-        },
-        {
-          label: 'unequalMatching',
-          value: 2,
-          show: true
-        },
-        {
-          label: 'greaterThanEqual',
-          value: 5,
-          show: false
-        },
-        {
-          label: 'lessThanEqual',
-          value: 6,
-          show: false
-        }
-      ]
+      return deepCopy(defineSearchTypeOptions)
     }
   },
   searchValueOptions: {
@@ -178,7 +154,7 @@ const emits = defineEmits(['search', 'searchLabelChange'])
 
 const searchInfo = ref({
   searchLabel: '',
-  searchType: 0,
+  searchType: SEARCH_OPTION_FUZZY,
   searchInputName: ''
 })
 
@@ -186,7 +162,7 @@ const searchValueOptionSelect = ref([])
 
 const searchTypeDataOptions = ref([])
 
-const searchValueOptionsShowType = ref('input')
+const searchValueOptionsShowType = ref(SEARCH_TYPE_INPUT)
 
 function searchList() {
   emits('search', searchInfo.value)
