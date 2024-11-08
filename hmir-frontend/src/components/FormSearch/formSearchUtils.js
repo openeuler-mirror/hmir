@@ -2,10 +2,11 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-11-05 13:25:56
  * @LastEditors: Z&N
- * @LastEditTime: 2024-11-05 15:02:26
+ * @LastEditTime: 2024-11-05 15:08:07
  * @FilePath: /hmir-frontend/src/components/FormSearch/formSearchUtils.js
  * @Description:
  */
+import { deepCopy } from '@/utils/clone'
 
 /**
  * @description: 模糊匹配
@@ -77,3 +78,13 @@ export const SEARCH_TYPE_SELECT = 'select'
  * @description: 定义查询方式为树型下拉列表
  */
 export const SEARCH_TYPE_TREE = 'treeSelect'
+
+export const defaultSearchInfo = {
+  searchLabel: '',
+  searchType: SEARCH_OPTION_FUZZY,
+  searchInputName: ''
+}
+
+export function getDefaultSearchInfo() {
+  return deepCopy(defaultSearchInfo)
+}

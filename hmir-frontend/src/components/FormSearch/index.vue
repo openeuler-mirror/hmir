@@ -110,11 +110,15 @@
 <script setup>
 import ComFlexSpace from '@/components/ComFlexSpace/index.vue'
 import { Search } from '@element-plus/icons-vue'
-import { defineSearchTypeOptions, SEARCH_OPTION_FUZZY, SEARCH_TYPE_INPUT, SEARCH_TYPE_SELECT, SEARCH_TYPE_TREE } from './formSearchUtils'
-import { ref } from 'vue'
+import { defineSearchTypeOptions, getDefaultSearchInfo, SEARCH_TYPE_INPUT, SEARCH_TYPE_SELECT, SEARCH_TYPE_TREE } from './formSearchUtils'
+import { ref, computed } from 'vue'
 import { deepCopy } from '@/utils/clone'
 
-defineProps({
+const props = defineProps({
+  modelValue: {
+    type: Array,
+    default: () => [getDefaultSearchInfo()]
+  },
   inputWidth: {
     type: String,
     default: '140px'
@@ -150,13 +154,16 @@ defineProps({
   }
 })
 
-const emits = defineEmits(['search', 'searchLabelChange'])
+const emits = defineEmits(['update:modelValue', 'search', 'searchLabelChange'])
 
-const searchInfo = ref({
-  searchLabel: '',
-  searchType: SEARCH_OPTION_FUZZY,
-  searchInputName: ''
+const searchInfoList = computed({
+  get: () => props.modelValue,
+  set: (val) => {
+    emits('update:modelValue', val)
+  }
 })
+
+const searchInfo = computed(() => searchInfoList.value[0])
 
 const searchValueOptionSelect = ref([])
 
