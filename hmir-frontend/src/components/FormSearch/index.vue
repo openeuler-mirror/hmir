@@ -201,10 +201,12 @@ function searchLabelChange(value) {
 function openAdvancedSearcch() {
   DialogRef.value.openDialog({
     title: '高级查询',
-    width: 500,
+    width: 800,
     component: markRaw(AdvancedQueryDialog),
     componentData: {
-      searchInfoList: searchInfoList.value
+      searchInfoList: searchInfoList.value,
+      searchTypeDataOptions: searchTypeDataOptions.value,
+      searchLabelOptions: props.searchLabelOptions
     }
   })
 }
