@@ -2,7 +2,7 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-11-05 10:02:31
  * @LastEditors: Z&N
- * @LastEditTime: 2024-11-06 13:50:14
+ * @LastEditTime: 2024-11-06 14:40:55
  * @FilePath: /hmir-frontend/src/components/FormSearch/index.vue
  * @Description:
 -->
@@ -19,13 +19,15 @@
         >
           <div class="tagDiv">
             <ComFlexSpace>
-              <el-tag
+              <AdvanceSearchTag
                 v-for="(item, index) in searchInfoList"
                 :key="index"
-                closable
-              >
-                {{ item }}
-              </el-tag>
+                v-model="searchInfoList[index]"
+                :search-label-options="searchLabelOptions"
+                :search-type-options="searchTypeOptions"
+                :search-value-options="searchValueOptions"
+                :tag-key="index"
+              />
             </ComFlexSpace>
           </div>
         </el-form-item>
@@ -67,6 +69,7 @@ import ComFlexSpace from '@/components/ComFlexSpace/index.vue'
 import Dialog from '@/components/Dialog/defauleDialog.vue'
 import AdvancedQueryDialog from './subview/advancedQueryDialog.vue'
 import SearchInfoForm from './subview/searchInfoForm.vue'
+import AdvanceSearchTag from './components/advanceSearchTag.vue'
 import { defineSearchTypeOptions, getDefaultSearchInfo, SEARCH_TYPE_INPUT } from './formSearchUtils'
 import { ref, computed, markRaw, nextTick, onMounted } from 'vue'
 import { deepCopy } from '@/utils/clone'
@@ -97,11 +100,9 @@ const props = defineProps({
     }
   },
   searchValueOptions: {
-    type: Object,
+    type:  [Object, Array],
     default() {
-      return {
-        default: {}
-      }
+      return []
     }
   },
   treeNodeKey: {

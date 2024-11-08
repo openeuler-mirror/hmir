@@ -2,11 +2,14 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-11-05 13:25:56
  * @LastEditors: Z&N
- * @LastEditTime: 2024-11-06 14:25:32
+ * @LastEditTime: 2024-11-06 14:49:50
  * @FilePath: /hmir-frontend/src/components/FormSearch/formSearchUtils.ts
  * @Description:
  */
 import { deepCopy } from '@/utils/clone'
+import { i18n } from '@/lang/index'
+
+const { t } = i18n.global
 
 /**
  * @description: 模糊匹配
@@ -102,5 +105,5 @@ export function getDefaultSearchInfo(): defaultSearchInfoFace {
  * @return {string}
  */
 export function getOptionLabel(value: string | number, options: any): string {
-  return options.find(item => item.value === value)?.label ?? value
+  return t(options.find((item: { value: string | number }) => item.value === value)?.label ?? value)
 }
