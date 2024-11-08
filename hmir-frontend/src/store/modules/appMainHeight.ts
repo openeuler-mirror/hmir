@@ -1,28 +1,27 @@
 /*
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-10-29 16:17:53
- * @LastEditors: Z&N dev17101@linx-info.com
- * @LastEditTime: 2024-10-29 16:21:08
+ * @LastEditors: Z&N
+ * @LastEditTime: 2024-11-05 11:26:43
  * @FilePath: /hmir-frontend/src/store/modules/appMainHeight.ts
  * @Description: 
  */
 import { defineStore } from 'pinia'
 import { store } from '@/store'
-import {i18n} from '@/lang'
-import Cache from '@/utils/cache/index'
+
 export const useHeightStore = defineStore('height', {
   state: () => {
     return {
-        appMainHeight: 650
+      appMainHeight: 650
     }
   },
   actions: {
-    UPDATE_HEIGHT(height: number) { //语言切换
+    UPDATE_HEIGHT(height: number) { //更新高度
       this.appMainHeight = height
     }
   }
 })
 
-export function useHeightStoreHook() {
+export default function useHeightStoreHook() {
   return useHeightStore(store)
 }

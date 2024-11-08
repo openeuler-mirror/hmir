@@ -56,11 +56,11 @@ import ClusterTableTitleRight from '@/components/ClusterTableTitleRight/index.vu
 import PerformanceDetails from '../components/PerformanceDetails.vue'
 import router from '@/router'
 import { onMounted, ref } from 'vue'
-import { hostsProcStore } from '@/store/modules/cluster/host'
+import { hostsHostStore } from '@/store/modules/cluster/host'
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 // 引入store仓库
-const store = hostsProcStore()
+const store = hostsHostStore()
 
 const breadcrumbTitle = ref()
 

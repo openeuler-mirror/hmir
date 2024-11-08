@@ -1,14 +1,14 @@
 /*
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-10-23 09:38:36
- * @LastEditors: Z&N dev17101@linx-info.com
- * @LastEditTime: 2024-10-29 14:41:14
+ * @LastEditors: Z&N
+ * @LastEditTime: 2024-11-01 17:29:26
  * @FilePath: /hmir-frontend/src/store/modules/app.ts
  * @Description: 
  */
 import { defineStore } from 'pinia'
 import { store } from '@/store'
-import {i18n} from '@/lang'
+import { i18n } from '@/lang'
 import Cache from '@/utils/cache/index'
 export const useAppStore = defineStore('app', {
   state: () => {
@@ -25,6 +25,6 @@ export const useAppStore = defineStore('app', {
   }
 })
 
-export function useAppStoreHook() {
+export default function useAppStoreHook() {
   return useAppStore(store)
 }

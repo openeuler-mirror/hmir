@@ -1,8 +1,8 @@
 <!--
  * @Author: zhang_tianran
  * @Date: 2023-06-30 10:05:05
- * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-30 10:17:55
+ * @LastEditors: Z&N
+ * @LastEditTime: 2024-11-05 10:14:43
  * @Description:
 -->
 <template>
@@ -17,10 +17,10 @@
 import PhysicalDisks from '@/views/cluster/components/PhysicalDisks.vue'
 import breadcrumb from '@/components/ClusterHeader/index.vue'
 import { onMounted, ref } from 'vue'
-import { hostsProcStore } from '@/store/modules/cluster/host'
+import { hostsHostStore } from '@/store/modules/cluster/host'
 
 // 引入store仓库
-const store = hostsProcStore()
+const store = hostsHostStore()
 
 const breadcrumbTitle = ref()
 

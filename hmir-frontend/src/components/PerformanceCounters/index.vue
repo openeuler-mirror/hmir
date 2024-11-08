@@ -46,10 +46,10 @@ import Pagination from '@/components/Pagination/index.vue'
 import router from '@/router'
 import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { hostsProcStore } from '@/store/modules/cluster/host'
+import { hostsHostStore } from '@/store/modules/cluster/host'
 
 // 引入store仓库
-const store = hostsProcStore()
+const store = hostsHostStore()
 
 const selectRow = ref<Object>({})
 

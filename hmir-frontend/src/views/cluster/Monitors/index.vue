@@ -27,10 +27,10 @@ import MonitorsStatus from './components/MonitorsStatus.vue'
 import inQuorum from './components/inQuorum.vue'
 import notInQuorum from './components/notInQuorum.vue'
 import { onMounted, ref } from 'vue'
-import { hostsProcStore } from '@/store/modules/cluster/host'
+import { hostsHostStore } from '@/store/modules/cluster/host'
 
 // 引入store仓库
-const store = hostsProcStore()
+const store = hostsHostStore()
 
 const breadcrumbTitle = ref()
 

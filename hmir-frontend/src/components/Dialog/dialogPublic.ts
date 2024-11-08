@@ -1,8 +1,8 @@
 /*
  * @Author: xhliu
  * @Date: 2024-08-01 11:06:06
- * @LastEditors: Z&N dev17101@linx-info.com
- * @LastEditTime: 2024-10-25 17:28:10
+ * @LastEditors: Z&N
+ * @LastEditTime: 2024-11-01 17:34:47
  * @Description:
  * Copyright (C) 2016-2024 - Beijing Linx Software Corp.
  */
@@ -33,5 +33,5 @@ const DefaultDialogInfo: DialogInfoInstance = {
 }
 
 export function getDefaultDialogInfo(): DialogInfoInstance {
-  return deepCopy(DefaultDialogInfo)  as DialogInfoInstance
+  return deepCopy(DefaultDialogInfo) as DialogInfoInstance
 }

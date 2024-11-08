@@ -98,9 +98,9 @@ import breadcrumb from '@/components/ClusterHeader/index.vue'
 import advancedMode from './advancedMode.vue'
 import router from '@/router'
 import { ref, onMounted, watch } from 'vue'
-import { hostsProcStore } from '@/store/modules/cluster/host'
+import { hostsHostStore } from '@/store/modules/cluster/host'
 
-const store = hostsProcStore()
+const store = hostsHostStore()
 
 const breadcrumbTitle = ref()
 
