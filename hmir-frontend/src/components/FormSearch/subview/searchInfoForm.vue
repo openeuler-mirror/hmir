@@ -2,102 +2,106 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-11-06 11:38:15
  * @LastEditors: Z&N
- * @LastEditTime: 2024-11-06 13:19:13
+ * @LastEditTime: 2024-11-06 13:49:04
  * @FilePath: /hmir-frontend/src/components/FormSearch/subview/searchInfoForm.vue
  * @Description:
 -->
 <template>
-  <el-form-item :label="$t('queryFields')">
-    <el-select
-      v-model="searchInfo.searchLabel"
-      :placeholder="$t('pleaseSelect')"
-      clearable
-      :style="{ width: inputWidth }"
-      @change="searchLabelChange"
-    >
-      <el-option
-        v-for="item in searchLabelOptions"
-        :key="item.value"
-        :label="$t(item.label)"
-        :value="item.value"
-      />
-    </el-select>
-  </el-form-item>
+  <ComFlexSpace>
+    <el-form-item :label="$t('queryFields')">
+      <el-select
+        v-model="searchInfo.searchLabel"
+        :placeholder="$t('pleaseSelect')"
+        clearable
+        :style="{ width: parseElementSize(inputWidth) }"
+        @change="searchLabelChange"
+      >
+        <el-option
+          v-for="item in searchLabelOptions"
+          :key="item.value"
+          :label="$t(item.label)"
+          :value="item.value"
+        />
+      </el-select>
+    </el-form-item>
 
-  <el-form-item :label="$t('queryMethod')">
-    <el-select
-      v-model="searchInfo.searchType"
-      :placeholder="$t('pleaseSelect')"
-      :style="{ width: inputWidth }"
-    >
-      <el-option
-        v-for="item in searchTypeDataOptions"
-        v-show="item.show"
-        :key="item.value"
-        :label="$t(item.label)"
-        :value="item.value"
-      />
-    </el-select>
-  </el-form-item>
+    <el-form-item :label="$t('queryMethod')">
+      <el-select
+        v-model="searchInfo.searchType"
+        :placeholder="$t('pleaseSelect')"
+        :style="{ width: parseElementSize(inputWidth) }"
+      >
+        <el-option
+          v-for="item in searchTypeOptions"
+          v-show="item.show"
+          :key="item.value"
+          :label="$t(item.label)"
+          :value="item.value"
+        />
+      </el-select>
+    </el-form-item>
 
-  <el-form-item :label="$t('queryContent')">
-    <el-input
-      v-if="searchValueOptionsShowType ===SEARCH_TYPE_INPUT"
-      v-model="searchInfo.searchInputName"
-      style="width: 220px"
-      :placeholder="$t('pleaseInputContent')"
-      :prefix-icon="Search"
-      @keyup.enter.stop="submitSearch"
-    />
-    <el-select
-      v-if="searchValueOptionsShowType ===SEARCH_TYPE_SELECT"
-      v-model="searchInfo.searchInputName"
-      :placeholder="$t('pleaseSelect')"
-      style="width: 220px"
-    >
-      <el-option
-        v-for="item in searchValueOptions"
-        :key="item.value"
-        :label="$t(item.label)"
-        :value="item.value"
-        :disabled="item.disabled"
+    <el-form-item :label="$t('queryContent')">
+      <el-input
+        v-if="searchValueOptionsShowType ===SEARCH_TYPE_INPUT"
+        v-model="searchInfo.searchInputName"
+        :style="{ width: parseElementSize(queryContentWidth) }"
+        :placeholder="$t('pleaseInputContent')"
+        :prefix-icon="Search"
+        @keyup.enter.stop="submitSearch"
       />
-    </el-select>
-    <el-tree-select
-      v-if="searchValueOptionsShowType === SEARCH_TYPE_TREE"
-      v-model="searchInfo.searchInputName"
-      filterable
-      default-expand-all
-      :data="searchValueOptions"
-      style="width: 220px"
-      :placeholder="$t('pleaseSelect')"
-      :node-key="treeNodeKey"
-      :props="{ value: treeNodeKey, label: 'name', children: 'children', disabled: disabledTreeNode }"
-    >
-      <template #default="{ data }">
-        <template v-if="data.name.length < 13">
-          <span> {{ data.name }}</span>
+      <el-select
+        v-if="searchValueOptionsShowType ===SEARCH_TYPE_SELECT"
+        v-model="searchInfo.searchInputName"
+        :placeholder="$t('pleaseSelect')"
+        :style="{ width: parseElementSize(queryContentWidth) }"
+      >
+        <el-option
+          v-for="item in searchValueOptions"
+          :key="item.value"
+          :label="$t(item.label)"
+          :value="item.value"
+          :disabled="item.disabled"
+        />
+      </el-select>
+      <el-tree-select
+        v-if="searchValueOptionsShowType === SEARCH_TYPE_TREE"
+        v-model="searchInfo.searchInputName"
+        filterable
+        default-expand-all
+        :data="searchValueOptions"
+        :style="{ width: parseElementSize(queryContentWidth) }"
+        :placeholder="$t('pleaseSelect')"
+        :node-key="treeNodeKey"
+        :props="{ value: treeNodeKey, label: 'name', children: 'children', disabled: disabledTreeNode }"
+      >
+        <template #default="{ data }">
+          <template v-if="data.name.length < 13">
+            <span> {{ data.name }}</span>
+          </template>
+          <template v-else>
+            <el-tooltip
+              class="item"
+              effect="dark"
+              :content="data.name"
+              :enterable="false"
+              placement="top"
+            >
+              <span> {{ data }}</span>
+            </el-tooltip>
+          </template>
         </template>
-        <template v-else>
-          <el-tooltip
-            class="item"
-            effect="dark"
-            :content="data.name"
-            :enterable="false"
-            placement="top"
-          >
-            <span> {{ data }}</span>
-          </el-tooltip>
-        </template>
-      </template>
-    </el-tree-select>
-  </el-form-item>
+      </el-tree-select>
+    </el-form-item>
+  </ComFlexSpace>
 </template>
 
 <script setup>
+import ComFlexSpace from '@/components/ComFlexSpace/index.vue'
 import { Search } from '@element-plus/icons-vue'
-import { SEARCH_TYPE_INPUT, SEARCH_TYPE_SELECT, SEARCH_TYPE_TREE } from './formSearchUtils'
+import { SEARCH_TYPE_INPUT, SEARCH_TYPE_SELECT, SEARCH_TYPE_TREE } from '../formSearchUtils'
 import { computed } from 'vue'
+import { parseElementSize } from '@/utils/utils'
 
 const props = defineProps({
   modelValue: {
@@ -127,6 +131,14 @@ const props = defineProps({
   searchValueOptions: {
     type: Array,
     default: () => []
+  },
+  inputWidth: {
+    type: [String, Number],
+    default: '140px'
+  },
+  queryContentWidth: {
+    type: [String, Number],
+    default: '220px'
   }
 })
 

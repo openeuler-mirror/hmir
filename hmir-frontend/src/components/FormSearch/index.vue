@@ -1,5 +1,10 @@
 <!--
- * Copyright (C) 2016-2021 - Beijing Linx Software Corp.
+ * @Author: Z&N dev17101@linx-info.com
+ * @Date: 2024-11-05 10:02:31
+ * @LastEditors: Z&N
+ * @LastEditTime: 2024-11-06 13:50:14
+ * @FilePath: /hmir-frontend/src/components/FormSearch/index.vue
+ * @Description:
 -->
 <template>
   <div class="search-box">
@@ -8,45 +13,6 @@
       size="large"
     >
       <ComFlexSpace ref="formComFlexSpaceRef">
-        <el-form-item
-          v-if="!isAdvanceSearch"
-          :label="$t('queryFields')"
-        >
-          <el-select
-            v-model="searchInfo.searchLabel"
-            :placeholder="$t('pleaseSelect')"
-            clearable
-            :style="{ width: inputWidth }"
-            @change="searchLabelChange"
-          >
-            <el-option
-              v-for="item in searchLabelOptions"
-              :key="item.value"
-              :label="$t(item.label)"
-              :value="item.value"
-            />
-          </el-select>
-        </el-form-item>
-
-        <el-form-item
-          v-if="!isAdvanceSearch"
-          :label="$t('queryMethod')"
-        >
-          <el-select
-            v-model="searchInfo.searchType"
-            :placeholder="$t('pleaseSelect')"
-            :style="{ width: inputWidth }"
-          >
-            <el-option
-              v-for="item in searchTypeDataOptions"
-              v-show="item.show"
-              :key="item.value"
-              :label="$t(item.label)"
-              :value="item.value"
-            />
-          </el-select>
-        </el-form-item>
-
         <el-form-item
           v-if="isAdvanceSearch"
           :label="$t('高级查询')"
@@ -64,79 +30,32 @@
           </div>
         </el-form-item>
 
-        <div>
-          <el-form-item
-            v-if="!isAdvanceSearch"
-            :label="$t('queryContent')"
-          >
-            <el-input
-              v-if="searchValueOptionsShowType ===SEARCH_TYPE_INPUT"
-              v-model="searchInfo.searchInputName"
-              style="width: 220px"
-              :placeholder="$t('pleaseInputContent')"
-              :prefix-icon="Search"
-              @keyup.enter.stop="searchList"
-            />
-            <el-select
-              v-if="searchValueOptionsShowType ===SEARCH_TYPE_SELECT"
-              v-model="searchInfo.searchInputName"
-              :placeholder="$t('pleaseSelect')"
-              style="width: 220px"
-            >
-              <el-option
-                v-for="item in searchValueOptionSelect"
-                :key="item.value"
-                :label="$t(item.label)"
-                :value="item.value"
-                :disabled="item.disabled"
-              />
-            </el-select>
-            <el-tree-select
-              v-if="searchValueOptionsShowType === SEARCH_TYPE_TREE"
-              v-model="searchInfo.searchInputName"
-              filterable
-              default-expand-all
-              :data="searchValueOptionSelect"
-              style="width: 220px"
-              :placeholder="$t('pleaseSelect')"
-              :node-key="treeNodeKey"
-              :props="{ value: treeNodeKey, label: 'name', children: 'children', disabled: disabledTreeNode }"
-            >
-              <template #default="{ data }">
-                <template v-if="data.name.length < 13">
-                  <span> {{ data.name }}</span>
-                </template>
-                <template v-else>
-                  <el-tooltip
-                    class="item"
-                    effect="dark"
-                    :content="data.name"
-                    :enterable="false"
-                    placement="top"
-                  >
-                    <span> {{ data }}</span>
-                  </el-tooltip>
-                </template>
-              </template>
-            </el-tree-select>
-          </el-form-item>
+        <SearchInfoForm
+          v-else
+          v-model="searchInfo"
+          :search-value-options="searchValueOptions"
+          :search-value-options-show-type="searchValueOptionsShowType"
+          :search-type-options="searchTypeOptions"
+          :tree-node-key="treeNodeKey"
+          :disabled-tree-node="disabledTreeNode"
+          @searchLabelChange="searchLabelChange"
+        />
 
-          <el-form-item style="margin-left: 16px;">
-            <el-button
-              id="form_btn_search"
-              type="primary"
-              @click="searchList"
-            >
-              {{ $t('search') }}
-            </el-button>
-            <el-button
-              type="primary"
-              @click="openAdvancedSearcch"
-            >
-              {{ $t('高级查询') }}
-            </el-button>
-          </el-form-item>
-        </div>
+        <el-form-item>
+          <el-button
+            id="form_btn_search"
+            type="primary"
+            @click="searchList"
+          >
+            {{ $t('search') }}
+          </el-button>
+          <el-button
+            type="primary"
+            @click="openAdvancedSearcch"
+          >
+            {{ $t('高级查询') }}
+          </el-button>
+        </el-form-item>
       </ComFlexSpace>
     </el-form>
     <Dialog ref="DialogRef" />
@@ -146,9 +65,9 @@
 <script setup>
 import ComFlexSpace from '@/components/ComFlexSpace/index.vue'
 import Dialog from '@/components/Dialog/defauleDialog.vue'
-import AdvancedQueryDialog from './advancedQueryDialog.vue'
-import { Search } from '@element-plus/icons-vue'
-import { defineSearchTypeOptions, getDefaultSearchInfo, SEARCH_TYPE_INPUT, SEARCH_TYPE_SELECT, SEARCH_TYPE_TREE } from './formSearchUtils'
+import AdvancedQueryDialog from './subview/advancedQueryDialog.vue'
+import SearchInfoForm from './subview/searchInfoForm.vue'
+import { defineSearchTypeOptions, getDefaultSearchInfo, SEARCH_TYPE_INPUT } from './formSearchUtils'
 import { ref, computed, markRaw, nextTick, onMounted } from 'vue'
 import { deepCopy } from '@/utils/clone'
 
@@ -162,7 +81,7 @@ const props = defineProps({
     default: () => [getDefaultSearchInfo()]
   },
   inputWidth: {
-    type: String,
+    type: [String, Number],
     default: '140px'
   },
   searchLabelOptions: {
@@ -211,12 +130,12 @@ const isAdvanceSearch = computed(() => searchInfoList.value.length > 1)
 /**
  * @description: 查询方式下拉默认数据，深拷贝避免直接修改props的值
  */
-const searchTypeDataOptions = ref(deepCopy(props.searchTypeOptions))
+const searchTypeOptions = ref(deepCopy(props.searchTypeOptions))
 
 /**
  * @description: 查询内容下拉默认数据
  */
-const searchValueOptionSelect = ref([])
+const searchValueOptions = ref([])
 
 /**
  * @description: 查询内容表单
@@ -238,7 +157,7 @@ function openAdvancedSearcch() {
     component: markRaw(AdvancedQueryDialog),
     componentData: {
       searchInfoList: searchInfoList.value,
-      searchTypeDataOptions: searchTypeDataOptions.value,
+      searchTypeOptions: searchTypeOptions.value,
       searchLabelOptions: props.searchLabelOptions
     },
     componentEvent: {
