@@ -2,7 +2,7 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-11-05 13:36:02
  * @LastEditors: Z&N
- * @LastEditTime: 2024-11-05 13:43:54
+ * @LastEditTime: 2024-11-06 11:29:40
  * @FilePath: /hmir-frontend/src/components/ComFlexSpace/index.vue
  * @Description:
 -->
@@ -40,7 +40,7 @@ function updateChildrenDom(isNotSetFlex = true) {
   if (!elSpaceRefChildren) return
   // 增加子节点为display:none时的判断
   for (let i = 0; i < elSpaceRefChildren.length; i++) {
-    if (elSpaceRefChildren[i].childElementCount === 0 || elSpaceRefChildren[i].children[0].style.display === 'none') {
+    if (elSpaceRefChildren[i].childElementCount === 0 || elSpaceRefChildren[i].children[0]?.style.display === 'none') {
       elSpaceRefChildren[i].style.display = 'none'
     } else if (!isNotSetFlex) {
       elSpaceRefChildren[i].style.display = 'flex'
