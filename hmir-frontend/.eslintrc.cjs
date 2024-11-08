@@ -8,7 +8,9 @@ module.exports = {
   },
   extends: [
     'plugin:vue/vue3-essential',
-    'standard-with-typescript'
+    'standard-with-typescript',
+    'plugin:vue/recommended',
+    'eslint:recommended'
   ],
   overrides: [
   ],
@@ -25,6 +27,7 @@ module.exports = {
     '@typescript-eslint/no-empty-function': 'off', // 关闭空方法检查
     '@typescript-eslint/no-explicit-any': 'off', // 关闭any类型的警告
     'vue/no-v-model-argument': 'off',
+    'vue/no-multiple-template-root': 'off',
     'no-alert': 0, // 禁止使用alert confirm prompt
     'no-array-constructor': 2, // 禁止使用数组构造器
     'no-bitwise': 0, // 禁止使用按位运算符

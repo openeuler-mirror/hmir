@@ -2,13 +2,16 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-10-23 09:38:36
  * @LastEditors: Z&N dev17101@linx-info.com
- * @LastEditTime: 2024-10-29 16:31:48
+ * @LastEditTime: 2024-10-31 10:27:21
  * @FilePath: /hmir-frontend/src/App.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
-  <windowHeader></windowHeader>
-  <div class="windowBody" ref="appMainRef">
+  <windowHeader />
+  <div
+    ref="appMainRef"
+    class="windowBody"
+  >
     <el-config-provider :locale="useAppStoreHook().locale === 'zh_CN' ? zhLocale : enLocale">
       <router-view />
     </el-config-provider>
