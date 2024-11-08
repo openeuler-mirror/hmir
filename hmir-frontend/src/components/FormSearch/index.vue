@@ -129,7 +129,6 @@ const props = defineProps({
       return []
     }
   },
-  // 不建议直接修改父组件传过来的值
   searchTypeOptions: {
     type: Array,
     default() {
@@ -163,12 +162,21 @@ const searchInfoList = computed({
   }
 })
 
-const searchInfo = computed(() => searchInfoList.value[0])
+const searchInfo = computed(() => searchInfoList.value[0] ?? {})
 
+/**
+ * @description: 查询方式下拉默认数据，深拷贝避免直接修改props的值
+ */
+const searchTypeDataOptions = ref(deepCopy(props.searchTypeOptions))
+
+/**
+ * @description: 查询内容下拉默认数据
+ */
 const searchValueOptionSelect = ref([])
 
-const searchTypeDataOptions = ref([])
-
+/**
+ * @description: 查询内容表单
+ */
 const searchValueOptionsShowType = ref(SEARCH_TYPE_INPUT)
 
 function searchList() {

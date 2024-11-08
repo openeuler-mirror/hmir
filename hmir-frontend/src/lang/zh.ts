@@ -108,5 +108,7 @@ export default {
     accurateMatching: '精确匹配',
     unequalMatching: '不等匹配',
     greaterThanEqual: '大于等于',
-    lessThanEqual: '小于等于'
+    lessThanEqual: '小于等于',
+    search: '搜索',
+    pleaseInputContent: '请输入内容'
 }
