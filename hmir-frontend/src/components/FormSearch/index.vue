@@ -100,19 +100,30 @@
             >
               {{ $t('search') }}
             </el-button>
+            <el-button
+              type="primary"
+              @click="openAdvancedSearcch"
+            >
+              {{ $t('高级查询') }}
+            </el-button>
           </el-form-item>
         </div>
       </ComFlexSpace>
     </el-form>
+    <Dialog ref="DialogRef" />
   </div>
 </template>
 
 <script setup>
 import ComFlexSpace from '@/components/ComFlexSpace/index.vue'
+import Dialog from '@/components/Dialog/defauleDialog.vue'
+import AdvancedQueryDialog from './advancedQueryDialog.vue'
 import { Search } from '@element-plus/icons-vue'
 import { defineSearchTypeOptions, getDefaultSearchInfo, SEARCH_TYPE_INPUT, SEARCH_TYPE_SELECT, SEARCH_TYPE_TREE } from './formSearchUtils'
-import { ref, computed } from 'vue'
+import { ref, computed, markRaw } from 'vue'
 import { deepCopy } from '@/utils/clone'
+
+const DialogRef = ref()
 
 const props = defineProps({
   modelValue: {
@@ -180,11 +191,22 @@ const searchValueOptionSelect = ref([])
 const searchValueOptionsShowType = ref(SEARCH_TYPE_INPUT)
 
 function searchList() {
-  emits('search', searchInfo.value)
+  emits('search', searchInfoList.value)
 }
 
 function searchLabelChange(value) {
   emits('searchLabelChange', value)
+}
+
+function openAdvancedSearcch() {
+  DialogRef.value.openDialog({
+    title: '高级查询',
+    width: 500,
+    component: markRaw(AdvancedQueryDialog),
+    componentData: {
+      searchInfoList: searchInfoList.value
+    }
+  })
 }
 </script>
 
