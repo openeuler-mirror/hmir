@@ -2,7 +2,7 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-11-06 11:38:15
  * @LastEditors: Z&N
- * @LastEditTime: 2024-11-06 13:49:04
+ * @LastEditTime: 2024-11-06 15:29:51
  * @FilePath: /hmir-frontend/src/components/FormSearch/subview/searchInfoForm.vue
  * @Description:
 -->
@@ -129,7 +129,7 @@ const props = defineProps({
     default: () => false
   },
   searchValueOptions: {
-    type: Array,
+    type:  [Object, Array],
     default: () => []
   },
   inputWidth: {

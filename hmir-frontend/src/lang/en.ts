@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-02-02 15:29:41
  * @LastEditors: Z&N
- * @LastEditTime: 2024-11-05 15:43:19
+ * @LastEditTime: 2024-11-06 15:21:15
  * @Description: 
  */
 
@@ -111,5 +111,6 @@ export default {
     greaterThanEqual: 'Greater than or equal to',
     lessThanEqual: 'Less than or equal to',
     search: 'Search',
-    pleaseInputContent: 'Please Input Content'
+    pleaseInputContent: 'Please Input Content',
+    advancedQuery: 'Advanced Query'
 }

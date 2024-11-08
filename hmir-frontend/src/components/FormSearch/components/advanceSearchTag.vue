@@ -2,21 +2,38 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-11-06 14:00:39
  * @LastEditors: Z&N
- * @LastEditTime: 2024-11-06 14:39:10
+ * @LastEditTime: 2024-11-06 15:32:30
  * @FilePath: /hmir-frontend/src/components/FormSearch/components/advanceSearchTag.vue
  * @Description:
 -->
 <template>
-  <el-tag
-    closable
-    @close="closeTag"
+  <el-popover
+    placement="top"
+    trigger="click"
+    width="270"
   >
-    <span>{{ getOptionLabel(searchInfo.searchLabel,searchLabelOptions) }}({{ getOptionLabel(searchInfo.searchType,searchTypeOptions) }}): {{ getOptionLabel(searchInfo.searchInputName, searchValueOptions) }}</span>
-  </el-tag>
+    <template #reference>
+      <el-tag
+        closable
+        @close="closeTag"
+      >
+        <span>{{ getOptionLabel(searchInfo.searchLabel,searchLabelOptions) }}({{ getOptionLabel(searchInfo.searchType,searchTypeOptions) }}): {{ getOptionLabel(searchInfo.searchInputName, searchValueOptions) }}</span>
+      </el-tag>
+    </template>
+    <SearchInfoForm
+      v-model="searchInfo"
+      :search-value-options="searchValueOptions"
+      :search-value-options-show-type="searchValueOptionsShowType"
+      :search-type-options="searchTypeOptions"
+      :tree-node-key="treeNodeKey"
+      :disabled-tree-node="disabledTreeNode"
+    />
+  </el-popover>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import SearchInfoForm from '../subview/searchInfoForm.vue'
+import { ref, computed } from 'vue'
 import { defaultSearchInfoFace, getOptionLabel } from '../formSearchUtils'
 
 const props = defineProps({
@@ -41,8 +58,18 @@ const props = defineProps({
   tagKey: {
     type: [String, Number],
     default: null
+  },
+  treeNodeKey: {
+    type: String,
+    default: 'distinctId'
+  },
+  disabledTreeNode: {
+    type: Function,
+    default: () => false
   }
 })
+
+const searchValueOptionsShowType = ref()
 
 const emits = defineEmits(['update:modelValue', 'closeTag'])
 

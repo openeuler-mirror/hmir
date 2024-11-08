@@ -2,7 +2,7 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-11-05 10:02:31
  * @LastEditors: Z&N
- * @LastEditTime: 2024-11-06 15:16:05
+ * @LastEditTime: 2024-11-06 15:28:44
  * @FilePath: /hmir-frontend/src/components/FormSearch/index.vue
  * @Description:
 -->
@@ -15,7 +15,7 @@
       <ComFlexSpace ref="formComFlexSpaceRef">
         <el-form-item
           v-if="isAdvanceSearch"
-          :label="$t('高级查询')"
+          :label="$t('advancedQuery')"
         >
           <div class="tagDiv">
             <ComFlexSpace>
@@ -27,6 +27,8 @@
                 :search-type-options="searchTypeOptions"
                 :search-value-options="searchValueOptions"
                 :tag-key="index"
+                :tree-node-key="treeNodeKey"
+                :disabled-tree-node="disabledTreeNode"
                 @closeTag="closeTag"
               />
             </ComFlexSpace>
@@ -56,7 +58,7 @@
             type="primary"
             @click="openAdvancedSearcch"
           >
-            {{ $t('高级查询') }}
+            {{ $t('advancedQuery') }}
           </el-button>
         </el-form-item>
       </ComFlexSpace>

@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-02-02 15:29:41
  * @LastEditors: Z&N
- * @LastEditTime: 2024-11-05 14:26:59
+ * @LastEditTime: 2024-11-06 15:21:21
  * @Description: 
  */
 
@@ -110,5 +110,6 @@ export default {
     greaterThanEqual: '大于等于',
     lessThanEqual: '小于等于',
     search: '搜索',
-    pleaseInputContent: '请输入内容'
+    pleaseInputContent: '请输入内容',
+    advancedQuery: '高级查询'
 }
