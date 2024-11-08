@@ -1,8 +1,8 @@
 /*
  * @Author: zhang_tianran
  * @Date: 2023-02-02 15:29:41
- * @LastEditors: 72 5134364+dwdaw1323@user.noreply.gitee.com
- * @LastEditTime: 2024-10-29 09:16:06
+ * @LastEditors: Z&N
+ * @LastEditTime: 2024-11-05 14:26:58
  * @Description: 
  */
 
@@ -76,7 +76,7 @@ export default {
     pgScrub: 'PG scrub',
     PerformanceCounters: 'Performance Counters',
     Name: 'Name',
-    description:'Description',
+    description: 'Description',
     value: 'Value',
     hostsList: 'Hosts List',
     overallPerformance: 'Overall Performance',
@@ -100,5 +100,14 @@ export default {
     Configuration: 'Configuration',
     close: 'Close',
     cancel: 'Cancel',
-    confirm: 'Confirm'
+    confirm: 'Confirm',
+    queryFields: 'Query Fields',
+    queryContent: 'Query Content',
+    queryMethod: 'Query Method',
+    pleaseSelect: 'Please Select',
+    fuzzyMatching: 'Fuzzy Matching',
+    accurateMatching: 'Accurate Matching',
+    unequalMatching: 'Unequal Matching',
+    greaterThanEqual: 'Greater than or equal to',
+    lessThanEqual: 'Less than or equal to'
 }

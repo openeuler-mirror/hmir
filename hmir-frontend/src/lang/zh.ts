@@ -1,8 +1,8 @@
 /*
  * @Author: zhang_tianran
  * @Date: 2023-02-02 15:29:41
- * @LastEditors: 72 5134364+dwdaw1323@user.noreply.gitee.com
- * @LastEditTime: 2024-10-29 09:16:08
+ * @LastEditors: Z&N
+ * @LastEditTime: 2024-11-05 14:26:59
  * @Description: 
  */
 
@@ -99,5 +99,14 @@ export default {
     Configuration: '配置',
     close: '关闭',
     cancel: '取消',
-    confirm: '确定'
+    confirm: '确定',
+    queryFields: '查询字段',
+    queryContent: '查询内容',
+    queryMethod: '查询方式',
+    pleaseSelect: '请选择',
+    fuzzyMatching: '模糊匹配',
+    accurateMatching: '精确匹配',
+    unequalMatching: '不等匹配',
+    greaterThanEqual: '大于等于',
+    lessThanEqual: '小于等于'
 }
