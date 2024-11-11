@@ -1,8 +1,8 @@
 <!--
  * @Author: zhang_tianran
  * @Date: 2023-06-14 09:47:34
- * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-07-27 17:41:39
+ * @LastEditors: Z&N
+ * @LastEditTime: 2024-11-06 15:54:20
  * @Description:
 -->
 <template>
@@ -29,6 +29,7 @@
                 num-show
                 search-input-show
                 :table-column="tableColumn"
+                :search-label-options="searchLabelOptions"
               />
             </template>
             <template #expand="{ row }">
@@ -349,6 +350,49 @@ const tableColumn = ref([
     showColumn: true
   }
 ])
+
+const searchLabelOptions = [
+  {
+    label: 'hostname',
+    value: 'hostname'
+  },
+  {
+    label: 'service',
+    value: 'service'
+  },
+  {
+    label: 'labels',
+    value: 'labels'
+  },
+  {
+    label: 'status',
+    value: 'status'
+  },
+  {
+    label: 'model',
+    value: 'model'
+  },
+  {
+    label: 'cpus',
+    value: 'cpus'
+  },
+  {
+    label: 'cores',
+    value: 'cores'
+  },
+  {
+    label: 'totalMemory',
+    value: 'totalMemory'
+  },
+  {
+    label: 'capacity',
+    value: 'capacity'
+  },
+  {
+    label: 'hdds',
+    value: 'hdds'
+  }
+]
 
 onMounted(() => {
   breadcrumbTitle.value = store.get_defaultTitle(['hosts'])
