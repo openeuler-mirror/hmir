@@ -1,9 +1,8 @@
-<!-- eslint-disable no-underscore-dangle -->
 <!--
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-11-13 14:34:32
  * @LastEditors: Z&N
- * @LastEditTime: 2024-11-13 15:50:10
+ * @LastEditTime: 2024-11-13 16:02:19
  * @FilePath: /hmir-frontend/src/views/parsers/index.vue
  * @Description:
 -->
@@ -18,7 +17,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 
 const reference = ref()
 
@@ -40,24 +39,26 @@ function parse(parser, code, parserSettings) {
 const astTree = ref()
 
 onMounted(() => {
-  setTimeout(() => {
-    const parsersContentWindow = reference.value.contentWindow
+  nextTick(() => {
+    reference.value.onload = () => {
+      const parsersContentWindow = reference.value.contentWindow
 
-    console.log(reference.value.contentWindow)
+      console.log(reference.value.contentWindow)
 
-    console.log(parsersContentWindow.$initParsers)
+      console.log(parsersContentWindow.$initParsers)
 
-    parsersInfo.value = parsersContentWindow.$initParsers()
+      parsersInfo.value = parsersContentWindow.$initParsers()
 
-    const babylon7 = parsersInfo.value.parserByID.babylon7
+      const babylon7 = parsersInfo.value.parserByID.babylon7
 
-    parse(babylon7, 'console.log(dwa)', babylon7.getDefaultOptions()).then(
-      ast => {
-        astTree.value = JSON.stringify(ast)
-        console.log(ast)
-      }
-    )
-  }, 1000)
+      parse(babylon7, 'console.log(dwa)', babylon7.getDefaultOptions()).then(
+        ast => {
+          astTree.value = JSON.stringify(ast)
+          console.log(ast)
+        }
+      )
+    }
+  })
 })
 </script>
 
