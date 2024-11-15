@@ -1658,7 +1658,7 @@ oem_info_init_from_list(oem_valstr_list_t *oemlist, size_t count)
 	count += head_entries + tail_entries + 1;
 
 	/*
-	 * Allocate as much memory as needed to accomodata all the entries
+	 * Allocate as much memory as needed to accommodate all the entries
 	 * of the loaded linked list, plus the static head and tail, not including
 	 * their terminating entries, plus the terminating entry for the new
 	 * array.
