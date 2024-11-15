@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 17:24:16
  * @LastEditors: Z&N
- * @LastEditTime: 2024-11-05 16:45:18
+ * @LastEditTime: 2024-11-06 15:41:56
  * @Description:
 -->
 <template>
@@ -108,6 +108,12 @@
     <FormSearch
       v-if="searchInputShow"
       v-model="inputValue"
+      :input-width="inputWidth"
+      :search-label-options="searchLabelOptions"
+      :search-type-options="searchTypeOptions"
+      :search-value-options="searchValueOptions"
+      :tree-node-key="treeNodeKey"
+      :disabled-tree-node="disabledTreeNode"
     />
   </ComFlexSpace>
 </template>
@@ -118,7 +124,8 @@ import ComFlexSpace from '@/components/ComFlexSpace/index.vue'
 import { onMounted, ref } from 'vue'
 import { Refresh, Grid, ArrowDown } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
-import { getDefaultSearchInfo } from '../FormSearch/formSearchUtils'
+import { defineSearchTypeOptions, getDefaultSearchInfo } from '../FormSearch/formSearchUtils'
+import { deepCopy } from '@/utils/clone'
 
 const { t } = useI18n()
 const props = defineProps({
@@ -153,6 +160,36 @@ const props = defineProps({
   searchInputShow: {
     type: Boolean,
     default: false
+  },
+  inputWidth: {
+    type: [String, Number],
+    default: '140px'
+  },
+  searchLabelOptions: {
+    type: Array,
+    default() {
+      return []
+    }
+  },
+  searchTypeOptions: {
+    type: Array,
+    default() {
+      return deepCopy(defineSearchTypeOptions)
+    }
+  },
+  searchValueOptions: {
+    type:  [Object, Array],
+    default() {
+      return []
+    }
+  },
+  treeNodeKey: {
+    type: String,
+    default: 'distinctId'
+  },
+  disabledTreeNode: {
+    type: Function,
+    default: () => false
   }
 })
 

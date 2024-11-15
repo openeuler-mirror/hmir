@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-05-17 18:16:11
  * @LastEditors: Z&N
- * @LastEditTime: 2024-11-06 13:27:04
+ * @LastEditTime: 2024-11-06 16:07:12
  * @Description:
 -->
 
@@ -43,7 +43,7 @@
           </el-button>
         </el-col>
         <el-col :span="1">
-          <el-checkbox />
+          <el-checkbox v-model="item.check" />
         </el-col>
         <el-col :span="5">
           <el-select
@@ -160,7 +160,12 @@ const props = defineProps({
   }
 })
 
-const searchInfoShowList = ref(deepCopy(props.searchInfoList))
+const searchInfoShowList = ref(deepCopy(props.searchInfoList).map(item => {
+  return {
+    ...item,
+    check: true
+  }
+}))
 
 function saveSearchList() {
   emits('saveSearchList', searchInfoShowList.value)
@@ -168,12 +173,17 @@ function saveSearchList() {
 }
 
 function addSearchInfo(index) {
-  searchInfoShowList.value.splice(index + 1, 0, getDefaultSearchInfo())
+  searchInfoShowList.value.splice(index + 1, 0, {
+    ...getDefaultSearchInfo(),
+    check: true
+  })
 }
 
 function removeSearchInfo(index) {
   searchInfoShowList.value.splice(index, 1)
 }
+
+const searchValueOptionsShowType = ref(SEARCH_TYPE_INPUT)
 
 onMounted(() => {
 

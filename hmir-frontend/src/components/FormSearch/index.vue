@@ -2,7 +2,7 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-11-05 10:02:31
  * @LastEditors: Z&N
- * @LastEditTime: 2024-11-06 15:28:44
+ * @LastEditTime: 2024-11-06 15:55:18
  * @FilePath: /hmir-frontend/src/components/FormSearch/index.vue
  * @Description:
 -->
@@ -26,6 +26,7 @@
                 :search-label-options="searchLabelOptions"
                 :search-type-options="searchTypeOptions"
                 :search-value-options="searchValueOptions"
+                :search-value-options-show-type="searchValueOptionsShowType"
                 :tag-key="index"
                 :tree-node-key="treeNodeKey"
                 :disabled-tree-node="disabledTreeNode"
@@ -38,6 +39,7 @@
         <SearchInfoForm
           v-else
           v-model="searchInfo"
+          :search-label-options="searchLabelOptions"
           :search-value-options="searchValueOptions"
           :search-value-options-show-type="searchValueOptionsShowType"
           :search-type-options="searchTypeOptions"
