@@ -2,7 +2,7 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-12-04 09:23:26
  * @LastEditors: Z&N
- * @LastEditTime: 2024-12-04 15:17:56
+ * @LastEditTime: 2024-12-04 16:00:00
  * @FilePath: /hmir-frontend/src/components/BecommonTable/subview/BecommonTableHead.vue
  * @Description:
 -->
@@ -75,6 +75,6 @@ onBeforeUnmount(() => {
   float: right;
   display: flex;
   justify-content: flex-end;
-  margin-right: -23px;
+  margin-right: -12px;
 }
 </style>
