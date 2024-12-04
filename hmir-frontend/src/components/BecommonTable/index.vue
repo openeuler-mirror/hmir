@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 14:03:21
  * @LastEditors: Z&N
- * @LastEditTime: 2024-12-04 11:26:19
+ * @LastEditTime: 2024-12-04 14:33:30
  * @Description:
 -->
 <template>
@@ -12,16 +12,20 @@
         <slot name="tableTitleLeft" />
       </template>
       <template #tableTitleRight>
-        <slot name="tableTitleRight" />
+        <slot name="tableTitleRight">
+          <template v-if="tableRightShow">
+            <ClusterTableTitleRight v-bind="attrs" />
+          </template>
+        </slot>
       </template>
     </BecommonTableHead>
     <el-table
-      ref="clusterBodyTable"
+      ref="tableBodyRef"
       :data="tableData"
       :row-key="rowKey"
-      border
       style="width: 100%"
       :highlight-current-row="highlightCurrentRow"
+      border
       @row-click="rowClick"
       @expand-change="expandChange"
     >
@@ -100,57 +104,16 @@
 <script lang="ts" setup>
 import BecommonTableHead from './subview/BecommonTableHead.vue'
 import Pagination from '@/components/Pagination/index.vue'
-import { ref, computed } from 'vue'
+import ClusterTableTitleRight from '@/components/ClusterTableTitleRight/index.vue'
+import defaultTableProps from './becommonTableProps'
+import { ref, computed, useAttrs } from 'vue'
 import type { ElTable } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 
+const attrs = useAttrs()
+
 const { t } = useI18n()
-const props = defineProps({
-  tableData: {
-    type: Array<Object>,
-    default() {
-      return []
-    }
-  },
-  tableColumn: {
-    type: Array<any>,
-    default() {
-      return []
-    }
-  },
-  highlightCurrentRow: {
-    type: Boolean,
-    default: false
-  },
-  expandShow: {
-    type: Boolean,
-    default: false
-  },
-  paginationShow: {
-    type: Boolean,
-    default: false
-  },
-  total: {
-    type: Number,
-    default: 0
-  },
-  paginationDisabled: {
-    type: Boolean,
-    default: false
-  },
-  background: {
-    type: Boolean,
-    default: false
-  },
-  small: {
-    type: Boolean,
-    default: false
-  },
-  hideOnSinglePage: {
-    type: Boolean,
-    default: true
-  }
-})
+const props = defineProps(defaultTableProps)
 
 const filteredTableColumn = computed(() => {
   return props.tableColumn.filter(item => item.showColumn)
@@ -167,7 +130,7 @@ const emit = defineEmits({
   handleCurrentChange: (_val: number) => true
 })
 
-const clusterBodyTable = ref<InstanceType<typeof ElTable>>()
+const tableBodyRef = ref<InstanceType<typeof ElTable>>()
 
 const rowClick = (row: Object) => {
   emit('selectRowData', row)
@@ -178,7 +141,7 @@ const rowKey = (row: any) => {
 }
 
 const expandChange = (row: any, expandedRows: any) => {
-  let width = Number(clusterBodyTable.value?.bodyWidth.replace('px', ''))
+  let width = Number(tableBodyRef.value?.bodyWidth.replace('px', ''))
 
   if (width) width -= 16
 
@@ -186,7 +149,7 @@ const expandChange = (row: any, expandedRows: any) => {
   if (expandedRows.length !== 1) {
     expandedRows.forEach((itme: { id: any }) => {
       if (itme.id !== row.id) {
-        clusterBodyTable.value!.toggleRowExpansion(itme, false)
+        tableBodyRef.value!.toggleRowExpansion(itme, false)
       }
     })
   }
@@ -217,6 +180,4 @@ const handleCurrentChange = (val: number) => {
 
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
