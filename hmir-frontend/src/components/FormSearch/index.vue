@@ -2,7 +2,7 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-11-05 10:02:31
  * @LastEditors: Z&N
- * @LastEditTime: 2024-12-04 15:12:04
+ * @LastEditTime: 2024-12-04 17:49:35
  * @FilePath: /hmir-frontend/src/components/FormSearch/index.vue
  * @Description:
 -->
@@ -12,11 +12,11 @@
       inline
       size="default"
     >
-      <ComFlexSpace ref="formComFlexSpaceRef">
-        <el-form-item
-          v-if="isAdvanceSearch"
-          :label="$t('advancedQuery')"
-        >
+      <ComFlexSpace
+        v-if="isAdvanceSearch"
+        ref="formComFlexSpaceRef"
+      >
+        <el-form-item :label="$t('advancedQuery')">
           <div class="tagDiv">
             <ComFlexSpace>
               <AdvanceSearchTag
@@ -36,18 +36,6 @@
           </div>
         </el-form-item>
 
-        <SearchInfoForm
-          v-else
-          v-model="searchInfo"
-          :search-label-options="searchLabelOptions"
-          :search-value-options="searchValueOptions"
-          :search-value-options-show-type="searchValueOptionsShowType"
-          :search-type-options="searchTypeOptions"
-          :tree-node-key="treeNodeKey"
-          :disabled-tree-node="disabledTreeNode"
-          @searchLabelChange="searchLabelChange"
-        />
-
         <el-form-item>
           <el-button
             id="form_btn_search"
@@ -56,6 +44,9 @@
           >
             {{ $t('search') }}
           </el-button>
+        </el-form-item>
+
+        <el-form-item>
           <el-button
             type="primary"
             @click="openAdvancedSearcch"
@@ -64,7 +55,39 @@
           </el-button>
         </el-form-item>
       </ComFlexSpace>
+
+      <SearchInfoForm
+        v-else
+        v-model="searchInfo"
+        :search-label-options="searchLabelOptions"
+        :search-value-options="searchValueOptions"
+        :search-value-options-show-type="searchValueOptionsShowType"
+        :search-type-options="searchTypeOptions"
+        :tree-node-key="treeNodeKey"
+        :disabled-tree-node="disabledTreeNode"
+        @searchLabelChange="searchLabelChange"
+      >
+        <el-form-item>
+          <el-button
+            id="form_btn_search"
+            type="primary"
+            @click="searchList"
+          >
+            {{ $t('search') }}
+          </el-button>
+        </el-form-item>
+
+        <el-form-item>
+          <el-button
+            type="primary"
+            @click="openAdvancedSearcch"
+          >
+            {{ $t('advancedQuery') }}
+          </el-button>
+        </el-form-item>
+      </SearchInfoForm>
     </el-form>
+
     <Dialog ref="DialogRef" />
   </div>
 </template>
@@ -73,7 +96,7 @@
 import ComFlexSpace from '@/components/ComFlexSpace/index.vue'
 import Dialog from '@/components/Dialog/defauleDialog.vue'
 import AdvancedQueryDialog from './subview/advancedQueryDialog.vue'
-import SearchInfoForm from './subview/searchInfoForm.vue'
+import SearchInfoForm from './components/searchInfoForm.vue'
 import AdvanceSearchTag from './components/advanceSearchTag.vue'
 import { defineSearchTypeOptions, getDefaultSearchInfo, SEARCH_TYPE_INPUT } from './formSearchUtils'
 import { ref, computed, markRaw, nextTick, onMounted } from 'vue'
@@ -201,5 +224,9 @@ onMounted(() => {
   max-width: calc(100% - 70px);
   border: 1px solid #dcdfe6;
   border-radius: 4px;
+}
+
+.ComFlexSpace {
+  justify-content: flex-end;
 }
 </style>
