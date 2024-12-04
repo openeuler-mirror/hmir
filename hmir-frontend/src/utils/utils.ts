@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-07-05 13:56:50
  * @LastEditors: Z&N
- * @LastEditTime: 2024-11-06 13:42:57
+ * @LastEditTime: 2024-12-04 15:01:37
  * @Description: 
  */
 
@@ -37,7 +37,7 @@ export function addResizeObserver(dom: any, callback?: Function) {
  * @param {[String, Number]} str
  * @return {String}
  */
-export function parseElementSize(str: number | string): string | null {
+export function parseElementSize(str: number | string): string | undefined {
   if (typeof str === 'number') {
     return `${str}px`
   }
@@ -48,5 +48,5 @@ export function parseElementSize(str: number | string): string | null {
       return str
     }
   }
-  return null
+  return undefined
 }

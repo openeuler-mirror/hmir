@@ -2,7 +2,7 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-12-04 09:23:26
  * @LastEditors: Z&N
- * @LastEditTime: 2024-12-04 13:54:11
+ * @LastEditTime: 2024-12-04 15:17:56
  * @FilePath: /hmir-frontend/src/components/BecommonTable/subview/BecommonTableHead.vue
  * @Description:
 -->
@@ -23,7 +23,7 @@
     >
       <div
         class="rightElColChildren"
-        :style="{ width: rightElColChildrenWidth + 'px' }"
+        :style="{ width: parseElementSize(rightElColChildrenWidth) as any }"
       >
         <slot name="tableTitleRight" />
       </div>
@@ -34,6 +34,7 @@
 <script setup lang="ts">
 import addResizeObserver from '@/utils/resizeObserver'
 import { ref, onMounted, nextTick, onBeforeUnmount } from 'vue'
+import { parseElementSize } from '@/utils/utils'
 
 const BecommonTableHeadRef = ref()
 
@@ -50,7 +51,7 @@ onMounted(() => {
         const leftChildrenWidth = leftElColChildrenDom?.offsetWidth ?? 0
 
         // 计算剩余宽度
-        rightElColChildrenWidth.value = entry.target.offsetWidth - leftChildrenWidth
+        rightElColChildrenWidth.value = entry.target.offsetWidth - leftChildrenWidth - 32
       })
     })
   })
@@ -63,11 +64,17 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss" scoped>
+.el-row {
+  margin-bottom: 16px;
+}
 .rightElcol {
   display: inline-block;
 }
 
 .rightElColChildren {
   float: right;
+  display: flex;
+  justify-content: flex-end;
+  margin-right: -23px;
 }
 </style>
