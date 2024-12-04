@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 09:47:34
  * @LastEditors: Z&N
- * @LastEditTime: 2024-11-06 15:54:20
+ * @LastEditTime: 2024-12-04 15:26:21
  * @Description:
 -->
 <template>
@@ -10,7 +10,7 @@
     <template #breadcrumbBody>
       <el-tabs type="card">
         <el-tab-pane :label="t('hostsList')">
-          <ClusterBodyTable
+          <BecommonTable
             :table-data="tableData"
             :table-column="tableColumn"
             highlight-current-row
@@ -38,7 +38,7 @@
                 :table-width="tableWidth"
               />
             </template>
-          </ClusterBodyTable>
+          </BecommonTable>
         </el-tab-pane>
         <el-tab-pane :label="t('overallPerformance')">
           <PerformanceDetails select-time="last1hour" />
@@ -51,7 +51,7 @@
 <script setup lang="ts">
 import expandBody from './components/expandBody.vue'
 import breadcrumb from '@/components/ClusterHeader/index.vue'
-import ClusterBodyTable from '@/components/ClusterBodyTable/index.vue'
+import BecommonTable from '@/components/BecommonTable/index.vue'
 import hostTableTitleLeft from './components/hostTableTitleLeft.vue'
 import ClusterTableTitleRight from '@/components/ClusterTableTitleRight/index.vue'
 import PerformanceDetails from '../components/PerformanceDetails.vue'

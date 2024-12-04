@@ -2,14 +2,11 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-12-04 13:59:46
  * @LastEditors: Z&N
- * @LastEditTime: 2024-12-04 14:24:07
+ * @LastEditTime: 2024-12-04 15:27:12
  * @FilePath: /hmir-frontend/src/components/BecommonTable/becommonTableProps.ts
  * @Description: 
  */
-import clusterTableTitleRightProps from '../ClusterTableTitleRight/clusterTableTitleRightProps'
-
 const defaultTableProps = {
-  ...clusterTableTitleRightProps,
   tableData: {
     type: Array<Object>,
     default() {
@@ -25,10 +22,6 @@ const defaultTableProps = {
   highlightCurrentRow: {
     type: Boolean,
     default: false
-  },
-  tableRightShow: {
-    type: Boolean,
-    default: true
   },
   expandShow: {
     type: Boolean,

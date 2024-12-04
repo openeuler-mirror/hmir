@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 14:03:21
  * @LastEditors: Z&N
- * @LastEditTime: 2024-12-04 14:33:30
+ * @LastEditTime: 2024-12-04 15:26:56
  * @Description:
 -->
 <template>
@@ -12,11 +12,7 @@
         <slot name="tableTitleLeft" />
       </template>
       <template #tableTitleRight>
-        <slot name="tableTitleRight">
-          <template v-if="tableRightShow">
-            <ClusterTableTitleRight v-bind="attrs" />
-          </template>
-        </slot>
+        <slot name="tableTitleRight" />
       </template>
     </BecommonTableHead>
     <el-table
@@ -104,13 +100,10 @@
 <script lang="ts" setup>
 import BecommonTableHead from './subview/BecommonTableHead.vue'
 import Pagination from '@/components/Pagination/index.vue'
-import ClusterTableTitleRight from '@/components/ClusterTableTitleRight/index.vue'
 import defaultTableProps from './becommonTableProps'
-import { ref, computed, useAttrs } from 'vue'
+import { ref, computed } from 'vue'
 import type { ElTable } from 'element-plus'
 import { useI18n } from 'vue-i18n'
-
-const attrs = useAttrs()
 
 const { t } = useI18n()
 const props = defineProps(defaultTableProps)
