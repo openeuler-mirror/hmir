@@ -2,7 +2,7 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-12-04 17:16:18
  * @LastEditors: Z&N
- * @LastEditTime: 2024-12-04 17:26:52
+ * @LastEditTime: 2024-12-05 17:07:59
  * @FilePath: /hmir-frontend/src/components/FormSearch/components/FormSearchLabel.vue
  * @Description:
 -->
@@ -12,6 +12,7 @@
     :placeholder="$t('pleaseSelect')"
     clearable
     :style="{ width: parseElementSize(inputWidth) }"
+    :teleported="teleported"
     @change="searchLabelChange"
   >
     <el-option
