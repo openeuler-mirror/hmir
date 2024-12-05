@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-05-17 18:16:11
  * @LastEditors: Z&N
- * @LastEditTime: 2024-11-06 16:07:12
+ * @LastEditTime: 2024-12-05 11:15:30
  * @Description:
 -->
 
@@ -46,88 +46,30 @@
           <el-checkbox v-model="item.check" />
         </el-col>
         <el-col :span="5">
-          <el-select
+          <FormSearchLabel
             v-model="item.searchLabel"
-            :placeholder="$t('pleaseSelect')"
-            clearable
-            :style="{ width: inputWidth }"
-            @change="searchLabelChange"
-          >
-            <el-option
-              v-for="optionItem in searchLabelOptions"
-              :key="optionItem.value"
-              :label="$t(optionItem.label)"
-              :value="optionItem.value"
-            />
-          </el-select>
+            :input-width="inputWidth"
+            :search-label-options="searchLabelOptions"
+          />
         </el-col>
         <el-col :span="1" />
         <el-col :span="5">
-          <el-select
+          <FormSearchType
             v-model="item.searchType"
-            :placeholder="$t('pleaseSelect')"
-            :style="{ width: inputWidth }"
-          >
-            <el-option
-              v-for="optionItem in searchTypeOptions"
-              v-show="optionItem.show"
-              :key="optionItem.value"
-              :label="$t(optionItem.label)"
-              :value="optionItem.value"
-            />
-          </el-select>
+            :search-type-options="searchTypeOptions"
+            :input-width="inputWidth"
+          />
         </el-col>
         <el-col :span="1" />
         <el-col :span="7">
-          <el-input
-            v-if="searchValueOptionsShowType ===SEARCH_TYPE_INPUT"
+          <FormSearchValue
             v-model="item.searchInputName"
-            style="width: 220px"
-            :placeholder="$t('pleaseInputContent')"
-            :prefix-icon="Search"
-            @keyup.enter.stop="searchList"
+            :search-value-options-show-type="searchValueOptionsShowType"
+            :search-value-options="searchValueOptions"
+            :tree-node-key="treeNodeKey"
+            :disabled-tree-node="disabledTreeNode"
+            :query-content-width="queryContentWidth"
           />
-          <el-select
-            v-if="searchValueOptionsShowType ===SEARCH_TYPE_SELECT"
-            v-model="item.searchInputName"
-            :placeholder="$t('pleaseSelect')"
-            style="width: 220px"
-          >
-            <el-option
-              v-for="optionItem in searchValueOptions"
-              :key="optionItem.value"
-              :label="$t(optionItem.label)"
-              :value="optionItem.value"
-              :disabled="optionItem.disabled"
-            />
-          </el-select>
-          <el-tree-select
-            v-if="searchValueOptionsShowType === SEARCH_TYPE_TREE"
-            v-model="item.searchInputName"
-            filterable
-            default-expand-all
-            :data="searchValueOptions"
-            style="width: 220px"
-            :placeholder="$t('pleaseSelect')"
-            :node-key="treeNodeKey"
-            :props="{ value: treeNodeKey, label: 'name', children: 'children', disabled: disabledTreeNode }"
-          >
-            <template #default="{ data }">
-              <template v-if="data.name.length < 13">
-                <span> {{ data.name }}</span>
-              </template>
-              <template v-else>
-                <el-tooltip
-                  effect="dark"
-                  :content="data.name"
-                  :enterable="false"
-                  placement="top"
-                >
-                  <span> {{ data }}</span>
-                </el-tooltip>
-              </template>
-            </template>
-          </el-tree-select>
         </el-col>
       </el-row>
     </ComFlexSpace>
@@ -137,9 +79,12 @@
 <script setup>
 import ComFlexSpace from '@/components/ComFlexSpace/index.vue'
 import DialogBody from '@/components/DialogBody/index.vue'
+import FormSearchLabel from '../components/FormSearchLabel.vue'
+import FormSearchType from '../components/FormSearchType.vue'
+import FormSearchValue from '../components/FormSearchValue.vue'
 import { deepCopy } from '@/utils/clone'
 import { ref, onMounted, inject } from 'vue'
-import { getDefaultSearchInfo, SEARCH_TYPE_INPUT, SEARCH_TYPE_SELECT, SEARCH_TYPE_TREE } from '../formSearchUtils'
+import { getDefaultSearchInfo, SEARCH_TYPE_INPUT } from '../formSearchUtils'
 
 const closeDialog = inject('closeDialog')
 
@@ -157,6 +102,26 @@ const props = defineProps({
   searchLabelOptions: {
     type: Array,
     required: true
+  },
+  searchValueOptions: {
+    type: Array,
+    required: true
+  },
+  inputWidth: {
+    type: [String, Number],
+    default: '140px'
+  },
+  treeNodeKey: {
+    type: String,
+    default: 'distinctId'
+  },
+  disabledTreeNode: {
+    type: Function,
+    default: () => false
+  },
+  queryContentWidth: {
+    type: [String, Number],
+    default: '220px'
   }
 })
 

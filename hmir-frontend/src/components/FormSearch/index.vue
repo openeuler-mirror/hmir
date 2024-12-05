@@ -2,7 +2,7 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-11-05 10:02:31
  * @LastEditors: Z&N
- * @LastEditTime: 2024-12-05 09:05:29
+ * @LastEditTime: 2024-12-05 11:14:01
  * @FilePath: /hmir-frontend/src/components/FormSearch/index.vue
  * @Description:
 -->
@@ -187,7 +187,9 @@ function openAdvancedSearcch() {
     componentData: {
       searchInfoList: searchInfoList.value,
       searchTypeOptions: searchTypeOptions.value,
-      searchLabelOptions: props.searchLabelOptions
+      searchLabelOptions: props.searchLabelOptions,
+      searchValueOptions: props.searchValueOptions,
+      inputWidth: props.inputWidth
     },
     componentEvent: {
       saveSearchList: (value) => {
