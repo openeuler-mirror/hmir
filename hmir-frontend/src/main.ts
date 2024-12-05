@@ -2,7 +2,7 @@
  * @Author: duanwujie88 dev17001@linx-info.com
  * @Date: 2023-02-02 14:20:40
  * @LastEditors: Z&N
- * @LastEditTime: 2024-11-05 15:41:30
+ * @LastEditTime: 2024-12-05 15:04:14
  * @FilePath: /hmir-frontend/src/main.ts
  * @Description: hmir-front
  */
@@ -48,10 +48,13 @@ import "./styles/index.scss";
 import 'animate.css';
 import echarts from "./utils/echarts";
 import { setupI18n, i18n } from "./lang";
+import dragDir from "./directive/dragDir";
 
 const { t } = i18n.global
 const app = createApp(App)
 app.directive('deBounce', deBounce);
+app.directive('drag', dragDir() as any)
+
 //全局挂载
 setupStore(app);
 setupI18n(app);
