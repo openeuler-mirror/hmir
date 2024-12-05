@@ -2,7 +2,7 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-12-04 17:16:24
  * @LastEditors: Z&N
- * @LastEditTime: 2024-12-04 17:42:35
+ * @LastEditTime: 2024-12-05 09:07:15
  * @FilePath: /hmir-frontend/src/components/FormSearch/components/FormSearchType.vue
  * @Description:
 -->
@@ -26,10 +26,10 @@
 import { parseElementSize } from '@/utils/utils'
 import { computed } from 'vue'
 
-const emits = defineEmits(['update:moduleValue'])
+const emits = defineEmits(['update:modelValue'])
 
 const props = defineProps({
-  moduleValue: {
+  modelValue: {
     type: [String, Number],
     required: true
   },
@@ -43,9 +43,9 @@ const props = defineProps({
   }
 })
 const searchType = computed({
-  get: () => props.moduleValue,
+  get: () => props.modelValue,
   set: (val) => {
-    emits('update:moduleValue', val)
+    emits('update:modelValue', val)
   }
 })
 

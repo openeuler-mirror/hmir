@@ -27,10 +27,10 @@
 import { parseElementSize } from '@/utils/utils'
 import { computed } from 'vue'
 
-const emits = defineEmits(['update:moduleValue', 'searchLabelChange'])
+const emits = defineEmits(['update:modelValue', 'searchLabelChange'])
 
 const props = defineProps({
-  moduleValue: {
+  modelValue: {
     type: [String, Number],
     required: true
   },
@@ -44,9 +44,9 @@ const props = defineProps({
   }
 })
 const searchLabel = computed({
-  get: () => props.moduleValue,
+  get: () => props.modelValue,
   set: (val) => {
-    emits('update:moduleValue', val)
+    emits('update:modelValue', val)
   }
 })
 

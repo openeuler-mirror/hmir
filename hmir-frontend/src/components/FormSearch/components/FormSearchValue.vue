@@ -2,7 +2,7 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-12-04 17:16:23
  * @LastEditors: Z&N
- * @LastEditTime: 2024-12-04 17:38:23
+ * @LastEditTime: 2024-12-05 11:01:40
  * @FilePath: /hmir-frontend/src/components/FormSearch/components/FormSearchValue.vue
  * @Description:
 -->
@@ -63,11 +63,12 @@
 import { SEARCH_TYPE_INPUT, SEARCH_TYPE_SELECT, SEARCH_TYPE_TREE } from '../formSearchUtils'
 import { parseElementSize } from '@/utils/utils'
 import { computed } from 'vue'
+import { Search } from '@element-plus/icons-vue'
 
-const emits = defineEmits(['update:moduleValue', 'searchLabelChange'])
+const emits = defineEmits(['update:modelValue', 'searchLabelChange', 'submitSearch'])
 
 const props = defineProps({
-  moduleValue: {
+  modelValue: {
     type: [String, Number],
     required: true
   },
@@ -93,10 +94,14 @@ const props = defineProps({
   }
 })
 const searchInputName = computed({
-  get: () => props.moduleValue,
+  get: () => props.modelValue,
   set: (val) => {
-    emits('update:moduleValue', val)
+    emits('update:modelValue', val)
   }
 })
+
+function submitSearch() {
+  emits('submitSearch')
+}
 
 </script>

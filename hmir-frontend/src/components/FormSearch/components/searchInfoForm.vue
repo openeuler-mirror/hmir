@@ -2,7 +2,7 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-11-06 11:38:15
  * @LastEditors: Z&N
- * @LastEditTime: 2024-12-04 17:48:16
+ * @LastEditTime: 2024-12-05 08:59:47
  * @FilePath: /hmir-frontend/src/components/FormSearch/components/searchInfoForm.vue
  * @Description:
 -->
@@ -74,7 +74,7 @@ const props = defineProps({
     default: () => false
   },
   searchValueOptions: {
-    type:  [Object, Array],
+    type: [Object, Array],
     default: () => []
   },
   inputWidth: {
@@ -105,9 +105,9 @@ function searchLabelChange(value) {
 }
 </script>
 
-  <style lang="scss" scoped>
-  :deep(.el-form-item) {
-    margin: 0;
-  }
-  </style>
+<style lang="scss" scoped>
+:deep(.el-form-item) {
+  margin: 0;
+}
+</style>
 
