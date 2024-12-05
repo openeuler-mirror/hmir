@@ -2,7 +2,7 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-11-06 11:38:15
  * @LastEditors: Z&N
- * @LastEditTime: 2024-12-05 08:59:47
+ * @LastEditTime: 2024-12-05 16:56:55
  * @FilePath: /hmir-frontend/src/components/FormSearch/components/searchInfoForm.vue
  * @Description:
 -->
@@ -47,8 +47,10 @@ import FormSearchLabel from './FormSearchLabel.vue'
 import FormSearchType from './FormSearchType.vue'
 import FormSearchValue from './FormSearchValue.vue'
 import { computed } from 'vue'
+import { SEARCH_DEFAULT_PROPS } from '../formSearchProps'
 
 const props = defineProps({
+  ...SEARCH_DEFAULT_PROPS,
   modelValue: {
     type: Object,
     required: true
@@ -65,25 +67,9 @@ const props = defineProps({
     type: Array,
     required: true
   },
-  treeNodeKey: {
-    type: String,
-    default: 'distinctId'
-  },
-  disabledTreeNode: {
-    type: Function,
-    default: () => false
-  },
   searchValueOptions: {
     type: [Object, Array],
     default: () => []
-  },
-  inputWidth: {
-    type: [String, Number],
-    default: '140px'
-  },
-  queryContentWidth: {
-    type: [String, Number],
-    default: '220px'
   }
 })
 

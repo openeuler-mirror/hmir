@@ -2,7 +2,7 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-11-05 10:02:31
  * @LastEditors: Z&N
- * @LastEditTime: 2024-12-05 11:14:01
+ * @LastEditTime: 2024-12-05 16:58:03
  * @FilePath: /hmir-frontend/src/components/FormSearch/index.vue
  * @Description:
 -->
@@ -101,19 +101,17 @@ import AdvanceSearchTag from './components/advanceSearchTag.vue'
 import { defineSearchTypeOptions, getDefaultSearchInfo, SEARCH_TYPE_INPUT } from './formSearchUtils'
 import { ref, computed, markRaw, nextTick, onMounted } from 'vue'
 import { deepCopy } from '@/utils/clone'
+import { SEARCH_DEFAULT_PROPS } from './formSearchProps'
 
 const DialogRef = ref()
 
 const formComFlexSpaceRef = ref()
 
 const props = defineProps({
+  ...SEARCH_DEFAULT_PROPS,
   modelValue: {
     type: Array,
     default: () => [getDefaultSearchInfo()]
-  },
-  inputWidth: {
-    type: [String, Number],
-    default: '140px'
   },
   searchLabelOptions: {
     type: Array,
@@ -132,14 +130,6 @@ const props = defineProps({
     default() {
       return []
     }
-  },
-  treeNodeKey: {
-    type: String,
-    default: 'distinctId'
-  },
-  disabledTreeNode: {
-    type: Function,
-    default: () => false
   }
 })
 

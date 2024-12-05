@@ -2,7 +2,7 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-11-06 14:00:39
  * @LastEditors: Z&N
- * @LastEditTime: 2024-12-04 17:54:03
+ * @LastEditTime: 2024-12-05 16:57:49
  * @FilePath: /hmir-frontend/src/components/FormSearch/components/advanceSearchTag.vue
  * @Description:
 -->
@@ -36,8 +36,10 @@
 import SearchInfoForm from './searchInfoForm.vue'
 import { ref, computed } from 'vue'
 import { SEARCH_TYPE_INPUT, defaultSearchInfoFace, getOptionLabel } from '../formSearchUtils'
+import { SEARCH_DEFAULT_PROPS } from '../formSearchProps'
 
 const props = defineProps({
+  ...SEARCH_DEFAULT_PROPS,
   modelValue: {
     type: Object,
     required: true
@@ -59,14 +61,6 @@ const props = defineProps({
   tagKey: {
     type: [String, Number],
     default: null
-  },
-  treeNodeKey: {
-    type: String,
-    default: 'distinctId'
-  },
-  disabledTreeNode: {
-    type: Function,
-    default: () => false
   }
 })
 
