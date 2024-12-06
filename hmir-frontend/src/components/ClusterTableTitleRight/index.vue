@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 17:24:16
  * @LastEditors: Z&N
- * @LastEditTime: 2024-11-06 15:41:56
+ * @LastEditTime: 2024-12-04 14:09:32
  * @Description:
 -->
 <template>
@@ -121,77 +121,14 @@
 <script setup lang="ts">
 import FormSearch from '../FormSearch/index.vue'
 import ComFlexSpace from '@/components/ComFlexSpace/index.vue'
+import tableRightProps from './clusterTableTitleRightProps'
 import { onMounted, ref } from 'vue'
 import { Refresh, Grid, ArrowDown } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
-import { defineSearchTypeOptions, getDefaultSearchInfo } from '../FormSearch/formSearchUtils'
-import { deepCopy } from '@/utils/clone'
+import { getDefaultSearchInfo } from '../FormSearch/formSearchUtils'
 
 const { t } = useI18n()
-const props = defineProps({
-  num: {
-    type: Number,
-    default() {
-      return 1
-    }
-  },
-  tableColumn: {
-    type: Array<any>,
-    default() {
-      return []
-    }
-  },
-  refreshBtn: {
-    type: Boolean,
-    default: false
-  },
-  columnShow: {
-    type: Boolean,
-    default: false
-  },
-  numShow: {
-    type: Boolean,
-    default: false
-  },
-  columnSort: {
-    type: Boolean,
-    default: false
-  },
-  searchInputShow: {
-    type: Boolean,
-    default: false
-  },
-  inputWidth: {
-    type: [String, Number],
-    default: '140px'
-  },
-  searchLabelOptions: {
-    type: Array,
-    default() {
-      return []
-    }
-  },
-  searchTypeOptions: {
-    type: Array,
-    default() {
-      return deepCopy(defineSearchTypeOptions)
-    }
-  },
-  searchValueOptions: {
-    type:  [Object, Array],
-    default() {
-      return []
-    }
-  },
-  treeNodeKey: {
-    type: String,
-    default: 'distinctId'
-  },
-  disabledTreeNode: {
-    type: Function,
-    default: () => false
-  }
-})
+const props = defineProps(tableRightProps)
 
 const num = ref(1)
 
@@ -217,7 +154,8 @@ onMounted(() => {
 :deep(.el-button-group) {
   display: flex;
 }
-.el-input-number{
+
+.el-input-number {
   display: inline-block;
 }
 </style>
