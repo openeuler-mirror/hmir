@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 14:03:21
  * @LastEditors: Z&N
- * @LastEditTime: 2024-12-04 15:26:56
+ * @LastEditTime: 2024-12-04 17:43:05
  * @Description:
 -->
 <template>
@@ -39,45 +39,24 @@
       <el-table-column
         v-for="column in filteredTableColumn"
         :key="column.prop"
-        :label="t(column.label)"
         :prop="column.prop"
-        :sortable="column.sortable"
-        :show-overflow-tooltip="column.showTooltip"
         :width="column.width"
+        :min-width="column.minWidth"
+        :label="t(column.label)"
+        :align="column.align"
+        :sortable="column.sortable ?? false"
+        :fixed="column.fixed ?? false"
+        :show-overflow-tooltip="column.showTooltip ?? true"
       >
         <template #default="{ row }">
-          <el-progress
-            v-if="column.type === 'progress'"
-            :stroke-width="15"
-            :percentage="row[column.prop]"
+          <slot
+            v-if="$slots[column.rowSlotName || column.prop] || column.openRowSlot"
+            :name="column.rowSlotName || column.prop"
+            :row="row"
           />
-          <el-link
-            v-else-if="column.type === 'link'"
-            type="primary"
-            @click="lineClick(row, column)"
-          >
+          <span v-else>
             {{ tableValue(row, column) }}
-          </el-link>
-          <template v-else-if="column.type === 'linkList'">
-            <div
-              v-for="(linkItem, index) in row[column.prop]"
-              :key="linkItem"
-            >
-              <el-link
-                type="primary"
-                @click="lineClick(row, column, linkItem)"
-              >
-                {{ tableLinkListValue(row, column, linkItem) }}
-              </el-link>
-              <el-divider
-                v-if="index !== row[column.prop].length - 1"
-                direction="vertical"
-              />
-            </div>
-          </template>
-          <div v-else>
-            {{ tableValue(row, column) }}
-          </div>
+          </span>
         </template>
       </el-table-column>
     </el-table>
@@ -109,7 +88,7 @@ const { t } = useI18n()
 const props = defineProps(defaultTableProps)
 
 const filteredTableColumn = computed(() => {
-  return props.tableColumn.filter(item => item.showColumn)
+  return props.tableColumn.filter(item => item.showColumn ?? true)
 })
 
 const emit = defineEmits({
@@ -151,16 +130,6 @@ const expandChange = (row: any, expandedRows: any) => {
 // eslint-disable-next-line no-unused-vars
 const tableValue = (row: { [x: string]: any }, column: { formatter: (arg0: any) => any; prop: string | number }) => {
   return column.formatter ? column.formatter(row) : row[column.prop]
-}
-
-// eslint-disable-next-line no-unused-vars
-const tableLinkListValue = (row: { [x: string]: any }, column: { formatter: (arg0: any, value: any) => any; prop: string | number }, value: any) => {
-  return column.formatter ? column.formatter(row, value) : value
-}
-
-// eslint-disable-next-line no-unused-vars
-const lineClick = (row: any, column: { linkClick: (arg0: any, arg1: any, value: any) => void }, value: any = null) => {
-  column?.linkClick(row, column, value)
 }
 
 const handleSizeChange = (val: number) => {
