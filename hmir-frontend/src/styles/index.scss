@@ -2,7 +2,7 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-12-05 11:17:03
  * @LastEditors: Z&N
- * @LastEditTime: 2024-12-05 16:08:56
+ * @LastEditTime: 2024-12-05 16:41:33
  * @FilePath: /hmir-frontend/src/styles/index.scss
  * @Description: 
  */
@@ -13,4 +13,14 @@
  [dragged] {
     cursor: move;
     user-select: none;
+ }
+
+ .el-dialog {
+    display: flex;
+    flex-direction: column;
+    margin: 0 !important;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
  }
