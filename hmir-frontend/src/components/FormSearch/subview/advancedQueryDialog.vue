@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-05-17 18:16:11
  * @LastEditors: Z&N
- * @LastEditTime: 2024-12-05 11:15:30
+ * @LastEditTime: 2024-12-05 16:54:55
  * @Description:
 -->
 
@@ -85,12 +85,14 @@ import FormSearchValue from '../components/FormSearchValue.vue'
 import { deepCopy } from '@/utils/clone'
 import { ref, onMounted, inject } from 'vue'
 import { getDefaultSearchInfo, SEARCH_TYPE_INPUT } from '../formSearchUtils'
+import { SEARCH_DEFAULT_PROPS } from '../formSearchProps'
 
 const closeDialog = inject('closeDialog')
 
 const emits = defineEmits(['saveSearchList'])
 
 const props = defineProps({
+  ...SEARCH_DEFAULT_PROPS,
   searchInfoList: {
     type: Array,
     required: true
@@ -106,22 +108,6 @@ const props = defineProps({
   searchValueOptions: {
     type: Array,
     required: true
-  },
-  inputWidth: {
-    type: [String, Number],
-    default: '140px'
-  },
-  treeNodeKey: {
-    type: String,
-    default: 'distinctId'
-  },
-  disabledTreeNode: {
-    type: Function,
-    default: () => false
-  },
-  queryContentWidth: {
-    type: [String, Number],
-    default: '220px'
   }
 })
 
