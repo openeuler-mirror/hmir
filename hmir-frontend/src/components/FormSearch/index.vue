@@ -2,7 +2,7 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-11-05 10:02:31
  * @LastEditors: Z&N
- * @LastEditTime: 2024-12-04 17:49:35
+ * @LastEditTime: 2024-12-05 09:05:29
  * @FilePath: /hmir-frontend/src/components/FormSearch/index.vue
  * @Description:
 -->
@@ -192,7 +192,7 @@ function openAdvancedSearcch() {
     componentEvent: {
       saveSearchList: (value) => {
         searchInfoList.value = value
-        nextTick(() => formComFlexSpaceRef.value.updateChildrenDom(false))
+        nextTick(() => formComFlexSpaceRef?.value?.updateChildrenDom(false))
       }
     }
   })
@@ -207,7 +207,7 @@ function closeTag(index) {
 }
 
 onMounted(() => {
-  nextTick(formComFlexSpaceRef.value.updateChildrenDom)
+  nextTick(formComFlexSpaceRef?.value?.updateChildrenDom)
 })
 </script>
 
