@@ -114,17 +114,17 @@ pub struct HmirStoragePool{
     pub state: u32,
     pub capacity: u64,
     pub allocation: u64,
-    pub avaliable: u64
+    pub available: u64
 }
 
 impl HmirStoragePool{
-    pub fn new(uuid:String, state:u32, capacity:u64, allocation:u64, avaliable:u64) -> HmirStoragePool{
+    pub fn new(uuid:String, state:u32, capacity:u64, allocation:u64, available:u64) -> HmirStoragePool{
         HmirStoragePool { 
             uuid, 
             state, 
             capacity, 
             allocation, 
-            avaliable 
+            available 
         }
     }
 }
