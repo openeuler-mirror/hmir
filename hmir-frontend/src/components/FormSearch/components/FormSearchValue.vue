@@ -2,7 +2,7 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-12-04 17:16:23
  * @LastEditors: Z&N
- * @LastEditTime: 2024-12-05 11:01:40
+ * @LastEditTime: 2024-12-05 17:08:31
  * @FilePath: /hmir-frontend/src/components/FormSearch/components/FormSearchValue.vue
  * @Description:
 -->
@@ -20,6 +20,7 @@
     v-model="searchInputName"
     :placeholder="$t('pleaseSelect')"
     :style="{ width: parseElementSize(queryContentWidth) }"
+    :teleported="teleported"
   >
     <el-option
       v-for="item in searchValueOptions"
@@ -39,6 +40,7 @@
     :placeholder="$t('pleaseSelect')"
     :node-key="treeNodeKey"
     :props="{ value: treeNodeKey, label: 'name', children: 'children', disabled: disabledTreeNode }"
+    :teleported="teleported"
   >
     <template #default="{ data }">
       <template v-if="data.name.length < 13">
@@ -91,6 +93,10 @@ const props = defineProps({
   queryContentWidth: {
     type: [String, Number],
     default: '220px'
+  },
+  teleported: {
+    type: Boolean,
+    default: true
   }
 })
 const searchInputName = computed({
