@@ -2,7 +2,7 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-11-06 14:00:39
  * @LastEditors: Z&N
- * @LastEditTime: 2024-11-11 14:41:36
+ * @LastEditTime: 2024-12-04 17:54:03
  * @FilePath: /hmir-frontend/src/components/FormSearch/components/advanceSearchTag.vue
  * @Description:
 -->
@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import SearchInfoForm from '../subview/searchInfoForm.vue'
+import SearchInfoForm from './searchInfoForm.vue'
 import { ref, computed } from 'vue'
 import { SEARCH_TYPE_INPUT, defaultSearchInfoFace, getOptionLabel } from '../formSearchUtils'
 

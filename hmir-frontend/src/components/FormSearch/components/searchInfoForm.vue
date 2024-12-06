@@ -2,7 +2,7 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-11-06 11:38:15
  * @LastEditors: Z&N
- * @LastEditTime: 2024-12-04 17:40:03
+ * @LastEditTime: 2024-12-04 17:48:16
  * @FilePath: /hmir-frontend/src/components/FormSearch/components/searchInfoForm.vue
  * @Description:
 -->
@@ -36,6 +36,8 @@
         @submitSearch="submitSearch"
       />
     </el-form-item>
+
+    <slot v-if="$slots.default" />
   </ComFlexSpace>
 </template>
 

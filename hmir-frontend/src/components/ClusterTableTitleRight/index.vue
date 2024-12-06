@@ -2,7 +2,7 @@
  * @Author: zhang_tianran
  * @Date: 2023-06-14 17:24:16
  * @LastEditors: Z&N
- * @LastEditTime: 2024-12-04 14:09:32
+ * @LastEditTime: 2024-12-04 15:58:00
  * @Description:
 -->
 <template>
@@ -157,5 +157,9 @@ onMounted(() => {
 
 .el-input-number {
   display: inline-block;
+}
+
+.ComFlexSpace {
+  justify-content: flex-end;
 }
 </style>
