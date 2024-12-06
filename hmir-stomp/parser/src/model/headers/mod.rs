@@ -51,7 +51,7 @@ impl FromStr for NameValue {
     }
 }
 
-/// A pair of numbers which specify at what intervall the originator of
+/// A pair of numbers which specify at what interval the originator of
 /// the containing message will supply a heartbeat and expect a heartbeat.
 #[derive(Eq, PartialEq, Debug, Clone, Default)]
 pub struct HeartBeatIntervalls {
@@ -73,7 +73,7 @@ impl std::fmt::Display for HeartBeatIntervalls {
 
 impl FromStr for HeartBeatIntervalls {
     type Err = StompParseError;
-    /// Parses the string message as two ints representing "supplied, expected" heartbeat intervalls
+    /// Parses the string message as two ints representing "supplied, expected" heartbeat intervals
     fn from_str(input: &str) -> Result<HeartBeatIntervalls, StompParseError> {
         split_once(input, ',')
             .ok_or_else(|| StompParseError::new(format!("Poorly formatted heartbeats: {}", input)))
@@ -296,10 +296,10 @@ mod test {
     fn heartbeat_into_intervalls() {
         let hb = HeartBeatValue::new(HeartBeatIntervalls::new(123, 987));
 
-        let intervalls: HeartBeatIntervalls = hb.into();
+        let intervals: HeartBeatIntervalls = hb.into();
 
-        assert_eq!(123, intervalls.supplied);
-        assert_eq!(987, intervalls.expected);
+        assert_eq!(123, intervals.supplied);
+        assert_eq!(987, intervals.expected);
     }
 
     struct TestValue {
