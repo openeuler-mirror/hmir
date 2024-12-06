@@ -1,8 +1,8 @@
 /*
  * @Author: zhang_tianran
  * @Date: 2023-05-16 17:05:12
- * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-05-17 15:59:11
+ * @LastEditors: Z&N
+ * @LastEditTime: 2024-12-04 14:43:43
  * @Description: 
  */
 import type { App } from 'vue';
@@ -32,7 +32,10 @@ const localData = {
     globalInjextion: true,
     legacy: false,
     locale: Cache.getIl8nLang() || 'zh_CN',
-    messages
+    messages,
+    silentTranslationWarn: true,
+    fallbackWarn: false,
+    missingWarn: false
 }
 
 export const i18n = createI18n(localData)
