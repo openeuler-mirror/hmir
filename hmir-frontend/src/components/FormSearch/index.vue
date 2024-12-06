@@ -2,7 +2,7 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-11-05 10:02:31
  * @LastEditors: Z&N
- * @LastEditTime: 2024-11-06 15:55:18
+ * @LastEditTime: 2024-12-04 15:12:04
  * @FilePath: /hmir-frontend/src/components/FormSearch/index.vue
  * @Description:
 -->
@@ -10,7 +10,7 @@
   <div class="search-box">
     <el-form
       inline
-      size="large"
+      size="default"
     >
       <ComFlexSpace ref="formComFlexSpaceRef">
         <el-form-item
