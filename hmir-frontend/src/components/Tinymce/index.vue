@@ -3,7 +3,7 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-12-10 11:40:22
  * @LastEditors: Z&N
- * @LastEditTime: 2024-12-10 14:41:14
+ * @LastEditTime: 2024-12-10 14:48:50
  * @FilePath: /hmir-frontend/src/components/Tinymce/index.vue
  * @Description:
 -->
@@ -128,6 +128,8 @@ const initOptions = computed(() => {
     link_title: false,
     object_resizing: false,
     auto_focus: true,
+    promotion: false,
+    skin: false,
     ...options,
     setup: (editor) => {
       editorRef.value = editor
