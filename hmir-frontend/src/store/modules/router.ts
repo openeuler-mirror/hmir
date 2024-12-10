@@ -154,7 +154,7 @@ export const useRouterStore = defineStore('router', {
           {
             path: '/parsers',
             name: 'parsers',
-            component: () => import('@/views/parsers/index.vue'),
+            component: () => import('@/views/tinymce/index.vue'),
             meta: { title: 'AST', icon: 'Menu', disabled: false },
           },
         ]
