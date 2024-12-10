@@ -3,7 +3,7 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-12-10 11:40:22
  * @LastEditors: Z&N
- * @LastEditTime: 2024-12-10 15:46:00
+ * @LastEditTime: 2024-12-10 16:45:46
  * @FilePath: /hmir-frontend/src/components/Tinymce/index.vue
  * @Description:
 -->
@@ -21,6 +21,7 @@
 </template>
 
 <script setup>
+import mammoth from 'mammoth'
 import tinymce from 'tinymce/tinymce'
 import '@/styles/skins/ui/oxide/skin.css'// 样式
 import '@/lang/tinymce.js' // 引入编辑器语言包
@@ -134,6 +135,53 @@ const initOptions = computed(() => {
     setup: (editor) => {
       editorRef.value = editor
       editor.on('init', (e) => initSetup(e))
+      // 注册自定义按钮
+      editor.ui.registry.addButton('customUploadBtn', {
+        text: '上传Word',
+        onAction: function() {
+          let input = document.createElement('input')
+
+          input.type = 'file'
+          input.accept = '.doc,.docx'
+          // 执行上传文件操作
+          input.addEventListener('change', handleFileSelect, false)
+
+          function handleFileSelect(event) {
+            let file = event.target.files[0]
+            let extension = file.name.slice((file.name.lastIndexOf('.') - 1 >>> 0) + 2)
+
+            if (extension === 'docx' || extension === 'doc') {
+              readFileInputEventAsArrayBuffer(event, function(arrayBuffer) {
+                mammoth.convertToHtml({ arrayBuffer: arrayBuffer })
+                  .then(displayResult, function(error) {
+                    console.error(error)
+                  })
+              })
+            }
+          }
+
+          function displayResult(result) {
+            console.log(result)
+            // tinymce的set方法将内容添加到编辑器中
+            tinymce.activeEditor.setContent(result.value)
+          }
+
+          function readFileInputEventAsArrayBuffer(event, callback) {
+            let file = event.target.files[0]
+            let reader = new FileReader()
+
+            reader.onload = function(loadEvent) {
+              let arrayBuffer = loadEvent.target.result
+
+              callback(arrayBuffer)
+            }
+            reader.readAsArrayBuffer(file)
+          }
+
+          // 触发点击事件，打开选择文件的对话框
+          input.click()
+        }
+      })
     }
   }
 })
