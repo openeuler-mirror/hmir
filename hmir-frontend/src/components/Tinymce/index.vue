@@ -1,12 +1,12 @@
+<!-- eslint-disable no-unused-vars -->
 <!--
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-12-10 11:40:22
  * @LastEditors: Z&N
- * @LastEditTime: 2024-12-10 13:10:37
+ * @LastEditTime: 2024-12-10 14:41:14
  * @FilePath: /hmir-frontend/src/components/Tinymce/index.vue
  * @Description:
 -->
-// ==========Tinymce.vue==========
 <template>
   <div
     class="prefixCls"
@@ -22,37 +22,40 @@
 
 <script setup>
 import tinymce from 'tinymce/tinymce'
-import 'tinymce/themes/silver'
-import 'tinymce/icons/default/icons'
-import 'tinymce/plugins/advlist'
-import 'tinymce/plugins/anchor'
-import 'tinymce/plugins/autolink'
-import 'tinymce/plugins/autosave'
-import 'tinymce/plugins/code'
-import 'tinymce/plugins/codesample'
-import 'tinymce/plugins/directionality'
-import 'tinymce/plugins/fullscreen'
-import 'tinymce/plugins/hr'
-import 'tinymce/plugins/insertdatetime'
-import 'tinymce/plugins/link'
-import 'tinymce/plugins/lists'
-import 'tinymce/plugins/media'
-import 'tinymce/plugins/nonbreaking'
-import 'tinymce/plugins/noneditable'
-import 'tinymce/plugins/pagebreak'
-import 'tinymce/plugins/paste'
-import 'tinymce/plugins/preview'
-import 'tinymce/plugins/print'
-import 'tinymce/plugins/save'
-import 'tinymce/plugins/searchreplace'
-import 'tinymce/plugins/spellchecker'
-import 'tinymce/plugins/tabfocus'
-import 'tinymce/plugins/template'
-import 'tinymce/plugins/textpattern'
-import 'tinymce/plugins/visualblocks'
-import 'tinymce/plugins/visualchars'
-import 'tinymce/plugins/wordcount'
-// import 'tinymce/plugins/table';
+import '@/styles/skins/ui/oxide/skin.css'// 样式
+import '@/lang/tinymce.js' // 引入编辑器语言包
+import 'tinymce/models/dom' // 引入dom模块。从 Tinymce6，开始必须有此模块导入
+import 'tinymce/themes/silver' // 默认主题
+import 'tinymce/icons/default' // 引入编辑器图标icon，不引入则不显示对应图标
+import 'tinymce/plugins/advlist' // 高级列表
+import 'tinymce/plugins/anchor' // 锚点
+import 'tinymce/plugins/autolink' // 自动链接
+import 'tinymce/plugins/autoresize' // 编辑器高度自适应,注：plugins里引入此插件时，Init里设置的height将失效
+import 'tinymce/plugins/autosave' // 自动存稿
+import 'tinymce/plugins/charmap' // 特殊字符
+import 'tinymce/plugins/code' // 编辑源码
+import 'tinymce/plugins/codesample' // 代码示例
+import 'tinymce/plugins/directionality' // 文字方向
+import 'tinymce/plugins/emoticons' // 表情
+import 'tinymce/plugins/fullscreen' // 全屏
+import 'tinymce/plugins/help' // 帮助
+import 'tinymce/plugins/image' // 插入编辑图片
+import 'tinymce/plugins/importcss' // 引入css
+import 'tinymce/plugins/insertdatetime' // 插入日期时间
+import 'tinymce/plugins/link' // 超链接
+import 'tinymce/plugins/lists' // 列表插件
+import 'tinymce/plugins/media' // 插入编辑媒体
+import 'tinymce/plugins/nonbreaking' // 插入不间断空格
+import 'tinymce/plugins/pagebreak' // 插入分页符
+import 'tinymce/plugins/preview' // 预览
+import 'tinymce/plugins/quickbars' // 快速工具栏
+import 'tinymce/plugins/save' // 保存
+import 'tinymce/plugins/searchreplace' // 查找替换
+import 'tinymce/plugins/table' // 表格
+// import 'tinymce/plugins/template' // 内容模板
+import 'tinymce/plugins/visualblocks' // 显示元素范围
+import 'tinymce/plugins/visualchars' // 显示不可见字符
+import 'tinymce/plugins/wordcount' // 字数统计
 
 import { computed, nextTick, ref, unref, watch, onDeactivated, onBeforeUnmount, defineProps, defineEmits, getCurrentInstance } from 'vue'
 import { toolbar, plugins } from './tinymce'
@@ -64,7 +67,7 @@ import { isNumber } from '@/utils/is'
 const props = defineProps({
   options: {
     type: Object,
-    default: () => {}
+    default: () => { }
   },
   toolbar: {
     type: Array,
@@ -107,11 +110,11 @@ const containerWidth = computed(() => {
 const editorRef = ref(null)
 const fullscreen = ref(false)
 const elRef = ref(null)
+// eslint-disable-next-line no-unused-vars
 const tinymceContent = computed(() => props.modelValue)
 
 const initOptions = computed(() => {
   const { height, options, toolbar, plugins } = props
-  const publicPath = '/'
 
   return {
     selector: `#${unref(tinymceId)}`,
@@ -119,16 +122,12 @@ const initOptions = computed(() => {
     toolbar,
     menubar: 'file edit insert view format table',
     plugins,
-    language_url: '/resource/tinymce/langs/zh_CN.js',
     language: 'zh_CN',
     branding: false,
     default_link_target: '_blank',
     link_title: false,
     object_resizing: false,
     auto_focus: true,
-    skin: 'oxide',
-    skin_url: '/resource/tinymce/skins/ui/oxide',
-    content_css: '/resource/tinymce/skins/ui/oxide/content.min.css',
     ...options,
     setup: (editor) => {
       editorRef.value = editor
@@ -137,6 +136,7 @@ const initOptions = computed(() => {
   }
 })
 
+// eslint-disable-next-line no-unused-vars
 const disabled = computed(() => {
   const { options } = props
   const getdDisabled = options && Reflect.get(options, 'readonly')
@@ -258,6 +258,7 @@ function bindModelHandlers(editor) {
   })
 }
 
+// eslint-disable-next-line no-unused-vars
 function handleImageUploading(name) {
   const editor = unref(editorRef)
 
@@ -270,6 +271,7 @@ function handleImageUploading(name) {
   setValue(editor, content)
 }
 
+// eslint-disable-next-line no-unused-vars
 function handleDone(name, url) {
   const editor = unref(editorRef)
 
@@ -288,10 +290,11 @@ function getUploadingImgName(name) {
 </script>
 
 <style lang="scss" scoped>
-.prefixCls{
+.prefixCls {
     position: relative;
     line-height: normal;
 }
+
 textarea {
     z-index: -1;
     visibility: hidden;
