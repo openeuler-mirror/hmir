@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@tauri-apps/api": "^1.1.0",
-    "@tinymce/tinymce-vue": "^6.1.0",
     "@vueuse/core": "^9.9.0",
     "animate.css": "^4.1.1",
     "axios": "^1.2.1",
