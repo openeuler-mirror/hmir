@@ -2,7 +2,7 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-11-05 10:02:31
  * @LastEditors: Z&N
- * @LastEditTime: 2024-12-05 16:58:03
+ * @LastEditTime: 2024-12-09 18:03:53
  * @FilePath: /hmir-frontend/src/components/FormSearch/index.vue
  * @Description:
 -->
@@ -65,7 +65,6 @@
         :search-type-options="searchTypeOptions"
         :tree-node-key="treeNodeKey"
         :disabled-tree-node="disabledTreeNode"
-        @searchLabelChange="searchLabelChange"
       >
         <el-form-item>
           <el-button
@@ -133,7 +132,7 @@ const props = defineProps({
   }
 })
 
-const emits = defineEmits(['update:modelValue', 'search', 'searchLabelChange'])
+const emits = defineEmits(['update:modelValue', 'search'])
 
 const searchInfoList = computed({
   get: () => props.modelValue,
@@ -163,10 +162,6 @@ const searchValueOptionsShowType = ref(SEARCH_TYPE_INPUT)
 
 function searchList() {
   emits('search', searchInfoList.value)
-}
-
-function searchLabelChange(value) {
-  emits('searchLabelChange', value)
 }
 
 function openAdvancedSearcch() {
