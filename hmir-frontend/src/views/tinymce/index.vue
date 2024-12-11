@@ -2,7 +2,7 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-12-10 11:04:51
  * @LastEditors: Z&N
- * @LastEditTime: 2024-12-10 18:22:32
+ * @LastEditTime: 2024-12-11 10:29:29
  * @FilePath: /hmir-frontend/src/views/tinymce/index.vue
  * @Description:
 -->
@@ -11,6 +11,10 @@
   <el-button @click="goDocxFile">
     导出docx
   </el-button>
+  <el-button @click="previewFile">
+    预览docx
+  </el-button>
+  <div ref="docxPreview" />
 </template>
 
 <script setup>
@@ -20,8 +24,10 @@ import { asBlob } from 'html-docx-js-typescript'
 // eslint-disable-next-line no-unused-vars
 import saveAs from 'file-saver'
 import { writeBinaryFile } from '@tauri-apps/api/fs'
-
 import { path, dialog } from '@tauri-apps/api'
+import { renderAsync } from 'docx-preview'
+
+const docxPreview = ref()
 
 const content = ref('')
 
@@ -30,31 +36,27 @@ watch(content, (val) => {
 })
 
 async function goDocxFile() {
-  const converted = await asBlob(`
-  <!DOCTYPE html>  
+  const converted = await asBlob(`  
+<!DOCTYPE html>  
 <html lang="en">  
 <head>  
     <meta charset="UTF-8">  
     <title>Document</title>  
 </head>  
-      <body>
-      ${content.value}
-      </body>
-      </html>`)
+<body>  
+    ${content.value}  
+</body>  
+</html>`)
 
   blobToUint8Array(converted).then(async(uint8Array) => {
     try {
       console.log(uint8Array)
       const basePath = await path.downloadDir()
-
       let selPath = await dialog.save({
-
         defaultPath: basePath
-
       })
 
       selPath = selPath.replace(/Untitled$/, '')
-
       writeBinaryFile({ contents: uint8Array, path: `${selPath}` })
     } catch (error) {
       console.error(error)
@@ -66,7 +68,7 @@ async function goDocxFile() {
   // saveAs(converted, 'test.docx')
 }
 
-async function blobToUint8Array(blob) {
+function blobToUint8Array(blob) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
 
@@ -78,6 +80,24 @@ async function blobToUint8Array(blob) {
       }
     }
     reader.readAsArrayBuffer(blob)
+  })
+}
+
+async function previewFile() {
+  const converted = await asBlob(`  
+<!DOCTYPE html>  
+<html lang="en">  
+<head>  
+    <meta charset="UTF-8">  
+    <title>Document</title>  
+</head>  
+<body>  
+    ${content.value}  
+</body>  
+</html>`)
+
+  renderAsync(converted, docxPreview.value).then(res => {
+    console.log(res)
   })
 }
 
