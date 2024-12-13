@@ -3,7 +3,7 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-12-10 11:40:22
  * @LastEditors: Z&N
- * @LastEditTime: 2024-12-10 14:48:50
+ * @LastEditTime: 2024-12-10 15:36:01
  * @FilePath: /hmir-frontend/src/components/Tinymce/index.vue
  * @Description:
 -->
@@ -83,7 +83,6 @@ const props = defineProps({
   },
   height: {
     type: [Number, String],
-    required: false,
     default: 400
   },
   width: {
@@ -117,6 +116,7 @@ const initOptions = computed(() => {
   const { height, options, toolbar, plugins } = props
 
   return {
+    license_key: 'gpl',
     selector: `#${unref(tinymceId)}`,
     height,
     toolbar,
