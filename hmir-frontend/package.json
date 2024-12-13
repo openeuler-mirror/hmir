@@ -11,15 +11,19 @@
   },
   "dependencies": {
     "@tauri-apps/api": "^1.1.0",
+    "@tinymce/tinymce-vue": "^6.1.0",
     "@vueuse/core": "^9.9.0",
     "animate.css": "^4.1.1",
     "axios": "^1.2.1",
+    "codemirror": "^5.65.18",
+    "codemirror-editor-vue3": "^2.8.0",
     "echarts": "^5.4.1",
     "element-plus": "^2.2.27",
     "mxgraph": "^4.2.2",
     "normalize.css": "^8.0.1",
     "nprogress": "^0.2.0",
     "pinia": "^2.0.28",
+    "tinymce": "^7.5.1",
     "vue": "^3.2.37",
     "vue-i18n": "^9.3.0-beta.16",
     "vue-router": "^4.1.6"
@@ -27,6 +31,7 @@
   "devDependencies": {
     "@babel/eslint-parser": "^7.12.16",
     "@tauri-apps/cli": "^1.1.0",
+    "@types/codemirror": "^5.60.15",
     "@types/node": "^18.11.18",
     "@types/nprogress": "^0.2.0",
     "@typescript-eslint/eslint-plugin": "^5.50.0",
