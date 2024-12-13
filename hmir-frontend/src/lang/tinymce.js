@@ -461,3 +461,4 @@ tinymce.addI18n('zh_CN', {
   'Whole words': '\u5168\u5b57\u5339\u914d',
   'Insert template': '\u63d2\u5165\u6a21\u677f'
 })
+
