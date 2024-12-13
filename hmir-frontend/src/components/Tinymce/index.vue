@@ -3,7 +3,7 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-12-10 11:40:22
  * @LastEditors: Z&N
- * @LastEditTime: 2024-12-10 16:45:46
+ * @LastEditTime: 2024-12-11 18:20:26
  * @FilePath: /hmir-frontend/src/components/Tinymce/index.vue
  * @Description:
 -->
@@ -110,9 +110,6 @@ const containerWidth = computed(() => {
 const editorRef = ref(null)
 const fullscreen = ref(false)
 const elRef = ref(null)
-// eslint-disable-next-line no-unused-vars
-const tinymceContent = computed(() => props.modelValue)
-
 const initOptions = computed(() => {
   const { height, options, toolbar, plugins } = props
 
@@ -161,7 +158,6 @@ const initOptions = computed(() => {
           }
 
           function displayResult(result) {
-            console.log(result)
             // tinymce的set方法将内容添加到编辑器中
             tinymce.activeEditor.setContent(result.value)
           }
@@ -184,18 +180,6 @@ const initOptions = computed(() => {
       })
     }
   }
-})
-
-// eslint-disable-next-line no-unused-vars
-const disabled = computed(() => {
-  const { options } = props
-  const getdDisabled = options && Reflect.get(options, 'readonly')
-  const editor = unref(editorRef)
-
-  if (editor) {
-    editor.setMode(getdDisabled ? 'readonly' : 'design')
-  }
-  return getdDisabled ?? false
 })
 
 watch(
@@ -306,36 +290,6 @@ function bindModelHandlers(editor) {
   editor.on('FullscreenStateChanged', (e) => {
     fullscreen.value = e.state
   })
-}
-
-// eslint-disable-next-line no-unused-vars
-function handleImageUploading(name) {
-  const editor = unref(editorRef)
-
-  if (!editor) {
-    return
-  }
-  editor.execCommand('mceInsertContent', false, getUploadingImgName(name))
-  const content = editor?.getContent() ?? ''
-
-  setValue(editor, content)
-}
-
-// eslint-disable-next-line no-unused-vars
-function handleDone(name, url) {
-  const editor = unref(editorRef)
-
-  if (!editor) {
-    return
-  }
-  const content = editor?.getContent() ?? ''
-  const val = content?.replace(getUploadingImgName(name), `<img src="${url}"/>`) ?? ''
-
-  setValue(editor, val)
-}
-
-function getUploadingImgName(name) {
-  return `[uploading:${name}]`
 }
 </script>
 
