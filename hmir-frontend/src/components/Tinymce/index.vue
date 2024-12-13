@@ -3,7 +3,7 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-12-10 11:40:22
  * @LastEditors: Z&N
- * @LastEditTime: 2024-12-10 15:36:01
+ * @LastEditTime: 2024-12-10 15:46:00
  * @FilePath: /hmir-frontend/src/components/Tinymce/index.vue
  * @Description:
 -->
@@ -70,11 +70,11 @@ const props = defineProps({
     default: () => { }
   },
   toolbar: {
-    type: Array,
+    type: [Array, String],
     default: toolbar
   },
   plugins: {
-    type: Array,
+    type: [Array, String],
     default: plugins
   },
   modelValue: {

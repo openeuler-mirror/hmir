@@ -2,7 +2,7 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-12-04 17:16:24
  * @LastEditors: Z&N
- * @LastEditTime: 2024-12-05 17:08:08
+ * @LastEditTime: 2024-12-05 17:24:34
  * @FilePath: /hmir-frontend/src/components/FormSearch/components/FormSearchType.vue
  * @Description:
 -->
@@ -41,6 +41,10 @@ const props = defineProps({
   inputWidth: {
     type: [String, Number],
     default: '140px'
+  },
+  teleported: {
+    type: Boolean,
+    default: true
   }
 })
 const searchType = computed({
