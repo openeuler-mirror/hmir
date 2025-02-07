@@ -6,7 +6,7 @@
  * @FilePath: /hmir-frontend/src/api/process/index.ts
  * @Description: 后端Process模块API
  */
-import { invoke } from "@tauri-apps/api/tauri";
+import invoke from '@/utils/invokeTauri';
 
 //获取进程信息
 export function cmd_process_info(data: any) {

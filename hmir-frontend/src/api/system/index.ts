@@ -6,7 +6,7 @@
  * @FilePath: /hmir-frontend/src/api/process/index.ts
  * @Description: 系统板块API
  */
-import { invoke } from "@tauri-apps/api/tauri";
+import invoke from '@/utils/invokeTauri';
 
 //获取系统页面信息
 export function cmd_sys_info(data: any) {

@@ -1,4 +1,4 @@
-import { invoke } from "@tauri-apps/api/tauri";
+import invoke from '@/utils/invokeTauri';
 
 //调用函数前的时间限制
 const timeout = 0
