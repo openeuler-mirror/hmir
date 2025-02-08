@@ -3,7 +3,7 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-12-10 11:40:22
  * @LastEditors: Z&N
- * @LastEditTime: 2024-12-11 18:20:26
+ * @LastEditTime: 2025-02-08 15:00:24
  * @FilePath: /hmir-frontend/src/components/Tinymce/index.vue
  * @Description:
 -->
@@ -59,7 +59,7 @@ import 'tinymce/plugins/visualchars' // 显示不可见字符
 import 'tinymce/plugins/wordcount' // 字数统计
 
 import { computed, nextTick, ref, unref, watch, onDeactivated, onBeforeUnmount, defineProps, defineEmits, getCurrentInstance } from 'vue'
-import { toolbar, plugins } from './tinymce'
+import { DEFAULT_TOOLBAR, DEFAULT_PLUGINS } from './tinymce'
 import { buildShortUUID } from '@/utils/uuid'
 import { bindHandlers } from './helper'
 import { onMountedOrActivated } from '@/hooks/onMountedOrActivated'
@@ -72,11 +72,11 @@ const props = defineProps({
   },
   toolbar: {
     type: [Array, String],
-    default: toolbar
+    default: DEFAULT_TOOLBAR
   },
   plugins: {
     type: [Array, String],
-    default: plugins
+    default: DEFAULT_PLUGINS
   },
   modelValue: {
     type: String,

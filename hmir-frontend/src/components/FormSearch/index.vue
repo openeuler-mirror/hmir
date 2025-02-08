@@ -2,7 +2,7 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-11-05 10:02:31
  * @LastEditors: Z&N
- * @LastEditTime: 2025-02-08 13:40:48
+ * @LastEditTime: 2025-02-08 14:56:06
  * @FilePath: /hmir-frontend/src/components/FormSearch/index.vue
  * @Description:
 -->
@@ -42,7 +42,7 @@
             type="primary"
             @click="searchList"
           >
-            {{ $t('search') }}
+            {{ $t("search") }}
           </el-button>
         </el-form-item>
 
@@ -51,7 +51,7 @@
             type="primary"
             @click="openAdvancedSearcch"
           >
-            {{ $t('advancedQuery') }}
+            {{ $t("advancedQuery") }}
           </el-button>
         </el-form-item>
       </ComFlexSpace>
@@ -72,7 +72,7 @@
             type="primary"
             @click="searchList"
           >
-            {{ $t('search') }}
+            {{ $t("search") }}
           </el-button>
         </el-form-item>
 
@@ -81,7 +81,7 @@
             type="primary"
             @click="openAdvancedSearcch"
           >
-            {{ $t('advancedQuery') }}
+            {{ $t("advancedQuery") }}
           </el-button>
         </el-form-item>
       </SearchInfoForm>
@@ -97,7 +97,11 @@ import Dialog from '@/components/Dialog/defauleDialog.vue'
 import AdvancedQueryDialog from './subview/advancedQueryDialog.vue'
 import SearchInfoForm from './components/searchInfoForm.vue'
 import AdvanceSearchTag from './components/advanceSearchTag.vue'
-import { defineSearchTypeOptions, getDefaultSearchInfo, SEARCH_TYPE_INPUT } from './formSearchUtils'
+import {
+  defineSearchTypeOptions,
+  getDefaultSearchInfo,
+  SEARCH_TYPE_INPUT
+} from './formSearchUtils'
 import { ref, computed, markRaw, nextTick, onMounted } from 'vue'
 import { deepCopy } from '@/utils/clone'
 import { SEARCH_DEFAULT_PROPS } from './formSearchProps'
@@ -125,7 +129,7 @@ const props = defineProps({
     }
   },
   searchValueOptions: {
-    type:  [Object, Array],
+    type: [Object, Array],
     default() {
       return []
     }
