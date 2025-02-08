@@ -2,7 +2,7 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-11-05 10:02:31
  * @LastEditors: Z&N
- * @LastEditTime: 2024-12-09 18:03:53
+ * @LastEditTime: 2025-02-08 13:40:48
  * @FilePath: /hmir-frontend/src/components/FormSearch/index.vue
  * @Description:
 -->
@@ -149,11 +149,6 @@ const isAdvanceSearch = computed(() => searchInfoList.value.length > 1)
  * @description: 查询方式下拉默认数据，深拷贝避免直接修改props的值
  */
 const searchTypeOptions = ref(deepCopy(props.searchTypeOptions))
-
-/**
- * @description: 查询内容下拉默认数据
- */
-const searchValueOptions = ref([])
 
 /**
  * @description: 查询内容表单
