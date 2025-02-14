@@ -1,35 +1,37 @@
 <!--
  * @Author: zhang_tianran
  * @Date: 2023-05-17 18:16:11
- * @LastEditors: zhang_tianran
- * @LastEditTime: 2023-06-29 10:04:43
+ * @LastEditors: Z&N
+ * @LastEditTime: 2025-02-08 15:56:59
  * @Description:
 -->
 <template>
-  <div class="card">
-    <span>HMIR控制台</span>
-    <el-button
-      :loading="!!loading"
-      @click="refresh()"
+  <div>
+    <div class="card">
+      <span>HMIR控制台</span>
+      <el-button
+        :loading="!!loading"
+        @click="refresh()"
+      >
+        刷新
+      </el-button>
+    </div>
+    <div
+      v-loading="loading"
+      class="iframe"
     >
-      刷新
-    </el-button>
-  </div>
-  <div
-    v-loading="loading"
-    class="iframe"
-  >
-    <iframe
-      id="iframeMapViewComponent"
-      v-if="ttydtMsg"
-      ref="iframeDom"
-      name="iframeMap"
-      :src="getPageUrl"
-      width="100%"
-      height="100%"
-      frameborder="0"
-      scrolling="yes"
-    />
+      <iframe
+        v-if="ttydtMsg"
+        id="iframeMapViewComponent"
+        ref="iframeDom"
+        name="iframeMap"
+        :src="getPageUrl"
+        width="100%"
+        height="100%"
+        frameborder="0"
+        scrolling="yes"
+      />
+    </div>
   </div>
 </template>
 

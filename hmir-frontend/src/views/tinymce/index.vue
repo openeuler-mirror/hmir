@@ -2,19 +2,21 @@
  * @Author: Z&N dev17101@linx-info.com
  * @Date: 2024-12-10 11:04:51
  * @LastEditors: Z&N
- * @LastEditTime: 2024-12-11 10:29:29
+ * @LastEditTime: 2025-02-10 15:25:52
  * @FilePath: /hmir-frontend/src/views/tinymce/index.vue
  * @Description:
 -->
 <template>
-  <Tinymce v-model="content" />
-  <el-button @click="goDocxFile">
-    导出docx
-  </el-button>
-  <el-button @click="previewFile">
-    预览docx
-  </el-button>
-  <div ref="docxPreview" />
+  <div>
+    <Tinymce v-model="content" />
+    <el-button @click="goDocxFile">
+      导出docx
+    </el-button>
+    <el-button @click="previewFile">
+      预览docx
+    </el-button>
+    <div ref="docxPreview" />
+  </div>
 </template>
 
 <script setup>
