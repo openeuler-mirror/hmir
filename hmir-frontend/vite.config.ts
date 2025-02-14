@@ -1,4 +1,12 @@
-import { UserConfig, ConfigEnv, defineConfig } from "vite";
+/*
+ * @Author: Z&N dev17101@linx-info.com
+ * @Date: 2024-10-23 09:38:36
+ * @LastEditors: Z&N
+ * @LastEditTime: 2025-02-07 17:27:48
+ * @FilePath: /hmir-frontend/vite.config.ts
+ * @Description: 
+ */
+import { defineConfig } from "vite";
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import vue from "@vitejs/plugin-vue";
 import path from 'path';
@@ -28,10 +36,15 @@ export default defineConfig({
   },
   // to make use of `TAURI_DEBUG` and other env variables
   // https://tauri.studio/v1/api/config#buildconfig.beforedevcommand
-  envPrefix: ["VITE_", "TAURI_"],
+  envPrefix: ["VITE_", "TAURI_", 'TAURI_ENV_*'],
   build: {
     // Tauri supports es2021
-    target: ["es2021", "chrome100", "safari13"],
+    //target: ["es2021", "chrome100", "safari13"],
+    // Tauri 在 Windows 上使用 Chromium，在 macOS 和 Linux 上使用 WebKit
+    target:
+      process.env.TAURI_ENV_PLATFORM == 'windows'
+        ? 'chrome105'
+        : 'safari13',
     // don't minify for debug builds
     minify: !process.env.TAURI_DEBUG ? "esbuild" : false,
     // produce sourcemaps for debug builds
