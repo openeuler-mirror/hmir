@@ -11,8 +11,8 @@ Summary:        Host management in rust
 
 
 License:        MulanPSL-2.0
-URL:            https://gitee.com/openeuler/hmir
-Source0:        https://gitee.com/openeuler/hmir/releases/download/v%{version}/%{name}-%{version}.tar.gz
+URL:            https://atomgit.com/openeuler/hmir
+Source0:        https://atomgit.com/openeuler/hmir/releases/download/v%{version}/%{name}-%{version}.tar.gz
 
 
 ExclusiveArch:  x86_64 aarch64
