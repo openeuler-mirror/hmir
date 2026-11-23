@@ -73,7 +73,7 @@ pub fn exec_rule(rule: String, cmd_name: String) -> Output{
     let output = Command::new("sh")
                         .arg("-c")
                         .arg(rule).
-                        output().expect(&format!("failed to excute {}", cmd_name));
+                        output().expect(&format!("failed to execute {}", cmd_name));
 
     output 
 }

@@ -121,17 +121,17 @@ use hmir_token::TokenChecker;
 use std::sync::{Arc,Mutex};
 use lazy_static::{lazy_static};
 
-struct WrapperCoon(Connect);
-unsafe impl Send for WrapperCoon{}
-unsafe impl Sync for WrapperCoon{}
+struct WrapperConn(Connect);
+unsafe impl Send for WrapperConn{}
+unsafe impl Sync for WrapperConn{}
 
-type HyperStaticConn = Arc<Mutex<Option<WrapperCoon>>>;
+type HyperStaticConn = Arc<Mutex<Option<WrapperConn>>>;
 
 lazy_static!{
     static ref QEMU_CONN: HyperStaticConn = {
         match Connect::open(QEMU_URI){
             Ok(c) => {
-                let p = Some(WrapperCoon(c));
+                let p = Some(WrapperConn(c));
                 return Arc::new(Mutex::new(p));
             },
             Err(_) => return Arc::new(Mutex::new(None))

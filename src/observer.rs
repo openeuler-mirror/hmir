@@ -56,7 +56,7 @@ struct ObserverParam {
     token : String,
     url : String, //now only support https
     obs_cmd : u32,
-    duration : u64, //the frenquence
+    duration : u64, //the frequency
 }
 
 #[derive(Debug,Clone,Deserialize)]
@@ -69,7 +69,7 @@ struct ObserverUnRegParam {
 struct ObserverMetric {
     url : std::string::String, //now only support https
     obs_cmd : u32,
-    duration : u64, //the frenquence
+    duration : u64, //the frequency
     status   : bool,
     callback: fn() -> String
 }

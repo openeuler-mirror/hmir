@@ -148,7 +148,7 @@ fn sys_all_os_info() -> String
     let os_release = OsInfo::new().unwrap();
     let product_info = ProductInfo::new().unwrap();
     let cpu_info = procfs::CpuInfo::new().unwrap();
-    let cpu_model = cpu_info.num_cores().to_string() +"x " + cpu_info.model_name(0).unwrap_or("Unkown");
+    let cpu_model = cpu_info.num_cores().to_string() +"x " + cpu_info.model_name(0).unwrap_or("Unknown");
 
 
     let info = sys::SystemAllInfo {

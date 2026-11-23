@@ -36,13 +36,13 @@ macro_rules! ttyd_default_result {
 
 pub fn ttyd_start() -> String
 {
-    return futures::executor::block_on(aysnc_ttyd_start());
+    return futures::executor::block_on(async_ttyd_start());
     // return ttyd_start_test();
 }
 
 
 
-pub async fn aysnc_ttyd_start() -> String
+pub async fn async_ttyd_start() -> String
 {
 
     if *TTY_ID.lock().unwrap() != 0 {
