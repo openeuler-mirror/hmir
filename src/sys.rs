@@ -17,7 +17,7 @@ use hmir_errno::errno;
 use hmir_token::TokenChecker;
 use std::ffi::OsString;
 use serde::{Serialize,Deserialize};
-use chrono::{Local};
+use chrono::{Local, NaiveDateTime};
 
 
 fn gethostname() -> OsString {
@@ -255,8 +255,12 @@ pub fn sys_set_hostname(pretty_hostname : String, static_hostname : String) -> S
 }
 
 fn validate_datetime_format(datetime_str : & String) -> bool {
-    let re = Regex::new(r"^\d{4}-\d{2}-\d{2} \d{2}:\d:{2}\d{2}$").unwrap();
-    return re.is_match(datetime_str);
+    // 先用正则校验外形，再用 chrono 解析排除 13 月、30 日、25 点等非法日期
+    let re = Regex::new(r"^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$").unwrap();
+    if !re.is_match(datetime_str) {
+        return false;
+    }
+    NaiveDateTime::parse_from_str(datetime_str, "%Y-%m-%d %H:%M:%S").is_ok()
 }
 
 pub fn sys_set_date(date: String) -> String {
@@ -322,6 +326,22 @@ mod tests {
     #[test]
     fn test_get_date(){
         sys_get_date();
+    }
+
+    #[test]
+    fn test_validate_datetime_format() {
+        // 合法输入
+        assert!(validate_datetime_format(&"2023-02-23 15:08:00".to_string()));
+        assert!(validate_datetime_format(&"2024-02-29 23:59:59".to_string())); // 闰年
+        // 旧正则 bug：畸形串能通过
+        assert!(!validate_datetime_format(&"2023-01-01 12::0:800".to_string()));
+        // 非法日期/时间
+        assert!(!validate_datetime_format(&"2023-13-01 12:00:00".to_string()));
+        assert!(!validate_datetime_format(&"2023-02-30 12:00:00".to_string()));
+        assert!(!validate_datetime_format(&"2023-02-23 25:00:00".to_string()));
+        // 格式缺失或非日期输入
+        assert!(!validate_datetime_format(&"2023-02-23".to_string()));
+        assert!(!validate_datetime_format(&"$(reboot)".to_string()));
     }
 }
 
