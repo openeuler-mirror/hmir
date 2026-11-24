@@ -136,6 +136,7 @@ mod tests {
 
 
     #[test]
+    #[ignore = "依赖本机 /var/lib/dpkg/status，非 Debian 系环境会失败"]
     fn dpkg_list_it_worked(){
         dpkg_package_info();
     }

@@ -309,11 +309,13 @@ mod tests {
     }
 
     #[test]
+    #[ignore = "会真实修改系统主机名，仅需手动运行验证"]
     fn test_set_hostname(){
         sys_set_hostname("I am dwj".to_string(),"dwj".to_string());
     }
 
     #[test]
+    #[ignore = "会真实修改系统时间，仅需手动运行验证"]
     fn test_set_datetime() {
         let out = sys_set_date("2023-02-23 15:08:00".to_string());
         println!("{}",out);

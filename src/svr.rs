@@ -526,6 +526,7 @@ mod tests {
     }
 
     #[test]
+    #[ignore = "会真实 enable docker.service，仅需手动运行验证"]
     fn svr_result_it_work()  {
 
         let s = svr_result_test();
@@ -540,6 +541,7 @@ mod tests {
     }
 
     #[test]
+    #[ignore = "会真实 restart docker.service，仅需手动运行验证"]
     fn service_restart_it_works() {
         let s = service_restart(std::string::String::from("docker.service"));
         println!("{}",s);
@@ -547,18 +549,21 @@ mod tests {
 
 
     #[test]
+    #[ignore = "会真实 stop docker.service，仅需手动运行验证"]
     fn service_stop_it_works() {
         let s = service_stop(std::string::String::from("docker.service"));
         println!("{}",s);
     }
 
     #[test]
+    #[ignore = "会真实 start docker.service，仅需手动运行验证"]
     fn service_start_it_works() {
         let s = service_start(std::string::String::from("docker.service"));
         println!("{}",s);
     }
 
     #[test]
+    #[ignore = "会真实 disable docker.service，仅需手动运行验证"]
     fn service_disable_it_works(){
         let s = service_disable(std::string::String::from("docker.service"));
         println!("{}",s);
