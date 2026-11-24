@@ -10,9 +10,9 @@ pub fn df() -> String {
     command::mon_exec("df")
 }
 
-///集群ID
+///集群ID（mon 返回的是带引号的 JSON 字符串标量，这里去掉外层引号）
 pub fn fsid() -> String {
-    command::mon_exec("fsid")
+    command::mon_exec("fsid").trim_matches('"').to_string()
 }
 
 ///列出相关服务运行节点
