@@ -285,8 +285,13 @@ pub fn sys_set_date(date: String) -> String {
 
 pub fn sys_get_date() -> String {
     let fmt = "%Y-%m-%d %H:%M:%S";
-    let now = Local::now().format(fmt);
-    now.to_string()
+    let now = Local::now().format(fmt).to_string();
+
+    let mut map = HashWrap::<String,String>:: new();
+    map.insert(String::from("date"), now);
+
+    let serialized = serde_json::to_string(&map).unwrap();
+    serialized
 }
 
 
