@@ -104,7 +104,7 @@ mod tests {
     use hmir_errno::errno;
 
     #[test]
-    fn token_genertate_it_works()
+    fn token_generate_it_works()
     {
 
         let i = errno::HMIR_SUCCESS;
