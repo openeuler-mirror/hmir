@@ -93,23 +93,42 @@ pub fn sys_total_memory() -> f64 {
     sys.total_memory() as f64
 }
 
+///计算内存占用百分比
+///res_kb：进程 RSS，单位 KB（由 statm 页数乘 (pagesize>>10) 得到）
+///total_bytes：系统总内存，单位字节（sysinfo >= 0.27 的 total_memory() 返回 bytes，
+///升级自 0.26 的 KiB，单位变更时这里必须同步改）
+fn calc_mem_usage(res_kb: f64, total_bytes: f64) -> f64 {
+    if total_bytes <= f64::EPSILON {
+        return 0.0;
+    }
+    ((res_kb * 1024.0 / total_bytes) * 10_000.0).round() / 100.0
+}
+
+///计算采样窗口内的 CPU 占用百分比；窗口总时间差为 0 时返回 0，
+///避免把原始累计 tick 当成百分比输出
+fn calc_cpu_usage(proc_delta: f64, total_delta: f64) -> f64 {
+    if total_delta <= f64::EPSILON {
+        return 0.0;
+    }
+    (10000.0 * proc_delta / total_delta).round() / 100.0
+}
+
 fn update_all_cpu_usage(map: &mut HashWrap::<i32, proc::ProcInfo>)
 {
+    //第一次采样：cpu_usage 暂存各进程累计 CPU 时间(ticks)作为基准
     for (k,v)  in map.result.iter_mut() {
         v.cpu_usage = get_cpu_proc_occupy(*k);
     }
     let total_cpu_time1 = get_cpu_total_occupy();
     std::thread::sleep(std::time::Duration::from_millis(200));
     let total_cpu_time2 = get_cpu_total_occupy();
+    let total_delta = total_cpu_time2 - total_cpu_time1;
 
+    //第二次采样：用窗口内的增量换算百分比；
+    //进程可能在窗口内退出，occupy 返回 0 会使增量为负，钳位为 0
     for (k,v)  in map.result.iter_mut() {
-        v.cpu_usage = get_cpu_proc_occupy(*k) - v.cpu_usage;
-    }
-    if (total_cpu_time2 - total_cpu_time1).abs() > f64::EPSILON
-    {
-        for (_k,v)  in map.result.iter_mut() {
-            v.cpu_usage = (10000.0 * v.cpu_usage / (total_cpu_time2 - total_cpu_time1)).round()/100.0;
-        }
+        let proc_delta = (get_cpu_proc_occupy(*k) - v.cpu_usage).max(0.0);
+        v.cpu_usage = calc_cpu_usage(proc_delta, total_delta);
     }
 }
 
@@ -169,7 +188,7 @@ pub fn _process_all() -> std::string::String
                     shr: sha,
                     state: String::from(stat.state),
                     cpu_usage: 0.0,
-                    mem_usage: ((res as f64 * 1024.0 / total_memory) * 10_000.0).round() / 100.0,
+                    mem_usage: calc_mem_usage(res as f64, total_memory),
                     cmdline: p.cmdline().unwrap().iter().map(|x| x.to_string() + " ").collect::<String>(),
                 };
 
@@ -252,6 +271,24 @@ mod tests {
     use super::*;
 
     #[test]
+    fn calc_usage_it_works() {
+        //内存：1MiB / 100MiB => 1%（res 为 KB，total 为 bytes）
+        assert_eq!(calc_mem_usage(1024.0, 100.0 * 1024.0 * 1024.0), 1.0);
+        assert_eq!(calc_mem_usage(0.0, 1024.0 * 1024.0), 0.0);
+        //总内存为 0 时防除零
+        assert_eq!(calc_mem_usage(1024.0, 0.0), 0.0);
+        //1KB / 4096KB => 0.02%
+        assert_eq!(calc_mem_usage(1.0, 4096.0 * 1024.0), 0.02);
+
+        //CPU：窗口内占用一半 => 50%
+        assert_eq!(calc_cpu_usage(500.0, 1000.0), 50.0);
+        //窗口总增量为 0 时返回 0，而不是原始 tick
+        assert_eq!(calc_cpu_usage(12345.0, 0.0), 0.0);
+        //负增量钳位后为 0
+        assert_eq!(calc_cpu_usage(-10.0_f64.max(0.0), 1000.0), 0.0);
+    }
+
+    #[test]
     fn process_all_it_works() {
         let s = process_all();
         println!("{}", s);
@@ -279,6 +316,8 @@ mod tests {
 
         for (k,v) in map.result.into_iter() {
             println!("----- {} : {}",k,v.cpu_usage);
+            //结果应为百分比语义：非负且不超过 100
+            assert!(v.cpu_usage >= 0.0 && v.cpu_usage <= 100.0);
         }
 
     }
