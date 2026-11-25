@@ -92,8 +92,9 @@ impl RequestClient {
             let response: Result<String,_>= self.client.request("sys-get-date", rpc_params![token]).await;
             match response {
                 Ok(result) => {
-                    let p: HashWrap::<i32,i32> = serde_json::from_str(result.as_str()).unwrap();
-                    return (p.code(),serde_json::to_string(&p.result).unwrap());
+                    let p: HashWrap::<String,String> = serde_json::from_str(result.as_str()).unwrap();
+                    let date = p.get(&String::from("date")).cloned().unwrap_or_default();
+                    return (p.code(),date);
                 },
                 _ => { return (errno::HMIR_ERR_COMM,"".to_string())}
             };
