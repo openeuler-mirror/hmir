@@ -5,7 +5,7 @@ use std::collections::HashMap;
 
 lazy_static! {
     // static ref OSD_STATUS_REGEX : Regex = Regex::new(r"\u001b\[[0-9]*[;]?[0-9]*m|[\|]*[\n]*\+[\-]*[\n]*[\|]*|[\n]+\|").unwrap();
-    static ref OSD_STATUS_REGEX : Regex = Regex::new(r"\u001b\[[0-9]*[;]?[0-9]*m|[\|]*[\n]*\+[\-]*[\n]*|[\n]+\|").unwrap();
+    static ref OSD_STATUS_REGEX : Regex = Regex::new(r"\u001b\[[0-9;]*m|[\|]*[\n]*\+[\-]*[\n]*|[\n]+\|").unwrap();
     static ref OSD_STATUS_HEAD_AND_TAIL_CENTER_VERTICAL_LINE_REGEX : Regex 
     = Regex::new(r"^\||\|$").unwrap();
     
@@ -143,13 +143,22 @@ pub fn process_osd_status_result(result : String) -> String {
 }
 
 #[test]
-pub fn osd_staus_test() {
-    let osd_status_color_regex : Regex = Regex::new(r"\\u001b\[[0-9]*[;]?[0-9]*m").unwrap();
-    let ret = String::from("\\u001b[1m\\u001b[1;33m1294\\u001b[0m\\u001b[0m\\u001b[1m\\u001b[1;30mM\\u001b[0m\\u001b[0m | \\u001b[1m\\u001b[1;33m 198\\u001b[0m\\u001b[0m\\u001b[1m\\u001b[1;30mG\\u001b[0m\\u001b[0m | \\u001b[1m\\u001b[1;30m 0\\u001b[0m\\u001b[0m\\u001b[1m\\u001b[1;30m \\u001b[0m\\u001b[0m | \\u001b[1m\\u001b[1;30m 0\\u001b[0m\\u001b[0m\\u001b[1m\\u001b[1;30m \\u001b[0m\\u001b[0m | \\u001b[1m\\u001b[1;30m 0\\u001b[0m\\u001b[0m\\u001b[1m\\u001b[1;30m \\u001b[0m\\u001b[0m | \\u001b[1m\\u001b[1;30m 0\\u001b[0m\\u001b[0m\\u001b[1m\\u001b[1;30m \\u001b[0m\\u001b[0m | exists,up |\\n| 1 | n2 | \\u001b[1m\\u001b[1;33m1294\\u001b[0m\\u001b[0m\\u001b[1m\\u001b[1;30mM\\u001b[0m\\u001b[0m | \\u001b[1m\\u001b[1;33m 198\\u001b[0m\\u001b[0m\\u001b[1m\\u001b[1;30mG\\u001b[0m\\u001b[0m | \\u001b[1m\\u001b[1;30m 0\\u001b[0m\\u001b[0m\\u001b[1m\\u001b[1;30m \\u001b[0m\\u001b[0m | \\u001b[1m\\u001b[1;30m 0\\u001b[0m\\u001b[0m\\u001b[1m\\u001b[1;30m \\u001b[0m\\u001b[0m | \\u001b[1m\\u001b[1;30m 0\\u001b[0m\\u001b[0m\\u001b[1m\\u001b[1;30m \\u001b[0m\\u001b[0m | \\u001b[1m\\u001b[1;30m 0\\u001b[0m\\u001b[0m\\u001b[1m\\u001b[1;30m \\u001b[0m\\u001b[0m | exists,up |\\n| 2 | n3 | \\u001b[1m\\u001b[1;33m1294\\u001b[0m\\u001b[0m\\u001b[1m\\u001b[1;30mM\\u001b[0m\\u001b[0m | \\u001b[1m\\u001b[1;33m 198\\u001b[0m\\u001b[0m\\u001b[1m\\u001b[1;30mG\\u001b[0m\\u001b[0m | \\u001b[1m\\u001b[1;30m 0\\u001b[0m\\u001b[0m\\u001b[1m\\u001b[1;30m \\u001b[0m\\u001b[0m | \\u001b[1m\\u001b[1;30m 0\\u001b[0m\\u001b[0m\\u001b[1m\\u001b[1;30m \\u001b[0m\\u001b[0m | \\u001b[1m\\u001b[1;33m 2\\u001b[0m\\u001b[0m\\u001b[1m\\u001b[1;30m \\u001b[0m\\u001b[0m | \\u001b[1m\\u001b[1;33m 106\\u001b[0m\\u001b[0m\\u001b[1m\\u001b[1;30m \\u001b[0m\\u001b[0m");
+pub fn osd_status_test() {
+    // ANSI 色码在真实输出中是 ESC(0x1B) 字符；写成 r"\\u001b" 匹配的是
+    // 「反斜杠+u001b」字面量，清理不掉任何真实色码
+    let osd_status_color_regex : Regex = Regex::new(r"\u001b\[[0-9;]*m").unwrap();
+    // 构造含真实 ESC 字符的样本（含多参数 SGR 码 \u001b[38;5;12m）
+    let ret = String::from("\u001b[1m\u001b[1;33m1294\u001b[0m\u001b[0m\u001b[1m\u001b[1;30mM\u001b[0m\u001b[0m | \u001b[38;5;12m 198\u001b[0m\u001b[0mG | exists,up |\n| 2 | n3 | \u001b[1m\u001b[1;30m 0\u001b[0m\u001b[0m");
     let result = osd_status_color_regex.replace_all(&ret, "");
-    println!("ret: {}", ret);
-    println!("result: {}", result);
+    // 清洗后不应再有任何 ESC 字符
+    assert!(!result.contains('\u{1b}'));
+    // 业务数据不丢失
+    assert!(result.contains("1294"));
+    assert!(result.contains("198"));
+    assert!(result.contains("exists,up"));
+
     let mut obj_test = OsdStatus::new();
     OSD_STATUS_OBJ_FUNC.get(&0).unwrap()(&mut obj_test, String::from("test"));
     println!("obj_test: {:?}", obj_test);
+    assert_eq!(obj_test.id, Some(String::from("test")));
 }
