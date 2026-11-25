@@ -2,6 +2,7 @@
 use serde::{Serialize, Deserialize};
 use jsonwebtoken::{encode, decode, Header, Validation, Algorithm,EncodingKey, DecodingKey};
 use std::io::Read;
+use std::time::{SystemTime, UNIX_EPOCH};
 use log::{error};
 
 // use crate::hmir_errno::errno;
@@ -12,21 +13,41 @@ use log::{error};
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Claims {
     user : String, //The username
-    exp  : usize,  //Expiration timestamp
+    exp  : u64,    //Expiration timestamp (seconds since the Unix epoch)
 }
 
-pub const EXP_TIME : usize = 4852281600;//2023/10/7
+/// Token 默认有效期（秒），可通过环境变量 `HMIR_TOKEN_EXPIRE_SECONDS` 覆盖。
+pub const DEFAULT_TOKEN_EXPIRE_SECONDS: u64 = 24 * 60 * 60; // 24 小时
 
 
-pub const PUBLIC_KEY : &str = "/etc/hmir//hmir-public-key.pem";
+pub const PUBLIC_KEY : &str = "/etc/hmir/hmir-public-key.pem";
 pub const PRIVATE_KEY : &str = "/etc/hmir/hmir-private-key.pem";
+
+
+/// 返回当前 Unix 时间戳（秒）。
+fn now_timestamp() -> u64 {
+    SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map(|d| d.as_secs())
+        .unwrap_or(0)
+}
+
+/// 返回 Token 有效期（秒）：优先读取环境变量 `HMIR_TOKEN_EXPIRE_SECONDS`，
+/// 缺省或非法（非数字或 <=0）时回退到 [`DEFAULT_TOKEN_EXPIRE_SECONDS`]。
+fn token_expire_seconds() -> u64 {
+    std::env::var("HMIR_TOKEN_EXPIRE_SECONDS")
+        .ok()
+        .and_then(|s| s.trim().parse::<u64>().ok())
+        .filter(|v| *v > 0)
+        .unwrap_or(DEFAULT_TOKEN_EXPIRE_SECONDS)
+}
 
 
 pub fn token_generate(user : &String) -> String
 {
     let my_claims = Claims {
         user : user.clone(),
-        exp  : EXP_TIME //Never expiration
+        exp  : now_timestamp() + token_expire_seconds(),
     };
 
     let exits = std::path::Path::new(PRIVATE_KEY).exists();
@@ -76,7 +97,7 @@ pub fn token_verify(token : String) -> bool {
             return _token_verify(token);
         },
         _ => {
-            error!("Could not find the private key {}",PUBLIC_KEY);
+            error!("Could not find the public key {}",PUBLIC_KEY);
             return false;
         }
     }
