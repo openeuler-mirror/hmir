@@ -2,7 +2,9 @@
 //!
 //!
 //! 支持以下的请求
-//! - process-all : 查询指定服务状态
+//! - process-all : 查询全部进程信息
+//! - process-kill : 终止指定进程，参数 `[pid]`
+//! - process-bind : 将目标进程绑定到指定 CPU 核，参数 `{"pid": 1234, "core": 2}`
 //!
 //! 请求格式:
 //! ```
@@ -19,18 +21,18 @@ use procfs;
 use hmir_hash::HashWrap;
 use hmir_errno::errno;
 use nix::sys::signal;
+use nix::sched::{sched_setaffinity, CpuSet};
 use nix::unistd;
 use nix::libc;
 use std::ffi::CStr;
+use std::collections::HashMap;
+use log::error;
 use hmir_protocol::proc;
 use sysinfo::{System, SystemExt};
 // use std::{thread, time};
 use tokio::time::{sleep, Duration};
 
 use std::sync::{Mutex};
-
-
-extern crate core_affinity;
 
 macro_rules! proc_default_result {
     ($i:expr) =>{
@@ -210,16 +212,28 @@ pub fn process_kill(pid: i32) -> std::string::String {
     proc_default_result!(errno::HMIR_ERR_COMM);
 }
 
-pub fn process_bind_cpu(pid: i32) -> std::string::String {
-    // 进程绑定cpu运行
-    if is_valid_process(pid) {
-        let core_ids = core_affinity::get_core_ids().unwrap();
-        // 目前只能固定绑定第一个cpu
-        let core_id = core_ids[0];
-        core_affinity::set_for_current(core_id);
-        proc_default_result!(0);
+pub fn process_bind_cpu(pid: i32, core_id: i32) -> std::string::String {
+    // 对目标进程（而非当前服务线程）设置 CPU 亲和性，核心号由调用方传入
+    if pid <= 0 || core_id < 0 {
+        proc_default_result!(errno::HMIR_ERR_PARAM);
     }
-    proc_default_result!(errno::HMIR_ERR_COMM);
+    if !is_valid_process(pid) {
+        proc_default_result!(errno::HMIR_ERR_COMM);
+    }
+    let mut cpu_set = CpuSet::new();
+    if cpu_set.set(core_id as usize).is_err() {
+        proc_default_result!(errno::HMIR_ERR_PARAM);
+    }
+    match sched_setaffinity(unistd::Pid::from_raw(pid), &cpu_set) {
+        Ok(()) => {
+            proc_default_result!(0);
+        },
+        Err(e) => {
+            // 核心不存在或不在进程允许范围内时，内核返回 EINVAL
+            error!("process-bind pid={} core={} failed: {:?}", pid, core_id, e);
+            proc_default_result!(errno::HMIR_ERR_COMMAND);
+        }
+    }
 }
 
 
@@ -237,9 +251,11 @@ pub fn register_method(module: &mut RpcModule<()>) -> anyhow::Result<()> {
     })?;
 
     module.register_method("process-bind", |params, _| {
-        //默认没有error就是成功的
-        let pid = params.one::<i32>()?;
-        Ok(process_bind_cpu(pid))
+        //绑定目标进程到指定 CPU 核：{"pid": 1234, "core": 2}
+        let params_map = params.parse::<HashMap<String, i32>>()?;
+        let pid = params_map.get("pid").cloned().unwrap_or(-1);
+        let core = params_map.get("core").cloned().unwrap_or(-1);
+        Ok(process_bind_cpu(pid, core))
     })?;
 
 

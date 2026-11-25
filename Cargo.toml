@@ -30,8 +30,7 @@ futures = "0.3"
 lazy_static = "1.4.0"
 serde_json = "1.0.87"
 serde = { version = "1.0.147", features = ["derive"] }
-nix = "0.25.0"
-core_affinity = "0.7.6"
+nix = { version = "0.25.0", features = ["sched", "signal"] }
 ssh2 = "0.9.3"
 pam = "0.7.0"
 cfg = "0.5.0"
