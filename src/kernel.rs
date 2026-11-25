@@ -1,5 +1,9 @@
-//! CEPH管理模块
+//! 内核模块管理模块
 //!
+//! 支持以下的请求
+//! - kernel-lsmod : 查询已加载的内核模块
+//! - kernel-rmmod : 卸载指定的内核模块
+//! - kernel-modprobe : 加载指定的内核模块
 //!
 
 use jsonrpsee::ws_server::{RpcModule};
