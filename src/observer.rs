@@ -219,6 +219,7 @@ pub fn register_method(module :  & mut RpcModule<()>) -> anyhow::Result<()>
 
 }
 
+#[cfg(test)]
 mod test {
 
     use super::*;
